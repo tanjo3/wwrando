@@ -119,10 +119,123 @@
                <string>Where Should Progress Items Appear?</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_2">
-               <item row="7" column="0">
-                <widget class="QCheckBox" name="progression_platforms_rafts">
+               <item row="0" column="1">
+                <widget class="QCheckBox" name="progression_puzzle_secret_caves">
                  <property name="text">
-                  <string>Lookout Platforms and Rafts</string>
+                  <string>Puzzle Secret Caves</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="2">
+                <widget class="QCheckBox" name="progression_spoils_trading">
+                 <property name="text">
+                  <string>Spoils Trading</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="2">
+                <widget class="QCheckBox" name="progression_expensive_purchases">
+                 <property name="text">
+                  <string>Expensive Purchases</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="2">
+                <widget class="QCheckBox" name="progression_big_octos_gunboats">
+                 <property name="text">
+                  <string>Big Octos and Gunboats</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <widget class="QCheckBox" name="progression_triforce_charts">
+                 <property name="text">
+                  <string>Sunken Treasure (From Triforce Charts)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="3">
+                <widget class="QCheckBox" name="progression_island_puzzles">
+                 <property name="text">
+                  <string>Island Puzzles</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QCheckBox" name="progression_free_gifts">
+                 <property name="text">
+                  <string>Free Gifts</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="3">
+                <widget class="QCheckBox" name="progression_eye_reef_chests">
+                 <property name="text">
+                  <string>Eye Reef Chests</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QCheckBox" name="progression_submarines">
+                 <property name="text">
+                  <string>Submarines</string>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="1">
+                <widget class="QCheckBox" name="progression_treasure_charts">
+                 <property name="text">
+                  <string>Sunken Treasure (From Treasure Charts)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="3">
+                <widget class="QCheckBox" name="progression_mail">
+                 <property name="text">
+                  <string>Mail</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QCheckBox" name="progression_savage_labyrinth">
+                 <property name="text">
+                  <string>Savage Labyrinth</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QCheckBox" name="progression_great_fairies">
+                 <property name="text">
+                  <string>Great Fairies</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QCheckBox" name="progression_minigames">
+                 <property name="text">
+                  <string>Minigames</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="3">
+                <widget class="QCheckBox" name="progression_tingle_chests">
+                 <property name="text">
+                  <string>Tingle Chests</string>
                  </property>
                 </widget>
                </item>
@@ -143,116 +256,10 @@
                  </property>
                 </widget>
                </item>
-               <item row="4" column="0">
-                <widget class="QCheckBox" name="progression_short_sidequests">
+               <item row="7" column="0">
+                <widget class="QCheckBox" name="progression_platforms_rafts">
                  <property name="text">
-                  <string>Short Sidequests</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="9" column="1">
-                <widget class="QCheckBox" name="progression_treasure_charts">
-                 <property name="text">
-                  <string>Sunken Treasure (From Treasure Charts)</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="7" column="1">
-                <widget class="QCheckBox" name="progression_submarines">
-                 <property name="text">
-                  <string>Submarines</string>
-                 </property>
-                 <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="9" column="0">
-                <widget class="QCheckBox" name="progression_triforce_charts">
-                 <property name="text">
-                  <string>Sunken Treasure (From Triforce Charts)</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="2">
-                <widget class="QCheckBox" name="progression_spoils_trading">
-                 <property name="text">
-                  <string>Spoils Trading</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="0">
-                <widget class="QCheckBox" name="progression_minigames">
-                 <property name="text">
-                  <string>Minigames</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="1">
-                <widget class="QCheckBox" name="progression_battlesquid">
-                 <property name="text">
-                  <string>Battlesquid Minigame</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="7" column="2">
-                <widget class="QCheckBox" name="progression_big_octos_gunboats">
-                 <property name="text">
-                  <string>Big Octos and Gunboats</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="2">
-                <widget class="QCheckBox" name="progression_expensive_purchases">
-                 <property name="text">
-                  <string>Expensive Purchases</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QCheckBox" name="progression_great_fairies">
-                 <property name="text">
-                  <string>Great Fairies</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="2">
-                <widget class="QCheckBox" name="progression_combat_secret_caves">
-                 <property name="text">
-                  <string>Combat Secret Caves</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QCheckBox" name="progression_free_gifts">
-                 <property name="text">
-                  <string>Free Gifts</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="3">
-                <widget class="QCheckBox" name="progression_savage_labyrinth">
-                 <property name="text">
-                  <string>Savage Labyrinth</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QCheckBox" name="progression_puzzle_secret_caves">
-                 <property name="text">
-                  <string>Puzzle Secret Caves</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
+                  <string>Lookout Platforms and Rafts</string>
                  </property>
                 </widget>
                </item>
@@ -266,31 +273,24 @@
                  </property>
                 </widget>
                </item>
-               <item row="7" column="3">
-                <widget class="QCheckBox" name="progression_eye_reef_chests">
+               <item row="0" column="2">
+                <widget class="QCheckBox" name="progression_combat_secret_caves">
                  <property name="text">
-                  <string>Eye Reef Chests</string>
+                  <string>Combat Secret Caves</string>
                  </property>
                 </widget>
                </item>
-               <item row="4" column="3">
-                <widget class="QCheckBox" name="progression_mail">
+               <item row="6" column="1">
+                <widget class="QCheckBox" name="progression_battlesquid">
                  <property name="text">
-                  <string>Mail</string>
+                  <string>Battlesquid Minigame</string>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="3">
-                <widget class="QCheckBox" name="progression_tingle_chests">
+               <item row="4" column="0">
+                <widget class="QCheckBox" name="progression_short_sidequests">
                  <property name="text">
-                  <string>Tingle Chests</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="3">
-                <widget class="QCheckBox" name="progression_island_puzzles">
-                 <property name="text">
-                  <string>Island Puzzles</string>
+                  <string>Short Sidequests</string>
                  </property>
                 </widget>
                </item>
@@ -303,57 +303,6 @@
                <string>Additional Randomization Options</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_3">
-               <item row="0" column="0">
-                <layout class="QHBoxLayout" name="horizontalLayout_5">
-                 <item>
-                  <widget class="QLabel" name="label_for_sword_mode">
-                   <property name="text">
-                    <string>Sword Mode</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QComboBox" name="sword_mode">
-                   <item>
-                    <property name="text">
-                     <string>Start with Hero's Sword</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>No Starting Sword</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Swordless</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="2" column="0">
-                <widget class="QCheckBox" name="randomize_charts">
-                 <property name="text">
-                  <string>Randomize Charts</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QCheckBox" name="randomize_starting_island">
-                 <property name="text">
-                  <string>Randomize Starting Island</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QCheckBox" name="keylunacy">
-                 <property name="text">
-                  <string>Key-Lunacy</string>
-                 </property>
-                </widget>
-               </item>
                <item row="1" column="3">
                 <layout class="QHBoxLayout" name="horizontalLayout_2">
                  <item>
@@ -396,21 +345,21 @@
                     <property name="text">
                      <string>3</string>
                     </property>
-                   </item>
+                 </item>
                    <item>
                     <property name="text">
                      <string>4</string>
                     </property>
-                   </item>
+               </item>
                    <item>
-                    <property name="text">
+                 <property name="text">
                      <string>5</string>
-                    </property>
-                   </item>
+                 </property>
+               </item>
                    <item>
-                    <property name="text">
+                 <property name="text">
                      <string>6</string>
-                    </property>
+                 </property>
                    </item>
                    <item>
                     <property name="text">
@@ -422,17 +371,145 @@
                      <string>8</string>
                     </property>
                    </item>
-                  </widget>
-                 </item>
+                </widget>
+               </item>
                  <item>
                   <widget class="QWidget" name="widget" native="true"/>
                  </item>
                 </layout>
                </item>
+               <item row="0" column="1" colspan="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_8">
+                 <item>
+                  <widget class="QLabel" name="label_for_randomize_entrances">
+                 <property name="text">
+                    <string>Randomize Entrances</string>
+                 </property>
+                </widget>
+               </item>
+                 <item>
+                  <widget class="QComboBox" name="randomize_entrances">
+                   <item>
+                    <property name="text">
+                     <string>Disabled</string>
+                   </property>
+                   </item>
+                   <item>
+                   <property name="text">
+                     <string>Dungeons</string>
+                   </property>
+                 </item>
+                 <item>
+                    <property name="text">
+                     <string>Secret Caves</string>
+                   </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Dungeons &amp; Secret Caves (Separately)</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Dungeons &amp; Secret Caves (Together)</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                   <item>
+                  <widget class="QWidget" name="widget_2" native="true"/>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="0">
+                <widget class="QCheckBox" name="keylunacy">
+                    <property name="text">
+                  <string>Key-Lunacy</string>
+                    </property>
+                </widget>
+                   </item>
+               <item row="2" column="0">
+                <layout class="QHBoxLayout" name="horizontalLayout_14">
+                   <item>
+                  <widget class="QLabel" name="label_for_hint_placement">
+                    <property name="text">
+                    <string>Hint Placement</string>
+                    </property>
+                  </widget>
+                   </item>
+                 <item>
+                  <widget class="QComboBox" name="hint_placement">
+                   <item>
+                    <property name="text">
+                     <string>Fishmen</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="3" column="1">
+                <widget class="QCheckBox" name="randomize_starting_island">
+                 <property name="text">
+                  <string>Randomize Starting Island</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <layout class="QHBoxLayout" name="horizontalLayout_5">
+                   <item>
+                  <widget class="QLabel" name="label_for_sword_mode">
+                    <property name="text">
+                    <string>Sword Mode</string>
+                    </property>
+                  </widget>
+                   </item>
+                 <item>
+                  <widget class="QComboBox" name="sword_mode">
+                   <item>
+                    <property name="text">
+                     <string>Start with Hero's Sword</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>No Starting Sword</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Swordless</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="3">
+                <widget class="QCheckBox" name="randomize_enemies">
+                 <property name="text">
+                  <string>Randomize Enemy Locations</string>
+                 </property>
+                </widget>
+               </item>
                <item row="1" column="1">
                 <widget class="QCheckBox" name="race_mode">
                  <property name="text">
                   <string>Race Mode</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QCheckBox" name="randomize_charts">
+                 <property name="text">
+                  <string>Randomize Charts</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="3">
+                <widget class="QCheckBox" name="randomize_music">
+                 <property name="text">
+                  <string>Randomize Music</string>
                  </property>
                 </widget>
                </item>
@@ -499,69 +576,32 @@
                  </item>
                 </layout>
                </item>
-               <item row="0" column="1" colspan="2">
-                <layout class="QHBoxLayout" name="horizontalLayout_8">
-                 <item>
-                  <widget class="QLabel" name="label_for_randomize_entrances">
+               <item row="3" column="2">
+                <widget class="QCheckBox" name="randomize_enemy_palettes">
                    <property name="text">
-                    <string>Randomize Entrances</string>
+                  <string>Randomize Enemy Palettes</string>
                    </property>
                   </widget>
                  </item>
+               <item row="2" column="1">
+                <layout class="QHBoxLayout" name="horizontalLayout_15">
                  <item>
-                  <widget class="QComboBox" name="randomize_entrances">
-                   <item>
+                  <widget class="QLabel" name="label_for_hint_type">
                     <property name="text">
-                     <string>Disabled</string>
+                    <string>Hint Type</string>
                     </property>
+                  </widget>
                    </item>
                    <item>
-                    <property name="text">
-                     <string>Dungeons</string>
-                    </property>
-                   </item>
+                  <widget class="QComboBox" name="hint_type">
                    <item>
                     <property name="text">
-                     <string>Secret Caves</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Dungeons &amp; Secret Caves (Separately)</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Dungeons &amp; Secret Caves (Together)</string>
+                     <string>Items</string>
                     </property>
                    </item>
                   </widget>
                  </item>
-                 <item>
-                  <widget class="QWidget" name="widget_2" native="true"/>
-                 </item>
                 </layout>
-               </item>
-               <item row="2" column="3">
-                <widget class="QCheckBox" name="randomize_music">
-                 <property name="text">
-                  <string>Randomize Music</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="2">
-                <widget class="QCheckBox" name="randomize_enemy_palettes">
-                 <property name="text">
-                  <string>Randomize Enemy Palettes</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="3">
-                <widget class="QCheckBox" name="randomize_enemies">
-                 <property name="text">
-                  <string>Randomize Enemy Locations</string>
-                 </property>
-                </widget>
                </item>
               </layout>
              </widget>
@@ -572,16 +612,6 @@
                <string>Convenience Tweaks</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_4">
-               <item row="1" column="2">
-                <widget class="QCheckBox" name="remove_title_and_ending_videos">
-                 <property name="text">
-                  <string>Remove Title and Ending Videos</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
                <item row="0" column="0">
                 <widget class="QCheckBox" name="swift_sail">
                  <property name="text">
@@ -589,13 +619,6 @@
                  </property>
                  <property name="checked">
                   <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QCheckBox" name="add_shortcut_warps_between_dungeons">
-                 <property name="text">
-                  <string>Add Shortcut Warps Between Dungeons</string>
                  </property>
                 </widget>
                </item>
@@ -609,10 +632,34 @@
                  </property>
                 </widget>
                </item>
+               <item row="1" column="3">
+                <widget class="QCheckBox" name="remove_music">
+                 <property name="text">
+                  <string>Remove Music</string>
+                 </property>
+                </widget>
+               </item>
                <item row="0" column="3">
                 <widget class="QCheckBox" name="invert_camera_x_axis">
                  <property name="text">
                   <string>Invert Camera X-Axis</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QCheckBox" name="remove_title_and_ending_videos">
+                 <property name="text">
+                  <string>Remove Title and Ending Videos</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QCheckBox" name="add_shortcut_warps_between_dungeons">
+                 <property name="text">
+                  <string>Add Shortcut Warps Between Dungeons</string>
                  </property>
                 </widget>
                </item>
@@ -626,10 +673,10 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="3">
-                <widget class="QCheckBox" name="remove_music">
+               <item row="2" column="0">
+                <widget class="QCheckBox" name="invert_sea_compass_x_axis">
                  <property name="text">
-                  <string>Remove Music</string>
+                  <string>Invert Sea Compass X-Axis</string>
                  </property>
                 </widget>
                </item>
@@ -640,13 +687,6 @@
                  </property>
                  <property name="checked">
                   <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QCheckBox" name="invert_sea_compass_x_axis">
-                 <property name="text">
-                  <string>Invert Sea Compass X-Axis</string>
                  </property>
                 </widget>
                </item>

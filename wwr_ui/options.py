@@ -159,6 +159,14 @@ OPTIONS = OrderedDict([
     "Select the number of dungeons that are required in Race Mode.\nRequired dungeon bosses will drop required items (e.g. Triforce Shards). Nothing in the other dungeons will ever be required.",
   ),
   (
+    "hint_placement",
+    "HINT PLACEMENT TODO",
+  ),
+  (
+    "hint_type",
+    "HINT TYPE TODO",
+  ),
+  (
     "randomize_music",
     "Shuffles around all the music in the game. This affects background music, combat music, fanfares, etc.",
   ),

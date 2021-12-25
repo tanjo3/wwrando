@@ -16,6 +16,7 @@ from wwlib.dol import DOL
 from wwlib.rel import REL, RELRelocation, RELRelocationType
 from wwlib.gcm import GCM
 from wwlib.jpc import JPC
+from hints import Hints
 import tweaks
 from asm import patcher
 from logic.logic import Logic
@@ -305,6 +306,7 @@ class Randomizer:
     self.using_custom_sail_texture = False
     
     self.logic = Logic(self)
+    self.hints = Hints(self)
     
     num_progress_locations = self.logic.get_num_progression_locations()
     max_race_mode_banned_locations = self.logic.get_max_race_mode_banned_locations()
@@ -424,10 +426,15 @@ class Randomizer:
     
     options_completed += 2
     
-    yield("Saving items...", options_completed)
+    
     if self.randomize_items and not self.dry_run:
+      yield("Saving items...", options_completed)
       items.write_changed_items(self)
+    
+    yield("Generating hints...", options_completed)
+    if self.randomize_items and not self.dry_run:
       tweaks.randomize_and_update_hints(self)
+      options_completed += 10
     
     if not self.dry_run:
       self.apply_necessary_post_randomization_tweaks()
