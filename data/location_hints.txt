@@ -1,0 +1,212 @@
+Outset Island - Orca - Give 10 Knight's Crests:
+  giving a fellow swordsman crests of honor
+Outset Island - Great Fairy:
+  visiting the Great Fairy atop Outset
+Outset Island - Jabun's Cave:
+  entering the domain of the whale in hiding
+Outset Island - Dig up Black Soil:
+  teaching a pig to dig for treasure
+
+Windfall Island - Chu Jelly Juice Shop - Give 15 Green Chu Jelly:
+  giving a potion master green jelly
+Windfall Island - Chu Jelly Juice Shop - Give 15 Blue Chu Jelly:
+  giving a potion master blue jelly
+Windfall Island - Mrs. Marie - Give 40 Joy Pendants:
+  giving a schoolteacher forty pendants
+Windfall Island - Lenzo's House - Become Lenzo's Assistant:
+  undertaking an apprenticeship
+Windfall Island - Lenzo's House - Bring Forest Firefly:
+  catching a firefly in a bottle
+Windfall Island - Maggie's Father - Give 20 Skull Necklaces:
+  giving a wealthy man twenty necklaces
+Windfall Island - Zunari - Stock Exotic Flower in Zunari's Shop:
+  stocking Zunari's shop with three flowers
+Windfall Island - Sam - Decorate the Town:
+  covering Windfall with flowers
+Windfall Island - Mila - Follow the Thief:
+  stopping a burglary of Zunari's safe
+Windfall Island - Battlesquid - Under 20 Shots Prize:
+  setting a new high score in Battlesquid
+Windfall Island - Pompie and Vera - Secret Meeting Photo:
+  showing a photo to two gossiping ladies
+Windfall Island - Kamo - Full Moon Photo:
+  snapping a colorful picture of the full moon
+Windfall Island - Minenco - Miss Windfall Photo:
+  showing Minenco a photo of herself
+Windfall Island - Linda and Anton:
+  uniting two lovers with the power of photography
+
+Dragon Roost Island - Rito Aerie - Give Hoskit 20 Golden Feathers:
+  gathering feathers for a charitable lover
+Dragon Roost Island - Fly Across Platforms Around Island:
+  gliding around the home of bird people
+Dragon Roost Island - Rito Aerie - Baito:
+  mastering the art of letter throwing
+Dragon Roost Island - Secret Cave:
+  besting the cavern at of the home of bird people
+
+Dragon Roost Cavern - Mini-Boss:
+  freeing the chest where Medli was once trapped
+Dragon Roost Cavern - Under Rope Bridge:
+  slaying two Bokoblins near a fragile bridge
+Dragon Roost Cavern - Big Key Chest:
+  plundering the blue-stained chest in Dragon Roost Cavern
+
+Forest Haven - On Tree Branch:
+  receiving a gift from the Great Deku Tree
+Forest Haven - Small Island Chest:
+  gliding to a remote island near a safe haven
+
+Forbidden Woods - Mothula Mini-Boss Room:
+  exterminating a flying bug in a forbidden dungeon
+Forbidden Woods - Chest in Locked Tree Trunk:
+  destroying vines on a chest in a tree trunk
+Forbidden Woods - Big Key Chest:
+  plundering the blue-stained chest in Forbidden Woods
+
+Tower of the Gods - Hop Across Floating Boxes:
+  lighting two torches beyond boxes in water
+Tower of the Gods - First Chest Guarded by Armos Knights:
+  slaying two bomb-hungry foes in a godly tower
+Tower of the Gods - Darknut Mini-Boss Room:
+  slaying a sworded foe in a godly tower
+
+Forsaken Fortress - Phantom Ganon:
+  playing tennis with an apparition
+
+Fire Mountain - Cave - Chest:
+  jumping across dried magma to Magtails
+
+Ice Ring Isle - Inner Cave - Chest:
+  awakening foes from an icy slumber
+
+Earth Temple - Stalfos Mini-Boss Room:
+  slaying three Stalfos in an open earthy arena
+Earth Temple - Kill All Floormasters in Foggy Room:
+  slaying an army of Floormasters
+Earth Temple - Stalfos Crypt Room:
+  slaying three Stalfos in a tightly-spaced crypt
+Earth Temple - Big Key Chest:
+  plundering the blue-stained chest in Earth Temple
+
+Wind Temple - Big Key Chest:
+  plundering the blue-stained chest in Wind Temple
+Wind Temple - Wizzrobe Mini-Boss Room:
+  slaying the Wizzrobe clad in fancy orange robes
+Wind Temple - Chest Behind Seven Armos:
+  defeating seven mechanical foes near the top of a blustery dungeon
+Wind Temple - Kill All Enemies in Tall Basement Room:
+  defeating every enemy in the lowest room of a blustery dungeon
+
+Mailbox - Letter from Hoskit's Girlfriend:
+  the gratitude of a pampered Rito
+Mailbox - Letter from Baito:
+  the writings of a bewildered letter sorter
+Mailbox - Letter from Orca:
+  the writings of your hometown swordsman
+Mailbox - Letter from Aryll:
+  the writings of your beloved sister
+Mailbox - Letter from Tingle:
+  the writings of a rupee-hungry fairy
+
+The Great Sea - Cyclos:
+  using a frog in a cyclone as target practice
+The Great Sea - Goron Trading Reward:
+  trading a golden statuette to a wandering merchant
+The Great Sea - Withered Trees:
+  restoring life to the trees of the Koroks
+The Great Sea - Ghost Ship:
+  plundering the haunted ship
+
+Needle Rock Isle - Chest:
+  activating a switch upon the needle
+Needle Rock Isle - Cave:
+  lighting torches in a cave of sunken ships
+Needle Rock Isle - Golden Gunboat:
+  sinking a warship made of gold
+
+Angular Isles - Cave:
+  pushing blocks inside of a block
+
+Boating Course - Cave:
+  lighting three switches at the mercy of Miniblins
+
+Stone Watcher Island - Cave:
+  besting the trials at the home of the stone watcher
+Stone Watcher Island - Lookout Platform - Destroy the Cannons:
+  destroying eight cannons on a single lookout platform
+
+Islet of Steel - Interior:
+  infiltrating a fort made of steel
+Islet of Steel - Lookout Platform - Defeat the Enemies:
+  clearing the platform near a fort made of steel
+
+Overlook Island - Cave:
+  besting the trials at an island made of brick structures
+
+Bird's Peak Rock - Cave:
+  playing the song of winds in Bird's Peak Rock
+
+Pawprint Isle - Chuchu Cave - Scale the Wall:
+  climbing up pegs in the cave where Chuchus roam
+Pawprint Isle - Wizzrobe Cave:
+  slaying Wizzrobes in their cave
+
+Thorned Fairy Island - Great Fairy:
+  visiting the domain of a thorned fairy
+
+Eastern Fairy Island - Lookout Platform - Defeat the Cannons and Enemies:
+  defending the platform at the domain of an eastern fairy
+
+Tingle Island - Ankle - Reward for All Tingle Statues:
+  collecting five glistening fairy figurines
+Tingle Island - Big Octo:
+  slaying the sea monstrosity at the island of greed
+
+Bomb Island - Cave:
+  playing basketball with Magtails
+
+Rock Spire Isle - Southeast Gunboat:
+  sinking the warship near the home of the masked shop seller
+
+Shark Island - Cave:
+  fending off waves in a crimson cave
+
+Horseshoe Island - Play Golf:
+  playing three holes under par
+Horseshoe Island - Cave:
+  clearing out Mothulas in an overgrown cave
+
+Flight Control Platform - Bird-Man Contest - First Prize:
+  gliding to the Flight Control finish line
+Flight Control Platform - Submarine:
+  slaying wizzrobes in a dimly-lit submarine
+
+Star Island - Cave:
+  besting the cavern at an island shaped like a stars
+
+Five-Star Isles - Lookout Platform - Destroy the Cannons:
+  making quick work of cannons at the remains of five isles
+Five-Star Isles - Submarine:
+  slaying Bokoblins in a dimly-lit submarine
+
+Seven-Star Isles - Big Octo:
+  slaying the sea monstrosity near the remains of seven isles
+
+Cyclops Reef - Destroy the Cannons and Gunboats:
+  ravaging the one-eyed reef
+
+Two-Eye Reef - Destroy the Cannons and Gunboats:
+  ravaging the two-eyed reef
+
+Three-Eye Reef - Destroy the Cannons and Gunboats:
+  ravaging the three-eyed reef
+
+Four-Eye Reef - Destroy the Cannons and Gunboats:
+  ravaging the four-eyed reef
+
+Five-Eye Reef - Destroy the Cannons:
+  ravaging the five-eyed reef
+
+Six-Eye Reef - Destroy the Cannons and Gunboats:
+  ravaging the six-eyed reef
