@@ -183,7 +183,7 @@ Flight Control Platform - Submarine:
   slaying wizzrobes in a dimly-lit submarine
 
 Star Island - Cave:
-  besting the cavern at an island shaped like a stars
+  besting the cavern at an island shaped like a star
 
 Five-Star Isles - Lookout Platform - Destroy the Cannons:
   making quick work of cannons at the remains of five isles
