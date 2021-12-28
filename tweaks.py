@@ -14,7 +14,7 @@ from asm import patcher
 from wwlib import texture_utils
 from wwlib.rarc import RARC
 from wwlib.rel import REL, RELSection, RELRelocation, RELRelocationType
-from hints import Hints
+from logic.hints import Hints
 from wwrando_paths import ASSETS_PATH, ASM_PATH, SEEDGEN_PATH
 import customizer
 
@@ -850,26 +850,26 @@ def update_savage_labyrinth_hint_tablet(self):
   floor_30_item_name = Hints.get_hint_item_name_static(floor_30_item_name)
   floor_50_item_name = Hints.get_hint_item_name_static(floor_50_item_name)
   
-  if floor_30_is_progress and not floor_30_item_name in self.progress_item_hints:
+  if floor_30_is_progress and not floor_30_item_name in self.hints.progress_item_hints:
     raise Exception("Could not find progress item hint for item: %s" % floor_30_item_name)
-  if floor_50_is_progress and not floor_50_item_name in self.progress_item_hints:
+  if floor_50_is_progress and not floor_50_item_name in self.hints.progress_item_hints:
     raise Exception("Could not find progress item hint for item: %s" % floor_50_item_name)
   
   if floor_30_is_progress and floor_50_is_progress:
-    floor_30_item_hint = self.progress_item_hints[floor_30_item_name]
-    floor_50_item_hint = self.progress_item_hints[floor_50_item_name]
+    floor_30_item_hint = self.hints.progress_item_hints[floor_30_item_name]
+    floor_50_item_hint = self.hints.progress_item_hints[floor_50_item_name]
     hint = "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}" % floor_30_item_hint
     hint += " and "
     hint += "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}" % floor_50_item_hint
     hint += " await"
   elif floor_30_is_progress:
-    floor_30_item_hint = self.progress_item_hints[floor_30_item_name]
+    floor_30_item_hint = self.hints.progress_item_hints[floor_30_item_name]
     hint = "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}" % floor_30_item_hint
     hint += " and "
     hint += "challenge"
     hint += " await"
   elif floor_50_is_progress:
-    floor_50_item_hint = self.progress_item_hints[floor_50_item_name]
+    floor_50_item_hint = self.hints.progress_item_hints[floor_50_item_name]
     hint = "challenge"
     hint += " and "
     hint += "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}" % floor_50_item_hint
@@ -892,11 +892,20 @@ def randomize_and_update_hints(self):
   update_big_octo_great_fairy_item_name_hint(self, item_hints[0])
   
   # Determine the remaining hints for the seed
-  hints = item_hints[1:]
+  if self.options.get("hint_type") == "Items":
+    hints = item_hints[1:]
+  elif self.options.get("hint_type") == "TEST":
+    hints = self.hints.generate_test_hints()
+  else:
+    raise Exception("Invalid hint type: %s" % self.options.get("hint_type"))
   
   # Place hints into the game
   if self.options.get("hint_placement") == "Fishmen":
     update_fishmen_hints(self, hints)
+  elif self.options.get("hint_placement") == "Old Man Ho Ho":
+    update_hoho_hints(self, hints)
+  else:
+    raise Exception("Invalid hint placement: %s" % self.options.get("hint_placement"))
 
 def update_fishmen_hints(self, hints):
   islands = list(range(1, 49+1))
@@ -920,6 +929,18 @@ def update_fishmen_hints(self, hints):
       if self.options.get("instant_text_boxes"):
         # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
+    elif self.options.get("hint_type") == "TEST":
+      hint_type, *hint = hint
+      if hint_type == "WOTH":
+        hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is on the way of the hero." % hint[0])
+      elif hint_type == "Barren":
+        hint_lines.append("They say that plundering \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is a foolish choice." % hint[0])
+      else:
+        hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (hint[0], hint[1]))
+      # Add a two-second wait command (delay) to prevent the player from skipping over the hint accidentally.
+      hint_lines[-1] += "\\{1A 07 00 00 07 00 3C}"
+    else:
+      raise Exception("Invalid hint type: %s" % self.options.get("hint_type"))
     
     hint = ""
     for hint_line in hint_lines:
@@ -930,6 +951,106 @@ def update_fishmen_hints(self, hints):
     msg_id = 13026 + fishman_island_number
     msg = self.bmg.messages_by_id[msg_id]
     msg.string = hint
+
+def update_hoho_hints(self, hints):
+  # Build a list of hint we can duplicate if we need to
+  if self.options.get("hint_type") == "TEST":
+    duplicatable_hints = list(filter(lambda hint: hint[0] in ["Barren", "Location"], hints))
+    if len(duplicatable_hints) == 0:
+      duplicatable_hints = [("Junk", "Junk")]
+  
+  # Duplicate each item hint and shuffle the list
+  hints = hints * 2
+  self.rng.shuffle(hints)
+  
+  if self.options.get("hint_type") == "TEST":
+    # Ensure that for TEST hints, the number of hints is a multiple of 10 (number of Old Man Ho Ho)
+    while len(hints) % 10 != 0:
+      hints.append(self.rng.choice(duplicatable_hints))
+    
+    # Determine the number of hints each Old Man Ho Ho should get
+    num_hints_per_hoho = len(hints) // 10
+  
+  for hoho_hint_number in range(10):
+    hint_lines = []
+    
+    if self.options.get("hint_type") == "Items":
+      # Give each Old Man Ho Ho two item hints
+      item_hint_name_1, island_hint_name_1 = hints[hoho_hint_number * 2]
+      item_hint_name_2, island_hint_name_2 = hints[hoho_hint_number * 2 + 1]
+      
+      hint_lines.append(
+        "\\{1A 05 01 01 03}Ho ho! I've heard that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is located in \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}" % (item_hint_name_1, island_hint_name_1)
+      )
+      # Add a one-second wait command (delay) to prevent the player from skipping over the hint accidentally.
+      hint_lines[-1] += "\\{1A 07 00 00 07 00 1C}"
+      
+      hint_lines.append(
+        "and that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is located in \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (item_hint_name_2, island_hint_name_2)
+      )
+      # Add a one-second wait command (delay) to prevent the player from skipping over the hint accidentally.
+      hint_lines[-1] += "\\{1A 07 00 00 07 00 1C}"
+      
+      if self.options.get("instant_text_boxes"):
+        # If instant text mode is on, we need to reset the text speed to instant after the first wait command messed it up.
+        hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
+      
+      hint_lines.append("Could be worth a try checking thoses places out. If you know where they are, of course.")
+
+      if self.options.get("instant_text_boxes"):
+        # If instant text mode is on, we need to reset the text speed to instant after the second wait command messed it up.
+        hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
+    elif self.options.get("hint_type") == "TEST":
+        hints_for_hoho = []
+        hint_order = {"WOTH": 0, "Barren": 1, "Location": 2, "Junk": 100}
+
+        # Give each Old Man Ho Ho multiple hints (there may be duplicates)
+        for i in range(num_hints_per_hoho):
+          if len(hints) > 0:
+            hint = self.rng.choice(hints)
+            hints_for_hoho.append(hint)
+            hints.remove(hint)
+        hints_for_hoho.sort(key=lambda hint: hint_order[hint[0]])
+
+        for i, hint in enumerate(hints_for_hoho):
+          hint_type, *hint = hint
+
+          if i == 0 and hint_type != "Junk":
+            # Only say "Ho ho!" for the first hint
+            if hint_type == "WOTH":
+              hint_lines.append("\\{1A 05 01 01 03}Ho ho! They say that \\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00} is on the way of the hero." % hint[0])
+            elif hint_type == "Barren":
+              hint_lines.append("\\{1A 05 01 01 03}Ho ho! They say that plundering \\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00} is a foolish choice." % hint[0])
+            else:
+              hint_lines.append("\\{1A 05 01 01 03}Ho ho! They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (hint[0], hint[1]))
+            # Add a one-second wait command (delay) to prevent the player from skipping over the hint accidentally.
+            hint_lines[-1] += "\\{1A 07 00 00 07 00 1C}"
+          else:
+            if hint_type == "WOTH":
+              hint_lines.append("They say that \\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00} is on the way of the hero." % hint[0])
+            elif hint_type == "Barren":
+              hint_lines.append("They say that plundering \\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00} is a foolish choice." % hint[0])
+            else:
+              hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (hint[0], hint[1]))
+            # Add a one-second wait command (delay) to prevent the player from skipping over the hint accidentally.
+            hint_lines[-1] += "\\{1A 07 00 00 07 00 1C}"
+          
+          if self.options.get("instant_text_boxes") and i > 0:
+            # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
+            hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
+    else:
+      raise Exception("Invalid hint type: %s" % self.options.get("hint_type"))
+    
+    hint = ""
+    for hint_line in hint_lines:
+      hint_line = word_wrap_string(hint_line)
+      hint_line = pad_string_to_next_4_lines(hint_line)
+      hint += hint_line
+    
+    if len(hint_lines) > 0:
+      msg_id = 14001 + hoho_hint_number
+      msg = self.bmg.messages_by_id[msg_id]
+      msg.string = hint
 
 def update_big_octo_great_fairy_item_name_hint(self, hint):
   item_hint_name, island_hint_name = hint

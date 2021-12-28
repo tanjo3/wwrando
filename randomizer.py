@@ -16,9 +16,9 @@ from wwlib.dol import DOL
 from wwlib.rel import REL, RELRelocation, RELRelocationType
 from wwlib.gcm import GCM
 from wwlib.jpc import JPC
-from hints import Hints
 import tweaks
 from asm import patcher
+from logic.hints import Hints
 from logic.logic import Logic
 from wwrando_paths import DATA_PATH, ASM_PATH, RANDO_ROOT_PATH, IS_RUNNING_FROM_SOURCE
 import customizer
@@ -427,13 +427,14 @@ class Randomizer:
     options_completed += 2
     
     
+    yield("Saving items...", options_completed)
     if self.randomize_items and not self.dry_run:
-      yield("Saving items...", options_completed)
       items.write_changed_items(self)
     
     yield("Generating hints...", options_completed)
     if self.randomize_items and not self.dry_run:
       tweaks.randomize_and_update_hints(self)
+    if self.options.get("hint_type") == "TEST":
       options_completed += 10
     
     if not self.dry_run:
@@ -626,12 +627,6 @@ class Randomizer:
     
     with open(os.path.join(ASM_PATH, "free_space_start_offsets.txt"), "r") as f:
       self.free_space_start_offsets = yaml.safe_load(f)
-    
-    with open(os.path.join(DATA_PATH, "progress_item_hints.txt"), "r") as f:
-      self.progress_item_hints = yaml.safe_load(f)
-    
-    with open(os.path.join(DATA_PATH, "island_name_hints.txt"), "r") as f:
-      self.island_name_hints = yaml.safe_load(f)
     
     with open(os.path.join(DATA_PATH, "enemy_types.txt"), "r") as f:
       self.enemy_types = yaml.safe_load(f)

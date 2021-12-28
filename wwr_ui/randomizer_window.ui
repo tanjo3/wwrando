@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>943</width>
-    <height>704</height>
+    <height>722</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,8 +28,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1097</width>
-         <height>783</height>
+         <width>908</width>
+         <height>654</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -345,21 +345,21 @@
                     <property name="text">
                      <string>3</string>
                     </property>
-                 </item>
+                   </item>
                    <item>
                     <property name="text">
                      <string>4</string>
                     </property>
-               </item>
+                   </item>
                    <item>
-                 <property name="text">
+                    <property name="text">
                      <string>5</string>
-                 </property>
-               </item>
+                    </property>
+                   </item>
                    <item>
-                 <property name="text">
+                    <property name="text">
                      <string>6</string>
-                 </property>
+                    </property>
                    </item>
                    <item>
                     <property name="text">
@@ -371,8 +371,8 @@
                      <string>8</string>
                     </property>
                    </item>
-                </widget>
-               </item>
+                  </widget>
+                 </item>
                  <item>
                   <widget class="QWidget" name="widget" native="true"/>
                  </item>
@@ -382,27 +382,27 @@
                 <layout class="QHBoxLayout" name="horizontalLayout_8">
                  <item>
                   <widget class="QLabel" name="label_for_randomize_entrances">
-                 <property name="text">
+                   <property name="text">
                     <string>Randomize Entrances</string>
-                 </property>
-                </widget>
-               </item>
+                   </property>
+                  </widget>
+                 </item>
                  <item>
                   <widget class="QComboBox" name="randomize_entrances">
                    <item>
                     <property name="text">
                      <string>Disabled</string>
-                   </property>
+                    </property>
                    </item>
                    <item>
-                   <property name="text">
+                    <property name="text">
                      <string>Dungeons</string>
-                   </property>
-                 </item>
-                 <item>
+                    </property>
+                   </item>
+                   <item>
                     <property name="text">
                      <string>Secret Caves</string>
-                   </property>
+                    </property>
                    </item>
                    <item>
                     <property name="text">
@@ -416,32 +416,37 @@
                    </item>
                   </widget>
                  </item>
-                   <item>
+                 <item>
                   <widget class="QWidget" name="widget_2" native="true"/>
                  </item>
                 </layout>
                </item>
                <item row="1" column="0">
                 <widget class="QCheckBox" name="keylunacy">
-                    <property name="text">
+                 <property name="text">
                   <string>Key-Lunacy</string>
-                    </property>
+                 </property>
                 </widget>
-                   </item>
+               </item>
                <item row="2" column="0">
                 <layout class="QHBoxLayout" name="horizontalLayout_14">
-                   <item>
+                 <item>
                   <widget class="QLabel" name="label_for_hint_placement">
-                    <property name="text">
+                   <property name="text">
                     <string>Hint Placement</string>
-                    </property>
+                   </property>
                   </widget>
-                   </item>
+                 </item>
                  <item>
                   <widget class="QComboBox" name="hint_placement">
                    <item>
                     <property name="text">
                      <string>Fishmen</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Old Man Ho Ho</string>
                     </property>
                    </item>
                   </widget>
@@ -457,13 +462,13 @@
                </item>
                <item row="0" column="0">
                 <layout class="QHBoxLayout" name="horizontalLayout_5">
-                   <item>
+                 <item>
                   <widget class="QLabel" name="label_for_sword_mode">
-                    <property name="text">
+                   <property name="text">
                     <string>Sword Mode</string>
-                    </property>
+                   </property>
                   </widget>
-                   </item>
+                 </item>
                  <item>
                   <widget class="QComboBox" name="sword_mode">
                    <item>
@@ -578,25 +583,30 @@
                </item>
                <item row="3" column="2">
                 <widget class="QCheckBox" name="randomize_enemy_palettes">
-                   <property name="text">
+                 <property name="text">
                   <string>Randomize Enemy Palettes</string>
-                   </property>
-                  </widget>
-                 </item>
+                 </property>
+                </widget>
+               </item>
                <item row="2" column="1">
                 <layout class="QHBoxLayout" name="horizontalLayout_15">
                  <item>
                   <widget class="QLabel" name="label_for_hint_type">
-                    <property name="text">
+                   <property name="text">
                     <string>Hint Type</string>
-                    </property>
+                   </property>
                   </widget>
-                   </item>
-                   <item>
+                 </item>
+                 <item>
                   <widget class="QComboBox" name="hint_type">
                    <item>
                     <property name="text">
                      <string>Items</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>TEST</string>
                     </property>
                    </item>
                   </widget>
