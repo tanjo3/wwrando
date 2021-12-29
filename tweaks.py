@@ -895,7 +895,7 @@ def randomize_and_update_hints(self):
   if self.options.get("hint_type") == "Items":
     hints = item_hints[1:]
   elif self.options.get("hint_type") == "WotH-Style":
-    hints = self.hints.generate_test_hints()
+    hints = self.hints.generate_woth_style_hints()
   else:
     raise Exception("Invalid hint type: %s" % self.options.get("hint_type"))
   
@@ -904,6 +904,8 @@ def randomize_and_update_hints(self):
     update_fishmen_hints(self, hints)
   elif self.options.get("hint_placement") == "Old Man Ho Ho":
     update_hoho_hints(self, hints)
+  elif self.options.get("hint_placement") == "KoRL":
+    update_korl_hints(self, hints)
   else:
     raise Exception("Invalid hint placement: %s" % self.options.get("hint_placement"))
 
@@ -996,14 +998,14 @@ def update_hoho_hints(self, hints):
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
       
       hint_lines.append("Could be worth a try checking thoses places out. If you know where they are, of course.")
-
+      
       if self.options.get("instant_text_boxes"):
         # If instant text mode is on, we need to reset the text speed to instant after the second wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
     elif self.options.get("hint_type") == "WotH-Style":
         hints_for_hoho = []
         hint_order = {"WOTH": 0, "Barren": 1, "Location": 2, "Junk": 100}
-
+        
         # Give each Old Man Ho Ho multiple hints (there may be duplicates)
         for i in range(num_hints_per_hoho):
           if len(hints) > 0:
@@ -1011,10 +1013,10 @@ def update_hoho_hints(self, hints):
             hints_for_hoho.append(hint)
             hints.remove(hint)
         hints_for_hoho.sort(key=lambda hint: hint_order[hint[0]])
-
+        
         for i, hint in enumerate(hints_for_hoho):
           hint_type, *hint = hint
-
+          
           if i == 0 and hint_type != "Junk":
             # Only say "Ho ho!" for the first hint
             if hint_type == "WOTH":
@@ -1051,6 +1053,60 @@ def update_hoho_hints(self, hints):
       msg_id = 14001 + hoho_hint_number
       msg = self.bmg.messages_by_id[msg_id]
       msg.string = hint
+
+def update_korl_hints(self, hints):
+  hint_lines = []
+  if self.options.get("hint_type") == "Items":
+    for i, hint in enumerate(set(hints)):
+      item_hint_name, island_hint_name = hint
+      
+      hint_lines.append(
+        "They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is located in \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (item_hint_name, island_hint_name)
+      )
+      # Add a half-second wait command (delay) to prevent the player from skipping over the hint accidentally.
+      hint_lines[-1] += "\\{1A 07 00 00 07 00 0F}"
+
+      if self.options.get("instant_text_boxes") and i > 0:
+        # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
+        hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
+  elif self.options.get("hint_type") == "WotH-Style":
+    # Concatenate all WOTH hints into one textbox
+    woth_hints = ["\\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00}" % hint[1] for hint in filter(lambda hint: hint[0] == "WOTH", hints)]
+    hint_lines.append(
+      "They say that %s are on the way of the hero." % (", ".join(woth_hints[:-1]) + ", and " + woth_hints[-1])
+    )
+    # Add a half-second wait command (delay) to prevent the player from skipping over the hint accidentally.
+    hint_lines[-1] += "\\{1A 07 00 00 07 00 0F}"
+    
+    # Concatenate all barren hints into one textbox
+    barren_hints = ["\\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00}" % hint[1] for hint in filter(lambda hint: hint[0] == "Barren", hints)]
+    hint_lines.append(
+      "They say that plundering %s are foolish choices." % (", ".join(barren_hints[:-1]) + ", and " + barren_hints[-1])
+    )
+    # Add a half-second wait command (delay) to prevent the player from skipping over the hint accidentally.
+    hint_lines[-1] += "\\{1A 07 00 00 07 00 0F}"
+
+    if self.options.get("instant_text_boxes"):
+      # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
+      hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
+    
+    # Each location hint is its own textbox
+    for hint_type, location_hint, item_name in filter(lambda hint: hint[0] == "Location", hints):
+      if self.options.get("instant_text_boxes"):
+        hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (location_hint, item_name))
+        # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
+        hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
+  else:
+    raise Exception("Invalid hint type: %s" % self.options.get("hint_type"))
+  
+  hint = ""
+  for hint_line in hint_lines:
+    hint_line = word_wrap_string(hint_line)
+    hint_line = pad_string_to_next_4_lines(hint_line)
+    hint += hint_line
+
+  msg = self.bmg.messages_by_id[3443]
+  msg.string = hint
 
 def update_big_octo_great_fairy_item_name_hint(self, hint):
   item_hint_name, island_hint_name = hint

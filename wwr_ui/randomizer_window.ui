@@ -429,6 +429,11 @@
                      <string>Old Man Ho Ho</string>
                     </property>
                    </item>
+                   <item>
+                    <property name="text">
+                     <string>KoRL</string>
+                    </property>
+                   </item>
                   </widget>
                  </item>
                 </layout>
