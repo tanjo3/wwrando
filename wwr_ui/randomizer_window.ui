@@ -303,6 +303,36 @@
                <string>Additional Randomization Options</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_3">
+               <item row="0" column="0">
+                <layout class="QHBoxLayout" name="horizontalLayout_5">
+                 <item>
+                  <widget class="QLabel" name="label_for_sword_mode">
+                   <property name="text">
+                    <string>Sword Mode</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="sword_mode">
+                   <item>
+                    <property name="text">
+                     <string>Start with Hero's Sword</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>No Starting Sword</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Swordless</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
                <item row="1" column="3">
                 <layout class="QHBoxLayout" name="horizontalLayout_2">
                  <item>
@@ -378,56 +408,6 @@
                  </item>
                 </layout>
                </item>
-               <item row="0" column="1" colspan="2">
-                <layout class="QHBoxLayout" name="horizontalLayout_8">
-                 <item>
-                  <widget class="QLabel" name="label_for_randomize_entrances">
-                   <property name="text">
-                    <string>Randomize Entrances</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QComboBox" name="randomize_entrances">
-                   <item>
-                    <property name="text">
-                     <string>Disabled</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Dungeons</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Secret Caves</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Dungeons &amp; Secret Caves (Separately)</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Dungeons &amp; Secret Caves (Together)</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QWidget" name="widget_2" native="true"/>
-                 </item>
-                </layout>
-               </item>
-               <item row="1" column="0">
-                <widget class="QCheckBox" name="keylunacy">
-                 <property name="text">
-                  <string>Key-Lunacy</string>
-                 </property>
-                </widget>
-               </item>
                <item row="2" column="0">
                 <layout class="QHBoxLayout" name="horizontalLayout_14">
                  <item>
@@ -457,64 +437,6 @@
                 <widget class="QCheckBox" name="randomize_starting_island">
                  <property name="text">
                   <string>Randomize Starting Island</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <layout class="QHBoxLayout" name="horizontalLayout_5">
-                 <item>
-                  <widget class="QLabel" name="label_for_sword_mode">
-                   <property name="text">
-                    <string>Sword Mode</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QComboBox" name="sword_mode">
-                   <item>
-                    <property name="text">
-                     <string>Start with Hero's Sword</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>No Starting Sword</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Swordless</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="0" column="3">
-                <widget class="QCheckBox" name="randomize_enemies">
-                 <property name="text">
-                  <string>Randomize Enemy Locations</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QCheckBox" name="race_mode">
-                 <property name="text">
-                  <string>Race Mode</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QCheckBox" name="randomize_charts">
-                 <property name="text">
-                  <string>Randomize Charts</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="3">
-                <widget class="QCheckBox" name="randomize_music">
-                 <property name="text">
-                  <string>Randomize Music</string>
                  </property>
                 </widget>
                </item>
@@ -581,10 +503,74 @@
                  </item>
                 </layout>
                </item>
+               <item row="0" column="1" colspan="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_8">
+                 <item>
+                  <widget class="QLabel" name="label_for_randomize_entrances">
+                   <property name="text">
+                    <string>Randomize Entrances</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="randomize_entrances">
+                   <item>
+                    <property name="text">
+                     <string>Disabled</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Dungeons</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Secret Caves</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Dungeons &amp; Secret Caves (Separately)</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Dungeons &amp; Secret Caves (Together)</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QWidget" name="widget_2" native="true"/>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="3">
+                <widget class="QCheckBox" name="randomize_enemies">
+                 <property name="text">
+                  <string>Randomize Enemy Locations</string>
+                 </property>
+                </widget>
+               </item>
                <item row="3" column="2">
                 <widget class="QCheckBox" name="randomize_enemy_palettes">
                  <property name="text">
                   <string>Randomize Enemy Palettes</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QCheckBox" name="randomize_charts">
+                 <property name="text">
+                  <string>Randomize Charts</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QCheckBox" name="race_mode">
+                 <property name="text">
+                  <string>Race Mode</string>
                  </property>
                 </widget>
                </item>
@@ -606,12 +592,26 @@
                    </item>
                    <item>
                     <property name="text">
-                     <string>TEST</string>
+                     <string>WotH-Style</string>
                     </property>
                    </item>
                   </widget>
                  </item>
                 </layout>
+               </item>
+               <item row="1" column="0">
+                <widget class="QCheckBox" name="keylunacy">
+                 <property name="text">
+                  <string>Key-Lunacy</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="3">
+                <widget class="QCheckBox" name="randomize_music">
+                 <property name="text">
+                  <string>Randomize Music</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>

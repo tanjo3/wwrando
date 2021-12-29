@@ -26,8 +26,8 @@ class Hints:
     "Progressive Bow",
   ]
   
-  # Define constants for TEST distribution of hints
-  MAX_TEST_HINTS = 15
+  # Define constants for WotH-style distribution of hints
+  TOTAL_WOTH_STYLE_HINTS = 15
   MAX_WOTH_HINTS = 5
   MAX_WOTH_DUNGEONS = 2
   MAX_BARREN_HINTS = 3
@@ -198,7 +198,7 @@ class Hints:
     
     return hints
   
-  def generate_test_hints(self):
+  def generate_woth_style_hints(self):
     # Determine which locations are required to beat the seed
     # Items are implicitly referred to by their location to handle duplicate item names (i.e., progressive items and
     # small keys). Basically, we remove the item from that location and see if the seed is still beatable. If not, then
@@ -305,7 +305,7 @@ class Hints:
     
     # Fill in the remaining hints with location hints
     hinted_locations = []
-    remaining_hints_desired = self.MAX_TEST_HINTS - len(hinted_woth_zones) - len(hinted_barren_zones)
+    remaining_hints_desired = self.TOTAL_WOTH_STYLE_HINTS - len(hinted_woth_zones) - len(hinted_barren_zones)
     hintable_locations = list(filter(lambda loc: loc in self.location_hints.keys(), progress_locations))
     # Remove locations in race-mode banned dungeons
     hintable_locations = list(filter(lambda loc: self.rando.logic.split_location_name_by_zone(loc)[0] not in race_mode_banned_dungeons, hintable_locations))

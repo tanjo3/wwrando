@@ -217,6 +217,24 @@ class Ui_MainWindow(object):
         self.groupBox_3.setObjectName(u"groupBox_3")
         self.gridLayout_3 = QGridLayout(self.groupBox_3)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.label_for_sword_mode = QLabel(self.groupBox_3)
+        self.label_for_sword_mode.setObjectName(u"label_for_sword_mode")
+
+        self.horizontalLayout_5.addWidget(self.label_for_sword_mode)
+
+        self.sword_mode = QComboBox(self.groupBox_3)
+        self.sword_mode.addItem("")
+        self.sword_mode.addItem("")
+        self.sword_mode.addItem("")
+        self.sword_mode.setObjectName(u"sword_mode")
+
+        self.horizontalLayout_5.addWidget(self.sword_mode)
+
+
+        self.gridLayout_3.addLayout(self.horizontalLayout_5, 0, 0, 1, 1)
+
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.label_for_num_starting_triforce_shards = QLabel(self.groupBox_3)
@@ -252,36 +270,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addLayout(self.horizontalLayout_2, 1, 3, 1, 1)
 
-        self.horizontalLayout_8 = QHBoxLayout()
-        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
-        self.label_for_randomize_entrances = QLabel(self.groupBox_3)
-        self.label_for_randomize_entrances.setObjectName(u"label_for_randomize_entrances")
-
-        self.horizontalLayout_8.addWidget(self.label_for_randomize_entrances)
-
-        self.randomize_entrances = QComboBox(self.groupBox_3)
-        self.randomize_entrances.addItem("")
-        self.randomize_entrances.addItem("")
-        self.randomize_entrances.addItem("")
-        self.randomize_entrances.addItem("")
-        self.randomize_entrances.addItem("")
-        self.randomize_entrances.setObjectName(u"randomize_entrances")
-
-        self.horizontalLayout_8.addWidget(self.randomize_entrances)
-
-        self.widget_2 = QWidget(self.groupBox_3)
-        self.widget_2.setObjectName(u"widget_2")
-
-        self.horizontalLayout_8.addWidget(self.widget_2)
-
-
-        self.gridLayout_3.addLayout(self.horizontalLayout_8, 0, 1, 1, 2)
-
-        self.keylunacy = QCheckBox(self.groupBox_3)
-        self.keylunacy.setObjectName(u"keylunacy")
-
-        self.gridLayout_3.addWidget(self.keylunacy, 1, 0, 1, 1)
-
         self.horizontalLayout_14 = QHBoxLayout()
         self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
         self.label_for_hint_placement = QLabel(self.groupBox_3)
@@ -303,44 +291,6 @@ class Ui_MainWindow(object):
         self.randomize_starting_island.setObjectName(u"randomize_starting_island")
 
         self.gridLayout_3.addWidget(self.randomize_starting_island, 3, 1, 1, 1)
-
-        self.horizontalLayout_5 = QHBoxLayout()
-        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.label_for_sword_mode = QLabel(self.groupBox_3)
-        self.label_for_sword_mode.setObjectName(u"label_for_sword_mode")
-
-        self.horizontalLayout_5.addWidget(self.label_for_sword_mode)
-
-        self.sword_mode = QComboBox(self.groupBox_3)
-        self.sword_mode.addItem("")
-        self.sword_mode.addItem("")
-        self.sword_mode.addItem("")
-        self.sword_mode.setObjectName(u"sword_mode")
-
-        self.horizontalLayout_5.addWidget(self.sword_mode)
-
-
-        self.gridLayout_3.addLayout(self.horizontalLayout_5, 0, 0, 1, 1)
-
-        self.randomize_enemies = QCheckBox(self.groupBox_3)
-        self.randomize_enemies.setObjectName(u"randomize_enemies")
-
-        self.gridLayout_3.addWidget(self.randomize_enemies, 0, 3, 1, 1)
-
-        self.race_mode = QCheckBox(self.groupBox_3)
-        self.race_mode.setObjectName(u"race_mode")
-
-        self.gridLayout_3.addWidget(self.race_mode, 1, 1, 1, 1)
-
-        self.randomize_charts = QCheckBox(self.groupBox_3)
-        self.randomize_charts.setObjectName(u"randomize_charts")
-
-        self.gridLayout_3.addWidget(self.randomize_charts, 3, 0, 1, 1)
-
-        self.randomize_music = QCheckBox(self.groupBox_3)
-        self.randomize_music.setObjectName(u"randomize_music")
-
-        self.gridLayout_3.addWidget(self.randomize_music, 3, 3, 1, 1)
 
         self.horizontalLayout_13 = QHBoxLayout()
         self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
@@ -371,10 +321,50 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addLayout(self.horizontalLayout_13, 1, 2, 1, 1)
 
+        self.horizontalLayout_8 = QHBoxLayout()
+        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
+        self.label_for_randomize_entrances = QLabel(self.groupBox_3)
+        self.label_for_randomize_entrances.setObjectName(u"label_for_randomize_entrances")
+
+        self.horizontalLayout_8.addWidget(self.label_for_randomize_entrances)
+
+        self.randomize_entrances = QComboBox(self.groupBox_3)
+        self.randomize_entrances.addItem("")
+        self.randomize_entrances.addItem("")
+        self.randomize_entrances.addItem("")
+        self.randomize_entrances.addItem("")
+        self.randomize_entrances.addItem("")
+        self.randomize_entrances.setObjectName(u"randomize_entrances")
+
+        self.horizontalLayout_8.addWidget(self.randomize_entrances)
+
+        self.widget_2 = QWidget(self.groupBox_3)
+        self.widget_2.setObjectName(u"widget_2")
+
+        self.horizontalLayout_8.addWidget(self.widget_2)
+
+
+        self.gridLayout_3.addLayout(self.horizontalLayout_8, 0, 1, 1, 2)
+
+        self.randomize_enemies = QCheckBox(self.groupBox_3)
+        self.randomize_enemies.setObjectName(u"randomize_enemies")
+
+        self.gridLayout_3.addWidget(self.randomize_enemies, 0, 3, 1, 1)
+
         self.randomize_enemy_palettes = QCheckBox(self.groupBox_3)
         self.randomize_enemy_palettes.setObjectName(u"randomize_enemy_palettes")
 
         self.gridLayout_3.addWidget(self.randomize_enemy_palettes, 3, 2, 1, 1)
+
+        self.randomize_charts = QCheckBox(self.groupBox_3)
+        self.randomize_charts.setObjectName(u"randomize_charts")
+
+        self.gridLayout_3.addWidget(self.randomize_charts, 3, 0, 1, 1)
+
+        self.race_mode = QCheckBox(self.groupBox_3)
+        self.race_mode.setObjectName(u"race_mode")
+
+        self.gridLayout_3.addWidget(self.race_mode, 1, 1, 1, 1)
 
         self.horizontalLayout_15 = QHBoxLayout()
         self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
@@ -392,6 +382,16 @@ class Ui_MainWindow(object):
 
 
         self.gridLayout_3.addLayout(self.horizontalLayout_15, 2, 1, 1, 1)
+
+        self.keylunacy = QCheckBox(self.groupBox_3)
+        self.keylunacy.setObjectName(u"keylunacy")
+
+        self.gridLayout_3.addWidget(self.keylunacy, 1, 0, 1, 1)
+
+        self.randomize_music = QCheckBox(self.groupBox_3)
+        self.randomize_music.setObjectName(u"randomize_music")
+
+        self.gridLayout_3.addWidget(self.randomize_music, 3, 3, 1, 1)
 
 
         self.verticalLayout_2.addWidget(self.groupBox_3)
@@ -819,6 +819,11 @@ class Ui_MainWindow(object):
         self.progression_battlesquid.setText(QCoreApplication.translate("MainWindow", u"Battlesquid Minigame", None))
         self.progression_short_sidequests.setText(QCoreApplication.translate("MainWindow", u"Short Sidequests", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"Additional Randomization Options", None))
+        self.label_for_sword_mode.setText(QCoreApplication.translate("MainWindow", u"Sword Mode", None))
+        self.sword_mode.setItemText(0, QCoreApplication.translate("MainWindow", u"Start with Hero's Sword", None))
+        self.sword_mode.setItemText(1, QCoreApplication.translate("MainWindow", u"No Starting Sword", None))
+        self.sword_mode.setItemText(2, QCoreApplication.translate("MainWindow", u"Swordless", None))
+
         self.label_for_num_starting_triforce_shards.setText(QCoreApplication.translate("MainWindow", u"Triforce Shards to Start With", None))
         self.num_starting_triforce_shards.setItemText(0, QCoreApplication.translate("MainWindow", u"0", None))
         self.num_starting_triforce_shards.setItemText(1, QCoreApplication.translate("MainWindow", u"1", None))
@@ -830,28 +835,11 @@ class Ui_MainWindow(object):
         self.num_starting_triforce_shards.setItemText(7, QCoreApplication.translate("MainWindow", u"7", None))
         self.num_starting_triforce_shards.setItemText(8, QCoreApplication.translate("MainWindow", u"8", None))
 
-        self.label_for_randomize_entrances.setText(QCoreApplication.translate("MainWindow", u"Randomize Entrances", None))
-        self.randomize_entrances.setItemText(0, QCoreApplication.translate("MainWindow", u"Disabled", None))
-        self.randomize_entrances.setItemText(1, QCoreApplication.translate("MainWindow", u"Dungeons", None))
-        self.randomize_entrances.setItemText(2, QCoreApplication.translate("MainWindow", u"Secret Caves", None))
-        self.randomize_entrances.setItemText(3, QCoreApplication.translate("MainWindow", u"Dungeons & Secret Caves (Separately)", None))
-        self.randomize_entrances.setItemText(4, QCoreApplication.translate("MainWindow", u"Dungeons & Secret Caves (Together)", None))
-
-        self.keylunacy.setText(QCoreApplication.translate("MainWindow", u"Key-Lunacy", None))
         self.label_for_hint_placement.setText(QCoreApplication.translate("MainWindow", u"Hint Placement", None))
         self.hint_placement.setItemText(0, QCoreApplication.translate("MainWindow", u"Fishmen", None))
         self.hint_placement.setItemText(1, QCoreApplication.translate("MainWindow", u"Old Man Ho Ho", None))
 
         self.randomize_starting_island.setText(QCoreApplication.translate("MainWindow", u"Randomize Starting Island", None))
-        self.label_for_sword_mode.setText(QCoreApplication.translate("MainWindow", u"Sword Mode", None))
-        self.sword_mode.setItemText(0, QCoreApplication.translate("MainWindow", u"Start with Hero's Sword", None))
-        self.sword_mode.setItemText(1, QCoreApplication.translate("MainWindow", u"No Starting Sword", None))
-        self.sword_mode.setItemText(2, QCoreApplication.translate("MainWindow", u"Swordless", None))
-
-        self.randomize_enemies.setText(QCoreApplication.translate("MainWindow", u"Randomize Enemy Locations", None))
-        self.race_mode.setText(QCoreApplication.translate("MainWindow", u"Race Mode", None))
-        self.randomize_charts.setText(QCoreApplication.translate("MainWindow", u"Randomize Charts", None))
-        self.randomize_music.setText(QCoreApplication.translate("MainWindow", u"Randomize Music", None))
         self.label_for_num_race_mode_dungeons.setText(QCoreApplication.translate("MainWindow", u"Race Mode Required Dungeons", None))
         self.num_race_mode_dungeons.setItemText(0, QCoreApplication.translate("MainWindow", u"1", None))
         self.num_race_mode_dungeons.setItemText(1, QCoreApplication.translate("MainWindow", u"2", None))
@@ -860,11 +848,23 @@ class Ui_MainWindow(object):
         self.num_race_mode_dungeons.setItemText(4, QCoreApplication.translate("MainWindow", u"5", None))
         self.num_race_mode_dungeons.setItemText(5, QCoreApplication.translate("MainWindow", u"6", None))
 
+        self.label_for_randomize_entrances.setText(QCoreApplication.translate("MainWindow", u"Randomize Entrances", None))
+        self.randomize_entrances.setItemText(0, QCoreApplication.translate("MainWindow", u"Disabled", None))
+        self.randomize_entrances.setItemText(1, QCoreApplication.translate("MainWindow", u"Dungeons", None))
+        self.randomize_entrances.setItemText(2, QCoreApplication.translate("MainWindow", u"Secret Caves", None))
+        self.randomize_entrances.setItemText(3, QCoreApplication.translate("MainWindow", u"Dungeons & Secret Caves (Separately)", None))
+        self.randomize_entrances.setItemText(4, QCoreApplication.translate("MainWindow", u"Dungeons & Secret Caves (Together)", None))
+
+        self.randomize_enemies.setText(QCoreApplication.translate("MainWindow", u"Randomize Enemy Locations", None))
         self.randomize_enemy_palettes.setText(QCoreApplication.translate("MainWindow", u"Randomize Enemy Palettes", None))
+        self.randomize_charts.setText(QCoreApplication.translate("MainWindow", u"Randomize Charts", None))
+        self.race_mode.setText(QCoreApplication.translate("MainWindow", u"Race Mode", None))
         self.label_for_hint_type.setText(QCoreApplication.translate("MainWindow", u"Hint Type", None))
         self.hint_type.setItemText(0, QCoreApplication.translate("MainWindow", u"Items", None))
-        self.hint_type.setItemText(1, QCoreApplication.translate("MainWindow", u"TEST", None))
+        self.hint_type.setItemText(1, QCoreApplication.translate("MainWindow", u"WotH-Style", None))
 
+        self.keylunacy.setText(QCoreApplication.translate("MainWindow", u"Key-Lunacy", None))
+        self.randomize_music.setText(QCoreApplication.translate("MainWindow", u"Randomize Music", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"Convenience Tweaks", None))
         self.swift_sail.setText(QCoreApplication.translate("MainWindow", u"Swift Sail", None))
         self.instant_text_boxes.setText(QCoreApplication.translate("MainWindow", u"Instant Text Boxes", None))

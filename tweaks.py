@@ -894,7 +894,7 @@ def randomize_and_update_hints(self):
   # Determine the remaining hints for the seed
   if self.options.get("hint_type") == "Items":
     hints = item_hints[1:]
-  elif self.options.get("hint_type") == "TEST":
+  elif self.options.get("hint_type") == "WotH-Style":
     hints = self.hints.generate_test_hints()
   else:
     raise Exception("Invalid hint type: %s" % self.options.get("hint_type"))
@@ -929,7 +929,7 @@ def update_fishmen_hints(self, hints):
       if self.options.get("instant_text_boxes"):
         # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
-    elif self.options.get("hint_type") == "TEST":
+    elif self.options.get("hint_type") == "WotH-Style":
       hint_type, *hint = hint
       if hint_type == "WOTH":
         hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is on the way of the hero." % hint[0])
@@ -954,7 +954,7 @@ def update_fishmen_hints(self, hints):
 
 def update_hoho_hints(self, hints):
   # Build a list of hint we can duplicate if we need to
-  if self.options.get("hint_type") == "TEST":
+  if self.options.get("hint_type") == "WotH-Style":
     duplicatable_hints = list(filter(lambda hint: hint[0] in ["Barren", "Location"], hints))
     if len(duplicatable_hints) == 0:
       duplicatable_hints = [("Junk", "Junk")]
@@ -963,8 +963,8 @@ def update_hoho_hints(self, hints):
   hints = hints * 2
   self.rng.shuffle(hints)
   
-  if self.options.get("hint_type") == "TEST":
-    # Ensure that for TEST hints, the number of hints is a multiple of 10 (number of Old Man Ho Ho)
+  if self.options.get("hint_type") == "WotH-Style":
+    # Ensure that for WotH-style hints, the number of hints is a multiple of 10 (number of Old Man Ho Ho)
     while len(hints) % 10 != 0:
       hints.append(self.rng.choice(duplicatable_hints))
     
@@ -1000,7 +1000,7 @@ def update_hoho_hints(self, hints):
       if self.options.get("instant_text_boxes"):
         # If instant text mode is on, we need to reset the text speed to instant after the second wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
-    elif self.options.get("hint_type") == "TEST":
+    elif self.options.get("hint_type") == "WotH-Style":
         hints_for_hoho = []
         hint_order = {"WOTH": 0, "Barren": 1, "Location": 2, "Junk": 100}
 

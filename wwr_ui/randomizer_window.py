@@ -260,7 +260,7 @@ class WWRandomizerWindow(QMainWindow):
     max_progress_val = 20
     if options.get("randomize_enemy_palettes"):
       max_progress_val += 10
-    if options.get("hint_type") == "TEST":
+    if options.get("hint_type") == "WotH-Style":
       max_progress_val += 10
     self.progress_dialog = RandomizerProgressDialog("Randomizing", "Initializing...", max_progress_val)
     
