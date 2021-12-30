@@ -14,7 +14,7 @@ from asm import patcher
 from wwlib import texture_utils
 from wwlib.rarc import RARC
 from wwlib.rel import REL, RELSection, RELRelocation, RELRelocationType
-from logic.hints import Hints
+from logic.hints import HintType, Hint, Hints
 from wwrando_paths import ASSETS_PATH, ASM_PATH, SEEDGEN_PATH
 import customizer
 
@@ -919,7 +919,8 @@ def update_fishmen_hints(self, hints):
     
     hint_lines = []
     if self.options.get("hint_type") == "Items":
-      item_hint_name, island_hint_name = hint
+      item_hint_name = self.hints.progress_item_hints[hint.item]
+      island_hint_name = self.hints.island_name_hints[hint.location]
       
       hint_lines.append(
         "I've heard from my sources that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is located in \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (item_hint_name, island_hint_name)
@@ -932,13 +933,14 @@ def update_fishmen_hints(self, hints):
         # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
     elif self.options.get("hint_type") == "WotH-Style":
-      hint_type, *hint = hint
-      if hint_type == "WOTH":
-        hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is on the way of the hero." % hint[0])
-      elif hint_type == "Barren":
-        hint_lines.append("They say that plundering \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is a foolish choice." % hint[0])
+      if hint.type == HintType.WOTH:
+        hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is on the way of the hero." % hint.location)
+      elif hint.type == HintType.BARREN:
+        hint_lines.append("They say that plundering \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is a foolish choice." % hint.location)
+      elif hint.type == HintType.LOCATION:
+        hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (hint.location, hint.item))
       else:
-        hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (hint[0], hint[1]))
+        pass
       # Add a two-second wait command (delay) to prevent the player from skipping over the hint accidentally.
       hint_lines[-1] += "\\{1A 07 00 00 07 00 3C}"
     else:
@@ -957,9 +959,9 @@ def update_fishmen_hints(self, hints):
 def update_hoho_hints(self, hints):
   # Build a list of hint we can duplicate if we need to
   if self.options.get("hint_type") == "WotH-Style":
-    duplicatable_hints = list(filter(lambda hint: hint[0] in ["Barren", "Location"], hints))
+    duplicatable_hints = list(filter(lambda hint: hint.type in (HintType.BARREN, HintType.LOCATION), hints))
     if len(duplicatable_hints) == 0:
-      duplicatable_hints = [("Junk", "Junk")]
+      duplicatable_hints = [Hint(HintType.JUNK, None, None)]
   
   # Duplicate each item hint and shuffle the list
   hints = hints * 2
@@ -978,17 +980,17 @@ def update_hoho_hints(self, hints):
     
     if self.options.get("hint_type") == "Items":
       # Give each Old Man Ho Ho two item hints
-      item_hint_name_1, island_hint_name_1 = hints[hoho_hint_number * 2]
-      item_hint_name_2, island_hint_name_2 = hints[hoho_hint_number * 2 + 1]
+      hint_1 = hints[hoho_hint_number * 2]
+      hint_2 = hints[hoho_hint_number * 2 + 1]
       
       hint_lines.append(
-        "\\{1A 05 01 01 03}Ho ho! I've heard that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is located in \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}" % (item_hint_name_1, island_hint_name_1)
+        "\\{1A 05 01 01 03}Ho ho! I've heard that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is located in \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}" % (hint_1.item, hint_1.location)
       )
       # Add a one-second wait command (delay) to prevent the player from skipping over the hint accidentally.
       hint_lines[-1] += "\\{1A 07 00 00 07 00 1C}"
       
       hint_lines.append(
-        "and that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is located in \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (item_hint_name_2, island_hint_name_2)
+        "and that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is located in \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (hint_2.item, hint_2.location)
       )
       # Add a one-second wait command (delay) to prevent the player from skipping over the hint accidentally.
       hint_lines[-1] += "\\{1A 07 00 00 07 00 1C}"
@@ -1004,7 +1006,6 @@ def update_hoho_hints(self, hints):
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
     elif self.options.get("hint_type") == "WotH-Style":
         hints_for_hoho = []
-        hint_order = {"WOTH": 0, "Barren": 1, "Location": 2, "Junk": 100}
         
         # Give each Old Man Ho Ho multiple hints (there may be duplicates)
         for i in range(num_hints_per_hoho):
@@ -1012,28 +1013,32 @@ def update_hoho_hints(self, hints):
             hint = self.rng.choice(hints)
             hints_for_hoho.append(hint)
             hints.remove(hint)
-        hints_for_hoho.sort(key=lambda hint: hint_order[hint[0]])
+        
+        # Order the hints that Old Man Ho Ho says them
+        hints_for_hoho.sort(key=lambda hint: hint.type.value)
         
         for i, hint in enumerate(hints_for_hoho):
-          hint_type, *hint = hint
-          
-          if i == 0 and hint_type != "Junk":
+          if i == 0 and hint.type != HintType.JUNK:
             # Only say "Ho ho!" for the first hint
-            if hint_type == "WOTH":
-              hint_lines.append("\\{1A 05 01 01 03}Ho ho! They say that \\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00} is on the way of the hero." % hint[0])
-            elif hint_type == "Barren":
-              hint_lines.append("\\{1A 05 01 01 03}Ho ho! They say that plundering \\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00} is a foolish choice." % hint[0])
+            if hint.type == HintType.WOTH:
+              hint_lines.append("\\{1A 05 01 01 03}Ho ho! They say that \\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00} is on the way of the hero." % hint.location)
+            elif hint.type == HintType.BARREN:
+              hint_lines.append("\\{1A 05 01 01 03}Ho ho! They say that plundering \\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00} is a foolish choice." % hint.location)
+            elif hint.type == HintType.LOCATION:
+              hint_lines.append("\\{1A 05 01 01 03}Ho ho! They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (hint.location, hint.item))
             else:
-              hint_lines.append("\\{1A 05 01 01 03}Ho ho! They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (hint[0], hint[1]))
+              pass
             # Add a one-second wait command (delay) to prevent the player from skipping over the hint accidentally.
             hint_lines[-1] += "\\{1A 07 00 00 07 00 1C}"
           else:
-            if hint_type == "WOTH":
-              hint_lines.append("They say that \\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00} is on the way of the hero." % hint[0])
-            elif hint_type == "Barren":
-              hint_lines.append("They say that plundering \\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00} is a foolish choice." % hint[0])
+            if hint.type == HintType.WOTH:
+              hint_lines.append("They say that \\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00} is on the way of the hero." % hint.location)
+            elif hint.type == HintType.BARREN:
+              hint_lines.append("They say that plundering \\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00} is a foolish choice." % hint.location)
+            elif hint.type == HintType.LOCATION:
+              hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (hint.location, hint.item))
             else:
-              hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (hint[0], hint[1]))
+              pass
             # Add a one-second wait command (delay) to prevent the player from skipping over the hint accidentally.
             hint_lines[-1] += "\\{1A 07 00 00 07 00 1C}"
           
@@ -1058,7 +1063,8 @@ def update_korl_hints(self, hints):
   hint_lines = []
   if self.options.get("hint_type") == "Items":
     for i, hint in enumerate(set(hints)):
-      item_hint_name, island_hint_name = hint
+      item_hint_name = self.hints.progress_item_hints[hint.item]
+      island_hint_name = self.hints.island_name_hints[hint.location]
       
       hint_lines.append(
         "They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is located in \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (item_hint_name, island_hint_name)
@@ -1071,7 +1077,7 @@ def update_korl_hints(self, hints):
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
   elif self.options.get("hint_type") == "WotH-Style":
     # Concatenate all WOTH hints into one textbox
-    woth_hints = ["\\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00}" % hint[1] for hint in filter(lambda hint: hint[0] == "WOTH", hints)]
+    woth_hints = ["\\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00}" % hint.location for hint in filter(lambda hint: hint.type == HintType.WOTH, hints)]
     hint_lines.append(
       "They say that %s are on the way of the hero." % (", ".join(woth_hints[:-1]) + ", and " + woth_hints[-1])
     )
@@ -1079,7 +1085,7 @@ def update_korl_hints(self, hints):
     hint_lines[-1] += "\\{1A 07 00 00 07 00 0F}"
     
     # Concatenate all barren hints into one textbox
-    barren_hints = ["\\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00}" % hint[1] for hint in filter(lambda hint: hint[0] == "Barren", hints)]
+    barren_hints = ["\\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00}" % hint.location for hint in filter(lambda hint: hint.type == HintType.BARREN, hints)]
     hint_lines.append(
       "They say that plundering %s are foolish choices." % (", ".join(barren_hints[:-1]) + ", and " + barren_hints[-1])
     )
@@ -1091,9 +1097,9 @@ def update_korl_hints(self, hints):
       hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
     
     # Each location hint is its own textbox
-    for hint_type, location_hint, item_name in filter(lambda hint: hint[0] == "Location", hints):
+    for hint in filter(lambda hint: hint.type == HintType.LOCATION, hints):
       if self.options.get("instant_text_boxes"):
-        hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (location_hint, item_name))
+        hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (hint.location, hint.item))
         # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
   else:
@@ -1109,7 +1115,8 @@ def update_korl_hints(self, hints):
   msg.string = hint
 
 def update_big_octo_great_fairy_item_name_hint(self, hint):
-  item_hint_name, island_hint_name = hint
+  item_hint_name = self.hints.progress_item_hints[hint.item]
+  island_hint_name = self.hints.island_name_hints[hint.location]
   self.bmg.messages_by_id[12015].string = word_wrap_string(
     "\\{1A 06 FF 00 00 05}In \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 05}, you will find an item." % island_hint_name,
     max_line_length=43

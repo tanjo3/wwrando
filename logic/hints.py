@@ -1,10 +1,38 @@
 
 import os
 from collections import OrderedDict
+from enum import Enum
+
 import yaml
+from wwrando_paths import DATA_PATH
 
 from logic.logic import Logic
-from wwrando_paths import DATA_PATH
+
+
+class HintType(Enum):
+  WOTH = 0
+  BARREN = 1
+  LOCATION = 2
+  ITEM = 3
+  JUNK = 100
+
+class Hint:
+  def __init__(self, type, item, location):
+    self.type = type
+    self.item = item
+    self.location = location
+  
+  def __str__(self):
+    return "%s <Item: %s, Location: %s>" % (str(self.type), self.item, self.location)
+  
+  def __hash__(self):
+    return hash(str(self))
+  
+  def __eq__(self, other):
+    if isinstance(other, self.__class__):
+      return (self.type == other.type) and (self.item == other.item) and (self.location == other.location)
+    else:
+      return False
 
 class Hints:
   # When these items are placed in a seed, they are always logically required regardless of settings
@@ -178,23 +206,19 @@ class Hints:
       if zone_name in self.rando.dungeon_and_cave_island_locations and (is_dungeon or is_puzzle_cave or is_combat_cave or is_savage):
         # If the location is in a dungeon or cave, use the hint for whatever island the dungeon/cave is located on.
         island_name = self.rando.dungeon_and_cave_island_locations[zone_name]
-        island_hint_name = self.island_name_hints[island_name]
       elif zone_name in self.island_name_hints:
         island_name = zone_name
-        island_hint_name = self.island_name_hints[island_name]
       elif zone_name in self.rando.logic.DUNGEON_NAMES.values():
         continue
       else:
         continue
       
-      if (item_name, island_name) in unique_items_given_hint_for: # Don't give hint for same type of item in same zone
+      new_item_hint = Hint(HintType.ITEM, item_name, island_name)
+      if new_item_hint in unique_items_given_hint_for: # Don't give hint for same type of item in same zone
         continue
       
-      item_hint_name = self.progress_item_hints[item_name]
-      
-      hints.append((item_hint_name, island_hint_name))
-      
-      unique_items_given_hint_for.append((item_name, island_name))
+      hints.append(new_item_hint)
+      unique_items_given_hint_for.append(new_item_hint)
     
     return hints
   
@@ -267,11 +291,11 @@ class Hints:
       if zone_name in self.rando.logic.DUNGEON_NAMES.values():
         if zone_name == "Tower of the Gods" and specific_location_name == "Sunken Treasure":
           # Special case: if location is Tower of the Gods - Sunken Treasure, use "Tower of the Gods Sector" as the hint
-          hinted_woth_zones.append(("WOTH", "Tower of the Gods Sector"))
+          hinted_woth_zones.append(Hint(HintType.WOTH, None, "Tower of the Gods Sector"))
         else:
-          hinted_woth_zones.append(("WOTH", zone_name))
+          hinted_woth_zones.append(Hint(HintType.WOTH, None, zone_name))
       else:
-        hinted_woth_zones.append(("WOTH", entrance_zone))
+        hinted_woth_zones.append(Hint(HintType.WOTH, None, entrance_zone))
       previously_hinted_locations.append("%s - %s" % (zone_name, specific_location_name))
     
     # Identify zones which do not contain required items
@@ -301,7 +325,7 @@ class Hints:
           num_dungeons_hinted_barren += 1
         else:
           continue
-      hinted_barren_zones.append(("Barren", zone_name))
+      hinted_barren_zones.append(Hint(HintType.BARREN, None, zone_name))
     
     # Fill in the remaining hints with location hints
     hinted_locations = []
@@ -317,7 +341,9 @@ class Hints:
       
       # Don't hint at the same item twice
       if location_name not in previously_hinted_locations:
-        hinted_locations.append(("Location", self.location_hints[location_name], item_name))
+        hinted_locations.append(Hint(HintType.LOCATION, item_name, self.location_hints[location_name]))
         remaining_hints_desired -= 1
     
+    for hint in hinted_woth_zones + hinted_barren_zones + hinted_locations:
+      print(hint)
     return hinted_woth_zones + hinted_barren_zones + hinted_locations
