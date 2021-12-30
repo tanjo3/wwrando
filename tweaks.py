@@ -965,21 +965,28 @@ def update_hoho_hints(self, hints):
     hint_lines = []
     
     if self.options.get("hint_type") == "Items":
-      # Give each Old Man Ho Ho two item hints
-      hint_1 = hints[hoho_hint_number * 2]
+      # Give each Old Man Ho Ho three item hints
+      hint_1 = hints[hoho_hint_number * 3]
       hint_1 = Hint(hint_1.type, self.hints.progress_item_hints[hint_1.item], self.hints.island_name_hints[hint_1.location])
-      hint_2 = hints[hoho_hint_number * 2 + 1]
+      hint_2 = hints[hoho_hint_number * 3 + 1]
       hint_2 = Hint(hint_2.type, self.hints.progress_item_hints[hint_2.item], self.hints.island_name_hints[hint_2.location])
+      hint_3 = hints[hoho_hint_number * 3 + 2]
+      hint_3 = Hint(hint_3.type, self.hints.progress_item_hints[hint_3.item], self.hints.island_name_hints[hint_3.location])
       
       hint_lines.append(Hints.get_formatted_hint_text(hint_1, prefix="\\{1A 05 01 01 03}Ho ho! They say that ", suffix=""))
-      hint_lines.append(Hints.get_formatted_hint_text(hint_2, prefix="and that "))
+      hint_lines.append(Hints.get_formatted_hint_text(hint_2, prefix="and that ", suffix=""))
       if self.options.get("instant_text_boxes"):
         # If instant text mode is on, we need to reset the text speed to instant after the first wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
       
-      hint_lines.append("Could be worth a try checking thoses places out. If you know where they are, of course.")
+      hint_lines.append(Hints.get_formatted_hint_text(hint_3, prefix="and that "))
       if self.options.get("instant_text_boxes"):
         # If instant text mode is on, we need to reset the text speed to instant after the second wait command messed it up.
+        hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
+      
+      hint_lines.append("Could be worth a try checking thoses places out. If you know where they are, of course.")
+      if self.options.get("instant_text_boxes"):
+        # If instant text mode is on, we need to reset the text speed to instant after the third wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
     elif self.options.get("hint_type") == "WotH-Style":
         hints_for_hoho = []
