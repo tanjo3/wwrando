@@ -192,7 +192,7 @@ class Hints:
         continue
       
       item_name = Hints.get_hint_item_name_static(item_name)
-      if item_name == "Bait Bag":
+      if item_name == "Bait Bag" and self.rando.options.get("hint_placement") == "Fishmen":
         # Can't access fishmen hints until you already have the bait bag
         continue
       if len(hints) >= desired_num_hints:
