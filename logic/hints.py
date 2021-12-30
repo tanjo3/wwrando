@@ -344,6 +344,4 @@ class Hints:
         hinted_locations.append(Hint(HintType.LOCATION, item_name, self.location_hints[location_name]))
         remaining_hints_desired -= 1
     
-    for hint in hinted_woth_zones + hinted_barren_zones + hinted_locations:
-      print(hint)
     return hinted_woth_zones + hinted_barren_zones + hinted_locations
