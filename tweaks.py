@@ -919,30 +919,16 @@ def update_fishmen_hints(self, hints):
     
     hint_lines = []
     if self.options.get("hint_type") == "Items":
-      item_hint_name = self.hints.progress_item_hints[hint.item]
-      island_hint_name = self.hints.island_name_hints[hint.location]
+      hint = Hint(hint.type, self.hints.progress_item_hints[hint.item], self.hints.island_name_hints[hint.location])
       
-      hint_lines.append(
-        "I've heard from my sources that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is located in \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (item_hint_name, island_hint_name)
-      )
-      # Add a two-second wait command (delay) to prevent the player from skipping over the hint accidentally.
-      hint_lines[-1] += "\\{1A 07 00 00 07 00 3C}"
-      
+      hint_lines.append(Hints.get_formatted_hint_text(hint, prefix="I've heard from my sources that", delay=60))
       hint_lines.append("Could be worth a try checking that place out. If you know where it is, of course.")
+      
       if self.options.get("instant_text_boxes"):
         # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
     elif self.options.get("hint_type") == "WotH-Style":
-      if hint.type == HintType.WOTH:
-        hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is on the way of the hero." % hint.location)
-      elif hint.type == HintType.BARREN:
-        hint_lines.append("They say that plundering \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is a foolish choice." % hint.location)
-      elif hint.type == HintType.LOCATION:
-        hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (hint.location, hint.item))
-      else:
-        pass
-      # Add a two-second wait command (delay) to prevent the player from skipping over the hint accidentally.
-      hint_lines[-1] += "\\{1A 07 00 00 07 00 3C}"
+      hint_lines.append(Hints.get_formatted_hint_text(hint))
     else:
       raise Exception("Invalid hint type: %s" % self.options.get("hint_type"))
     
@@ -981,26 +967,17 @@ def update_hoho_hints(self, hints):
     if self.options.get("hint_type") == "Items":
       # Give each Old Man Ho Ho two item hints
       hint_1 = hints[hoho_hint_number * 2]
+      hint_1 = Hint(hint_1.type, self.hints.progress_item_hints[hint_1.item], self.hints.island_name_hints[hint_1.location])
       hint_2 = hints[hoho_hint_number * 2 + 1]
+      hint_2 = Hint(hint_2.type, self.hints.progress_item_hints[hint_2.item], self.hints.island_name_hints[hint_2.location])
       
-      hint_lines.append(
-        "\\{1A 05 01 01 03}Ho ho! I've heard that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is located in \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}" % (hint_1.item, hint_1.location)
-      )
-      # Add a one-second wait command (delay) to prevent the player from skipping over the hint accidentally.
-      hint_lines[-1] += "\\{1A 07 00 00 07 00 1C}"
-      
-      hint_lines.append(
-        "and that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is located in \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (hint_2.item, hint_2.location)
-      )
-      # Add a one-second wait command (delay) to prevent the player from skipping over the hint accidentally.
-      hint_lines[-1] += "\\{1A 07 00 00 07 00 1C}"
-      
+      hint_lines.append(Hints.get_formatted_hint_text(hint_1, prefix="\\{1A 05 01 01 03}Ho ho! They say that ", suffix=""))
+      hint_lines.append(Hints.get_formatted_hint_text(hint_2, prefix="and that "))
       if self.options.get("instant_text_boxes"):
         # If instant text mode is on, we need to reset the text speed to instant after the first wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
       
       hint_lines.append("Could be worth a try checking thoses places out. If you know where they are, of course.")
-      
       if self.options.get("instant_text_boxes"):
         # If instant text mode is on, we need to reset the text speed to instant after the second wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
@@ -1018,33 +995,16 @@ def update_hoho_hints(self, hints):
         hints_for_hoho.sort(key=lambda hint: hint.type.value)
         
         for i, hint in enumerate(hints_for_hoho):
-          if i == 0 and hint.type != HintType.JUNK:
-            # Only say "Ho ho!" for the first hint
-            if hint.type == HintType.WOTH:
-              hint_lines.append("\\{1A 05 01 01 03}Ho ho! They say that \\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00} is on the way of the hero." % hint.location)
-            elif hint.type == HintType.BARREN:
-              hint_lines.append("\\{1A 05 01 01 03}Ho ho! They say that plundering \\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00} is a foolish choice." % hint.location)
-            elif hint.type == HintType.LOCATION:
-              hint_lines.append("\\{1A 05 01 01 03}Ho ho! They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (hint.location, hint.item))
+          if hint.type != HintType.JUNK:
+            if i == 0:
+              # Only say "Ho ho!" for the first hint
+              hint_lines.append(Hints.get_formatted_hint_text(hint, prefix="\\{1A 05 01 01 03}Ho ho! They say that "))
             else:
-              pass
-            # Add a one-second wait command (delay) to prevent the player from skipping over the hint accidentally.
-            hint_lines[-1] += "\\{1A 07 00 00 07 00 1C}"
-          else:
-            if hint.type == HintType.WOTH:
-              hint_lines.append("They say that \\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00} is on the way of the hero." % hint.location)
-            elif hint.type == HintType.BARREN:
-              hint_lines.append("They say that plundering \\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00} is a foolish choice." % hint.location)
-            elif hint.type == HintType.LOCATION:
-              hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (hint.location, hint.item))
-            else:
-              pass
-            # Add a one-second wait command (delay) to prevent the player from skipping over the hint accidentally.
-            hint_lines[-1] += "\\{1A 07 00 00 07 00 1C}"
-          
-          if self.options.get("instant_text_boxes") and i > 0:
-            # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
-            hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
+              hint_lines.append(Hints.get_formatted_hint_text(hint))
+            
+            if self.options.get("instant_text_boxes") and i > 0:
+              # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
+              hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
     else:
       raise Exception("Invalid hint type: %s" % self.options.get("hint_type"))
     
@@ -1063,34 +1023,21 @@ def update_korl_hints(self, hints):
   hint_lines = []
   if self.options.get("hint_type") == "Items":
     for i, hint in enumerate(set(hints)):
-      item_hint_name = self.hints.progress_item_hints[hint.item]
-      island_hint_name = self.hints.island_name_hints[hint.location]
+      hint = Hint(hint.type, self.hints.progress_item_hints[hint.item], self.hints.island_name_hints[hint.location])
       
-      hint_lines.append(
-        "They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is located in \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (item_hint_name, island_hint_name)
-      )
-      # Add a half-second wait command (delay) to prevent the player from skipping over the hint accidentally.
-      hint_lines[-1] += "\\{1A 07 00 00 07 00 0F}"
-
+      hint_lines.append(Hints.get_formatted_hint_text(hint, delay=15))
+      
       if self.options.get("instant_text_boxes") and i > 0:
         # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
   elif self.options.get("hint_type") == "WotH-Style":
     # Concatenate all WOTH hints into one textbox
-    woth_hints = ["\\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00}" % hint.location for hint in filter(lambda hint: hint.type == HintType.WOTH, hints)]
-    hint_lines.append(
-      "They say that %s are on the way of the hero." % (", ".join(woth_hints[:-1]) + ", and " + woth_hints[-1])
-    )
-    # Add a half-second wait command (delay) to prevent the player from skipping over the hint accidentally.
-    hint_lines[-1] += "\\{1A 07 00 00 07 00 0F}"
+    woth_hints = list(filter(lambda hint: hint.type == HintType.WOTH, hints))
+    hint_lines.append(Hints.get_formatted_hint_group_text(woth_hints, HintType.WOTH, delay=15))
     
     # Concatenate all barren hints into one textbox
-    barren_hints = ["\\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00}" % hint.location for hint in filter(lambda hint: hint.type == HintType.BARREN, hints)]
-    hint_lines.append(
-      "They say that plundering %s are foolish choices." % (", ".join(barren_hints[:-1]) + ", and " + barren_hints[-1])
-    )
-    # Add a half-second wait command (delay) to prevent the player from skipping over the hint accidentally.
-    hint_lines[-1] += "\\{1A 07 00 00 07 00 0F}"
+    barren_hints = list(filter(lambda hint: hint.type == HintType.BARREN, hints))
+    hint_lines.append(Hints.get_formatted_hint_group_text(barren_hints, HintType.BARREN, delay=15))
 
     if self.options.get("instant_text_boxes"):
       # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
@@ -1098,8 +1045,15 @@ def update_korl_hints(self, hints):
     
     # Each location hint is its own textbox
     for hint in filter(lambda hint: hint.type == HintType.LOCATION, hints):
+      hint_lines.append(Hints.get_formatted_hint_text(hint, delay=15))
       if self.options.get("instant_text_boxes"):
-        hint_lines.append("They say that \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}." % (hint.location, hint.item))
+        # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
+        hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
+    
+    # Each item hint is its own textbox
+    for hint in filter(lambda hint: hint.type == HintType.ITEM, hints):
+      hint_lines.append(Hints.get_formatted_hint_text(hint, delay=15))
+      if self.options.get("instant_text_boxes"):
         # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
   else:

@@ -85,6 +85,53 @@ class Hints:
       return "Big Key"
     return item_name
   
+  @staticmethod
+  def get_formatted_hint_text(hint, prefix="They say that ", suffix=".", delay=30):
+    if hint.type == HintType.WOTH:
+      hint_string = "%s\\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00} is on the way of the hero%s" % (prefix, hint.location, suffix)
+    elif hint.type == HintType.BARREN:
+      hint_string = "%splundering \\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00} is a foolish choice%s" % (prefix, hint.location, suffix)
+    elif hint.type == HintType.LOCATION:
+      hint_string = "%s\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (prefix, hint.location, hint.item, suffix)
+    elif hint.type == HintType.ITEM:
+      hint_string = "%s\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is located in \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (prefix, hint.item, hint.location, suffix)
+    else:
+      hint_string = ""
+    
+    # Cap delay to "FF"
+    delay = min(delay, 255)
+    
+    # Add a wait command (delay) to prevent the player from skipping over the hint accidentally.
+    if delay > 0:
+      hint_string += "\\{1A 07 00 00 07 00 %X}" % delay
+    
+    return hint_string
+  
+  def get_formatted_hint_group_text(hints, hint_type, prefix="They say that ", suffix=".", delay=30):
+    if hint_type == HintType.WOTH:
+      woth_hints = ["\\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00}" % hint.location for hint in hints]
+      hint_string = "%s%s are on the way of the hero%s" % (prefix, ", ".join(woth_hints[:-1]) + ", and " + woth_hints[-1], suffix)
+    elif hint_type == HintType.BARREN:
+      barren_hints = ["\\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00}" % hint.location for hint in hints]
+      hint_string = "%splundering %s are foolish choices%s" % (prefix, ", ".join(barren_hints[:-1]) + ", and " + barren_hints[-1], suffix)
+    elif hint_type == HintType.LOCATION:
+      # Not implemented because grouped location would likely overflow textbox
+      pass
+    elif hint_type == HintType.ITEM:
+      # Not implemented because grouped location would likely overflow textbox
+      pass
+    else:
+      hint_string = ""
+    
+    # Cap delay to "FF"
+    delay = min(delay, 255)
+    
+    # Add a wait command (delay) to prevent the player from skipping over the hint accidentally.
+    if delay > 0:
+      hint_string += "\\{1A 07 00 00 07 00 %X}" % delay
+    
+    return hint_string
+  
   def check_location_required(self, location_to_check):
     # Optimization 1: If the item at the location is hard-required every seed, the location is trivially required
     if self.rando.logic.done_item_locations[location_to_check] in self.HARD_REQUIRED_ITEMS:
