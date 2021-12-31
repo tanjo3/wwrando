@@ -361,7 +361,7 @@ class Hints:
     # Generate barren hints
     # We select at most three zones at random to hint as barren. At max, `self.MAX_BARREN_HINTS` dungeons may be hinted
     # barren. All barren zones are weighted equally, regardless of how many locations are in that zone.
-    unhinted_barren_zones = list(barren_zones)
+    unhinted_barren_zones = list(sorted(barren_zones))
     hinted_barren_zones = []
     num_dungeons_hinted_barren = 0
     while len(unhinted_barren_zones) > 0 and len(hinted_barren_zones) < self.MAX_BARREN_HINTS:
