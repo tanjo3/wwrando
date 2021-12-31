@@ -433,6 +433,7 @@ class Randomizer:
     
     yield("Generating hints...", options_completed)
     if self.randomize_items and not self.dry_run:
+      self.reset_rng()
       tweaks.randomize_and_update_hints(self)
     if self.options.get("hint_type") == "WotH-Style":
       options_completed += 10
