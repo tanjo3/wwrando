@@ -86,7 +86,7 @@ class Hints:
     return item_name
   
   @staticmethod
-  def get_formatted_hint_text(hint, prefix="They say that ", suffix=".", delay=30):
+  def get_formatted_hint_text_static_static(hint, prefix="They say that ", suffix=".", delay=30):
     if hint.type == HintType.WOTH:
       hint_string = "%s\\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00} is on the way of the hero%s" % (prefix, hint.location, suffix)
     elif hint.type == HintType.BARREN:
@@ -107,7 +107,8 @@ class Hints:
     
     return hint_string
   
-  def get_formatted_hint_group_text(hints, hint_type, prefix="They say that ", suffix=".", delay=30):
+  @staticmethod
+  def get_formatted_hint_group_text_static(hints, hint_type, prefix="They say that ", suffix=".", delay=30):
     if hint_type == HintType.WOTH:
       woth_hints = ["\\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00}" % hint.location for hint in hints]
       hint_string = "%s%s are on the way of the hero%s" % (prefix, ", ".join(woth_hints[:-1]) + ", and " + woth_hints[-1], suffix)
@@ -115,11 +116,11 @@ class Hints:
       barren_hints = ["\\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00}" % hint.location for hint in hints]
       hint_string = "%splundering %s is foolish%s" % (prefix, ", ".join(barren_hints[:-1]) + ", and " + barren_hints[-1], suffix)
     elif hint_type == HintType.LOCATION:
-      # Not implemented because grouped location would likely overflow textbox
-      pass
+      # Not implemented because grouped location hints would likely overflow textbox
+      hint_string = ""
     elif hint_type == HintType.ITEM:
-      # Not implemented because grouped location would likely overflow textbox
-      pass
+      # Not implemented because grouped item hints would likely overflow textbox
+      hint_string = ""
     else:
       hint_string = ""
     

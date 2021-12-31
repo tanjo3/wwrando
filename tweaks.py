@@ -921,14 +921,14 @@ def update_fishmen_hints(self, hints):
     if self.options.get("hint_type") == "Items":
       hint = Hint(hint.type, self.hints.progress_item_hints[hint.item], self.hints.island_name_hints[hint.location])
       
-      hint_lines.append(Hints.get_formatted_hint_text(hint, prefix="I've heard from my sources that", delay=60))
+      hint_lines.append(Hints.get_formatted_hint_text_static(hint, prefix="I've heard from my sources that", delay=60))
       hint_lines.append("Could be worth a try checking that place out. If you know where it is, of course.")
       
       if self.options.get("instant_text_boxes"):
         # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
     elif self.options.get("hint_type") == "WotH-Style":
-      hint_lines.append(Hints.get_formatted_hint_text(hint))
+      hint_lines.append(Hints.get_formatted_hint_text_static(hint))
     else:
       raise Exception("Invalid hint type: %s" % self.options.get("hint_type"))
     
@@ -973,13 +973,13 @@ def update_hoho_hints(self, hints):
       hint_3 = hints[hoho_hint_number * 3 + 2]
       hint_3 = Hint(hint_3.type, self.hints.progress_item_hints[hint_3.item], self.hints.island_name_hints[hint_3.location])
       
-      hint_lines.append(Hints.get_formatted_hint_text(hint_1, prefix="\\{1A 05 01 01 03}Ho ho! They say that ", suffix=""))
-      hint_lines.append(Hints.get_formatted_hint_text(hint_2, prefix="and that ", suffix=""))
+      hint_lines.append(Hints.get_formatted_hint_text_static(hint_1, prefix="\\{1A 05 01 01 03}Ho ho! They say that ", suffix=""))
+      hint_lines.append(Hints.get_formatted_hint_text_static(hint_2, prefix="and that ", suffix=""))
       if self.options.get("instant_text_boxes"):
         # If instant text mode is on, we need to reset the text speed to instant after the first wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
       
-      hint_lines.append(Hints.get_formatted_hint_text(hint_3, prefix="and that "))
+      hint_lines.append(Hints.get_formatted_hint_text_static(hint_3, prefix="and that "))
       if self.options.get("instant_text_boxes"):
         # If instant text mode is on, we need to reset the text speed to instant after the second wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
@@ -1005,9 +1005,9 @@ def update_hoho_hints(self, hints):
           if hint.type != HintType.JUNK:
             if i == 0:
               # Only say "Ho ho!" for the first hint
-              hint_lines.append(Hints.get_formatted_hint_text(hint, prefix="\\{1A 05 01 01 03}Ho ho! They say that "))
+              hint_lines.append(Hints.get_formatted_hint_text_static(hint, prefix="\\{1A 05 01 01 03}Ho ho! They say that "))
             else:
-              hint_lines.append(Hints.get_formatted_hint_text(hint))
+              hint_lines.append(Hints.get_formatted_hint_text_static(hint))
             
             if self.options.get("instant_text_boxes") and i > 0:
               # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
@@ -1032,7 +1032,7 @@ def update_korl_hints(self, hints):
     for i, hint in enumerate(set(hints)):
       hint = Hint(hint.type, self.hints.progress_item_hints[hint.item], self.hints.island_name_hints[hint.location])
       
-      hint_lines.append(Hints.get_formatted_hint_text(hint, delay=15))
+      hint_lines.append(Hints.get_formatted_hint_text_static(hint, delay=15))
       
       if self.options.get("instant_text_boxes") and i > 0:
         # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
@@ -1040,11 +1040,11 @@ def update_korl_hints(self, hints):
   elif self.options.get("hint_type") == "WotH-Style":
     # Concatenate all WOTH hints into one textbox
     woth_hints = list(filter(lambda hint: hint.type == HintType.WOTH, hints))
-    hint_lines.append(Hints.get_formatted_hint_group_text(woth_hints, HintType.WOTH, delay=15))
+    hint_lines.append(Hints.get_formatted_hint_group_text_static(woth_hints, HintType.WOTH, delay=15))
     
     # Concatenate all barren hints into one textbox
     barren_hints = list(filter(lambda hint: hint.type == HintType.BARREN, hints))
-    hint_lines.append(Hints.get_formatted_hint_group_text(barren_hints, HintType.BARREN, delay=15))
+    hint_lines.append(Hints.get_formatted_hint_group_text_static(barren_hints, HintType.BARREN, delay=15))
 
     if self.options.get("instant_text_boxes"):
       # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
@@ -1052,14 +1052,14 @@ def update_korl_hints(self, hints):
     
     # Each location hint is its own textbox
     for hint in filter(lambda hint: hint.type == HintType.LOCATION, hints):
-      hint_lines.append(Hints.get_formatted_hint_text(hint, delay=15))
+      hint_lines.append(Hints.get_formatted_hint_text_static(hint, delay=15))
       if self.options.get("instant_text_boxes"):
         # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
     
     # Each item hint is its own textbox
     for hint in filter(lambda hint: hint.type == HintType.ITEM, hints):
-      hint_lines.append(Hints.get_formatted_hint_text(hint, delay=15))
+      hint_lines.append(Hints.get_formatted_hint_text_static(hint, delay=15))
       if self.options.get("instant_text_boxes"):
         # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
