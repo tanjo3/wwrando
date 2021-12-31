@@ -113,7 +113,7 @@ class Hints:
       hint_string = "%s%s are on the way of the hero%s" % (prefix, ", ".join(woth_hints[:-1]) + ", and " + woth_hints[-1], suffix)
     elif hint_type == HintType.BARREN:
       barren_hints = ["\\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00}" % hint.location for hint in hints]
-      hint_string = "%splundering %s are foolish choices%s" % (prefix, ", ".join(barren_hints[:-1]) + ", and " + barren_hints[-1], suffix)
+      hint_string = "%splundering %s is foolish%s" % (prefix, ", ".join(barren_hints[:-1]) + ", and " + barren_hints[-1], suffix)
     elif hint_type == HintType.LOCATION:
       # Not implemented because grouped location would likely overflow textbox
       pass
