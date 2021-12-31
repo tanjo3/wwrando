@@ -378,17 +378,52 @@ class Hints:
     hinted_locations = []
     remaining_hints_desired = self.TOTAL_WOTH_STYLE_HINTS - len(hinted_woth_zones) - len(hinted_barren_zones)
     hintable_locations = list(filter(lambda loc: loc in self.location_hints.keys(), progress_locations))
+    
     # Remove locations in race-mode banned dungeons
     hintable_locations = list(filter(lambda loc: self.rando.logic.split_location_name_by_zone(loc)[0] not in race_mode_banned_dungeons, hintable_locations))
+    
+    # Remove locations for items that were previously hinted
+    hintable_locations = list(filter(lambda loc: loc not in previously_hinted_locations, hintable_locations))
+    
+    # Remove locations in hinted barren areas
+    new_hintable_locations = []
+    barrens = [hint.location for hint in hinted_barren_zones]
+    for location_name in hintable_locations:
+      # Catch Mailbox cases
+      if (
+          (location_name == "Mailbox - Letter from Baito" and "Earth Temple" in barrens)
+          or (location_name == "Mailbox - Letter from Orca" and "Forbidden Woods" in barrens)
+          or (location_name == "Mailbox - Letter from Aryll" and "Forsaken Fortress" in barrens)
+          or (location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in barrens)
+      ):
+          continue
+      
+      zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
+      is_dungeon = "Dungeon" in self.rando.logic.item_locations[location_name]["Types"]
+      is_puzzle_cave = "Puzzle Secret Cave" in self.rando.logic.item_locations[location_name]["Types"]
+      is_combat_cave = "Combat Secret Cave" in self.rando.logic.item_locations[location_name]["Types"]
+      is_savage = "Savage Labyrinth" in self.rando.logic.item_locations[location_name]["Types"]
+      
+      if zone_name in self.rando.dungeon_and_cave_island_locations and (is_dungeon or is_puzzle_cave or is_combat_cave or is_savage):
+        entrance_zone = self.rando.dungeon_and_cave_island_locations[zone_name]
+        if entrance_zone == "Tower of the Gods":
+          entrance_zone = "Tower of the Gods Sector"
+      else:
+        entrance_zone = zone_name
+        if zone_name == "Tower of the Gods" and specific_location_name == "Sunken Treasure":
+          entrance_zone = "Tower of the Gods Sector"
+      
+      if entrance_zone not in barrens:
+        new_hintable_locations.append(location_name)
+    hintable_locations = new_hintable_locations.copy()
     
     while len(hintable_locations) > 0 and remaining_hints_desired > 0:
       location_name = self.rando.rng.choice(hintable_locations)
       hintable_locations.remove(location_name)
-      item_name = self.rando.logic.done_item_locations[location_name]
+      remaining_hints_desired -= 1
       
-      # Don't hint at the same item twice
-      if location_name not in previously_hinted_locations:
-        hinted_locations.append(Hint(HintType.LOCATION, item_name, self.location_hints[location_name]))
-        remaining_hints_desired -= 1
+      item_name = self.rando.logic.done_item_locations[location_name]
+      hinted_locations.append(Hint(HintType.LOCATION, item_name, self.location_hints[location_name]))
     
+    self.debug = hinted_woth_zones + hinted_barren_zones + hinted_locations
     return hinted_woth_zones + hinted_barren_zones + hinted_locations
