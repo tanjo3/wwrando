@@ -339,11 +339,11 @@ class Hints:
       if zone_name in self.rando.logic.DUNGEON_NAMES.values():
         if zone_name == "Tower of the Gods" and specific_location_name == "Sunken Treasure":
           # Special case: if location is Tower of the Gods - Sunken Treasure, use "Tower of the Gods Sector" as the hint
-          hinted_woth_zones.append(Hint(HintType.WOTH, None, "Tower of the Gods Sector"))
+          hinted_woth_zones.append(Hint(HintType.WOTH, item_name, "Tower of the Gods Sector"))
         else:
-          hinted_woth_zones.append(Hint(HintType.WOTH, None, zone_name))
+          hinted_woth_zones.append(Hint(HintType.WOTH, item_name, zone_name))
       else:
-        hinted_woth_zones.append(Hint(HintType.WOTH, None, entrance_zone))
+        hinted_woth_zones.append(Hint(HintType.WOTH, item_name, entrance_zone))
       previously_hinted_locations.append("%s - %s" % (zone_name, specific_location_name))
     
     # Identify zones which do not contain required items
