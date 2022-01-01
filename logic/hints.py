@@ -381,6 +381,7 @@ class Hints:
     hinted_locations = []
     hintable_locations = list(filter(lambda loc: loc in self.location_hints.keys(), progress_locations))
     # Remove locations in race-mode banned dungeons
+    race_mode_banned_dungeons = set(self.rando.logic.DUNGEON_NAMES.values()) - set(self.rando.race_mode_required_dungeons)
     hintable_locations = list(filter(lambda loc: self.rando.logic.split_location_name_by_zone(loc)[0] not in race_mode_banned_dungeons, hintable_locations))
     # Remove locations for items that were previously hinted
     hintable_locations = list(filter(lambda loc: loc not in previously_hinted_locations, hintable_locations))
