@@ -345,17 +345,17 @@ class Hints:
       previously_hinted_locations.append("%s - %s" % (zone_name, specific_location_name))
     
     # Identify zones which do not contain required items
-    # We start will all zones, plus a "Tower of the Gods Sector" zone to differentiate between the dungeon and the entrance/sector
-    all_world_areas = set(self.rando.logic.split_location_name_by_zone(loc)[0] for loc in progress_locations)
-    all_world_areas.add("Tower of the Gods Sector")
-    # For all locations, remove the entrance from being hinted barren
+    # For starters, get all entrance zones for progress locations in this seed
+    all_world_areas = set(self.get_entrance_zone(location_name) for location_name in progress_locations)
+    # Special case: if entrances are not randomized and Tower of the Gods - Sunken Treasure is not in logic, "Tower of
+    # the Gods Sector" can only refer to the dungeon, so is redundant. Remove it.
+    if self.rando.options.get("randomize_entrances") in ["Disabled", None] and "Tower of the Gods - Sunken Treasure" not in progress_locations:
+      all_world_areas.remove("Tower of the Gods Sector")
+    # For all required locations, remove the entrance from being hinted barren
     barren_zones = all_world_areas - set(list(zip(*required_locations))[1])
     # For dungeon locations, also remove the dungeon itself
     dungeon_woths = list(filter(lambda x: x[0] in self.rando.logic.DUNGEON_NAMES.values(), required_locations))
     barren_zones = barren_zones - set(list(zip(*dungeon_woths))[0])
-    # Remove race-mode banned dungeons from being hinted as barren
-    race_mode_banned_dungeons = set(self.rando.logic.DUNGEON_NAMES.values()) - set(self.rando.race_mode_required_dungeons)
-    barren_zones = barren_zones - race_mode_banned_dungeons
     
     # Generate barren hints
     # We select at most `self.MAX_BARREN_HINTS` zones at random to hint as barren. At max, `self.MAX_BARREN_DUNGEONS`
