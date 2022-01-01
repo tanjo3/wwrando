@@ -141,7 +141,13 @@ class Hints:
     # As a special case, if the entrance zone is Tower of the Gods or if the location name is "Tower of the Gods -
     # Sunken Treasure", the entrance zone name is "Tower of the Gods Sector" to differentiate between the dungeon and
     # the entrance.
+    
     zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
+    
+    # Distinguish between the two Pawprint Isle entrances
+    if location_name == "Pawprint Isle - Wizzrobe Cave":
+      zone_name = "Pawprint Isle Side Isle"
+    
     if zone_name in self.rando.dungeon_and_cave_island_locations and self.rando.logic.is_dungeon_or_cave(location_name):
       entrance_zone = self.rando.dungeon_and_cave_island_locations[zone_name]
       if entrance_zone == "Tower of the Gods":
@@ -268,6 +274,9 @@ class Hints:
         break
       
       zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
+      # Distinguish between the two Pawprint Isle entrances
+      if location_name == "Pawprint Isle - Wizzrobe Cave":
+        zone_name = "Pawprint Isle Side Isle"
       if zone_name in self.rando.dungeon_and_cave_island_locations and self.rando.logic.is_dungeon_or_cave(location_name):
         # If the location is in a dungeon or cave, use the hint for whatever island the dungeon/cave is located on.
         island_name = self.rando.dungeon_and_cave_island_locations[zone_name]
