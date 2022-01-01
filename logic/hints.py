@@ -86,7 +86,7 @@ class Hints:
     return item_name
   
   @staticmethod
-  def get_formatted_hint_text_static_static(hint, prefix="They say that ", suffix=".", delay=30):
+  def get_formatted_hint_text_static(hint, prefix="They say that ", suffix=".", delay=30):
     if hint.type == HintType.WOTH:
       hint_string = "%s\\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00} is on the way of the hero%s" % (prefix, hint.location, suffix)
     elif hint.type == HintType.BARREN:
@@ -132,6 +132,27 @@ class Hints:
       hint_string += "\\{1A 07 00 00 07 00 %X}" % delay
     
     return hint_string
+  
+  def get_entrance_zone(self, location_name):
+    # Helper function to return the entrance zone name for the location.
+    # For non-dungeon and non-cave locations, the entrance zone name is simply the zone name. When entrances are
+    # randomized, the entrance zone name may not be the same as the zone name for dungeons and cave.
+    #
+    # As a special case, if the entrance zone is Tower of the Gods or if the location name is "Tower of the Gods -
+    # Sunken Treasure", the entrance zone name is "Tower of the Gods Sector" to differentiate between the dungeon and
+    # the entrance.
+    zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
+    if zone_name in self.rando.dungeon_and_cave_island_locations and self.rando.logic.is_dungeon_or_cave(location_name):
+      entrance_zone = self.rando.dungeon_and_cave_island_locations[zone_name]
+      if entrance_zone == "Tower of the Gods":
+        entrance_zone = "Tower of the Gods Sector"
+    else:
+      entrance_zone = zone_name
+      if location_name == "Tower of the Gods - Sunken Treasure":
+        entrance_zone = "Tower of the Gods Sector"
+      # Note that Forsaken Fortress - Sunken Treasure has a similar issue, but there are no randomized entrances
+      # on Forsaken Fortress, so we won't make that distinction here
+    return entrance_zone
   
   def check_location_required(self, location_to_check):
     # Optimization 1: If the item at the location is hard-required every seed, the location is trivially required
@@ -247,11 +268,7 @@ class Hints:
         break
       
       zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
-      is_dungeon = "Dungeon" in self.rando.logic.item_locations[location_name]["Types"]
-      is_puzzle_cave = "Puzzle Secret Cave" in self.rando.logic.item_locations[location_name]["Types"]
-      is_combat_cave = "Combat Secret Cave" in self.rando.logic.item_locations[location_name]["Types"]
-      is_savage = "Savage Labyrinth" in self.rando.logic.item_locations[location_name]["Types"]
-      if zone_name in self.rando.dungeon_and_cave_island_locations and (is_dungeon or is_puzzle_cave or is_combat_cave or is_savage):
+      if zone_name in self.rando.dungeon_and_cave_island_locations and self.rando.logic.is_dungeon_or_cave(location_name):
         # If the location is in a dungeon or cave, use the hint for whatever island the dungeon/cave is located on.
         island_name = self.rando.dungeon_and_cave_island_locations[zone_name]
       elif zone_name in self.island_name_hints:
@@ -291,32 +308,13 @@ class Hints:
             and self.rando.hints.check_location_required(location_name)                   # Check if this exact location is required (to account for duplicate items)
         ):
             zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
-            is_dungeon = "Dungeon" in self.rando.logic.item_locations[location_name]["Types"]
-            is_puzzle_cave = "Puzzle Secret Cave" in self.rando.logic.item_locations[location_name]["Types"]
-            is_combat_cave = "Combat Secret Cave" in self.rando.logic.item_locations[location_name]["Types"]
-            is_savage = "Savage Labyrinth" in self.rando.logic.item_locations[location_name]["Types"]
-
-            if zone_name in self.rando.dungeon_and_cave_island_locations and (is_dungeon or is_puzzle_cave or is_combat_cave or is_savage):
-              entrance_zone = self.rando.dungeon_and_cave_island_locations[zone_name]
-              # Special case: if the entrance is Tower of the Gods, call the entrance zone "Tower of the Gods Sector" to
-              # differentiate between the dungeon and the entrance
-              if entrance_zone == "Tower of the Gods":
-                entrance_zone = "Tower of the Gods Sector"
-            else:
-              entrance_zone = zone_name
-              # Special case: if location is Tower of the Gods - Sunken Treasure, call the entrance zone "Tower of the
-              # Gods Sector" to differentiate between the dungeon and the entrance
-              if zone_name == "Tower of the Gods" and specific_location_name == "Sunken Treasure":
-                entrance_zone = "Tower of the Gods Sector"
-              # Note that Forsaken Fortress - Sunken Treasure has a similar issue, but there are no randomized entrances
-              # on Forsaken Fortress, so we won't make that distinction here
-            
+            entrance_zone = self.get_entrance_zone(location_name)
             required_locations.append((zone_name, entrance_zone, specific_location_name, item_name))
     
     # Generate WOTH hints
-    # We select at most three zones at random to hint as WOTH. At max, `self.MAX_WOTH_HINTS` dungeons may be hinted
-    # WOTH. Zones are weighted by the number of required locations at that zone. The more required locations, the more
-    # likely that zone will be chosen.
+    # We select at most `self.MAX_WOTH_HINTS` zones at random to hint as WOTH. At max, `self.MAX_WOTH_DUNGEONS` dungeons
+    # may be hinted WOTH. Zones are weighted by the number of required locations at that zone. The more required
+    # locations, the more likely that zone will be chosen.
     unhinted_woth_locations = required_locations.copy()
     hinted_woth_zones = []
     num_dungeons_hinted_woth = 0
@@ -360,14 +358,18 @@ class Hints:
     barren_zones = barren_zones - race_mode_banned_dungeons
     
     # Generate barren hints
-    # We select at most three zones at random to hint as barren. At max, `self.MAX_BARREN_HINTS` dungeons may be hinted
-    # barren. All barren zones are weighted equally, regardless of how many locations are in that zone.
+    # We select at most `self.MAX_BARREN_HINTS` zones at random to hint as barren. At max, `self.MAX_BARREN_DUNGEONS`
+    # dungeons may be hinted barren. All barren zones are weighted equally, regardless of how many locations are in that
+    # zone.
     unhinted_barren_zones = list(sorted(barren_zones))
     hinted_barren_zones = []
     num_dungeons_hinted_barren = 0
     while len(unhinted_barren_zones) > 0 and len(hinted_barren_zones) < self.MAX_BARREN_HINTS:
+      # Remove a barren zone at random from the list
       zone_name = self.rando.rng.choice(unhinted_barren_zones)
       unhinted_barren_zones.remove(zone_name)
+      
+      # If the zone is a dungeon, ensure we still have room to hint at barren dungeon
       if zone_name in self.rando.logic.DUNGEON_NAMES.values():
         if num_dungeons_hinted_barren < self.MAX_BARREN_DUNGEONS:
           num_dungeons_hinted_barren += 1
@@ -377,15 +379,11 @@ class Hints:
     
     # Fill in the remaining hints with location hints
     hinted_locations = []
-    remaining_hints_desired = self.TOTAL_WOTH_STYLE_HINTS - len(hinted_woth_zones) - len(hinted_barren_zones)
     hintable_locations = list(filter(lambda loc: loc in self.location_hints.keys(), progress_locations))
-    
     # Remove locations in race-mode banned dungeons
     hintable_locations = list(filter(lambda loc: self.rando.logic.split_location_name_by_zone(loc)[0] not in race_mode_banned_dungeons, hintable_locations))
-    
     # Remove locations for items that were previously hinted
     hintable_locations = list(filter(lambda loc: loc not in previously_hinted_locations, hintable_locations))
-    
     # Remove locations in hinted barren areas
     new_hintable_locations = []
     barrens = [hint.location for hint in hinted_barren_zones]
@@ -398,31 +396,18 @@ class Hints:
           or (location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in barrens)
       ):
           continue
-      
-      zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
-      is_dungeon = "Dungeon" in self.rando.logic.item_locations[location_name]["Types"]
-      is_puzzle_cave = "Puzzle Secret Cave" in self.rando.logic.item_locations[location_name]["Types"]
-      is_combat_cave = "Combat Secret Cave" in self.rando.logic.item_locations[location_name]["Types"]
-      is_savage = "Savage Labyrinth" in self.rando.logic.item_locations[location_name]["Types"]
-      
-      if zone_name in self.rando.dungeon_and_cave_island_locations and (is_dungeon or is_puzzle_cave or is_combat_cave or is_savage):
-        entrance_zone = self.rando.dungeon_and_cave_island_locations[zone_name]
-        if entrance_zone == "Tower of the Gods":
-          entrance_zone = "Tower of the Gods Sector"
-      else:
-        entrance_zone = zone_name
-        if zone_name == "Tower of the Gods" and specific_location_name == "Sunken Treasure":
-          entrance_zone = "Tower of the Gods Sector"
-      
+      # Catch locations which are hinted in barren zones
+      entrance_zone = self.get_entrance_zone(location_name)
       if entrance_zone not in barrens:
         new_hintable_locations.append(location_name)
     hintable_locations = new_hintable_locations.copy()
     
-    while len(hintable_locations) > 0 and remaining_hints_desired > 0:
-      location_name = self.rando.rng.choice(hintable_locations)
-      hintable_locations.remove(location_name)
-      remaining_hints_desired -= 1
-      
+    # Generate location hints
+    # Shuffle the list of valid location hints and then create them one by one until we have enough
+    self.rando.rng.shuffle(hintable_locations)
+    remaining_hints_desired = self.TOTAL_WOTH_STYLE_HINTS - len(hinted_woth_zones) - len(hinted_barren_zones)
+    for i in range(remaining_hints_desired):
+      location_name = hintable_locations[i]
       item_name = self.rando.logic.done_item_locations[location_name]
       hinted_locations.append(Hint(HintType.LOCATION, item_name, self.location_hints[location_name]))
     
