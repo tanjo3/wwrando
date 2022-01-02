@@ -1071,8 +1071,9 @@ def update_korl_hints(self, hints):
     hint_line = word_wrap_string(hint_line)
     hint_line = pad_string_to_next_4_lines(hint_line)
     hint += hint_line
-
-  msg = self.bmg.messages_by_id[3443]
+  
+  korl_message_id = 3446 if self.options.get("sword_mode") == "Swordless" else 3443
+  msg = self.bmg.messages_by_id[korl_message_id]
   msg.string = hint
 
 def update_big_octo_great_fairy_item_name_hint(self, hint):
