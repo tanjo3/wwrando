@@ -943,23 +943,76 @@ def update_fishmen_hints(self, hints):
     msg.string = hint
 
 def update_hoho_hints(self, hints):
-  # Build a list of hint we can duplicate if we need to
-  if self.options.get("hint_type") == "WotH-Style":
+  if self.options.get("hint_type") == "Items":
+    # Duplicate each hint and shuffle the hint list
+    hints = hints * 2
+    self.rng.shuffle(hints)
+  elif self.options.get("hint_type") == "WotH-Style":
+    # Build a list of hints that we can duplicate if we need to
     duplicatable_hints = list(filter(lambda hint: hint.type in (HintType.BARREN, HintType.LOCATION), hints))
     if len(duplicatable_hints) == 0:
       duplicatable_hints = [Hint(HintType.JUNK, None, None)]
-  
-  # Duplicate each item hint and shuffle the list
-  hints = hints * 2
-  self.rng.shuffle(hints)
-  
-  if self.options.get("hint_type") == "WotH-Style":
-    # Ensure that for WotH-style hints, the number of hints is a multiple of 10 (number of Old Man Ho Ho)
+    
+    # Duplicate each hint
+    hints = hints * 2
+    
+    # Ensure that the number of hints is a multiple of 10. Ideally, we want two copies of each hint distributed among
+    # the 10 Old Man Ho Ho.
     while len(hints) % 10 != 0:
       hints.append(self.rng.choice(duplicatable_hints))
     
+    # Shuffle the hint list
+    self.rng.shuffle(hints)
+    
     # Determine the number of hints each Old Man Ho Ho should get
     num_hints_per_hoho = len(hints) // 10
+    
+    # Try to distribute hints without duplicates on a single Old Man Ho Ho
+    max_gen_attempts = 50
+    max_pull_attempts = 9
+    
+    gen_attempt = 0
+    pull_attempt = 0
+    while gen_attempt <= max_gen_attempts:
+      gen_attempt += 1
+      hints_copy = hints.copy()
+      hoho_hints = []
+      for hoho_number in range(10):
+        hints_for_hoho = []
+        for hint_number in range(num_hints_per_hoho):
+          pull_attempt = 1
+          while pull_attempt <= max_pull_attempts:
+            hint = self.rng.choice(hints_copy)
+            pull_attempt += 1
+            # Successfully chose a hint, break from loop
+            if hint not in hints_for_hoho:
+              hints_for_hoho.append(hint)
+              hints_copy.remove(hint)
+              break
+          # Was not able to successfully choose a hint, break from loop
+          if pull_attempt > max_pull_attempts:
+            break
+        
+        if len(hints_for_hoho) < num_hints_per_hoho:
+          # Was unable to distribute hints to this Old Man Ho Ho, attempt from the beginning
+          break
+        else:
+          # Otherwise, continue with next Old Man Ho Ho
+          hoho_hints.append(hints_for_hoho)
+      if len(hoho_hints) == 10:
+        # Successfully distributed hints across Old Man Ho Ho, break. Otherwise, try again until max retries.
+        break
+    
+    if len(hoho_hints) != 10:
+      # Distribute hints without caring about duplicates on a single Old Man Ho Ho
+      hoho_hints = []
+      for hoho_number in range(10):
+        hints_for_hoho = []
+        for hint_number in range(num_hints_per_hoho):
+          hint = self.rng.choice(hints)
+          hints_for_hoho.append(hint)
+          hints.remove(hint)
+        hoho_hints.append(hints_for_hoho)
   
   for hoho_hint_number in range(10):
     hint_lines = []
@@ -989,29 +1042,22 @@ def update_hoho_hints(self, hints):
         # If instant text mode is on, we need to reset the text speed to instant after the third wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
     elif self.options.get("hint_type") == "WotH-Style":
-        hints_for_hoho = []
-        
-        # Give each Old Man Ho Ho multiple hints (there may be duplicates)
-        for i in range(num_hints_per_hoho):
-          if len(hints) > 0:
-            hint = self.rng.choice(hints)
-            hints_for_hoho.append(hint)
-            hints.remove(hint)
-        
-        # Order the hints that Old Man Ho Ho says them
-        hints_for_hoho.sort(key=lambda hint: hint.type.value)
-        
-        for i, hint in enumerate(hints_for_hoho):
-          if hint.type != HintType.JUNK:
-            if i == 0:
-              # Only say "Ho ho!" for the first hint
-              hint_lines.append(Hints.get_formatted_hint_text_static(hint, prefix="\\{1A 05 01 01 03}Ho ho! They say that "))
-            else:
-              hint_lines.append(Hints.get_formatted_hint_text_static(hint))
-            
-            if self.options.get("instant_text_boxes") and i > 0:
-              # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
-              hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
+      hints_for_hoho = hoho_hints[hoho_hint_number]
+      
+      # Order the hints that Old Man Ho Ho says them
+      hints_for_hoho.sort(key=lambda hint: hint.type.value)
+      
+      for i, hint in enumerate(hints_for_hoho):
+        if hint.type != HintType.JUNK:
+          if i == 0:
+            # Only say "Ho ho!" for the first hint
+            hint_lines.append(Hints.get_formatted_hint_text_static(hint, prefix="\\{1A 05 01 01 03}Ho ho! They say that "))
+          else:
+            hint_lines.append(Hints.get_formatted_hint_text_static(hint))
+          
+          if self.options.get("instant_text_boxes") and i > 0:
+            # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
+            hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
     else:
       raise Exception("Invalid hint type: %s" % self.options.get("hint_type"))
     
