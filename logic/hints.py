@@ -284,18 +284,20 @@ class Hints:
     
     # Check Tingle statues: if one is required, all of them are; if one is not required, none of them are
     items_dict = {item_name: location_name for location_name, item_name in self.rando.logic.done_item_locations.items()}
-    location_name = items_dict["Dragon Tingle Statue"]
-    if self.rando.hints.check_location_required(location_name, cached_required_items, cached_nonrequired_items):
-      cached_required_items.update(("Dragon Tingle Statue", "Forbidden Tingle Statue", "Goddess Tingle Statue", "Earth Tingle Statue", "Wind Tingle Statue"))
-    else:
-      cached_nonrequired_items.update(("Dragon Tingle Statue", "Forbidden Tingle Statue", "Goddess Tingle Statue", "Earth Tingle Statue", "Wind Tingle Statue"))
+    if "Dragon Tingle Statue" in items_dict:
+      location_name = items_dict["Dragon Tingle Statue"]
+      if self.rando.hints.check_location_required(location_name, cached_required_items, cached_nonrequired_items):
+        cached_required_items.update(("Dragon Tingle Statue", "Forbidden Tingle Statue", "Goddess Tingle Statue", "Earth Tingle Statue", "Wind Tingle Statue"))
+      else:
+        cached_nonrequired_items.update(("Dragon Tingle Statue", "Forbidden Tingle Statue", "Goddess Tingle Statue", "Earth Tingle Statue", "Wind Tingle Statue"))
     
     # Check mail dependencies
-    location_name = items_dict["Delivery Bag"]
-    if not self.rando.hints.check_location_required(location_name, cached_required_items, cached_nonrequired_items):
-      cached_nonrequired_items.update(("Delivery Bag", "Maggie's Letter", "Moblin's Letter", "Note to Mom", "Cabana Deed"))
-    else:
-      cached_required_items.add("Delivery Bag")
+    if "Delivery Bag" in items_dict:
+      location_name = items_dict["Delivery Bag"]
+      if not self.rando.hints.check_location_required(location_name, cached_required_items, cached_nonrequired_items):
+        cached_nonrequired_items.update(("Delivery Bag", "Maggie's Letter", "Moblin's Letter", "Note to Mom", "Cabana Deed"))
+      else:
+        cached_required_items.add("Delivery Bag")
     
     # Dungeons can mark off a lot of required items if the boss is required since that means that the BK and all SKs are
     # required (with the exceptions of FW SK and FF as a dungeon). Additionally, it means that all the items required to
@@ -338,7 +340,7 @@ class Hints:
       # Ignore race-mode-banned locations
       if location_name in self.rando.race_mode_banned_locations:
         continue
-
+      
       # Build a list of required locations, along with the item at that location
       item_name = self.rando.logic.done_item_locations[location_name]
       if (
@@ -485,13 +487,18 @@ class Hints:
     all_world_areas = set(self.get_entrance_zone(location_name) for location_name in progress_locations)
     # Special case: if entrances are not randomized and Tower of the Gods - Sunken Treasure is not in logic, "Tower of
     # the Gods Sector" can only refer to the dungeon, so is redundant. Remove it.
-    if self.rando.options.get("randomize_entrances") in ["Disabled", None] and "Tower of the Gods - Sunken Treasure" not in progress_locations:
+    if (
+      "Tower of the Gods Sector" in all_world_areas
+      and self.rando.options.get("randomize_entrances") in ["Disabled", None]
+      and "Tower of the Gods - Sunken Treasure" not in progress_locations
+    ):
       all_world_areas.remove("Tower of the Gods Sector")
     # For all required locations, remove the entrance from being hinted barren
     barren_zones = all_world_areas - set(list(zip(*required_locations))[1])
     # For dungeon locations, also remove the dungeon itself
     dungeon_woths = list(filter(lambda x: x[0] in self.rando.logic.DUNGEON_NAMES.values(), required_locations))
-    barren_zones = barren_zones - set(list(zip(*dungeon_woths))[0])
+    if len(dungeon_woths) > 0:
+      barren_zones = barren_zones - set(list(zip(*dungeon_woths))[0])
     
     # Generate barren hints
     # We select at most `self.MAX_BARREN_HINTS` zones at random to hint as barren. At max, `self.MAX_BARREN_DUNGEONS`
@@ -543,8 +550,8 @@ class Hints:
     # Shuffle the list of valid location hints and then create them one by one until we have enough
     self.rando.rng.shuffle(hintable_locations)
     remaining_hints_desired = self.TOTAL_WOTH_STYLE_HINTS - len(hinted_woth_zones) - len(hinted_barren_zones)
-    for i in range(remaining_hints_desired):
-      location_name = hintable_locations[i]
+    for location_name in hintable_locations:
+      remaining_hints_desired -= 1
       item_name = self.rando.logic.done_item_locations[location_name]
       hinted_locations.append(Hint(HintType.LOCATION, item_name, self.location_hints[location_name]))
     
