@@ -72,6 +72,8 @@ class Hints:
     
     with open(os.path.join(DATA_PATH, "location_hints.txt"), "r") as f:
       self.location_hints = yaml.safe_load(f)
+    
+    self.chart_name_to_sunken_treasure = {}
   
   @staticmethod
   def get_hint_item_name_static(item_name):
@@ -160,10 +162,27 @@ class Hints:
       # on Forsaken Fortress, so we won't make that distinction here
     return entrance_zone
   
-  def check_location_required(self, location_to_check):
-    # Optimization 1: If the item at the location is hard-required every seed, the location is trivially required
-    if self.rando.logic.done_item_locations[location_to_check] in self.HARD_REQUIRED_ITEMS:
+  def check_location_required(self, location_to_check, cached_required_items, cached_nonrequired_items):
+    # Check if the item is in the cached set of required or nonrequired locations
+    item_name = self.rando.logic.done_item_locations[location_to_check]
+    if item_name in cached_required_items:
       return True
+    if item_name in cached_nonrequired_items:
+      return False
+    
+    # If the item is not a progress item, there's no way it's required
+    if item_name not in self.rando.logic.all_progress_items:
+      return False
+    
+    # If the item is a treasure/Triforce chart, only need to check if it's sunken treasure is required
+    if item_name.startswith("Treasure Chart ") or item_name.startswith("Triforce Chart "):
+      sunken_treasure_name = self.chart_name_to_sunken_treasure[item_name]
+      sunken_treasure_item = self.rando.logic.done_item_locations[sunken_treasure_name]
+      if self.check_location_required(sunken_treasure_name, cached_required_items, cached_nonrequired_items):
+        cached_required_items.add(sunken_treasure_item) # If sunken treasure is required, may as well cache this
+        return True
+      else:
+        return False
     
     # Effectively, to check whether the location is required or not, we simulate a playthrough and remove the item the
     # player would receive at that location immediately after they receive. If the player is still able to beat the game
@@ -228,6 +247,93 @@ class Hints:
       previously_accessible_locations = accessible_locations
     
     return not logic.check_requirement_met("Can Reach and Defeat Ganondorf")
+  
+  def get_required_locations(self):
+    from time import perf_counter
+    start_time = perf_counter()
+    
+    cached_required_items = set()
+    cached_nonrequired_items = set()
+    
+    # Add hard-required items  to cached list of required items
+    cached_required_items.update(self.HARD_REQUIRED_ITEMS)
+    
+    # Check Tingle statues: if one is required, all of them are; if one is not required, none of them are
+    items_dict = {item_name: location_name for location_name, item_name in self.rando.logic.done_item_locations.items()}
+    location_name = items_dict["Dragon Tingle Statue"]
+    if self.rando.hints.check_location_required(location_name, cached_required_items, cached_nonrequired_items):
+      cached_required_items.update(("Dragon Tingle Statue", "Forbidden Tingle Statue", "Goddess Tingle Statue", "Earth Tingle Statue", "Wind Tingle Statue"))
+    else:
+      cached_nonrequired_items.update(("Dragon Tingle Statue", "Forbidden Tingle Statue", "Goddess Tingle Statue", "Earth Tingle Statue", "Wind Tingle Statue"))
+    
+    # Check mail dependencies
+    location_name = items_dict["Delivery Bag"]
+    if not self.rando.hints.check_location_required(location_name, cached_required_items, cached_nonrequired_items):
+      cached_nonrequired_items.update(("Delivery Bag", "Maggie's Letter", "Moblin's Letter", "Note to Mom", "Cabana Deed"))
+    else:
+      cached_required_items.add("Delivery Bag")
+    
+    # Dungeons can mark off a lot of required items if the boss is required since that means that the BK and all SKs are
+    # required (with the exceptions of FW SK and FF as a dungeon). Additionally, it means that all the items required to
+    # reach and fight the boss are also required. Note that if a dungeon is not required, those items may or may not be
+    # required
+    if self.rando.hints.check_location_required("Dragon Roost Cavern - Gohma Heart Container", cached_required_items, cached_nonrequired_items):
+      cached_required_items.update(("DRC Small Key", "DRC Big Key"))
+    else:
+      cached_nonrequired_items.update(("DRC Small Key", "DRC Big Key"))
+    if (
+      self.rando.hints.check_location_required("Forbidden Woods - Kalle Demos Heart Container", cached_required_items, cached_nonrequired_items)
+      or self.rando.hints.check_location_required("Mailbox - Letter from Orca", cached_required_items, cached_nonrequired_items)
+    ):
+      cached_required_items.update(("FW Big Key", "Deku Leaf"))
+    else:
+      cached_nonrequired_items.add("FW Big Key")
+    if self.rando.hints.check_location_required("Tower of the Gods - Gohdan Heart Container", cached_required_items, cached_nonrequired_items):
+      cached_required_items.update(("TotG Small Key", "TotG Big Key", "Bombs", "Command Melody", "Deku Leaf"))
+    else:
+      cached_nonrequired_items.update(("TotG Small Key", "TotG Big Key"))
+    if (
+      self.rando.hints.check_location_required("Earth Temple - Jalhalla Heart Container", cached_required_items, cached_nonrequired_items)
+      or self.rando.hints.check_location_required("Mailbox - Letter from Baito", cached_required_items, cached_nonrequired_items)
+    ):
+      cached_required_items.update(("ET Small Key", "ET Big Key", "Progressive Shield", "Power Bracelets", "Command Melody", "Earth God's Lyric", "Skull Hammer"))
+    else:
+      cached_nonrequired_items.update(("ET Small Key", "ET Big Key"))
+    if self.rando.hints.check_location_required("Wind Temple - Molgera Heart Container", cached_required_items, cached_nonrequired_items):
+      cached_required_items.update(("WT Small Key", "WT Big Key", "Iron Boots", "Skull Hammer", "Command Melody", "Deku Leaf", "Wind God's Aria"))
+    else:
+      cached_nonrequired_items.update(("WT Small Key", "WT Big Key"))
+    
+    # Determine which locations are required to beat the seed
+    # Items are implicitly referred to by their location to handle duplicate item names (i.e., progressive items and
+    # small keys). Basically, we remove the item from that location and see if the seed is still beatable. If not, then
+    # we consider the item as required.
+    required_locations = []
+    progress_locations, non_progress_locations = self.rando.logic.get_progress_and_non_progress_locations()
+    for location_name in progress_locations:
+        # Ignore race-mode-banned locations
+        if location_name in self.rando.race_mode_banned_locations:
+          continue
+        
+        # Build a list of required locations, along with the item at that location
+        item_name = self.rando.logic.done_item_locations[location_name]
+        if (
+          location_name not in self.rando.race_mode_required_locations                  # Ignore boss Heart Containers in race mode, even if it's required
+          and (self.rando.options.get("keylunacy") or not item_name.endswith(" Key"))   # Keys are only considered in key-lunacy
+          and item_name in self.rando.logic.all_progress_items                          # Required locations always contain required items (by definition)
+        ):
+          if self.rando.hints.check_location_required(location_name, cached_required_items, cached_nonrequired_items):
+            zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
+            entrance_zone = self.get_entrance_zone(location_name)
+            required_locations.append((zone_name, entrance_zone, specific_location_name, item_name))
+            cached_required_items.add(item_name)
+          else:
+            cached_nonrequired_items.add(item_name)
+    
+    end_time = perf_counter()
+    print(end_time - start_time)
+    
+    return required_locations
   
   def generate_item_hints(self):
     hints = []
@@ -297,28 +403,26 @@ class Hints:
     return hints
   
   def generate_woth_style_hints(self):
+    # Create a mapping for chart name -> sunken treasure
+    self.chart_name_to_sunken_treasure = {}
+    chart_name_to_island_number = {}
+    for island_number in range(1, 49+1):
+      chart_name = self.rando.logic.macros["Chart for Island %d" % island_number][0]
+      chart_name_to_island_number[chart_name] = island_number
+    for chart_number in range(1, 49+1):
+      if chart_number <= 8:
+        chart_name = "Triforce Chart %d" % chart_number
+      else:
+        chart_name = "Treasure Chart %d" % (chart_number-8)
+      island_number = chart_name_to_island_number[chart_name]
+      island_name = self.rando.island_number_to_name[island_number]
+      self.chart_name_to_sunken_treasure[chart_name] = "%s - Sunken Treasure" % island_name
+
     # Determine which locations are required to beat the seed
     # Items are implicitly referred to by their location to handle duplicate item names (i.e., progressive items and
     # small keys). Basically, we remove the item from that location and see if the seed is still beatable. If not, then
     # we consider the item as required.
-    required_locations = []
-    progress_locations, non_progress_locations = self.rando.logic.get_progress_and_non_progress_locations()
-    for location_name in progress_locations:
-        # Ignore race-mode-banned locations
-        if location_name in self.rando.race_mode_banned_locations:
-          continue
-        
-        # Build a list of required locations, along with the item at that location
-        item_name = self.rando.logic.done_item_locations[location_name]
-        if (
-            location_name not in self.rando.race_mode_required_locations                  # Ignore boss Heart Containers in race mode, even if it's required
-            and (self.rando.options.get("keylunacy") or not item_name.endswith(" Key"))   # Keys are only considered in key-lunacy
-            and item_name in self.rando.logic.all_progress_items                          # Required locations always contain required items (by definition)
-            and self.rando.hints.check_location_required(location_name)                   # Check if this exact location is required (to account for duplicate items)
-        ):
-            zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
-            entrance_zone = self.get_entrance_zone(location_name)
-            required_locations.append((zone_name, entrance_zone, specific_location_name, item_name))
+    required_locations = self.get_required_locations()
     
     # Generate WOTH hints
     # We select at most `self.MAX_WOTH_HINTS` zones at random to hint as WOTH. At max, `self.MAX_WOTH_DUNGEONS` dungeons
@@ -355,6 +459,7 @@ class Hints:
     
     # Identify zones which do not contain required items
     # For starters, get all entrance zones for progress locations in this seed
+    progress_locations, non_progress_locations = self.rando.logic.get_progress_and_non_progress_locations()
     all_world_areas = set(self.get_entrance_zone(location_name) for location_name in progress_locations)
     # Special case: if entrances are not randomized and Tower of the Gods - Sunken Treasure is not in logic, "Tower of
     # the Gods Sector" can only refer to the dungeon, so is redundant. Remove it.
