@@ -554,5 +554,7 @@ class Hints:
       remaining_hints_desired -= 1
       item_name = self.rando.logic.done_item_locations[location_name]
       hinted_locations.append(Hint(HintType.LOCATION, item_name, self.location_hints[location_name]))
+      if remaining_hints_desired == 0:
+        break
     
     return hinted_woth_zones + hinted_barren_zones + hinted_locations
