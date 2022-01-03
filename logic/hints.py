@@ -343,25 +343,14 @@ class Hints:
       item_name = self.rando.logic.done_item_locations[location_name]
       if (
         location_name
-        not in self.rando.race_mode_required_locations  # Ignore boss Heart Containers in race mode, even if it's required
-        and (
-          self.rando.options.get("keylunacy")
-          or not item_name.endswith(" Key")
-        )  # Keys are only considered in key-lunacy
-        and item_name
-        in self.rando.logic.all_progress_items  # Required locations always contain required items (by definition)
+        not in self.rando.race_mode_required_locations                                # Ignore boss Heart Containers in race mode, even if it's required
+        and (self.rando.options.get("keylunacy") or not item_name.endswith(" Key"))   # Keys are only considered in key-lunacy
+        and item_name in self.rando.logic.all_progress_items                          # Required locations always contain required items (by definition)
       ):
-        if self.rando.hints.check_location_required(
-          location_name, cached_required_items, cached_nonrequired_items
-        ):
-          (
-            zone_name,
-            specific_location_name,
-          ) = self.rando.logic.split_location_name_by_zone(location_name)
+        if self.rando.hints.check_location_required(location_name, cached_required_items, cached_nonrequired_items):
+          zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
           entrance_zone = self.get_entrance_zone(location_name)
-          required_locations.append(
-            (zone_name, entrance_zone, specific_location_name, item_name)
-          )
+          required_locations.append((zone_name, entrance_zone, specific_location_name, item_name))
           cached_required_items.add(item_name)
         else:
           cached_nonrequired_items.add(item_name)
