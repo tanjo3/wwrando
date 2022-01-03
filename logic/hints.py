@@ -1,4 +1,3 @@
-
 import os
 from collections import OrderedDict
 from enum import Enum
@@ -16,6 +15,7 @@ class HintType(Enum):
   ITEM = 3
   JUNK = 100
 
+
 class Hint:
   def __init__(self, type, item, location):
     self.type = type
@@ -23,16 +23,25 @@ class Hint:
     self.location = location
   
   def __str__(self):
-    return "%s <Item: %s, Location: %s>" % (str(self.type), self.item, self.location)
+    return "%s <Item: %s, Location: %s>" % (
+      str(self.type),
+      self.item,
+      self.location,
+    )
   
   def __hash__(self):
     return hash(str(self))
   
   def __eq__(self, other):
     if isinstance(other, self.__class__):
-      return (self.type == other.type) and (self.item == other.item) and (self.location == other.location)
+      return (
+        (self.type == other.type)
+        and (self.item == other.item)
+        and (self.location == other.location)
+      )
     else:
       return False
+
 
 class Hints:
   # When these items are placed in a seed, they are always logically required regardless of settings
@@ -90,13 +99,25 @@ class Hints:
   @staticmethod
   def get_formatted_hint_text_static(hint, prefix="They say that ", suffix=".", delay=30):
     if hint.type == HintType.WOTH:
-      hint_string = "%s\\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00} is on the way of the hero%s" % (prefix, hint.location, suffix)
+      hint_string = (
+        "%s\\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00} is on the way of the hero%s"
+        % (prefix, hint.location, suffix)
+      )
     elif hint.type == HintType.BARREN:
-      hint_string = "%splundering \\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00} is a foolish choice%s" % (prefix, hint.location, suffix)
+      hint_string = (
+        "%splundering \\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00} is a foolish choice%s"
+        % (prefix, hint.location, suffix)
+      )
     elif hint.type == HintType.LOCATION:
-      hint_string = "%s\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (prefix, hint.location, hint.item, suffix)
+      hint_string = (
+        "%s\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} rewards \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s"
+        % (prefix, hint.location, hint.item, suffix)
+      )
     elif hint.type == HintType.ITEM:
-      hint_string = "%s\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is located in \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (prefix, hint.item, hint.location, suffix)
+      hint_string = (
+        "%s\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is located in \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s"
+        % (prefix, hint.item, hint.location, suffix)
+      )
     else:
       hint_string = ""
     
@@ -113,10 +134,16 @@ class Hints:
   def get_formatted_hint_group_text_static(hints, hint_type, prefix="They say that ", suffix=".", delay=30):
     if hint_type == HintType.WOTH:
       woth_hints = ["\\{1A 06 FF 00 00 05}%s\\{1A 06 FF 00 00 00}" % hint.location for hint in hints]
-      hint_string = "%s%s are on the way of the hero%s" % (prefix, ", ".join(woth_hints[:-1]) + ", and " + woth_hints[-1], suffix)
+      hint_string = (
+        "%s%s are on the way of the hero%s"
+        % (prefix, ", ".join(woth_hints[:-1]) + ", and " + woth_hints[-1], suffix)
+      )
     elif hint_type == HintType.BARREN:
       barren_hints = ["\\{1A 06 FF 00 00 03}%s\\{1A 06 FF 00 00 00}" % hint.location for hint in hints]
-      hint_string = "%splundering %s is foolish%s" % (prefix, ", ".join(barren_hints[:-1]) + ", and " + barren_hints[-1], suffix)
+      hint_string = (
+        "%splundering %s is foolish%s"
+        % (prefix, ", ".join(barren_hints[:-1]) + ", and " + barren_hints[-1], suffix)
+      )
     elif hint_type == HintType.LOCATION:
       # Not implemented because grouped location hints would likely overflow textbox
       hint_string = ""
@@ -249,9 +276,6 @@ class Hints:
     return not logic.check_requirement_met("Can Reach and Defeat Ganondorf")
   
   def get_required_locations(self):
-    from time import perf_counter
-    start_time = perf_counter()
-    
     cached_required_items = set()
     cached_nonrequired_items = set()
     
@@ -311,27 +335,36 @@ class Hints:
     required_locations = []
     progress_locations, non_progress_locations = self.rando.logic.get_progress_and_non_progress_locations()
     for location_name in progress_locations:
-        # Ignore race-mode-banned locations
-        if location_name in self.rando.race_mode_banned_locations:
-          continue
-        
-        # Build a list of required locations, along with the item at that location
-        item_name = self.rando.logic.done_item_locations[location_name]
-        if (
-          location_name not in self.rando.race_mode_required_locations                  # Ignore boss Heart Containers in race mode, even if it's required
-          and (self.rando.options.get("keylunacy") or not item_name.endswith(" Key"))   # Keys are only considered in key-lunacy
-          and item_name in self.rando.logic.all_progress_items                          # Required locations always contain required items (by definition)
+      # Ignore race-mode-banned locations
+      if location_name in self.rando.race_mode_banned_locations:
+        continue
+
+      # Build a list of required locations, along with the item at that location
+      item_name = self.rando.logic.done_item_locations[location_name]
+      if (
+        location_name
+        not in self.rando.race_mode_required_locations  # Ignore boss Heart Containers in race mode, even if it's required
+        and (
+          self.rando.options.get("keylunacy")
+          or not item_name.endswith(" Key")
+        )  # Keys are only considered in key-lunacy
+        and item_name
+        in self.rando.logic.all_progress_items  # Required locations always contain required items (by definition)
+      ):
+        if self.rando.hints.check_location_required(
+          location_name, cached_required_items, cached_nonrequired_items
         ):
-          if self.rando.hints.check_location_required(location_name, cached_required_items, cached_nonrequired_items):
-            zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
-            entrance_zone = self.get_entrance_zone(location_name)
-            required_locations.append((zone_name, entrance_zone, specific_location_name, item_name))
-            cached_required_items.add(item_name)
-          else:
-            cached_nonrequired_items.add(item_name)
-    
-    end_time = perf_counter()
-    print(end_time - start_time)
+          (
+            zone_name,
+            specific_location_name,
+          ) = self.rando.logic.split_location_name_by_zone(location_name)
+          entrance_zone = self.get_entrance_zone(location_name)
+          required_locations.append(
+            (zone_name, entrance_zone, specific_location_name, item_name)
+          )
+          cached_required_items.add(item_name)
+        else:
+          cached_nonrequired_items.add(item_name)
     
     return required_locations
   
@@ -417,7 +450,7 @@ class Hints:
       island_number = chart_name_to_island_number[chart_name]
       island_name = self.rando.island_number_to_name[island_number]
       self.chart_name_to_sunken_treasure[chart_name] = "%s - Sunken Treasure" % island_name
-
+    
     # Determine which locations are required to beat the seed
     # Items are implicitly referred to by their location to handle duplicate item names (i.e., progressive items and
     # small keys). Basically, we remove the item from that location and see if the seed is still beatable. If not, then
@@ -510,7 +543,7 @@ class Hints:
           or (location_name == "Mailbox - Letter from Aryll" and "Forsaken Fortress" in barrens)
           or (location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in barrens)
       ):
-          continue
+        continue
       # Catch locations which are hinted in barren zones
       entrance_zone = self.get_entrance_zone(location_name)
       if entrance_zone not in barrens:
