@@ -430,17 +430,17 @@ class Randomizer:
     yield("Saving items...", options_completed)
     if self.randomize_items and not self.dry_run:
       items.write_changed_items(self)
+      options_completed += 1
     
     yield("Generating hints...", options_completed)
     if self.randomize_items and not self.dry_run:
       self.reset_rng()
       tweaks.randomize_and_update_hints(self)
-    if self.options.get("hint_type") == "WotH-Style":
-      options_completed += 10
+      options_completed += 5
     
     if not self.dry_run:
       self.apply_necessary_post_randomization_tweaks()
-    options_completed += 7
+    options_completed += 1
     
     yield("Saving randomized ISO...", options_completed)
     if not self.dry_run:
