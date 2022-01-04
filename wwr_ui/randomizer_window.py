@@ -979,6 +979,10 @@ class WWRandomizerWindow(QMainWindow):
     else:
       should_enable_options["num_race_mode_dungeons"] = False
     
+    if self.get_option_value("hint_placement") == "None":
+      # Race mode places required items on dungeon bosses.
+      should_enable_options["hint_type"] = False
+    
     self.filtered_rgear.setFilterStrings(items_to_filter_out)
     
     starting_gear = self.get_option_value("starting_gear")

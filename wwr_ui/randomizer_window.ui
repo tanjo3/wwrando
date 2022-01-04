@@ -421,6 +421,11 @@
                   <widget class="QComboBox" name="hint_placement">
                    <item>
                     <property name="text">
+                     <string>None</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
                      <string>Fishmen</string>
                     </property>
                    </item>

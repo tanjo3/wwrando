@@ -281,6 +281,7 @@ class Ui_MainWindow(object):
         self.hint_placement.addItem("")
         self.hint_placement.addItem("")
         self.hint_placement.addItem("")
+        self.hint_placement.addItem("")
         self.hint_placement.setObjectName(u"hint_placement")
 
         self.horizontalLayout_14.addWidget(self.hint_placement)
@@ -837,9 +838,10 @@ class Ui_MainWindow(object):
         self.num_starting_triforce_shards.setItemText(8, QCoreApplication.translate("MainWindow", u"8", None))
 
         self.label_for_hint_placement.setText(QCoreApplication.translate("MainWindow", u"Hint Placement", None))
-        self.hint_placement.setItemText(0, QCoreApplication.translate("MainWindow", u"Fishmen", None))
-        self.hint_placement.setItemText(1, QCoreApplication.translate("MainWindow", u"Old Man Ho Ho", None))
-        self.hint_placement.setItemText(2, QCoreApplication.translate("MainWindow", u"KoRL", None))
+        self.hint_placement.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
+        self.hint_placement.setItemText(1, QCoreApplication.translate("MainWindow", u"Fishmen", None))
+        self.hint_placement.setItemText(2, QCoreApplication.translate("MainWindow", u"Old Man Ho Ho", None))
+        self.hint_placement.setItemText(3, QCoreApplication.translate("MainWindow", u"KoRL", None))
 
         self.randomize_starting_island.setText(QCoreApplication.translate("MainWindow", u"Randomize Starting Island", None))
         self.label_for_num_race_mode_dungeons.setText(QCoreApplication.translate("MainWindow", u"Race Mode Required Dungeons", None))

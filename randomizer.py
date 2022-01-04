@@ -432,11 +432,11 @@ class Randomizer:
       items.write_changed_items(self)
       options_completed += 1
     
-    yield("Generating hints...", options_completed)
-    if self.randomize_items and not self.dry_run:
+    if self.options.get("hint_placement") != "None" and self.randomize_items and not self.dry_run:
+      yield("Generating hints...", options_completed)
       self.reset_rng()
       tweaks.randomize_and_update_hints(self)
-      options_completed += 5
+    options_completed += 5
     
     if not self.dry_run:
       self.apply_necessary_post_randomization_tweaks()
