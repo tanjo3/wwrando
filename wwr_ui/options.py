@@ -160,11 +160,11 @@ OPTIONS = OrderedDict([
   ),
   (
     "hint_placement",
-    "HINT PLACEMENT TODO",
+    "Determine where hints will be placed in the game.\nFishmen must be fed All-Purpose Bait before getting the hint. Old Man Ho Ho and KoRL give the hints simply by talking to them.",
   ),
   (
     "hint_type",
-    "HINT TYPE TODO",
+    "Determine the type of hints used in the game.\nItem hints point where a random item can be found. WotH-style hints use a WotH/barren/location hint system similar to other Zelda randos. See http://bombch.us/DRuo for details.",
   ),
   (
     "randomize_music",
