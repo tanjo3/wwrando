@@ -361,6 +361,21 @@ class Hints:
     
     return required_locations
   
+  def build_sunken_treasure_mapping(self):
+    self.chart_name_to_sunken_treasure = {}
+    chart_name_to_island_number = {}
+    for island_number in range(1, 49+1):
+      chart_name = self.rando.logic.macros["Chart for Island %d" % island_number][0]
+      chart_name_to_island_number[chart_name] = island_number
+    for chart_number in range(1, 49+1):
+      if chart_number <= 8:
+        chart_name = "Triforce Chart %d" % chart_number
+      else:
+        chart_name = "Treasure Chart %d" % (chart_number-8)
+      island_number = chart_name_to_island_number[chart_name]
+      island_name = self.rando.island_number_to_name[island_number]
+      self.chart_name_to_sunken_treasure[chart_name] = "%s - Sunken Treasure" % island_name
+  
   def generate_item_hints(self):
     hints = []
     unique_items_given_hint_for = []
@@ -430,19 +445,20 @@ class Hints:
   
   def generate_woth_style_hints(self):
     # Create a mapping for chart name -> sunken treasure
-    self.chart_name_to_sunken_treasure = {}
-    chart_name_to_island_number = {}
-    for island_number in range(1, 49+1):
-      chart_name = self.rando.logic.macros["Chart for Island %d" % island_number][0]
-      chart_name_to_island_number[chart_name] = island_number
-    for chart_number in range(1, 49+1):
-      if chart_number <= 8:
-        chart_name = "Triforce Chart %d" % chart_number
+    self.build_sunken_treasure_mapping()
+    
+    # Get all entrance zones for progress locations in this seed
+    all_world_areas = []
+    progress_locations, non_progress_locations = self.rando.logic.get_progress_and_non_progress_locations()
+    for location_name in progress_locations:
+      if self.rando.logic.is_dungeon_location(location_name):
+        zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
+        all_world_areas.append(zone_name)
       else:
-        chart_name = "Treasure Chart %d" % (chart_number-8)
-      island_number = chart_name_to_island_number[chart_name]
-      island_name = self.rando.island_number_to_name[island_number]
-      self.chart_name_to_sunken_treasure[chart_name] = "%s - Sunken Treasure" % island_name
+        all_world_areas.append(self.get_entrance_zone(location_name))
+    
+    # Get a counter for the number of locations associated with each zone, used for weighing
+    location_counter = Counter(all_world_areas)
     
     # Determine which locations are required to beat the seed
     # Items are implicitly referred to by their location to handle duplicate item names (i.e., progressive items and
@@ -483,24 +499,6 @@ class Hints:
         hinted_woth_zones.append(Hint(HintType.WOTH, item_name, entrance_zone))
       previously_hinted_locations.append("%s - %s" % (zone_name, specific_location_name))
     
-    # Identify zones which do not contain required items
-    # For starters, get all entrance zones for progress locations in this seed
-    all_world_areas = []
-    progress_locations, non_progress_locations = self.rando.logic.get_progress_and_non_progress_locations()
-    for location_name in progress_locations:
-      if self.rando.logic.is_dungeon_location(location_name):
-        zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
-        all_world_areas.append(zone_name)
-      else:
-        all_world_areas.append(self.get_entrance_zone(location_name))
-    # Special case: if entrances are not randomized and Tower of the Gods - Sunken Treasure is not in logic, "Tower of
-    # the Gods Sector" can only refer to the dungeon, so is redundant. Remove it.
-    if (
-      "Tower of the Gods Sector" in all_world_areas
-      and self.rando.options.get("randomize_entrances") in ["Disabled", None]
-      and "Tower of the Gods - Sunken Treasure" not in progress_locations
-    ):
-      all_world_areas.remove("Tower of the Gods Sector")
     # For all required locations, remove the entrance from being hinted barren
     barren_zones = set(all_world_areas) - set(list(zip(*required_locations))[1])
     # For dungeon locations, also remove the dungeon itself
@@ -511,13 +509,9 @@ class Hints:
     race_mode_banned_dungeons = set(self.rando.logic.DUNGEON_NAMES.values()) - set(self.rando.race_mode_required_dungeons)
     barren_zones = barren_zones - race_mode_banned_dungeons
     
-    # Get a counter for the number of locations associated with each zone, used for weighing
-    location_counter = Counter(all_world_areas)
-    
     # Generate barren hints
     # We select at most `self.MAX_BARREN_HINTS` zones at random to hint as barren. At max, `self.MAX_BARREN_DUNGEONS`
-    # dungeons may be hinted barren. All barren zones are weighted equally, regardless of how many locations are in that
-    # zone.
+    # dungeons may be hinted barren. Barren zones are weighted by the square root of the number of locations at that zone.
     unhinted_barren_zones = list(sorted(barren_zones))
     hinted_barren_zones = []
     num_dungeons_hinted_barren = 0
@@ -541,7 +535,6 @@ class Hints:
     hinted_locations = []
     hintable_locations = list(filter(lambda loc: loc in self.location_hints.keys(), progress_locations))
     # Remove locations in race-mode banned dungeons
-    race_mode_banned_dungeons = set(self.rando.logic.DUNGEON_NAMES.values()) - set(self.rando.race_mode_required_dungeons)
     hintable_locations = list(filter(lambda loc: self.rando.logic.split_location_name_by_zone(loc)[0] not in race_mode_banned_dungeons, hintable_locations))
     # Remove locations for items that were previously hinted
     hintable_locations = list(filter(lambda loc: loc not in previously_hinted_locations, hintable_locations))
