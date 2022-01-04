@@ -575,3 +575,94 @@ class Hints:
         break
     
     return hinted_woth_zones + hinted_barren_zones + hinted_locations
+
+  def distribute_hints_on_hohos(self, hints):
+    if self.rando.options.get("hint_type") == "Items":
+      # Duplicate each hint and shuffle the hint list
+      hints = hints * 2
+      self.rando.rng.shuffle(hints)
+      
+      hoho_hints = []
+      for hoho_number in range(10):
+        # Give each Old Man Ho Ho three item hints
+        hint_1 = hints[hoho_number * 3]
+        hint_1 = Hint(hint_1.type, self.progress_item_hints[hint_1.item], self.island_name_hints[hint_1.location])
+        hint_2 = hints[hoho_number * 3 + 1]
+        hint_2 = Hint(hint_2.type, self.progress_item_hints[hint_2.item], self.island_name_hints[hint_2.location])
+        hint_3 = hints[hoho_number * 3 + 2]
+        hint_3 = Hint(hint_3.type, self.progress_item_hints[hint_3.item], self.island_name_hints[hint_3.location])
+        hoho_hints.append((hint_1, hint_2, hint_3))
+    elif self.rando.options.get("hint_type") == "WotH-Style":
+      # Build a list of hints that we can duplicate if we need to
+      duplicatable_hints = list(filter(lambda hint: hint.type in (HintType.BARREN, HintType.LOCATION), hints))
+      if len(duplicatable_hints) == 0:
+        duplicatable_hints = [Hint(HintType.JUNK, None, None)]
+      
+      # Duplicate each hint
+      hints = hints * 2
+      
+      # Ensure that the number of hints is a multiple of 10. Ideally, we want two copies of each hint distributed among
+      # the 10 Old Man Ho Ho.
+      while len(hints) % 10 != 0:
+        hints.append(self.rando.rng.choice(duplicatable_hints))
+      
+      # Shuffle the hint list
+      self.rando.rng.shuffle(hints)
+      
+      # Determine the number of hints each Old Man Ho Ho should get
+      num_hints_per_hoho = len(hints) // 10
+      
+      # Try to distribute hints without duplicates on a single Old Man Ho Ho
+      max_gen_attempts = 50
+      max_pull_attempts = 9
+      
+      gen_attempt = 0
+      pull_attempt = 0
+      while gen_attempt <= max_gen_attempts:
+        gen_attempt += 1
+        hints_copy = hints.copy()
+        hoho_hints = []
+        for hoho_number in range(10):
+          hints_for_hoho = []
+          for hint_number in range(num_hints_per_hoho):
+            pull_attempt = 1
+            while pull_attempt <= max_pull_attempts:
+              hint = self.rando.rng.choice(hints_copy)
+              pull_attempt += 1
+              # Successfully chose a hint, break from loop
+              if hint not in hints_for_hoho:
+                hints_for_hoho.append(hint)
+                hints_copy.remove(hint)
+                break
+            # Was not able to successfully choose a hint, break from loop
+            if pull_attempt > max_pull_attempts:
+              break
+          
+          if len(hints_for_hoho) < num_hints_per_hoho:
+            # Was unable to distribute hints to this Old Man Ho Ho, attempt from the beginning
+            break
+          else:
+            # Otherwise, continue with next Old Man Ho Ho
+            hoho_hints.append(hints_for_hoho)
+        if len(hoho_hints) == 10:
+          # Successfully distributed hints across Old Man Ho Ho, break. Otherwise, try again until max retries.
+          break
+      
+      if len(hoho_hints) != 10:
+        # Distribute hints without caring about duplicates on a single Old Man Ho Ho
+        hoho_hints = []
+        for hoho_number in range(10):
+          hints_for_hoho = []
+          for hint_number in range(num_hints_per_hoho):
+            hint = self.rando.rng.choice(hints)
+            hints_for_hoho.append(hint)
+            hints.remove(hint)
+          hoho_hints.append(hints_for_hoho)
+      
+      # Order the hints that Old Man Ho Ho says them
+      for hints_for_hoho in hoho_hints:
+        hints_for_hoho.sort(key=lambda hint: hint.type.value)
+    else:
+      raise Exception("Invalid hint type: %s" % self.rando.options.get("hint_type"))
+    
+    return hoho_hints
