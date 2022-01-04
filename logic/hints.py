@@ -1,6 +1,8 @@
 import os
+from collections import Counter
 from collections import OrderedDict
 from enum import Enum
+from math import sqrt
 
 import yaml
 from wwrando_paths import DATA_PATH
@@ -68,7 +70,7 @@ class Hints:
   MAX_WOTH_HINTS = 5
   MAX_WOTH_DUNGEONS = 2
   MAX_BARREN_HINTS = 3
-  MAX_BARREN_DUNGEONS = 1
+  MAX_BARREN_DUNGEONS = 2
   
   def __init__(self, rando):
     self.rando = rando
@@ -483,8 +485,14 @@ class Hints:
     
     # Identify zones which do not contain required items
     # For starters, get all entrance zones for progress locations in this seed
+    all_world_areas = []
     progress_locations, non_progress_locations = self.rando.logic.get_progress_and_non_progress_locations()
-    all_world_areas = set(self.get_entrance_zone(location_name) for location_name in progress_locations)
+    for location_name in progress_locations:
+      if self.rando.logic.is_dungeon_location(location_name):
+        zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
+        all_world_areas.append(zone_name)
+      else:
+        all_world_areas.append(self.get_entrance_zone(location_name))
     # Special case: if entrances are not randomized and Tower of the Gods - Sunken Treasure is not in logic, "Tower of
     # the Gods Sector" can only refer to the dungeon, so is redundant. Remove it.
     if (
@@ -494,11 +502,17 @@ class Hints:
     ):
       all_world_areas.remove("Tower of the Gods Sector")
     # For all required locations, remove the entrance from being hinted barren
-    barren_zones = all_world_areas - set(list(zip(*required_locations))[1])
+    barren_zones = set(all_world_areas) - set(list(zip(*required_locations))[1])
     # For dungeon locations, also remove the dungeon itself
     dungeon_woths = list(filter(lambda x: x[0] in self.rando.logic.DUNGEON_NAMES.values(), required_locations))
     if len(dungeon_woths) > 0:
       barren_zones = barren_zones - set(list(zip(*dungeon_woths))[0])
+    # Remove race-mode banned dungeons from being hinted as barren
+    race_mode_banned_dungeons = set(self.rando.logic.DUNGEON_NAMES.values()) - set(self.rando.race_mode_required_dungeons)
+    barren_zones = barren_zones - race_mode_banned_dungeons
+    
+    # Get a counter for the number of locations associated with each zone, used for weighing
+    location_counter = Counter(all_world_areas)
     
     # Generate barren hints
     # We select at most `self.MAX_BARREN_HINTS` zones at random to hint as barren. At max, `self.MAX_BARREN_DUNGEONS`
@@ -508,8 +522,11 @@ class Hints:
     hinted_barren_zones = []
     num_dungeons_hinted_barren = 0
     while len(unhinted_barren_zones) > 0 and len(hinted_barren_zones) < self.MAX_BARREN_HINTS:
-      # Remove a barren zone at random from the list
-      zone_name = self.rando.rng.choice(unhinted_barren_zones)
+      # Weigh each barren zone by the square root of the number of locations there
+      zone_weights = [sqrt(location_counter[zone]) for zone in unhinted_barren_zones]
+      
+      # Remove a barren zone at random from the list, using the weights above
+      zone_name = self.rando.rng.choices(unhinted_barren_zones, weights=zone_weights)[0]
       unhinted_barren_zones.remove(zone_name)
       
       # If the zone is a dungeon, ensure we still have room to hint at barren dungeon
