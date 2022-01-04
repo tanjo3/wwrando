@@ -476,6 +476,9 @@ class Hints:
     previously_hinted_locations = []
     while len(unhinted_woth_locations) > 0 and len(hinted_woth_zones) < self.MAX_WOTH_HINTS:
       zone_name, entrance_zone, specific_location_name, item_name = self.rando.rng.choice(unhinted_woth_locations)
+      # 50/50 chance we try to get another WOTH hint if we get one for a shard
+      if item_name.startswith("Triforce Shard ") and self.rando.rng.choice((True, False)):
+        zone_name, entrance_zone, specific_location_name, item_name = self.rando.rng.choice(unhinted_woth_locations)
       
       # Regardless of whether we use the location, remove that locations from being hinted
       unhinted_woth_locations.remove((zone_name, entrance_zone, specific_location_name, item_name))
