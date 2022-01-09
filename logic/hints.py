@@ -547,10 +547,10 @@ class Hints:
     for location_name in hintable_locations:
       # Catch Mailbox cases
       if (
-          (location_name == "Mailbox - Letter from Baito" and "Earth Temple" in barrens)
-          or (location_name == "Mailbox - Letter from Orca" and "Forbidden Woods" in barrens)
-          or (location_name == "Mailbox - Letter from Aryll" and "Forsaken Fortress" in barrens)
-          or (location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in barrens)
+          (location_name == "Mailbox - Letter from Baito" and "Earth Temple" in race_mode_banned_dungeons)
+          or (location_name == "Mailbox - Letter from Orca" and "Forbidden Woods" in race_mode_banned_dungeons)
+          or (location_name == "Mailbox - Letter from Aryll" and "Forsaken Fortress" in race_mode_banned_dungeons)
+          or (location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in race_mode_banned_dungeons)
       ):
         continue
       # Catch locations which are hinted in barren zones
