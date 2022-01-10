@@ -86,6 +86,7 @@ class Hints:
     
     self.chart_name_to_sunken_treasure = {}
   
+
   @staticmethod
   def get_hint_item_name_static(item_name):
     if item_name.startswith("Triforce Chart"):
@@ -164,6 +165,7 @@ class Hints:
     
     return hint_string
   
+  
   def get_entrance_zone(self, location_name):
     # Helper function to return the entrance zone name for the location.
     # For non-dungeon and non-cave locations, the entrance zone name is simply the zone name. When entrances are
@@ -190,6 +192,23 @@ class Hints:
       # Note that Forsaken Fortress - Sunken Treasure has a similar issue, but there are no randomized entrances
       # on Forsaken Fortress, so we won't make that distinction here
     return entrance_zone
+  
+  def build_sunken_treasure_mapping(self):
+    # Helper function to create a mapping of treasure charts to their respective sunken treasure.
+    
+    self.chart_name_to_sunken_treasure = {}
+    chart_name_to_island_number = {}
+    for island_number in range(1, 49+1):
+      chart_name = self.rando.logic.macros["Chart for Island %d" % island_number][0]
+      chart_name_to_island_number[chart_name] = island_number
+    for chart_number in range(1, 49+1):
+      if chart_number <= 8:
+        chart_name = "Triforce Chart %d" % chart_number
+      else:
+        chart_name = "Treasure Chart %d" % (chart_number-8)
+      island_number = chart_name_to_island_number[chart_name]
+      island_name = self.rando.island_number_to_name[island_number]
+      self.chart_name_to_sunken_treasure[chart_name] = "%s - Sunken Treasure" % island_name
   
   def check_location_required(self, location_to_check, cached_required_items, cached_nonrequired_items):
     # Check if the item is in the cached set of required or nonrequired locations
@@ -361,20 +380,108 @@ class Hints:
     
     return required_locations
   
-  def build_sunken_treasure_mapping(self):
-    self.chart_name_to_sunken_treasure = {}
-    chart_name_to_island_number = {}
-    for island_number in range(1, 49+1):
-      chart_name = self.rando.logic.macros["Chart for Island %d" % island_number][0]
-      chart_name_to_island_number[chart_name] = island_number
-    for chart_number in range(1, 49+1):
-      if chart_number <= 8:
-        chart_name = "Triforce Chart %d" % chart_number
+  def get_woth_hint(self, unhinted_locations, num_dungeons_hinted):
+    zone_name, entrance_zone, specific_location_name, item_name = self.rando.rng.choice(unhinted_locations)
+    # 50/50 chance we try to get another WOTH hint if we get one for a shard
+    if item_name.startswith("Triforce Shard ") and self.rando.rng.choice((True, False)):
+      zone_name, entrance_zone, specific_location_name, item_name = self.rando.rng.choice(unhinted_locations)
+    hinted_location = "%s - %s" % (zone_name, specific_location_name)
+    
+    # Regardless of whether we use the location, remove that locations from being hinted
+    unhinted_locations.remove((zone_name, entrance_zone, specific_location_name, item_name))
+    
+    # Create hint for dungeon only if we have room for another dungeon hint, otherwise skip
+    # Also, sunken treasure location don't count to catch for Tower of the Gods and Forsaken Fortress
+    if zone_name in self.rando.logic.DUNGEON_NAMES.values() and specific_location_name != "Sunken Treasure":
+        if num_dungeons_hinted < self.MAX_WOTH_DUNGEONS:
+          num_dungeons_hinted += 1
+        else:
+          return None
+    
+    # Record hinted zone and item. If it's a dungeon, use the dungeon name. If it's a cave, use the entrance zone name.
+    if zone_name in self.rando.logic.DUNGEON_NAMES.values():
+      if zone_name == "Tower of the Gods" and specific_location_name == "Sunken Treasure":
+        # Special case: if location is Tower of the Gods - Sunken Treasure, use "Tower of the Gods Sector" as the hint
+        return Hint(HintType.WOTH, item_name, "Tower of the Gods Sector"), hinted_location
       else:
-        chart_name = "Treasure Chart %d" % (chart_number-8)
-      island_number = chart_name_to_island_number[chart_name]
-      island_name = self.rando.island_number_to_name[island_number]
-      self.chart_name_to_sunken_treasure[chart_name] = "%s - Sunken Treasure" % island_name
+        return Hint(HintType.WOTH, item_name, zone_name), hinted_location
+    else:
+      return Hint(HintType.WOTH, item_name, entrance_zone), hinted_location
+  
+  def get_barren_zones(self, all_world_areas, required_locations):
+    # Helper function to build a list of barren zones in this seed.
+    # The list includes only zones which are allowed to be hinted as barren.
+    
+    # For all required locations, remove the entrance from being hinted barren
+    barren_zones = set(all_world_areas) - set(list(zip(*required_locations))[1])
+    
+    # For dungeon locations, also remove the dungeon itself
+    dungeon_woths = list(filter(lambda x: x[0] in self.rando.logic.DUNGEON_NAMES.values(), required_locations))
+    if len(dungeon_woths) > 0:
+      barren_zones = barren_zones - set(list(zip(*dungeon_woths))[0])
+    
+    # Remove race-mode banned dungeons from being hinted as barren
+    if self.rando.options.get("race_mode"):
+      race_mode_banned_dungeons = set(self.rando.logic.DUNGEON_NAMES.values()) - set(self.rando.race_mode_required_dungeons)
+      barren_zones = barren_zones - race_mode_banned_dungeons
+    
+    # Return the list of barren zones sorted to maintain consistent ordering
+    return list(sorted(barren_zones))
+  
+  def get_barren_hint(self, unhinted_zones, zone_weights, num_dungeons_hinted):
+    # Remove a barren zone at random from the list, using the weights provided
+    zone_name = self.rando.rng.choices(unhinted_zones, weights=zone_weights)[0]
+    unhinted_zones.remove(zone_name)
+    
+    # If the zone is a dungeon, ensure we still have room to hint at barren dungeon
+    if zone_name in self.rando.logic.DUNGEON_NAMES.values():
+      if num_dungeons_hinted < self.MAX_BARREN_DUNGEONS:
+        num_dungeons_hinted += 1
+      else:
+        return None
+    return Hint(HintType.BARREN, None, zone_name)
+  
+  def get_legal_location_hints(self, progress_locations, hinted_barren_zones, previously_hinted_locations):
+    # Helper function to build a list of locations which may be hinted as location hints in this seed.
+    
+    race_mode_banned_dungeons = set(self.rando.logic.DUNGEON_NAMES.values()) - set(self.rando.race_mode_required_dungeons)
+    
+    hinted_locations = []
+    hintable_locations = list(filter(lambda loc: loc in self.location_hints.keys(), progress_locations))
+    
+    # Remove locations in race-mode banned dungeons
+    hintable_locations = list(filter(lambda loc: self.rando.logic.split_location_name_by_zone(loc)[0] not in race_mode_banned_dungeons, hintable_locations))
+    
+    # Remove locations for items that were previously hinted
+    hintable_locations = list(filter(lambda loc: loc not in previously_hinted_locations, hintable_locations))
+    
+    # Remove locations in hinted barren areas
+    new_hintable_locations = []
+    barrens = [hint.location for hint in hinted_barren_zones]
+    for location_name in hintable_locations:
+      # Catch Mailbox cases
+      if (
+          (location_name == "Mailbox - Letter from Baito" and "Earth Temple" in race_mode_banned_dungeons)
+          or (location_name == "Mailbox - Letter from Orca" and "Forbidden Woods" in race_mode_banned_dungeons)
+          or (location_name == "Mailbox - Letter from Aryll" and "Forsaken Fortress" in race_mode_banned_dungeons)
+          or (location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in race_mode_banned_dungeons)
+      ):
+        continue
+      # Catch locations which are hinted in barren zones
+      entrance_zone = self.get_entrance_zone(location_name)
+      if entrance_zone not in barrens:
+        new_hintable_locations.append(location_name)
+    
+    return new_hintable_locations.copy()
+  
+  def get_location_hint(self, hintable_locations):
+    # Pick a location at which to hint at random
+    location_name = self.rando.rng.choice(hintable_locations)
+    hintable_locations.remove(location_name)
+    
+    item_name = self.rando.logic.done_item_locations[location_name]
+    return Hint(HintType.LOCATION, item_name, self.location_hints[location_name])
+  
   
   def generate_item_hints(self):
     hints = []
@@ -475,103 +582,38 @@ class Hints:
     num_dungeons_hinted_woth = 0
     previously_hinted_locations = []
     while len(unhinted_woth_locations) > 0 and len(hinted_woth_zones) < self.MAX_WOTH_HINTS:
-      zone_name, entrance_zone, specific_location_name, item_name = self.rando.rng.choice(unhinted_woth_locations)
-      # 50/50 chance we try to get another WOTH hint if we get one for a shard
-      if item_name.startswith("Triforce Shard ") and self.rando.rng.choice((True, False)):
-        zone_name, entrance_zone, specific_location_name, item_name = self.rando.rng.choice(unhinted_woth_locations)
-      
-      # Regardless of whether we use the location, remove that locations from being hinted
-      unhinted_woth_locations.remove((zone_name, entrance_zone, specific_location_name, item_name))
-      
-      # Create hint for dungeon only if we have room for another dungeon hint, otherwise skip
-      # Also, sunken treasure location don't count to catch for Tower of the Gods and Forsaken Fortress
-      if zone_name in self.rando.logic.DUNGEON_NAMES.values() and specific_location_name != "Sunken Treasure":
-          if num_dungeons_hinted_woth < self.MAX_WOTH_DUNGEONS:
-            num_dungeons_hinted_woth += 1
-          else:
-            continue
-      
-      # Record hinted zone and item. If it's a dungeon, use the dungeon name. If it's a cave, use the entrance zone name.
-      if zone_name in self.rando.logic.DUNGEON_NAMES.values():
-        if zone_name == "Tower of the Gods" and specific_location_name == "Sunken Treasure":
-          # Special case: if location is Tower of the Gods - Sunken Treasure, use "Tower of the Gods Sector" as the hint
-          hinted_woth_zones.append(Hint(HintType.WOTH, item_name, "Tower of the Gods Sector"))
-        else:
-          hinted_woth_zones.append(Hint(HintType.WOTH, item_name, zone_name))
-      else:
-        hinted_woth_zones.append(Hint(HintType.WOTH, item_name, entrance_zone))
-      previously_hinted_locations.append("%s - %s" % (zone_name, specific_location_name))
-    
-    # For all required locations, remove the entrance from being hinted barren
-    barren_zones = set(all_world_areas) - set(list(zip(*required_locations))[1])
-    # For dungeon locations, also remove the dungeon itself
-    dungeon_woths = list(filter(lambda x: x[0] in self.rando.logic.DUNGEON_NAMES.values(), required_locations))
-    if len(dungeon_woths) > 0:
-      barren_zones = barren_zones - set(list(zip(*dungeon_woths))[0])
-    # Remove race-mode banned dungeons from being hinted as barren
-    race_mode_banned_dungeons = set(self.rando.logic.DUNGEON_NAMES.values()) - set(self.rando.race_mode_required_dungeons)
-    barren_zones = barren_zones - race_mode_banned_dungeons
+      woth_hint, location_name = self.get_woth_hint(unhinted_woth_locations, num_dungeons_hinted_woth)
+      if woth_hint is not None:
+        hinted_woth_zones.append(woth_hint)
+      previously_hinted_locations.append(location_name)
     
     # Generate barren hints
     # We select at most `self.MAX_BARREN_HINTS` zones at random to hint as barren. At max, `self.MAX_BARREN_DUNGEONS`
     # dungeons may be hinted barren. Barren zones are weighted by the square root of the number of locations at that zone.
-    unhinted_barren_zones = list(sorted(barren_zones))
+    unhinted_barren_zones = self.get_barren_zones(all_world_areas, required_locations)
     hinted_barren_zones = []
     num_dungeons_hinted_barren = 0
     while len(unhinted_barren_zones) > 0 and len(hinted_barren_zones) < self.MAX_BARREN_HINTS:
       # Weigh each barren zone by the square root of the number of locations there
       zone_weights = [sqrt(location_counter[zone]) for zone in unhinted_barren_zones]
       
-      # Remove a barren zone at random from the list, using the weights above
-      zone_name = self.rando.rng.choices(unhinted_barren_zones, weights=zone_weights)[0]
-      unhinted_barren_zones.remove(zone_name)
-      
-      # If the zone is a dungeon, ensure we still have room to hint at barren dungeon
-      if zone_name in self.rando.logic.DUNGEON_NAMES.values():
-        if num_dungeons_hinted_barren < self.MAX_BARREN_DUNGEONS:
-          num_dungeons_hinted_barren += 1
-        else:
-          continue
-      hinted_barren_zones.append(Hint(HintType.BARREN, None, zone_name))
+      barren_hint = self.get_barren_hint(unhinted_barren_zones, zone_weights, num_dungeons_hinted_barren)
+      if barren_hint is not None:
+        hinted_barren_zones.append(barren_hint)
     
     # Fill in the remaining hints with location hints
+    # We try to generate location hints until we get to `self.TOTAL_WOTH_STYLE_HINTS` total hints, but if there are not
+    # enough valid hintable locations, then we have no choice but to return less than the desired amount of hints.
+    hintable_locations = self.get_legal_location_hints(progress_locations, hinted_barren_zones, previously_hinted_locations)
     hinted_locations = []
-    hintable_locations = list(filter(lambda loc: loc in self.location_hints.keys(), progress_locations))
-    # Remove locations in race-mode banned dungeons
-    hintable_locations = list(filter(lambda loc: self.rando.logic.split_location_name_by_zone(loc)[0] not in race_mode_banned_dungeons, hintable_locations))
-    # Remove locations for items that were previously hinted
-    hintable_locations = list(filter(lambda loc: loc not in previously_hinted_locations, hintable_locations))
-    # Remove locations in hinted barren areas
-    new_hintable_locations = []
-    barrens = [hint.location for hint in hinted_barren_zones]
-    for location_name in hintable_locations:
-      # Catch Mailbox cases
-      if (
-          (location_name == "Mailbox - Letter from Baito" and "Earth Temple" in race_mode_banned_dungeons)
-          or (location_name == "Mailbox - Letter from Orca" and "Forbidden Woods" in race_mode_banned_dungeons)
-          or (location_name == "Mailbox - Letter from Aryll" and "Forsaken Fortress" in race_mode_banned_dungeons)
-          or (location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in race_mode_banned_dungeons)
-      ):
-        continue
-      # Catch locations which are hinted in barren zones
-      entrance_zone = self.get_entrance_zone(location_name)
-      if entrance_zone not in barrens:
-        new_hintable_locations.append(location_name)
-    hintable_locations = new_hintable_locations.copy()
-    
-    # Generate location hints
-    # Shuffle the list of valid location hints and then create them one by one until we have enough
-    self.rando.rng.shuffle(hintable_locations)
     remaining_hints_desired = self.TOTAL_WOTH_STYLE_HINTS - len(hinted_woth_zones) - len(hinted_barren_zones)
-    for location_name in hintable_locations:
+    while len(hintable_locations) > 0 and remaining_hints_desired > 0:
       remaining_hints_desired -= 1
-      item_name = self.rando.logic.done_item_locations[location_name]
-      hinted_locations.append(Hint(HintType.LOCATION, item_name, self.location_hints[location_name]))
-      if remaining_hints_desired == 0:
-        break
+      location_hint = self.get_location_hint(hintable_locations)
+      hinted_locations.append(location_hint)
     
     return hinted_woth_zones + hinted_barren_zones + hinted_locations
-
+  
   def distribute_hints_on_hohos(self, hints):
     if self.rando.options.get("hint_type") == "Items":
       # Duplicate each hint and shuffle the hint list
