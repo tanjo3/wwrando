@@ -446,7 +446,6 @@ class Hints:
     
     race_mode_banned_dungeons = set(self.rando.logic.DUNGEON_NAMES.values()) - set(self.rando.race_mode_required_dungeons)
     
-    hinted_locations = []
     hintable_locations = list(filter(lambda loc: loc in self.location_hints.keys(), progress_locations))
     
     # Remove locations in race-mode banned dungeons
