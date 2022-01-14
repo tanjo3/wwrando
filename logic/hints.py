@@ -5,6 +5,7 @@ from enum import Enum
 from math import sqrt
 
 import yaml
+from logic.item_types import CONSUMABLE_ITEMS, DUNGEON_PROGRESS_ITEMS, DUNGEON_NONPROGRESS_ITEMS
 from wwrando_paths import DATA_PATH
 
 from logic.logic import Logic
@@ -365,10 +366,9 @@ class Hints:
       # Build a list of required locations, along with the item at that location
       item_name = self.rando.logic.done_item_locations[location_name]
       if (
-        location_name
-        not in self.rando.race_mode_required_locations                                # Ignore boss Heart Containers in race mode, even if it's required
+        location_name not in self.rando.race_mode_required_locations                  # Ignore boss Heart Containers in race mode, even if it's required
         and (self.rando.options.get("keylunacy") or not item_name.endswith(" Key"))   # Keys are only considered in key-lunacy
-        and item_name in self.rando.logic.all_progress_items                          # Required locations always contain required items (by definition)
+        and item_name in self.rando.logic.all_progress_items                          # Required locations always contain progress items (by definition)
       ):
         if self.rando.hints.check_location_required(location_name, cached_required_items, cached_nonrequired_items):
           zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
@@ -408,17 +408,137 @@ class Hints:
     else:
       return Hint(HintType.WOTH, item_name, entrance_zone), hinted_location
   
-  def get_barren_zones(self, all_world_areas, required_locations):
+  def determine_junk_items(self):
+    # Helper method which returns a set of guaranteed unrequired items in the seed
+    
+    junk_items = set(self.rando.logic.all_nonprogress_items)      # Start with all non-progress items in the seed
+    junk_items |= set(CONSUMABLE_ITEMS)                           # Add consumables like Heart Containers and Rupees
+    junk_items |= set(DUNGEON_NONPROGRESS_ITEMS)                  # Add dungeon items (Dungeon Maps and Compasses)
+    if not self.rando.options.get("keylunacy"):
+      junk_items |= set(DUNGEON_PROGRESS_ITEMS)                   # Consider Small and Big Keys junk when key-lunacy is off
+    
+    # Consider Empty Bottles junk only if none are logical
+    if "Empty Bottle" in self.rando.logic.all_progress_items:
+      junk_items.remove("Empty Bottle")
+    # Consider Progressive Wallet junk only if none are logical
+    if "Progressive Wallet" in self.rando.logic.all_progress_items:
+      junk_items.remove("Progressive Wallet")
+    
+    # Consider Small and Big Keys for non-required race mode dungeons as junk when key-lunacy is on
+    race_mode_banned_dungeons = set(self.rando.logic.DUNGEON_NAMES.values()) - set(self.rando.race_mode_required_dungeons)
+    if self.rando.options.get("race_mode") and self.rando.options.get("keylunacy"):
+      if "Dragon Roost Cavern" in race_mode_banned_dungeons:
+        junk_items.add("DRC Small Key")
+        junk_items.add("DRC Big Key")
+      if "Forbidden Woods" in race_mode_banned_dungeons:
+        junk_items.add("FW Small Key")
+        junk_items.add("FW Big Key")
+      if "Tower of the Gods" in race_mode_banned_dungeons:
+        junk_items.add("TotG Small Key")
+        junk_items.add("TotG Big Key")
+      if "Earth Temple" in race_mode_banned_dungeons:
+        junk_items.add("ET Small Key")
+        junk_items.add("ET Big Key")
+      if "Wind Temple" in race_mode_banned_dungeons:
+        junk_items.add("WT Small Key")
+        junk_items.add("WT Big Key")
+    
+    # Special cases: loop here until the list of junk items stops changing
+    junk_items_changed = True
+    while junk_items_changed:
+      junk_items_changed = False
+      
+      # Loop through charts when sunken treasure on and consider any charts that lead to immediately to junk as junk
+      if self.rando.options.get("progression_triforce_charts") or self.rando.options.get("progression_treasure_charts"):
+        for chart_name, sunken_treasure in self.chart_name_to_sunken_treasure.items():
+          if chart_name not in junk_items:
+            item_name = self.rando.logic.done_item_locations[sunken_treasure]
+            if item_name in junk_items:
+              junk_items.add(chart_name)
+              junk_items_changed = True
+      
+      # Check Maggie's and Moblin's Letters and if they lead to junk, consider them junk as well
+      if self.rando.options.get("progression_short_sidequests"):
+        item_name = self.rando.logic.done_item_locations["Windfall Island - Cafe Bar - Postman"]
+        if "Maggie's Letter" not in junk_items and item_name in junk_items:
+          junk_items.add("Maggie's Letter")
+          junk_items_changed = True
+        item_name = self.rando.logic.done_item_locations["Windfall Island - Maggie - Delivery Reward"]
+        if "Moblin's Letter" not in junk_items and item_name in junk_items:
+          junk_items.add("Moblin's Letter")
+          junk_items_changed = True
+      
+      # Check Tingle statues
+      if self.rando.options.get("progression_misc"):
+        item_name = self.rando.logic.done_item_locations["Tingle Island - Ankle - Reward for All Tingle Statues"]
+        if "Dragon Tingle Statue" not in junk_items and item_name in junk_items:
+          junk_items.add("Dragon Tingle Statue")
+          junk_items.add("Forbidden Tingle Statue")
+          junk_items.add("Goddess Tingle Statue")
+          junk_items.add("Earth Tingle Statue")
+          junk_items.add("Wind Tingle Statue")
+          junk_items_changed = True
+        
+    return junk_items
+  
+  def get_barren_zones(self):
     # Helper function to build a list of barren zones in this seed.
     # The list includes only zones which are allowed to be hinted as barren.
     
-    # For all required locations, remove the entrance from being hinted barren
-    barren_zones = set(all_world_areas) - set(list(zip(*required_locations))[1])
+    # To determine a list of candidate barren zones, we start by first constructing a list of guaranteed junk items
+    # The remaining set of items may or may not be required, and so the zones which contain them won't be hinted barren.
+    # We do this because the player may have multiple paths to beat the seed, and so if we only used non-WotH locations,
+    # we may hint all paths as being barren (since one particular path is not strictly required).
+    # Technically, this is an overestimate (a superset) of true barren locations, but it should suffice.
+    junk_items = self.determine_junk_items()
     
-    # For dungeon locations, also remove the dungeon itself
-    dungeon_woths = list(filter(lambda x: x[0] in self.rando.logic.DUNGEON_NAMES.values(), required_locations))
-    if len(dungeon_woths) > 0:
-      barren_zones = barren_zones - set(list(zip(*dungeon_woths))[0])
+    progress_locations, non_progress_locations = self.rando.logic.get_progress_and_non_progress_locations()
+    
+    # Initialize possibly-required zones to all logical zones in this seed
+    # `possibly_required_zones` contains a mapping of zone -> possibly-required items
+    possibly_required_zones = {}
+    for location_name in progress_locations:
+      zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
+      
+      # Consider dungeon as a separate zone
+      if zone_name in self.rando.logic.DUNGEON_NAMES.values():
+        if location_name == "Tower of the Gods - Sunken Treasure":
+          possibly_required_zones["Tower of the Gods Sector"] = set()
+        else:
+          possibly_required_zones[zone_name] = set()
+      else:
+        entrance_zone = self.get_entrance_zone(location_name)
+        possibly_required_zones[entrance_zone] = set()
+    
+    # Loop through all progress locations, recording only possibly-required items in our dictionary
+    for location_name in progress_locations:
+      item_name = self.rando.logic.done_item_locations[location_name]
+      if location_name not in self.rando.race_mode_required_locations and item_name not in junk_items:
+        zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
+        
+        # Consider dungeon as a separate zone
+        if zone_name in self.rando.logic.DUNGEON_NAMES.values():
+          if location_name == "Tower of the Gods - Sunken Treasure":
+            possibly_required_zones["Tower of the Gods Sector"].add(item_name)
+          else:
+            possibly_required_zones[zone_name].add(item_name)
+        else:
+          entrance_zone = self.get_entrance_zone(location_name)
+          possibly_required_zones[entrance_zone].add(item_name)
+        
+        # Include dungeon-related mail with its dungeon, in addition to Mailbox
+        if location_name == "Mailbox - Letter from Baito":
+          possibly_required_zones["Earth Temple"].add(item_name)
+          possibly_required_zones[self.get_entrance_zone("Earth Temple - Jalhalla Heart Container")].add(item_name)
+        if location_name == "Mailbox - Letter from Orca":
+          possibly_required_zones["Forbidden Woods"].add(item_name)
+          possibly_required_zones[self.get_entrance_zone("Forbidden Woods - Kalle Demos Heart Container")].add(item_name)
+        if location_name == "Mailbox - Letter from Aryll" or location_name == "Mailbox - Letter from Tingle":
+          possibly_required_zones["Forsaken Fortress"].add(item_name)
+    
+    # The zones with zero possibly-required items makes up our initial set of barren zones
+    barren_zones = list(filter(lambda x: len(x[1]) == 0, possibly_required_zones.items()))
+    barren_zones = set(zone_name for zone_name, empty_set in barren_zones)
     
     # Remove race-mode banned dungeons from being hinted as barren
     if self.rando.options.get("race_mode"):
@@ -471,7 +591,7 @@ class Hints:
       if entrance_zone not in barrens:
         new_hintable_locations.append(location_name)
     
-    return new_hintable_locations.copy()
+    return new_hintable_locations
   
   def get_location_hint(self, hintable_locations):
     # Pick a location at which to hint at random
@@ -589,7 +709,7 @@ class Hints:
     # Generate barren hints
     # We select at most `self.MAX_BARREN_HINTS` zones at random to hint as barren. At max, `self.MAX_BARREN_DUNGEONS`
     # dungeons may be hinted barren. Barren zones are weighted by the square root of the number of locations at that zone.
-    unhinted_barren_zones = self.get_barren_zones(all_world_areas, required_locations)
+    unhinted_barren_zones = self.get_barren_zones()
     hinted_barren_zones = []
     num_dungeons_hinted_barren = 0
     while len(unhinted_barren_zones) > 0 and len(hinted_barren_zones) < self.MAX_BARREN_HINTS:
