@@ -393,10 +393,8 @@ class Hints:
     # Create hint for dungeon only if we have room for another dungeon hint, otherwise skip
     # Also, sunken treasure location don't count to catch for Tower of the Gods and Forsaken Fortress
     if zone_name in self.rando.logic.DUNGEON_NAMES.values() and specific_location_name != "Sunken Treasure":
-        if num_dungeons_hinted < self.MAX_WOTH_DUNGEONS:
-          num_dungeons_hinted += 1
-        else:
-          return None
+        if num_dungeons_hinted >= self.MAX_WOTH_DUNGEONS:
+          return None, None
     
     # Record hinted zone and item. If it's a dungeon, use the dungeon name. If it's a cave, use the entrance zone name.
     if zone_name in self.rando.logic.DUNGEON_NAMES.values():
@@ -555,9 +553,7 @@ class Hints:
     
     # If the zone is a dungeon, ensure we still have room to hint at barren dungeon
     if zone_name in self.rando.logic.DUNGEON_NAMES.values():
-      if num_dungeons_hinted < self.MAX_BARREN_DUNGEONS:
-        num_dungeons_hinted += 1
-      else:
+      if num_dungeons_hinted >= self.MAX_BARREN_DUNGEONS:
         return None
     return Hint(HintType.BARREN, None, zone_name)
   
@@ -704,7 +700,11 @@ class Hints:
       woth_hint, location_name = self.get_woth_hint(unhinted_woth_locations, num_dungeons_hinted_woth)
       if woth_hint is not None:
         hinted_woth_zones.append(woth_hint)
-      previously_hinted_locations.append(location_name)
+        previously_hinted_locations.append(location_name)
+
+        # Increment dungeon counter if we created a dungeon WOTH hint
+        if woth_hint.location in self.rando.logic.DUNGEON_NAMES.values():
+          num_dungeons_hinted_woth += 1
     
     # Generate barren hints
     # We select at most `self.MAX_BARREN_HINTS` zones at random to hint as barren. At max, `self.MAX_BARREN_DUNGEONS`
@@ -719,6 +719,10 @@ class Hints:
       barren_hint = self.get_barren_hint(unhinted_barren_zones, zone_weights, num_dungeons_hinted_barren)
       if barren_hint is not None:
         hinted_barren_zones.append(barren_hint)
+        
+        # Increment dungeon counter if we created a dungeon barren hint
+        if barren_hint.location in self.rando.logic.DUNGEON_NAMES.values():
+          num_dungeons_hinted_barren += 1
     
     # Fill in the remaining hints with location hints
     # We try to generate location hints until we get to `self.TOTAL_WOTH_STYLE_HINTS` total hints, but if there are not
