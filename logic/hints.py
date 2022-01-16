@@ -538,6 +538,29 @@ class Hints:
     barren_zones = list(filter(lambda x: len(x[1]) == 0, possibly_required_zones.items()))
     barren_zones = set(zone_name for zone_name, empty_set in barren_zones)
     
+    # Prevent the entrances of possibly-required dungeon from being hinted as barren
+    possibly_required_dungeons = list(filter(
+      lambda x: len(x[1]) != 0
+      and x[0] in self.rando.logic.DUNGEON_NAMES.values(),
+      possibly_required_zones.items(),
+    ))
+    for dungeon_name, items_set in possibly_required_dungeons:
+      if dungeon_name == "Dragon Roost Cavern":
+        entrance_zone = self.get_entrance_zone("Dragon Roost Cavern - Gohma Heart Container")
+        barren_zones.discard(entrance_zone)
+      if dungeon_name == "Forbidden Woods":
+        entrance_zone = self.get_entrance_zone("Forbidden Woods - Kalle Demos Heart Container")
+        barren_zones.discard(entrance_zone)
+      if dungeon_name == "Tower of the Gods":
+        entrance_zone = self.get_entrance_zone("Tower of the Gods - Gohdan Heart Container")
+        barren_zones.discard(entrance_zone)
+      if dungeon_name == "Earth Temple":
+        entrance_zone = self.get_entrance_zone("Earth Temple - Jalhalla Heart Container")
+        barren_zones.discard(entrance_zone)
+      if dungeon_name == "Wind Temple":
+        entrance_zone = self.get_entrance_zone("Wind Temple - Molgera Heart Container")
+        barren_zones.discard(entrance_zone)
+    
     # Remove race-mode banned dungeons from being hinted as barren
     if self.rando.options.get("race_mode"):
       race_mode_banned_dungeons = set(self.rando.logic.DUNGEON_NAMES.values()) - set(self.rando.race_mode_required_dungeons)
