@@ -66,6 +66,23 @@ class Hints:
     "Progressive Bow",
   ]
   
+  # For hinting purposes, these item names can refer to multiple items at multiple locations
+  PROGRESSIVE_ITEMS = [
+    "Progressive Quiver",
+    # "Progressive Sword",  # All swords are logically required so we don't need to distiguish them
+    "Progressive Shield",
+    # "Progressive Bow",    # All bows are logically required so we don't need to distiguish them
+    "Progressive Wallet",
+    "Progressive Picto Box",
+    "Empty Bottle",
+    
+    "DRC Small Key",
+    "FW Small Key",
+    "TotG Small Key",
+    "ET Small Key",
+    "WT Small Key",
+  ]
+  
   # Define constants for WotH-style distribution of hints
   TOTAL_WOTH_STYLE_HINTS = 15
   MAX_WOTH_HINTS = 5
@@ -301,7 +318,7 @@ class Hints:
     cached_required_items = set()
     cached_nonrequired_items = set()
     
-    # Add hard-required items  to cached list of required items
+    # Add hard-required items to cached list of required items
     cached_required_items.update(self.HARD_REQUIRED_ITEMS)
     
     # Check Tingle statues: if one is required, all of them are; if one is not required, none of them are
@@ -324,7 +341,7 @@ class Hints:
     # Dungeons can mark off a lot of required items if the boss is required since that means that the BK and all SKs are
     # required (with the exceptions of FW SK and FF as a dungeon). Additionally, it means that all the items required to
     # reach and fight the boss are also required. Note that if a dungeon is not required, those items may or may not be
-    # required
+    # required.
     if self.rando.hints.check_location_required("Dragon Roost Cavern - Gohma Heart Container", cached_required_items, cached_nonrequired_items):
       cached_required_items.update(("DRC Small Key", "DRC Big Key"))
     else:
@@ -374,9 +391,12 @@ class Hints:
           zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
           entrance_zone = self.get_entrance_zone(location_name)
           required_locations.append((zone_name, entrance_zone, specific_location_name, item_name))
-          cached_required_items.add(item_name)
+          
+          if item_name not in self.PROGRESSIVE_ITEMS:
+            cached_required_items.add(item_name)
         else:
-          cached_nonrequired_items.add(item_name)
+          if item_name not in self.PROGRESSIVE_ITEMS:
+            cached_required_items.add(item_name)
     
     return required_locations
   
