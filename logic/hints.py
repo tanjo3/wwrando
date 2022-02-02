@@ -605,6 +605,12 @@ class Hints:
           or (location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in race_mode_banned_dungeons)
       ):
         continue
+      
+      # Catch locations which are hinted in barren dungeons
+      zone_name, specific_location_name = self.rando.logic.split_location_name_by_zone(location_name)
+      if zone_name in self.rando.logic.DUNGEON_NAMES.values() and zone_name in barrens:
+        continue
+      
       # Catch locations which are hinted in barren zones
       entrance_zone = self.get_entrance_zone(location_name)
       if entrance_zone not in barrens:
