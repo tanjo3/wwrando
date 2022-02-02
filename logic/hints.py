@@ -486,8 +486,16 @@ class Hints:
           junk_items.add("Moblin's Letter")
           junk_items_changed = True
       
-      # Check Tingle statues
+      # Check the two 12-eye octos and if both lead to junk, consider both quivers as junk
+      if self.rando.options.get("progression_big_octos_gunboats"):
+        octo1_item_name = self.rando.logic.done_item_locations["Tingle Island - Big Octo"]
+        octo2_item_name = self.rando.logic.done_item_locations["Seven-Star Isles - Big Octo"]
+        if "Progressive Quiver" not in junk_items and octo1_item_name in junk_items and octo2_item_name in junk_items:
+          junk_items.add("Progressive Quiver")
+          junk_items_changed = True
+      
       if self.rando.options.get("progression_misc"):
+        # Check Tingle statues
         item_name = self.rando.logic.done_item_locations["Tingle Island - Ankle - Reward for All Tingle Statues"]
         if "Dragon Tingle Statue" not in junk_items and item_name in junk_items:
           junk_items.add("Dragon Tingle Statue")
@@ -496,6 +504,13 @@ class Hints:
           junk_items.add("Earth Tingle Statue")
           junk_items.add("Wind Tingle Statue")
           junk_items_changed = True
+        
+        # Check Ghost Ship Chart
+        if self.rando.options.get("progression_misc"):
+          item_name = self.rando.logic.done_item_locations["The Great Sea - Ghost Ship"]
+          if "Ghost Ship Chart" not in junk_items and item_name in junk_items:
+            junk_items.add("Ghost Ship Chart")
+            junk_items_changed = True
         
     return junk_items
   
