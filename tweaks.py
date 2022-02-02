@@ -15,6 +15,7 @@ from wwlib import texture_utils
 from wwlib.rarc import RARC
 from wwlib.rel import REL, RELSection, RELRelocation, RELRelocationType
 from logic.hints import HintType, Hint, Hints
+from data.hint_stone_tablets import STONE_TABLET_DATAS
 from wwrando_paths import ASSETS_PATH, ASM_PATH, SEEDGEN_PATH
 import customizer
 
@@ -1423,6 +1424,27 @@ def add_inter_dungeon_warp_pots(self):
           texture = drc_jpc.textures_by_filename[texture_filename]
           copied_texture = copy.deepcopy(texture)
           dest_jpc.add_texture(copied_texture)
+
+def add_hint_stones(self, base_message_id, num_hints):
+  # Randomize the order of the stones based on the current seed
+  self.rng.shuffle(STONE_TABLET_DATAS)
+
+  for index, current_datas in enumerate(STONE_TABLET_DATAS):
+    room_arc_path = "files/res/Stage/%s/Room%d.arc" % (current_datas.stage_name, current_datas.room_num)
+    room_dzx = self.get_arc(room_arc_path).get_file("room.dzr")
+
+    stone = room_dzx.add_entity("ACTR", layer=None)
+    stone.name = "Piwa" # Stone Tablet
+    stone.type = 2 # Stone
+    stone.message_id = base_message_id + (index % num_hints)
+    stone.x_pos = current_datas.x
+    stone.y_pos = current_datas.y
+    stone.z_pos = current_datas.z
+    stone.y_rot = current_datas.y_rot
+    stone.x_rot = 0xFFFF
+    stone.z_rot = 0xFFFF
+
+    room_dzx.save_changes()
 
 def remove_makar_kidnapping_event(self):
   dzx = self.get_arc("files/res/Stage/kaze/Room3.arc").get_file("room.dzr")
