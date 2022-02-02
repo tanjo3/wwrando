@@ -17,7 +17,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(943, 722)
+        MainWindow.resize(943, 730)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -278,6 +278,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_14.addWidget(self.label_for_hint_placement)
 
         self.hint_placement = QComboBox(self.groupBox_3)
+        self.hint_placement.addItem("")
         self.hint_placement.addItem("")
         self.hint_placement.addItem("")
         self.hint_placement.addItem("")
@@ -723,7 +724,7 @@ class Ui_MainWindow(object):
 
         self.option_description = QLabel(self.centralwidget)
         self.option_description.setObjectName(u"option_description")
-        self.option_description.setMinimumSize(QSize(0, 32))
+        self.option_description.setMinimumSize(QSize(0, 40))
         self.option_description.setWordWrap(True)
 
         self.verticalLayout.addWidget(self.option_description)
@@ -842,6 +843,7 @@ class Ui_MainWindow(object):
         self.hint_placement.setItemText(1, QCoreApplication.translate("MainWindow", u"Fishmen", None))
         self.hint_placement.setItemText(2, QCoreApplication.translate("MainWindow", u"Old Man Ho Ho", None))
         self.hint_placement.setItemText(3, QCoreApplication.translate("MainWindow", u"KoRL", None))
+        self.hint_placement.setItemText(4, QCoreApplication.translate("MainWindow", u"Stone Tablets", None))
 
         self.randomize_starting_island.setText(QCoreApplication.translate("MainWindow", u"Randomize Starting Island", None))
         self.label_for_num_race_mode_dungeons.setText(QCoreApplication.translate("MainWindow", u"Race Mode Required Dungeons", None))

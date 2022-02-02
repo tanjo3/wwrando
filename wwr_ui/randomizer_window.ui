@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>943</width>
-    <height>722</height>
+    <height>730</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -437,6 +437,11 @@
                    <item>
                     <property name="text">
                      <string>KoRL</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Stone Tablets</string>
                     </property>
                    </item>
                   </widget>
@@ -1087,7 +1092,7 @@
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>32</height>
+        <height>40</height>
        </size>
       </property>
       <property name="text">

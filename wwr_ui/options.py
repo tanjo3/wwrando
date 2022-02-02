@@ -160,7 +160,7 @@ OPTIONS = OrderedDict([
   ),
   (
     "hint_placement",
-    "Determine where hints will be placed in the game.\nFishmen must be fed All-Purpose Bait before getting the hint. Old Man Ho Ho and KoRL give the hints simply by talking to them.",
+    "Determine where hints will be placed in the game.\nFishmen must be fed All-Purpose Bait before getting the hint. Old Man Ho Ho and KoRL give the hints simply by talking to them. Stone Tablets adds numerous stones around the world that will give you a hint when you read them.",
   ),
   (
     "hint_type",

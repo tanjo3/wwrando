@@ -907,6 +907,8 @@ def randomize_and_update_hints(self):
     update_hoho_hints(self, hints)
   elif self.options.get("hint_placement") == "KoRL":
     update_korl_hints(self, hints)
+  elif self.options.get("hint_placement") == "Stone Tablets":
+    update_stone_tablet_hints(self, hints)
   else:
     raise Exception("Invalid hint placement: %s" % self.options.get("hint_placement"))
 
@@ -1041,6 +1043,23 @@ def update_korl_hints(self, hints):
   korl_message_id = 3446 if self.options.get("sword_mode") == "Swordless" else 3443
   msg = self.bmg.messages_by_id[korl_message_id]
   msg.string = hint
+
+def update_stone_tablet_hints(self, hints):
+  base_new_message_id = 14510 # earliest empty message id when creating new message in Winditor
+  created_messages = 0
+
+  for i, hint in enumerate(hints):
+    hint_text = Hints.get_formatted_hint_text_static(hint, delay=0) # don't add delay for stones
+    hint_text = word_wrap_string(hint_text, max_line_length=42)
+    msg_id = base_new_message_id + created_messages
+  
+    msg = self.bmg.add_new_message(msg_id)
+    msg.string = hint_text
+    msg.text_box_type = 6 # stone
+    msg.initial_draw_type = 1 # instant
+    created_messages += 1
+
+  add_hint_stones(self, base_new_message_id, created_messages)
 
 def update_big_octo_great_fairy_item_name_hint(self, hint):
   item_hint_name = self.hints.progress_item_hints[hint.item]
