@@ -112,6 +112,10 @@ OPTIONS = OrderedDict([
     "chest_type_matches_contents",
     "Changes the chest type to reflect its contents. A metal chest has a progress item, a key chest has a dungeon key, and a wooden chest has a non-progress item or a consumable.\nKey chests are dark wood chests that use a custom texture based on Big Key chests. Keys for non-required dungeons in race mode will be in wooden chests."
   ),
+  (
+    "keep_duplicates_in_logic",
+    "When this option is selected, all duplicates of certain progressive items will be placed in progress locations when at least one is considered a progress item.\nThese progressive items are Empty Bottles, Progressive Quivers, and Progressive Wallets."
+  ),
   
   
   (

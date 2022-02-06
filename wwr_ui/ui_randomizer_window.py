@@ -372,6 +372,11 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.chest_type_matches_contents, 3, 0, 1, 1)
 
+        self.keep_duplicates_in_logic = QCheckBox(self.groupBox_3)
+        self.keep_duplicates_in_logic.setObjectName(u"keep_duplicates_in_logic")
+
+        self.gridLayout_3.addWidget(self.keep_duplicates_in_logic, 3, 1, 1, 1)
+
 
         self.verticalLayout_2.addWidget(self.groupBox_3)
 
@@ -837,6 +842,7 @@ class Ui_MainWindow(object):
         self.randomize_enemy_palettes.setText(QCoreApplication.translate("MainWindow", u"Randomize Enemy Palettes", None))
         self.randomize_enemies.setText(QCoreApplication.translate("MainWindow", u"Randomize Enemy Locations", None))
         self.chest_type_matches_contents.setText(QCoreApplication.translate("MainWindow", u"Chest Type Matches Contents", None))
+        self.keep_duplicates_in_logic.setText(QCoreApplication.translate("MainWindow", u"Keep Duplicates In Logic", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"Convenience Tweaks", None))
         self.remove_title_and_ending_videos.setText(QCoreApplication.translate("MainWindow", u"Remove Title and Ending Videos", None))
         self.swift_sail.setText(QCoreApplication.translate("MainWindow", u"Swift Sail", None))

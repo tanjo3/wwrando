@@ -570,6 +570,13 @@
                  </property>
                 </widget>
                </item>
+               <item row="3" column="1">
+                <widget class="QCheckBox" name="keep_duplicates_in_logic">
+                 <property name="text">
+                  <string>Keep Duplicates In Logic</string>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </widget>
             </item>
