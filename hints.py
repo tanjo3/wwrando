@@ -778,6 +778,9 @@ class Hints:
     # Note that this hint is completely independant of all other hints
     hintable_locations = self.get_legal_item_hints(self.logic.done_item_locations, [], [])
     
+    if len(hintable_locations) == 0:
+      raise Exception("No valid items to give hints for")
+    
     item_hint, location_name = self.get_item_hint(hintable_locations)
     # We don't want this Great Fairy to hint at her own item.
     if location_name == "Two-Eye Reef - Big Octo Great Fairy":
