@@ -418,8 +418,9 @@ class Hints:
       junk_items.remove("Progressive Wallet")
     
     # Consider Small and Big Keys for non-required race mode dungeons as junk when key-lunacy is on
-    race_mode_banned_dungeons = set(self.logic.DUNGEON_NAMES.values()) - set(self.rando.race_mode_required_dungeons)
     if self.options.get("race_mode") and self.options.get("keylunacy"):
+      race_mode_banned_dungeons = set(self.logic.DUNGEON_NAMES.values()) - set(self.rando.race_mode_required_dungeons)
+
       if "Dragon Roost Cavern" in race_mode_banned_dungeons:
         junk_items.add("DRC Small Key")
         junk_items.add("DRC Big Key")
@@ -618,8 +619,6 @@ class Hints:
   
   
   def filter_legal_item_hint(self, location_name, progress_locations, previously_hinted_locations):
-    race_mode_banned_dungeons = set(self.logic.DUNGEON_NAMES.values()) - set(self.rando.race_mode_required_dungeons)
-
     # Some location like the Great Sea or dungeons are invalid for item hints
     entrance_zone = self.get_entrance_zone(location_name)
     if entrance_zone == "Tower of the Gods Sector":
@@ -637,16 +636,16 @@ class Hints:
       
       # You already know which boss locations have a required item and which don't in race mode by looking at the sea chart.
       location_name not in self.rando.race_mode_required_locations and
-
+      
       # Only create hints for locations that are hintable (not Great Sea, Mailbox, or Hyrule)
       entrance_zone in self.island_name_hints and
       
       # Remove locations that are included in always hints
       not (location_name in self.location_hints and self.location_hints[location_name]["Type"] == "Always") and
-
+      
       # Remove locations in race-mode banned dungeons
-      self.logic.split_location_name_by_zone(location_name)[0] not in race_mode_banned_dungeons and
-
+      location_name not in self.rando.race_mode_banned_locations and
+      
       # Remove locations for items that were previously hinted
       location_name not in previously_hinted_locations
     )
@@ -654,23 +653,20 @@ class Hints:
   def get_legal_item_hints(self, progress_locations, hinted_barren_zones, previously_hinted_locations):
     # Helper function to build a list of locations which may be hinted as item hints in this seed.
     
-    hintable_locations = list(self.logic.done_item_locations.keys())
-    race_mode_banned_dungeons = set(self.logic.DUNGEON_NAMES.values()) - set(self.rando.race_mode_required_dungeons)
-
     # Filter out locations which are invalid to be hinted at for item hints
     hintable_locations = list(filter(lambda location_name: self.filter_legal_item_hint(
-      location_name, progress_locations, previously_hinted_locations), hintable_locations))
-
+      location_name, progress_locations, previously_hinted_locations), self.logic.done_item_locations.keys()))
+    
     # Remove locations in hinted barren areas
     new_hintable_locations = []
     barrens = [hint.info1 for hint in hinted_barren_zones]
     for location_name in hintable_locations:
       # Catch Mailbox cases
       if (
-          (location_name == "Mailbox - Letter from Baito" and "Earth Temple" in race_mode_banned_dungeons)
-          or (location_name == "Mailbox - Letter from Orca" and "Forbidden Woods" in race_mode_banned_dungeons)
-          or (location_name == "Mailbox - Letter from Aryll" and "Forsaken Fortress" in race_mode_banned_dungeons)
-          or (location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in race_mode_banned_dungeons)
+          (location_name == "Mailbox - Letter from Baito" and "Earth Temple" in barrens)
+          or (location_name == "Mailbox - Letter from Orca" and "Forbidden Woods" in barrens)
+          or (location_name == "Mailbox - Letter from Aryll" and "Forsaken Fortress" in barrens)
+          or (location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in barrens)
       ):
         continue
       
@@ -725,8 +721,7 @@ class Hints:
       always_hintable_locations = []
     
     # Remove locations in race-mode banned dungeons
-    race_mode_banned_dungeons = set(self.logic.DUNGEON_NAMES.values()) - set(self.rando.race_mode_required_dungeons)
-    hintable_locations = list(filter(lambda loc: self.logic.split_location_name_by_zone(loc)[0] not in race_mode_banned_dungeons, hintable_locations))
+    hintable_locations = list(filter(lambda location_name: location_name not in self.rando.race_mode_banned_locations, hintable_locations))
     
     # Remove locations for items that were previously hinted
     hintable_locations = list(filter(lambda loc: loc not in previously_hinted_locations, hintable_locations))
@@ -737,10 +732,10 @@ class Hints:
     for location_name in hintable_locations:
       # Catch Mailbox cases
       if (
-          (location_name == "Mailbox - Letter from Baito" and "Earth Temple" in race_mode_banned_dungeons)
-          or (location_name == "Mailbox - Letter from Orca" and "Forbidden Woods" in race_mode_banned_dungeons)
-          or (location_name == "Mailbox - Letter from Aryll" and "Forsaken Fortress" in race_mode_banned_dungeons)
-          or (location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in race_mode_banned_dungeons)
+          (location_name == "Mailbox - Letter from Baito" and "Earth Temple" in barrens)
+          or (location_name == "Mailbox - Letter from Orca" and "Forbidden Woods" in barrens)
+          or (location_name == "Mailbox - Letter from Aryll" and "Forsaken Fortress" in barrens)
+          or (location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in barrens)
       ):
         continue
       
