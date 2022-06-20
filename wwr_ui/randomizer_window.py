@@ -42,7 +42,7 @@ class WWRandomizerWindow(QMainWindow):
     
     self.cmd_line_args = cmd_line_args
     self.bulk_test = ("-bulk" in cmd_line_args)
-    self.no_ui_test = ("-noui" in cmd_line_args)
+    self.no_ui_test = True
     self.profiling = ("-profile" in cmd_line_args)
     self.auto_seed = ("-autoseed" in cmd_line_args)
 
@@ -74,6 +74,9 @@ class WWRandomizerWindow(QMainWindow):
     self.ui.starting_hcs.valueChanged.connect(self.update_health_label)
     
     self.load_settings()
+    
+    self.decode_permalink(cmd_line_args["-permalink"])
+    self.ui.seed.setText(cmd_line_args["-seed"])
     
     self.ui.clean_iso_path.editingFinished.connect(self.update_settings)
     self.ui.output_folder.editingFinished.connect(self.update_settings)
@@ -131,13 +134,6 @@ class WWRandomizerWindow(QMainWindow):
       return
     
     self.show()
-    
-    if not IS_RUNNING_FROM_SOURCE:
-      self.update_checker_thread = UpdateCheckerThread()
-      self.update_checker_thread.finished_checking_for_updates.connect(self.show_update_check_results)
-      self.update_checker_thread.start()
-    else:
-      self.ui.update_checker_label.setText("(Running from source, skipping release update check.)")
   
   def generate_seed(self):
     random.seed(None)
@@ -223,13 +219,6 @@ class WWRandomizerWindow(QMainWindow):
     self.ui.clean_iso_path.setText(clean_iso_path)
     self.ui.output_folder.setText(output_folder)
     
-    if not os.path.isfile(clean_iso_path):
-      QMessageBox.warning(self, "Clean ISO path not specified", "Must specify path to your clean Wind Waker ISO (USA).")
-      return
-    if not os.path.isdir(output_folder):
-      QMessageBox.warning(self, "No output folder specified", "Must specify a valid output folder for the randomized files.")
-      return
-    
     seed = self.settings["seed"]
     seed = self.sanitize_seed(seed)
     
@@ -255,7 +244,6 @@ class WWRandomizerWindow(QMainWindow):
     max_progress_val = 20
     if options.get("randomize_enemy_palettes"):
       max_progress_val += 10
-    self.progress_dialog = RandomizerProgressDialog("Randomizing", "Initializing...", max_progress_val)
     
     if self.bulk_test:
       failures_done = 0
@@ -290,18 +278,10 @@ class WWRandomizerWindow(QMainWindow):
       return
     
     self.randomizer_thread = RandomizerThread(rando, profiling=self.profiling)
-    self.randomizer_thread.update_progress.connect(self.update_progress_dialog)
     self.randomizer_thread.randomization_complete.connect(self.randomization_complete)
-    self.randomizer_thread.randomization_failed.connect(self.randomization_failed)
     self.randomizer_thread.start()
   
-  def update_progress_dialog(self, next_option_description, options_finished):
-    self.progress_dialog.setLabelText(next_option_description)
-    self.progress_dialog.setValue(options_finished)
-  
   def randomization_complete(self):
-    self.progress_dialog.reset()
-    
     self.randomizer_thread = None
     
     if self.no_ui_test:
@@ -436,8 +416,6 @@ class WWRandomizerWindow(QMainWindow):
     for option_name in OPTIONS:
       self.settings[option_name] = self.get_option_value(option_name)
     self.settings["custom_colors"] = self.custom_colors
-    
-    self.save_settings()
     
     self.encode_permalink()
     self.encode_legacy_permalink()
@@ -639,20 +617,11 @@ class WWRandomizerWindow(QMainWindow):
       if IS_RUNNING_FROM_SOURCE and VERSION.split("_")[0] == given_version_num.split("_")[0]:
         message = "The permalink you pasted is for version %s of the randomizer, while you are currently using version %s." % (given_version_num, VERSION)
         message += "\n\nBecause only the commit is different, the permalink may or may not still be compatible. Would you like to try loading this permalink anyway?"
-        response = QMessageBox.question(
-          self, "Potentially invalid permalink",
-          message,
-          QMessageBox.Cancel | QMessageBox.Yes,
-          QMessageBox.Cancel
-        )
-        if response == QMessageBox.Cancel:
-          return
+        raise Exception(message)
       else:
-        QMessageBox.critical(
-          self, "Invalid permalink",
+        raise Exception(
           "The permalink you pasted is for version %s of the randomizer, it cannot be used with the version you are currently using (%s)." % (given_version_num, VERSION)
         )
-        return
     
     self.ui.seed.setText(seed)
     
@@ -1496,10 +1465,6 @@ class WWRandomizerWindow(QMainWindow):
       self.close()
   
   def closeEvent(self, event):
-    if not IS_RUNNING_FROM_SOURCE:
-      # Need to wait for the update checker before exiting, or the program will crash when closing.
-      self.update_checker_thread.quit()
-      self.update_checker_thread.wait()
     event.accept()
 
 class ModelFilterOut(QSortFilterProxyModel):
@@ -1560,16 +1525,10 @@ class RandomizerThread(QThread):
         next_option_description, options_finished = next(randomizer_generator)
         if options_finished == -1:
           break
-        if time.time()-last_update_time < 0.1:
-          # Limit how frequently the signal is emitted to 10 times per second.
-          # Extremely frequent updates (e.g. 1000 times per second) can cause the program to crash with no error message.
-          continue
-        self.update_progress.emit(next_option_description, options_finished)
-        last_update_time = time.time()
     except Exception as e:
       stack_trace = traceback.format_exc()
       error_message = "Randomization failed with error:\n" + str(e) + "\n\n" + stack_trace
-      self.randomization_failed.emit(error_message)
+      self.randomization_complete.emit()
       return
     
     if self.profiling:

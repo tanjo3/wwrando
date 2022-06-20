@@ -16,7 +16,7 @@ from wwlib.jpc import JPC
 import tweaks
 from asm import patcher
 from logic.logic import Logic
-from wwrando_paths import DATA_PATH, ASM_PATH, RANDO_ROOT_PATH, IS_RUNNING_FROM_SOURCE
+from wwrando_paths import DATA_PATH, ASM_PATH, RANDO_ROOT_PATH, IS_RUNNING_FROM_SOURCE, SEEDGEN_PATH
 import customizer
 from wwlib import stage_searcher
 from asm import disassemble
@@ -94,7 +94,7 @@ class Randomizer:
     self.permalink = permalink
     self.seed_hash = None
     
-    self.dry_run = ("-dry" in cmd_line_args)
+    self.dry_run = True
     self.disassemble = ("-disassemble" in cmd_line_args)
     self.export_disc_to_folder = ("-exportfolder" in cmd_line_args)
     self.no_logs = ("-nologs" in cmd_line_args)
@@ -500,9 +500,38 @@ class Randomizer:
     if self.randomize_items:
       if not self.options.get("do_not_generate_spoiler_log"):
         self.write_spoiler_log()
-      self.write_non_spoiler_log()
+      
+      permalink_output_path = os.path.join(self.randomized_output_folder, "permalink_%s.txt" % self.seed)
+      with open(permalink_output_path, "w") as f:
+        f.write(self.permalink)
+      
+      seed_hash_output_path = os.path.join(self.randomized_output_folder, "seed_hash_%s.txt" % self.seed)
+      with open(seed_hash_output_path, "w") as f:
+        f.write(self.get_seed_hash())
     
     yield("Done", -1)
+  
+  def get_seed_hash(self):
+    if not self.options.get("do_not_generate_spoiler_log"):
+      integer_seed = self.convert_string_to_integer_md5(self.permalink)
+    else:
+      # When no spoiler log is generated, the seed key also affects randomization, not just the data in the permalink.
+      integer_seed = self.convert_string_to_integer_md5(self.permalink + SEED_KEY)
+    temp_rng = Random()
+    temp_rng.seed(integer_seed)
+    
+    with open(os.path.join(SEEDGEN_PATH, "names.txt")) as f:
+      all_names = f.read().splitlines()
+    
+    valid_names = [name for name in all_names if len(name) <= 5]
+    name_1, name_2 = temp_rng.sample(valid_names, 2)
+    name_1 = self.upper_first_letter(name_1)
+    name_2 = self.upper_first_letter(name_2)
+    return name_1 + " " + name_2
+  
+  def upper_first_letter(self, string):
+    first_letter = string[0].upper()
+    return first_letter + string[1:]
   
   def apply_necessary_tweaks(self):
     patcher.apply_patch(self, "custom_data")
@@ -988,12 +1017,6 @@ class Randomizer:
     
     header += "Wind Waker Randomizer Version %s\n" % VERSION
     
-    if self.permalink:
-      header += "Permalink: %s\n" % self.permalink
-    
-    if self.seed_hash:
-      header += "Seed Hash: %s\n" % self.seed_hash
-
     header += "Seed: %s\n" % self.seed
     
     header += "Options selected:\n  "
@@ -1162,7 +1185,7 @@ class Randomizer:
       island_name = self.island_number_to_name[island_number]
       spoiler_log += "  %-18s %s\n" % (chart_name+":", island_name)
     
-    spoiler_log_output_path = os.path.join(self.randomized_output_folder, "WW Random %s - Spoiler Log.txt" % self.seed)
+    spoiler_log_output_path = os.path.join(self.randomized_output_folder, "spoiler_log_%s.txt" % self.seed)
     with open(spoiler_log_output_path, "w") as f:
       f.write(spoiler_log)
   
