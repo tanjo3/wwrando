@@ -445,11 +445,17 @@ class Randomizer:
     yield("Saving items...", options_completed)
     if self.randomize_items and not self.dry_run:
       items.write_changed_items(self)
-      tweaks.randomize_and_update_hints(self)
+      options_completed += 1
+      
+      if self.randomize_items and not self.dry_run:
+        yield("Generating hints...", options_completed)
+        self.reset_rng()
+        tweaks.randomize_and_update_hints(self)
+      options_completed += 5
     
     if not self.dry_run:
       self.apply_necessary_post_randomization_tweaks()
-    options_completed += 7
+    options_completed += 1
     
     yield("Saving randomized ISO...", options_completed)
     if not self.dry_run:
@@ -545,7 +551,6 @@ class Randomizer:
       tweaks.update_auction_item_names(self)
       tweaks.update_battlesquid_item_names(self)
       tweaks.update_item_names_in_letter_advertising_rock_spire_shop(self)
-      tweaks.update_savage_labyrinth_hint_tablet(self)
     tweaks.show_quest_markers_on_sea_chart_for_dungeons(self, dungeon_names=self.race_mode_required_dungeons)
     tweaks.prevent_fire_mountain_lava_softlock(self)
   
