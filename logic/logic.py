@@ -781,6 +781,15 @@ class Logic:
     for item_name, num_required in sub_items_needed.items():
       items_needed[item_name] = max(num_required, items_needed.setdefault(item_name, 0))
     
+    # Force duplicates of certain progressive items to all be considered in logic
+    if self.rando.options.get("keep_duplicates_in_logic"):
+      if "Empty Bottle" in items_needed:
+        items_needed["Empty Bottle"] = 4
+      if "Progressive Quiver" in items_needed:
+        items_needed["Progressive Quiver"] = 2
+      if "Progressive Wallet" in items_needed:
+        items_needed["Progressive Wallet"] = 2
+    
     useful_items = self.flatten_items_needed_to_item_names(items_needed)
     
     all_progress_items_filtered = []
