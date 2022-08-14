@@ -120,14 +120,15 @@ class Hints:
     self.options = rando.options
     
     # Define constants for hint distribution.
-    self.MAX_PATH_HINTS = 6
-    self.MAX_BARREN_HINTS = 6
-    self.MAX_ITEM_HINTS = 0
-    self.MAX_LOCATION_HINTS = 8
+    self.MAX_PATH_HINTS = int(self.options.get("num_path_hints", 0))
+    self.MAX_BARREN_HINTS = int(self.options.get("num_barren_hints", 0))
+    self.MAX_ITEM_HINTS = int(self.options.get("num_item_hints", 0))
+    self.MAX_LOCATION_HINTS = int(self.options.get("num_location_hints", 0))
     self.TOTAL_NUM_HINTS = self.MAX_PATH_HINTS + self.MAX_BARREN_HINTS + self.MAX_LOCATION_HINTS + self.MAX_ITEM_HINTS
     
-    self.CLEARER_HINTS = True
-    self.USE_ALWAYS_HINTS = True
+    self.WOTH_ONLY = self.options.get("only_use_ganondorf_paths")
+    self.CLEARER_HINTS = self.options.get("clearer_hints")
+    self.USE_ALWAYS_HINTS = self.options.get("use_always_hints")
     
     # Import dictionaries used to build hints from files.
     with open(os.path.join(DATA_PATH, "progress_item_hints.txt"), "r") as f:
@@ -309,9 +310,14 @@ class Hints:
     return {path_name: not logic.check_requirement_met(self.DUNGEON_NAME_TO_REQUIREMENT_NAME[path_name]) for path_name in paths_to_check}
   
   def get_required_locations_for_paths(self):
-    # Add all race-mode dungeons as paths, in addition to Ganon's Tower.
-    dungeon_paths = self.rando.race_mode_required_dungeons.copy()
-    required_locations_for_paths = {goal: [] for goal in ["Ganon's Tower"] + dungeon_paths}
+    # If `self.WOTH_ONLY` is True, then the only path in the game is for Ganon's Tower. Otherwise, add all race-mode
+    # dungeons as paths, in addition to Ganon's Tower.
+    if self.WOTH_ONLY:
+      dungeon_paths = []
+      required_locations_for_paths = {"Ganon's Tower": []}
+    else:
+      dungeon_paths = self.rando.race_mode_required_dungeons.copy()
+      required_locations_for_paths = {goal: [] for goal in ["Ganon's Tower"] + dungeon_paths}
     
     # Determine which locations are required to beat the seed.
     # Items are implicitly referred to by their location to handle duplicate item names (i.e., progressive items and
@@ -828,24 +834,26 @@ class Hints:
     hinted_path_zones = []
     previously_hinted_locations = []
     
-    # Generate a path hint for each race-mode dungeon.
-    for dungeon_name in dungeon_paths:
-      # If there are no hintable locations for path hints, skip to barren hints.
-      if len(required_locations_for_paths) == 0:
-        break
-      
-      if len(hinted_path_zones) < self.MAX_PATH_HINTS:
-        path_hint, location_name = self.get_path_hint(required_locations_for_paths[dungeon_name], previously_hinted_locations, dungeon_name)
+    # Generate a path hint for each race-mode dungeon. If `self.WOTH_ONLY` is True, skip this step
+    if not self.WOTH_ONLY:
+      # Generate a path hint for each race-mode dungeon.
+      for dungeon_name in dungeon_paths:
+        # If there are no hintable locations for path hints, skip to barren hints.
+        if len(required_locations_for_paths) == 0:
+          break
         
-        # Unable to generate a path hint for the dungeon, so remove path goal and move on to the next.
-        if path_hint is None:
-          del required_locations_for_paths[dungeon_name]
-          continue
-        
-        # Remove locations that are hinted in always hints from being hinted path.
-        if not self.USE_ALWAYS_HINTS or (location_name not in self.location_hints or self.location_hints[location_name]["Type"] != "Always"):
-          hinted_path_zones.append(path_hint)
-          previously_hinted_locations.append(location_name)
+        if len(hinted_path_zones) < self.MAX_PATH_HINTS:
+          path_hint, location_name = self.get_path_hint(required_locations_for_paths[dungeon_name], previously_hinted_locations, dungeon_name)
+          
+          # Unable to generate a path hint for the dungeon, so remove path goal and move on to the next.
+          if path_hint is None:
+            del required_locations_for_paths[dungeon_name]
+            continue
+          
+          # Remove locations that are hinted in always hints from being hinted path.
+          if not self.USE_ALWAYS_HINTS or (location_name not in self.location_hints or self.location_hints[location_name]["Type"] != "Always"):
+            hinted_path_zones.append(path_hint)
+            previously_hinted_locations.append(location_name)
     
     while len(required_locations_for_paths) > 0 and len(hinted_path_zones) < self.MAX_PATH_HINTS:
       path_name = self.rando.rng.choice(list(required_locations_for_paths.keys()))
