@@ -1,0 +1,240 @@
+-
+  Name: Mother and Child Isles - Northern Ledge
+  Stage Name: sea
+  Room Number: 9
+  X: -181563.640625
+  Y: 1031.040283203125
+  Z: -201493.265625
+  Y Rotation: 0x1E5A
+-
+  Name: Mother and Child Isles - Southern Ledge
+  Stage Name: sea
+  Room Number: 9
+  X: -180337.8125
+  Y: 950.5496215820312
+  Z: -197885.1875
+  Y Rotation: 0x79AC
+-
+  Name: Windfall Island - Outside Jail Left
+  Stage Name: sea
+  Room Number: 11
+  X: -1808.2147216796875
+  Y: 944.1951904296875
+  Z: -203326.96875
+  Y Rotation: 0xED8D
+-
+  Name: Windfall Island - Outside Jail Left-Center
+  Stage Name: sea
+  Room Number: 11
+  X: -1644.2230224609375
+  Y: 920.1809692382812
+  Z: -203255.671875
+  Y Rotation: 0xECC2
+-
+  Name: Windfall Island - Outside Jail Right
+  Stage Name: sea
+  Room Number: 11
+  X: -1510.3162841796875
+  Y: 832.3160400390625
+  Z: -202566.484375
+  Y Rotation: 0xB0D4
+-
+  Name: Windfall Island - Outside Jail Right-Center
+  Stage Name: sea
+  Room Number: 11
+  X: -1389.1197509765625
+  Y: 854.2840576171875
+  Z: -202882.515625
+  Y Rotation: 0xB0D4
+-
+  Name: Pawprint Isle - Chuchu Cave - Entrance Front-Left
+  Stage Name: TyuTyu
+  Room Number: 0
+  X: 544.9401245117188
+  Y: -2.0290522115828935e-06
+  Z: 507.6248474121094
+  Y Rotation: 0xA260
+-
+  Name: Pawprint Isle - Chuchu Cave - Entrance Front-Right
+  Stage Name: TyuTyu
+  Room Number: 0
+  X: -646.927734375
+  Y: 1.904676901176572e-05
+  Z: 468.63983154296875
+  Y Rotation: 0x57F1
+-
+  Name: Pawprint Isle - Chuchu Cave - Entrance Back-Left
+  Stage Name: TyuTyu
+  Room Number: 0
+  X: 521.4263916015625
+  Y: -3.329448645672528e-06
+  Z: -556.22412109375
+  Y Rotation: 0xE068
+-
+  Name: Pawprint Isle - Chuchu Cave - Entrance Back-Right
+  Stage Name: TyuTyu
+  Room Number: 0
+  X: -536.5362548828125
+  Y: -9.38960693019908e-06
+  Z: -550.7044067382812
+  Y Rotation: 0x1F81
+-
+  Name: Dragon Roost Island - By Wind Shrine
+  Stage Name: sea
+  Room Number: 13
+  X: 201055.046875
+  Y: 185.0
+  Z: -197329.046875
+  Y Rotation: 0x3BE1
+-
+  Name: Dragon Roost Island - Path to Dragon Roost Cavern
+  Stage Name: Adanmae
+  Room Number: 0
+  X: -1008.187744140625
+  Y: 750.0
+  Z: 1749.326171875
+  Y Rotation: 0xFC79
+-
+  Name: Dragon Roost Cavern - First Room by Stairs
+  Stage Name: M_NewD2
+  Room Number: 0
+  X: -689.392822265625
+  Y: 0.0
+  Z: 4985.69677734375
+  Y Rotation: 0xDE1
+-
+  Name: Rock Spire Isle - On Main Pathway Corner
+  Stage Name: sea
+  Room Number: 16
+  X: -218387.234375
+  Y: 513.0156860351562
+  Z: -121792.8671875
+  Y Rotation: 0x1D41
+-
+  Name: Tingle Island - Free Corner
+  Stage Name: sea
+  Room Number: 17
+  X: -101130.9453125
+  Y: 350.42254638671875
+  Z: -79374.921875
+  Y Rotation: 0x4714
+-
+  Name: Greatfish Isle - Backside of Beach
+  Stage Name: sea
+  Room Number: 23
+  X: -203821.578125
+  Y: 36.67220687866211
+  Z: 3303.3818359375
+  Y Rotation: 0xDB9B
+-
+  Name: Needle Rock Isle - Behind Chest
+  Stage Name: sea
+  Room Number: 29
+  X: -279710.6875
+  Y: 500.0
+  Z: 125595.359375
+  Y Rotation: 0x8468
+-
+  Name: Private Oasis - Behind Cabana
+  Stage Name: sea
+  Room Number: 33
+  X: 121329.375
+  Y: 1000.0
+  Z: 117127.59375
+  Y Rotation: 0xF61A
+-
+  Name: Bomb Island - Between Boulders
+  Stage Name: sea
+  Room Number: 34
+  X: 218074.328125
+  Y: 300.0
+  Z: 79949.7578125
+  Y Rotation: 0xB99F
+-
+  Name: Bird's Peak Rock - Near Mailbox
+  Stage Name: sea
+  Room Number: 35
+  X: 302915.5625
+  Y: 490.1648254394531
+  Z: 104366.0859375
+  Y Rotation: 0x9798
+-
+  Name: Diamond Steppe Island - On Third Ledge
+  Stage Name: sea
+  Room Number: 36
+  X: -299506.84375
+  Y: 1734.02001953125
+  Z: 199134.765625
+  Y Rotation: 0xF3AE
+-
+  Name: Forest Haven - Eastern Side Ledge
+  Stage Name: sea
+  Room Number: 41
+  X: 218215.046875
+  Y: 866.7055053710938
+  Z: 201666.140625
+  Y Rotation: 0x770A
+-
+  Name: Cliff Plateau Isles - Cave - Back Wall
+  Stage Name: Cave03
+  Room Number: 0
+  X: 5056.4306640625
+  Y: 600.0
+  Z: -366.8910217285156
+  Y Rotation: 0xCBFA
+-
+  Name: Horseshoe - By Second Hole
+  Stage Name: sea
+  Room Number: 43
+  X: -320228.4375
+  Y: 788.4400024414062
+  Z: 297577.59375
+  Y Rotation: 0xF3CC
+-
+  Name: Outset Island - By Rose's House
+  Stage Name: sea
+  Room Number: 44
+  X: -201702.4375
+  Y: 1175.7100830078125
+  Z: 320396.09375
+  Y Rotation: 0x67CB
+-
+  Name: Outset Island - Behind Mesa's House
+  Stage Name: sea
+  Room Number: 44
+  X: -192301.53125
+  Y: 550.0
+  Z: 319096.4375
+  Y Rotation: 0x9DA4
+-
+  Name: Headstone Island - Back Corner Left
+  Stage Name: sea
+  Room Number: 45
+  X: -81767.6171875
+  Y: 151.6699981689453
+  Z: 320663.21875
+  Y Rotation: 0x164B
+-
+  Name: Headstone Island - Back Corner Right
+  Stage Name: sea
+  Room Number: 45
+  X: -78986.4609375
+  Y: 108.12887573242188
+  Z: 320942.53125
+  Y Rotation: 0xD767
+-
+  Name: Angular Isles - IN Northeast Corner
+  Stage Name: sea
+  Room Number: 47
+  X: 100504.2421875
+  Y: 300.0
+  Z: 319943.25
+  Y Rotation: 0x629E
+-
+  Name: Boating Course - On Southern Island
+  Stage Name: sea
+  Room Number: 48
+  X: 178922.625
+  Y: 574.3810424804688
+  Z: 282349.6875
+  Y Rotation: 0x6E51
