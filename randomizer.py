@@ -71,6 +71,7 @@ RNG_CHANGING_OPTIONS = [
   "cryptic_hints",
   "prioritize_remote_hints",
   "do_not_generate_spoiler_log",
+  "randomize_settings",
 ]
 
 class TooFewProgressionLocationsError(Exception): pass
