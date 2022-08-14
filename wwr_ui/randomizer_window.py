@@ -116,12 +116,12 @@ class WWRandomizerWindow(QMainWindow):
     
     self.show()
     
-    if not IS_RUNNING_FROM_SOURCE:
+    if False:
       self.update_checker_thread = UpdateCheckerThread()
       self.update_checker_thread.finished_checking_for_updates.connect(self.show_update_check_results)
       self.update_checker_thread.start()
     else:
-      self.ui.update_checker_label.setText("(Running from source, skipping release update check.)")
+      self.ui.update_checker_label.setText("<b>This is a build specifically for random settings.</b> For updates, please join the WWR Racing Discord server. For questions and bug reports, please contact tanjo3#5077 on Discord.")
   
   def generate_seed(self):
     random.seed(None)
@@ -166,14 +166,17 @@ class WWRandomizerWindow(QMainWindow):
     self.ui.clean_iso_path.setText(clean_iso_path)
     self.ui.output_folder.setText(output_folder)
     
-    if not os.path.isfile(clean_iso_path):
+    if not os.path.isfile(clean_iso_path) and not self.no_ui_test:
       QMessageBox.warning(self, "Clean ISO path not specified", "Must specify path to your clean Wind Waker ISO (USA).")
       return
-    if not os.path.isdir(output_folder):
+    if not os.path.isdir(output_folder) and not self.no_ui_test:
       QMessageBox.warning(self, "No output folder specified", "Must specify a valid output folder for the randomized files.")
       return
     
-    seed = self.settings["seed"]
+    if "-seed" in self.cmd_line_args:
+      seed = self.cmd_line_args["-seed"]
+    else:
+      seed = self.settings["seed"]
     seed = self.sanitize_seed(seed)
     
     if not seed:
@@ -184,6 +187,7 @@ class WWRandomizerWindow(QMainWindow):
     self.ui.seed.setText(seed)
     self.update_settings()
     
+    original_seed = seed
     seed = "RS_" + VERSION + "_" + seed
     
     options = randomize_settings(seed=seed)
@@ -198,9 +202,12 @@ class WWRandomizerWindow(QMainWindow):
     max_progress_val = 20
     if options.get("randomize_enemy_palettes"):
       max_progress_val += 10
-    self.progress_dialog = RandomizerProgressDialog("Randomizing", "Initializing...", max_progress_val)
+    if not self.no_ui_test:
+      self.progress_dialog = RandomizerProgressDialog("Randomizing", "Initializing...", max_progress_val)
     
     cmd_line_args = self.cmd_line_args.copy()
+    if self.no_ui_test:
+      cmd_line_args["-dry"] = None
     cmd_line_args["-nologs"] = None
     
     if self.bulk_test:
@@ -210,7 +217,7 @@ class WWRandomizerWindow(QMainWindow):
         temp_seed = "RS_" + VERSION + "_" + str(i)
         try:
           options = randomize_settings(seed=temp_seed)
-          rando = Randomizer(temp_seed, clean_iso_path, output_folder, options, cmd_line_args=cmd_line_args)
+          rando = Randomizer(temp_seed, str(i), clean_iso_path, output_folder, options, cmd_line_args=cmd_line_args)
           randomizer_generator = rando.randomize()
           while True:
             next_option_description, options_finished = next(randomizer_generator)
@@ -225,7 +232,7 @@ class WWRandomizerWindow(QMainWindow):
         print("%d/%d seeds failed" % (failures_done, total_done))
     
     try:
-      rando = Randomizer(seed, clean_iso_path, output_folder, options, cmd_line_args=cmd_line_args)
+      rando = Randomizer(seed, original_seed, clean_iso_path, output_folder, options, cmd_line_args=cmd_line_args)
     except (TooFewProgressionLocationsError, InvalidCleanISOError) as e:
       error_message = str(e)
       self.randomization_failed(error_message)
@@ -237,9 +244,11 @@ class WWRandomizerWindow(QMainWindow):
       return
     
     self.randomizer_thread = RandomizerThread(rando, profiling=self.profiling)
-    self.randomizer_thread.update_progress.connect(self.update_progress_dialog)
+    if not self.no_ui_test:
+      self.randomizer_thread.update_progress.connect(self.update_progress_dialog)
     self.randomizer_thread.randomization_complete.connect(self.randomization_complete)
-    self.randomizer_thread.randomization_failed.connect(self.randomization_failed)
+    if not self.no_ui_test:
+      self.randomizer_thread.randomization_failed.connect(self.randomization_failed)
     self.randomizer_thread.start()
   
   def update_progress_dialog(self, next_option_description, options_finished):
@@ -247,7 +256,8 @@ class WWRandomizerWindow(QMainWindow):
     self.progress_dialog.setValue(options_finished)
   
   def randomization_complete(self):
-    self.progress_dialog.reset()
+    if not self.no_ui_test:
+      self.progress_dialog.reset()
     
     self.randomizer_thread = None
     
@@ -384,7 +394,8 @@ class WWRandomizerWindow(QMainWindow):
       self.settings[option_name] = self.get_option_value(option_name)
     self.settings["custom_colors"] = self.custom_colors
     
-    self.save_settings()
+    if not self.no_ui_test:
+      self.save_settings()
   
   def browse_for_clean_iso(self):
     if self.settings["clean_iso_path"] and os.path.isfile(self.settings["clean_iso_path"]):
@@ -1058,7 +1069,7 @@ class WWRandomizerWindow(QMainWindow):
       self.close()
   
   def closeEvent(self, event):
-    if not IS_RUNNING_FROM_SOURCE:
+    if not IS_RUNNING_FROM_SOURCE and not self.no_ui_test:
       # Need to wait for the update checker before exiting, or the program will crash when closing.
       self.update_checker_thread.quit()
       self.update_checker_thread.wait()

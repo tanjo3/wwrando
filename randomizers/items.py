@@ -6,7 +6,8 @@ from collections import OrderedDict
 from fs_helpers import *
 
 def randomize_items(self):
-  print("Randomizing items...")
+  if not self.randobot:
+    print("Randomizing items...")
   
   if self.options.get("progression_dungeons") and self.options.get("race_mode"):
     randomize_boss_rewards(self)

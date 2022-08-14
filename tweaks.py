@@ -1706,14 +1706,11 @@ def show_seed_hash_on_name_entry_screen(self):
   # Add some text to the name entry screen which has two random character names that vary based on the permalink (so the seed and settings both change it).
   # This is so two players intending to play the same seed can verify if they really are on the same seed or not.
   
-  if not self.permalink:
-    return
-  
   if not self.options.get("do_not_generate_spoiler_log"):
-    integer_seed = self.convert_string_to_integer_md5(self.permalink)
+    integer_seed = self.convert_string_to_integer_md5(self.seed)
   else:
     # When no spoiler log is generated, the seed key also affects randomization, not just the data in the permalink.
-    integer_seed = self.convert_string_to_integer_md5(self.permalink + SEED_KEY)
+    integer_seed = self.convert_string_to_integer_md5(self.seed + SEED_KEY)
   temp_rng = Random()
   temp_rng.seed(integer_seed)
   

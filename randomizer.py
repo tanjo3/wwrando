@@ -16,7 +16,7 @@ from wwlib.jpc import JPC
 import tweaks
 from asm import patcher
 from logic.logic import Logic
-from wwrando_paths import DATA_PATH, ASM_PATH, RANDO_ROOT_PATH, IS_RUNNING_FROM_SOURCE
+from wwrando_paths import DATA_PATH, ASM_PATH, RANDO_ROOT_PATH, IS_RUNNING_FROM_SOURCE, SEEDGEN_PATH
 import customizer
 from wwlib import stage_searcher
 from asm import disassemble
@@ -89,10 +89,11 @@ class InvalidCleanISOError(Exception):
   pass
 
 class Randomizer:
-  def __init__(self, seed, clean_iso_path, randomized_output_folder, options, permalink=None, cmd_line_args=OrderedDict()):
+  def __init__(self, seed, original_seed, clean_iso_path, randomized_output_folder, options, permalink=None, cmd_line_args=OrderedDict()):
     self.randomized_output_folder = randomized_output_folder
     self.options = options
     self.seed = seed
+    self.original_seed = original_seed
     self.permalink = permalink
     self.seed_hash = None
     
@@ -100,6 +101,7 @@ class Randomizer:
     self.disassemble = ("-disassemble" in cmd_line_args)
     self.export_disc_to_folder = ("-exportfolder" in cmd_line_args)
     self.no_logs = ("-nologs" in cmd_line_args)
+    self.randobot = self.dry_run and self.no_logs
     self.bulk_test = ("-bulk" in cmd_line_args)
     if self.bulk_test:
       self.dry_run = True
@@ -480,9 +482,40 @@ class Randomizer:
     if self.randomize_items:
       if not self.options.get("do_not_generate_spoiler_log"):
         self.write_spoiler_log()
+      
+      if self.randobot:
+        permalink_output_path = os.path.join(self.randomized_output_folder, "permalink_%s.txt" % self.seed)
+        with open(permalink_output_path, "w") as f:
+          f.write(self.original_seed)
+        
+        seed_hash_output_path = os.path.join(self.randomized_output_folder, "seed_hash_%s.txt" % self.seed)
+        with open(seed_hash_output_path, "w") as f:
+          f.write(self.get_seed_hash())
       self.write_non_spoiler_log()
     
     yield("Done", -1)
+  
+  def get_seed_hash(self):
+    if not self.options.get("do_not_generate_spoiler_log"):
+      integer_seed = self.convert_string_to_integer_md5(self.seed)
+    else:
+      # When no spoiler log is generated, the seed key also affects randomization, not just the data in the permalink.
+      integer_seed = self.convert_string_to_integer_md5(self.seed + SEED_KEY)
+    temp_rng = Random()
+    temp_rng.seed(integer_seed)
+    
+    with open(os.path.join(SEEDGEN_PATH, "names.txt")) as f:
+      all_names = f.read().splitlines()
+    
+    valid_names = [name for name in all_names if len(name) <= 5]
+    name_1, name_2 = temp_rng.sample(valid_names, 2)
+    name_1 = self.upper_first_letter(name_1)
+    name_2 = self.upper_first_letter(name_2)
+    return name_1 + " " + name_2
+  
+  def upper_first_letter(self, string):
+    first_letter = string[0].upper()
+    return first_letter + string[1:]
   
   def apply_necessary_tweaks(self):
     patcher.apply_patch(self, "custom_data")
