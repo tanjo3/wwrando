@@ -3,7 +3,7 @@ from PySide6.QtCore import *
 from PySide6.QtWidgets import *
 
 from wwr_ui.ui_randomizer_window import Ui_MainWindow
-from wwr_ui.options import OPTIONS
+from wwr_ui.options import OPTIONS, NON_PERMALINK_OPTIONS
 from wwr_ui.update_checker import check_for_updates, LATEST_RELEASE_DOWNLOAD_PAGE_URL
 
 import random
@@ -21,6 +21,7 @@ import shutil
 from randomizer import Randomizer, VERSION, TooFewProgressionLocationsError, InvalidCleanISOError
 from wwrando_paths import SETTINGS_PATH, ASSETS_PATH, SEEDGEN_PATH, IS_RUNNING_FROM_SOURCE, CUSTOM_MODELS_PATH
 import customizer
+from randomizers.settings import randomize_settings
 from logic.logic import Logic
 from wwlib import texture_utils
 
@@ -183,8 +184,10 @@ class WWRandomizerWindow(QMainWindow):
     self.ui.seed.setText(seed)
     self.update_settings()
     
-    options = OrderedDict()
-    for option_name in OPTIONS:
+    seed = "RS_" + VERSION + "_" + seed
+    
+    options = randomize_settings(seed=seed)
+    for option_name in NON_PERMALINK_OPTIONS:
       options[option_name] = self.get_option_value(option_name)
     
     colors = OrderedDict()
@@ -197,13 +200,17 @@ class WWRandomizerWindow(QMainWindow):
       max_progress_val += 10
     self.progress_dialog = RandomizerProgressDialog("Randomizing", "Initializing...", max_progress_val)
     
+    cmd_line_args = self.cmd_line_args.copy()
+    cmd_line_args["-nologs"] = None
+    
     if self.bulk_test:
       failures_done = 0
       total_done = 0
       for i in range(100):
-        temp_seed = str(i)
+        temp_seed = "RS_" + VERSION + "_" + str(i)
         try:
-          rando = Randomizer(temp_seed, clean_iso_path, output_folder, options, cmd_line_args=self.cmd_line_args)
+          options = randomize_settings(seed=temp_seed)
+          rando = Randomizer(temp_seed, clean_iso_path, output_folder, options, cmd_line_args=cmd_line_args)
           randomizer_generator = rando.randomize()
           while True:
             next_option_description, options_finished = next(randomizer_generator)
@@ -218,7 +225,7 @@ class WWRandomizerWindow(QMainWindow):
         print("%d/%d seeds failed" % (failures_done, total_done))
     
     try:
-      rando = Randomizer(seed, clean_iso_path, output_folder, options, cmd_line_args=self.cmd_line_args)
+      rando = Randomizer(seed, clean_iso_path, output_folder, options, cmd_line_args=cmd_line_args)
     except (TooFewProgressionLocationsError, InvalidCleanISOError) as e:
       error_message = str(e)
       self.randomization_failed(error_message)
