@@ -64,6 +64,7 @@ RNG_CHANGING_OPTIONS = [
   "fishmen_hints",
   "hoho_hints",
   "korl_hints",
+  "stone_tablet_hints",
   "num_path_hints",
   "num_barren_hints",
   "num_location_hints",
@@ -721,6 +722,10 @@ class WWRandomizer:
     self.main_custom_symbols = self.custom_symbols["sys/main.dol"]
     with open(os.path.join(ASM_PATH, "free_space_start_offsets.txt"), "r") as f:
       self.free_space_start_offsets = yaml.safe_load(f)
+
+    with open(os.path.join(DATA_PATH, "hint_stone_tablets.txt"), "r") as f:
+      self.hint_stone_tablets = yaml.safe_load(f)
+    
   
   def register_renamed_item(self, item_id, item_name):
     self.item_name_to_id[item_name] = item_id

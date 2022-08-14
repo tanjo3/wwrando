@@ -9,6 +9,7 @@ from randomizers.base_randomizer import BaseRandomizer
 from wwlib.dzx import DZx, ACTR, MULT
 from wwrando_paths import DATA_PATH
 import tweaks
+import gclib.bmg
 from asm import patcher
 
 
@@ -141,6 +142,7 @@ class HintsRandomizer(BaseRandomizer):
     self.hints_per_placement: dict[str, list[Hint]] = {}
     self.island_to_fishman_hint: dict[int, Hint] = {}
     self.hoho_index_to_hints: dict[int, list[Hint]] = {}
+    self.stone_tablet_index_to_hints: dict[int, list[Hint]] = {}
     
     HintsRandomizer.load_hint_text_files()
     
@@ -192,7 +194,7 @@ class HintsRandomizer(BaseRandomizer):
     
     self.octo_fairy_hint = self.generate_octo_fairy_hint()
     
-    variable_hint_placement_options = ("fishmen_hints", "hoho_hints", "korl_hints")
+    variable_hint_placement_options = ("fishmen_hints", "hoho_hints", "korl_hints", "stone_tablet_hints")
     self.hints_per_placement.clear()
     for option_name in variable_hint_placement_options:
       if self.options[option_name]:
@@ -221,6 +223,8 @@ class HintsRandomizer(BaseRandomizer):
       self.distribute_fishmen_hints(self.hints_per_placement["fishmen_hints"])
     if "hoho_hints" in self.hints_per_placement:
       self.distribute_hoho_hints(self.hints_per_placement["hoho_hints"])
+    if "stone_tablet_hints" in self.hints_per_placement:
+      self.distribute_stone_tablet_hints(self.hints_per_placement["stone_tablet_hints"])
   
   def distribute_fishmen_hints(self, hints: list[Hint]):
     assert hints
@@ -252,6 +256,31 @@ class HintsRandomizer(BaseRandomizer):
         self.hoho_index_to_hints[hoho_index].append(hint)
         hint_index += 1
     
+  def distribute_stone_tablet_hints(self, orig_hints: list[Hint]):
+    assert orig_hints
+
+    stone_tablets = list(range(len(self.hint_stone_tablets)))
+    self.rng.shuffle(stone_tablets)
+    self.stone_tablet_index_to_hints.clear()
+    for i in stone_tablets:
+      self.stone_tablet_index_to_hints[i] = []
+
+    # Distribute the hints to each tablet
+    # We want each hint to be duplicated at least once for redundancy since
+    # there are many tablets and they won't all be relevant in each settings,
+    # and that every tablet has at least one hint
+
+    self.rng.shuffle(orig_hints)
+    padded_hints = orig_hints
+    self.rng.shuffle(orig_hints)
+    padded_hints += orig_hints
+    while len(stone_tablets) > len(padded_hints):
+      self.rng.shuffle(orig_hints)
+      padded_hints += orig_hints
+
+    for i, hint in enumerate(padded_hints):
+      self.stone_tablet_index_to_hints[i % len(stone_tablets)].append(hint)
+
   def _save(self):
     self.update_savage_labyrinth_hint_tablet(self.floor_30_hint, self.floor_50_hint)
     
@@ -270,6 +299,8 @@ class HintsRandomizer(BaseRandomizer):
         self.update_fishmen_hints()
       elif hint_placement == "hoho_hints":
         self.update_hoho_hints()
+      elif hint_placement == "stone_tablet_hints":
+        self.update_stone_tablet_hints()
       elif hint_placement == "korl_hints":
         self.update_korl_hints(self.hints_per_placement["korl_hints"])
       else:
@@ -431,6 +462,46 @@ class HintsRandomizer(BaseRandomizer):
     for msg_id in (1502, 3443, 3444, 3445, 3446, 3447, 3448):
       msg = self.rando.bmg.messages_by_id[msg_id]
       msg.construct_string_from_parts(self.rando.bfn, hint_lines)
+
+  def update_stone_tablet_hints(self):
+    base_new_message_id = 14510 # earliest empty message id when creating new message in Winditor
+    created_messages = 0
+
+    stone_tablet_messages = {}
+    for stone_tablet_index, hints_for_stone_tablet in self.stone_tablet_index_to_hints.items():
+      hint_lines = []
+      for i, hint in enumerate(hints_for_stone_tablet):
+        hint_lines.append(HintsRandomizer.get_formatted_hint_text(hint, self.cryptic_hints, prefix="", delay=0)) # don't add delay for stones
+      if len(hint_lines) == 1:
+        # Append an empty textbox to avoid softlock on one-box hintstones
+        hint_lines.append("")
+      
+      msg_id = base_new_message_id + created_messages
+      msg = self.rando.bmg.add_new_message(msg_id)
+      msg.text_box_type = gclib.bmg.TextBoxType.STONE # stone
+      msg.initial_draw_type = 1
+      msg.construct_string_from_parts(self.rando.bfn, hint_lines, extra_line_length=5)
+      created_messages += 1
+
+      stone_tablet_messages[stone_tablet_index] = msg_id
+    
+    # Now create them and assign the messages
+    for index, hint_stone in enumerate(self.hint_stone_tablets):
+      room_arc_path = "files/res/Stage/%s/Room%d.arc" % (hint_stone["Stage Name"], hint_stone["Room Number"])
+      room_dzx = self.rando.get_arc(room_arc_path).get_file("room.dzr", DZx)
+      
+      stone = room_dzx.add_entity(ACTR, layer=None)
+      stone.name = "Piwa" # Stone Tablet - d_a_obj_paper
+      stone.type = 2
+      stone.message_id = stone_tablet_messages[index]
+      stone.x_pos = hint_stone["X"]
+      stone.y_pos = hint_stone["Y"]
+      stone.z_pos = hint_stone["Z"]
+      stone.y_rot = hint_stone["Y Rotation"]
+      stone.x_rot = 0xFFFF
+      stone.z_rot = 0xFFFF
+      
+      room_dzx.save_changes()
   #endregion
   
   
@@ -445,6 +516,8 @@ class HintsRandomizer(BaseRandomizer):
       HintsRandomizer.cryptic_zone_hints = yaml.safe_load(f)
     with open(os.path.join(DATA_PATH, "location_hints.txt"), "r") as f:
       HintsRandomizer.location_hints = yaml.safe_load(f)
+    with open(os.path.join(DATA_PATH, "hint_stone_tablets.txt"), "r") as f:
+      HintsRandomizer.hint_stone_tablets = yaml.safe_load(f)
   
   @staticmethod
   def get_hint_item_name(item_name):

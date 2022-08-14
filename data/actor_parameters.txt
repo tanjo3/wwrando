@@ -2158,10 +2158,10 @@ d_a_obj_otble:
     Mask: 0x000000FF
 
 d_a_obj_paper:
-  unknown_param_1:
+  message_id:
     Bitfield name: params
     Mask: 0x0000FFFF
-  unknown_param_2:
+  type:
     Bitfield name: params
     Mask: 0x000F0000
 

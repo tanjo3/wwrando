@@ -1158,6 +1158,16 @@
                  </item>
                 </layout>
                </item>
+               <item row="4" column="3">
+                <widget class="QCheckBox" name="stone_tablet_hints">
+                 <property name="text">
+                  <string>Place Hints on Stone Tablets</string>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </widget>
             </item>

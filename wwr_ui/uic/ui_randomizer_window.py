@@ -817,6 +817,12 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addLayout(self.horizontalLayout_15, 5, 3, 1, 1)
 
+        self.stone_tablet_hints = QCheckBox(self.groupBox_5)
+        self.stone_tablet_hints.setObjectName(u"stone_tablet_hints")
+        self.stone_tablet_hints.setChecked(False)
+
+        self.gridLayout_7.addWidget(self.stone_tablet_hints, 4, 3, 1, 1)
+
 
         self.verticalLayout_8.addWidget(self.groupBox_5)
 
@@ -1100,6 +1106,7 @@ class Ui_MainWindow(object):
         self.label_for_num_location_hints.setText(QCoreApplication.translate("MainWindow", u"Location Hints", None))
         self.label_for_num_item_hints.setText(QCoreApplication.translate("MainWindow", u"Item Hints", None))
         self.label_for_num_path_hints.setText(QCoreApplication.translate("MainWindow", u"Path Hints", None))
+        self.stone_tablet_hints.setText(QCoreApplication.translate("MainWindow", u"Place Hints on Stone Tablets", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))
         self.do_not_generate_spoiler_log.setText(QCoreApplication.translate("MainWindow", u"Do Not Generate Spoiler Log", None))
         self.dry_run.setText(QCoreApplication.translate("MainWindow", u"Dry Run", None))

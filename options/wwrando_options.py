@@ -292,6 +292,10 @@ class Options(BaseOptions):
     default=False,
     description="Places hints on the King of Red Lions. Talk to the King of Red Lions to get hints.",
   )
+  stone_tablet_hints: bool = option(
+    default=False,
+    description="Places hints on Stone Tablets. 30 Stone tablets have been added at various places in the game, read them to get hints.",
+  )
   num_item_hints: int = option(
     default=15,
     minimum=0,
