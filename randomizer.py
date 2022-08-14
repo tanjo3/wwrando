@@ -71,7 +71,14 @@ RNG_CHANGING_OPTIONS = [
   "fishmen_hints",
   "hoho_hints",
   "korl_hints",
-  "num_hints",
+  "stone_tablet_hints",
+  "num_path_hints",
+  "num_barren_hints",
+  "num_location_hints",
+  "num_item_hints",
+  "only_use_ganondorf_paths",
+  "clearer_hints",
+  "use_always_hints",
   "do_not_generate_spoiler_log",
 ]
 
@@ -650,6 +657,9 @@ class Randomizer:
     
     with open(os.path.join(DATA_PATH, "island_name_hints.txt"), "r") as f:
       self.island_name_hints = yaml.safe_load(f)
+    
+    with open(os.path.join(DATA_PATH, "hint_stone_tablets.txt"), "r") as f:
+      self.hint_stone_tablets = yaml.safe_load(f)
     
     with open(os.path.join(DATA_PATH, "enemy_types.txt"), "r") as f:
       self.enemy_types = yaml.safe_load(f)

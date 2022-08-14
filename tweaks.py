@@ -918,6 +918,8 @@ def randomize_and_update_hints(self):
       update_hoho_hints(self, hints_per_placement["hoho_hints"])
     elif hint_placement == "korl_hints":
       update_korl_hints(self, hints_per_placement["korl_hints"])
+    elif hint_placement == "stone_tablet_hints":
+      update_stone_tablet_hints(self, hints_per_placement["stone_tablet_hints"])
     else:
       print("Invalid hint placement option: %s" % hint_placement)
 
@@ -1008,6 +1010,24 @@ def update_korl_hints(self, hints):
   for msg_id in (3443, 3444, 3445, 3446, 3447, 3448):
     msg = self.bmg.messages_by_id[msg_id]
     msg.string = hint
+
+def update_stone_tablet_hints(self, hints):
+  base_new_message_id = 14510 # earliest empty message id when creating new message in Winditor
+  created_messages = 0
+  
+  for hint in hints:
+    hint_text = Hints.get_formatted_hint_text_static(hint, delay=0) # don't add delay for stones
+    
+    hint_text = word_wrap_string(hint_text, max_line_length=39)
+    msg_id = base_new_message_id + created_messages
+    
+    msg = self.bmg.add_new_message(msg_id)
+    msg.string = hint_text
+    msg.text_box_type = 6 # stone
+    msg.initial_draw_type = 1 # instant
+    created_messages += 1
+  
+  add_hint_stones(self, base_new_message_id, created_messages)
 
 def update_big_octo_great_fairy_item_name_hint(self, hint):
   self.bmg.messages_by_id[12015].string = word_wrap_string(
@@ -1391,6 +1411,27 @@ def add_inter_dungeon_warp_pots(self):
           texture = drc_jpc.textures_by_filename[texture_filename]
           copied_texture = copy.deepcopy(texture)
           dest_jpc.add_texture(copied_texture)
+
+def add_hint_stones(self, base_message_id, num_hints):
+  # Randomize the order of the stones based on the current seed
+  self.rng.shuffle(self.hint_stone_tablets)
+  
+  for index, hint_stone in enumerate(self.hint_stone_tablets):
+    room_arc_path = "files/res/Stage/%s/Room%d.arc" % (hint_stone["Stage Name"], hint_stone["Room Number"])
+    room_dzx = self.get_arc(room_arc_path).get_file("room.dzr")
+    
+    stone = room_dzx.add_entity("ACTR", layer=None)
+    stone.name = "Piwa" # Stone Tablet
+    stone.type = 2 # Stone
+    stone.message_id = base_message_id + (index % num_hints)
+    stone.x_pos = hint_stone["X"]
+    stone.y_pos = hint_stone["Y"]
+    stone.z_pos = hint_stone["Z"]
+    stone.y_rot = hint_stone["Y Rotation"]
+    stone.x_rot = 0xFFFF
+    stone.z_rot = 0xFFFF
+    
+    room_dzx.save_changes()
 
 def remove_makar_kidnapping_event(self):
   dzx = self.get_arc("files/res/Stage/kaze/Room3.arc").get_file("room.dzr")
