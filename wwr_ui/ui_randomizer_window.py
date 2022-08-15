@@ -55,6 +55,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.random_settings_explanation.sizePolicy().hasHeightForWidth())
         self.random_settings_explanation.setSizePolicy(sizePolicy)
         self.random_settings_explanation.setFrameShape(QFrame.NoFrame)
+        self.random_settings_explanation.setOpenExternalLinks(True)
 
         self.verticalLayout_3.addWidget(self.random_settings_explanation)
 
