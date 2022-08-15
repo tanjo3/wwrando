@@ -190,56 +190,62 @@ class WWRandomizerWindow(QMainWindow):
     original_seed = seed
     seed = "RS_" + VERSION + "_" + seed
     
-    options = randomize_settings(seed=seed)
-    for option_name in NON_PERMALINK_OPTIONS:
-      options[option_name] = self.get_option_value(option_name)
-    
-    colors = OrderedDict()
-    for color_name in self.get_default_custom_colors_for_current_model():
-      colors[color_name] = self.get_color(color_name)
-    options["custom_colors"] = colors
-    
-    max_progress_val = 20
-    if options.get("randomize_enemy_palettes"):
-      max_progress_val += 10
-    if not self.no_ui_test:
-      self.progress_dialog = RandomizerProgressDialog("Randomizing", "Initializing...", max_progress_val)
-    
-    cmd_line_args = self.cmd_line_args.copy()
-    if self.no_ui_test:
-      cmd_line_args["-dry"] = None
-    cmd_line_args["-nologs"] = None
-    
-    if self.bulk_test:
-      failures_done = 0
-      total_done = 0
-      for i in range(100):
-        temp_seed = "RS_" + VERSION + "_" + str(i)
-        try:
-          options = randomize_settings(seed=temp_seed)
-          rando = Randomizer(temp_seed, str(i), clean_iso_path, output_folder, options, cmd_line_args=cmd_line_args)
-          randomizer_generator = rando.randomize()
-          while True:
-            next_option_description, options_finished = next(randomizer_generator)
-            if options_finished == -1:
-              break
-        except Exception as e:
-          stack_trace = traceback.format_exc()
-          error_message = "Error on seed " + temp_seed + ":\n" + str(e) + "\n\n" + stack_trace
-          print(error_message)
-          failures_done += 1
-        total_done += 1
-        print("%d/%d seeds failed" % (failures_done, total_done))
-    
-    try:
-      rando = Randomizer(seed, original_seed, clean_iso_path, output_folder, options, cmd_line_args=cmd_line_args)
-    except (TooFewProgressionLocationsError, InvalidCleanISOError) as e:
-      error_message = str(e)
-      self.randomization_failed(error_message)
-      return
-    except Exception as e:
-      stack_trace = traceback.format_exc()
-      error_message = "Randomization failed with error:\n" + str(e) + "\n\n" + stack_trace
+    n_attempts = 0
+    max_attempts = 10
+    error_message = ""
+    while n_attempts < max_attempts:
+      options = randomize_settings(seed=seed+str(n_attempts))
+      for option_name in NON_PERMALINK_OPTIONS:
+        options[option_name] = self.get_option_value(option_name)
+      
+      colors = OrderedDict()
+      for color_name in self.get_default_custom_colors_for_current_model():
+        colors[color_name] = self.get_color(color_name)
+      options["custom_colors"] = colors
+      
+      max_progress_val = 20
+      if options.get("randomize_enemy_palettes"):
+        max_progress_val += 10
+      if not self.no_ui_test:
+        self.progress_dialog = RandomizerProgressDialog("Randomizing", "Initializing...", max_progress_val)
+      
+      cmd_line_args = self.cmd_line_args.copy()
+      if self.no_ui_test:
+        cmd_line_args["-dry"] = None
+      cmd_line_args["-nologs"] = None
+      
+      if self.bulk_test:
+        failures_done = 0
+        total_done = 0
+        for i in range(100):
+          temp_seed = "RS_" + VERSION + "_" + str(i)
+          try:
+            options = randomize_settings(seed=temp_seed)
+            rando = Randomizer(temp_seed, str(i), clean_iso_path, output_folder, options, cmd_line_args=cmd_line_args)
+            randomizer_generator = rando.randomize()
+            while True:
+              next_option_description, options_finished = next(randomizer_generator)
+              if options_finished == -1:
+                break
+          except Exception as e:
+            stack_trace = traceback.format_exc()
+            error_message = "Error on seed " + temp_seed + ":\n" + str(e) + "\n\n" + stack_trace
+            print(error_message)
+            failures_done += 1
+          total_done += 1
+          print("%d/%d seeds failed" % (failures_done, total_done))
+      
+      try:
+        rando = Randomizer(seed, original_seed, clean_iso_path, output_folder, options, cmd_line_args=cmd_line_args)
+        break
+      except (TooFewProgressionLocationsError, InvalidCleanISOError) as e:
+        error_message = str(e)
+        n_attempts += 1
+      except Exception as e:
+        stack_trace = traceback.format_exc()
+        error_message = "Randomization failed with error:\n" + str(e) + "\n\n" + stack_trace
+        n_attempts += 1
+    else:
       self.randomization_failed(error_message)
       return
     
