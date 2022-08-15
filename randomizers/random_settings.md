@@ -59,30 +59,31 @@ Below are the weights for the randomized settings. If only one weight is listed,
 \* *If **Dungeons** are on, then the weight for **Skip Boss Rematches** is set to 0%*.
 
 ## Additional Starting Items
-For starting items, you will always start with the Telescope. Depending on the value of _Number of Starting Items_, additional weighted pulls (without replacement) from the following table with be made.
+For starting items, you will always start with the Telescope, Ballad of Gales, and Song of Passing. Depending on the value of _Number of Starting Items_, additional weighted pulls (without replacement) from the following table with be made.
 
 **_Importantly_**, the pool of starting items is dynamically modified based on the settings that were randomly chosen. For every option in the starting item pool, if it contains only items with **_no_** logical implications in the seed, that option is removed and its weight is evenly distributed among the remaining options. For example, if **Spoils Trading** is not on, _Spoils Bag_ is removed from the starting items pool and its weight is redistributed.
 
 |              **Starting Item(s)**              	| **Weight** 	|
 |:----------------------------------------------:	|:----------:	|
-|            **Progressive Picto Box**           	|    5.88%   	|
-|                 **Spoils Bag**                 	|    5.88%   	|
-|               **Grappling Hook**               	|    5.88%   	|
-|               **Progressive Bow**              	|    5.88%   	|
-|               **Power Bracelets**              	|    5.88%   	|
-|                 **Iron Boots**                 	|    5.88%   	|
-|                  **Bait Bag**                  	|    5.88%   	|
-|                  **Boomerang**                 	|    5.88%   	|
-|                  **Hookshot**                  	|    5.88%   	|
-|                    **Bombs**                   	|    5.88%   	|
-|                **Skull Hammer**                	|    5.88%   	|
-|                  **Deku Leaf**                 	|    5.88%   	|
-|             **Progressive Shield**             	|    5.88%   	|
-|                **Empty Bottle**                	|    5.88%   	|
-|              **Ghost Ship Chart**              	|    5.88%   	|
-| **Din's Pearl, Farore's Pearl, Nayru's Pearl** 	|    5.88%   	|
-|                **Delivery Bag**                	|    1.20%   	|
-|          **Delivery Bag, Note to Mom**         	|    1.18%   	|
-|        **Delivery Bag, Maggie's Letter**       	|    1.18%   	|
-|        **Delivery Bag, Moblin's Letter**       	|    1.18%   	|
-|          **Delivery Bag, Cabana Deed**         	|    1.18%   	|
+|            **Progressive Picto Box**           	|    5.60%   	|
+|                 **Spoils Bag**                 	|    5.60%   	|
+|               **Grappling Hook**               	|    5.60%   	|
+|               **Progressive Bow**              	|    5.60%   	|
+|               **Power Bracelets**              	|    5.60%   	|
+|                 **Iron Boots**                 	|    5.60%   	|
+|                  **Bait Bag**                  	|    5.60%   	|
+|                  **Boomerang**                 	|    5.60%   	|
+|                  **Hookshot**                  	|    5.60%   	|
+|                    **Bombs**                   	|    5.60%   	|
+|                **Skull Hammer**                	|    5.60%   	|
+|                  **Deku Leaf**                 	|    5.60%   	|
+|             **Progressive Shield**             	|    5.60%   	|
+|                **Empty Bottle**                	|    5.60%   	|
+|              **Ghost Ship Chart**              	|    5.60%   	|
+|          **Progressive Magic Meter**           	|    5.60%   	|
+| **Din's Pearl, Farore's Pearl, Nayru's Pearl** 	|    5.60%   	|
+|                **Delivery Bag**                	|    1.16%   	|
+|          **Delivery Bag, Note to Mom**         	|    0.91%   	|
+|        **Delivery Bag, Maggie's Letter**       	|    0.91%   	|
+|        **Delivery Bag, Moblin's Letter**       	|    0.91%   	|
+|          **Delivery Bag, Cabana Deed**         	|    0.91%   	|
