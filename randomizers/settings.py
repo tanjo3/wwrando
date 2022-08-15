@@ -160,7 +160,6 @@ def randomize_starting_gear(options, seed=None):
   num_starting_items = random.choices(values, weights=weights)[0]
   if num_starting_items == 0:
     return starting_gear
-  num_starting_items = 200
   
   try:
     rando = Randomizer(seed, "", "", "", options, cmd_line_args={"-dry": None})
