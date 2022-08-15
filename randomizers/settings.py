@@ -137,5 +137,7 @@ def randomize_settings(seed=None):
     else:
       chosen_option = random.choices(values, weights=weights)[0]
       settings_dict[option_name] = chosen_option
+    
+    settings_dict["starting_gear"] = list(set(settings_dict["starting_gear"]))
   
   return settings_dict
