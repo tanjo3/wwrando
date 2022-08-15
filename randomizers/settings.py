@@ -161,7 +161,10 @@ def randomize_starting_gear(options, seed=None):
     return starting_gear
   num_starting_items = 200
   
-  rando = Randomizer(seed, "", "", "", options, cmd_line_args={"-dry": None})
+  try:
+    rando = Randomizer(seed, "", "", "", options, cmd_line_args={"-dry": None})
+  except Exception:
+    return starting_gear
   
   # Determine which members of the starting items pool are valid based on their CTMC chest type
   valid_starting_gear_indices = []
