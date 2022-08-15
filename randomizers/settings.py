@@ -43,9 +43,8 @@ DEFAULT_WEIGHTS = {
   "num_starting_triforce_shards": [(0, 60), (1, 9), (2, 8), (3, 8), (4, 5), (5, 5), (6, 2), (7, 2), (8, 1)],
   "add_shortcut_warps_between_dungeons": [(True, 80), (False, 20)],
   "sword_mode": [("Start with Hero's Sword", 60), ("No Starting Sword", 35), ("Swordless", 5)],
-  "skip_rematch_bosses": [(True, 100), (False, 0)],
-  "race_mode": [(True, 90), (False, 10)],
-  "num_race_mode_dungeons": [(1, 5), (2, 15), (3, 25), (4, 30), (5, 15), (6, 10)],
+  "required_bosses": [(True, 90), (False, 10)],
+  "num_required_bosses": [(1, 5), (2, 15), (3, 25), (4, 30), (5, 15), (6, 10)],
   "randomize_music": [(True, 0), (False, 100)],
   "starting_gear": [
     (["Progressive Picto Box"], 5.88),
@@ -74,6 +73,7 @@ DEFAULT_WEIGHTS = {
   "starting_hcs": [(0, 100)],
   "randomize_enemies": [(True, 0), (False, 100)],
   
+  "skip_rematch_bosses": [(True, 75), (False, 25)],
   "hint_placement": [("fishmen_hints", 0), ("hoho_hints", 10), ("korl_hints", 80), ("stone_tablet_hints", 10)],
   "num_starting_items": [(0, 25), (1, 40), (2, 25), (3, 10)],
   "start_with_maps_and_compasses": [(True, 80), (False, 20)],
@@ -121,6 +121,12 @@ def randomize_settings(seed=None):
         settings_dict["starting_gear"] += items
     elif option_name == "num_starting_items":
       continue
+    elif option_name == "skip_rematch_bosses":
+      if settings_dict["progression_dungeons"] or settings_dict["required_bosses"]:
+        settings_dict["skip_rematch_bosses"] = True
+      else:
+        settings_dict["skip_rematch_bosses"] = random.choices(values, weights=weights)[0]
+
     else:
       chosen_option = random.choices(values, weights=weights)[0]
       settings_dict[option_name] = chosen_option

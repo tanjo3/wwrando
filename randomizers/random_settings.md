@@ -43,13 +43,15 @@ Below are the weights for the randomized settings. If only one weight is listed,
 |       **Prioritize Remote Locations**        	|                                                               100%                                                              	|
 |                                            	|                                                                                                                                 	|
 |               **Swift Sail**               	|                                                               100%                                                              	|
-|           **Skip Boss Rematches**          	|                                                               100%                                                              	|
+|           **Skip Boss Rematches**          	|                                                               75%                                                               	|
 |   **Add Shortcut Warps Between Dungeons**  	|                                                               80%                                                               	|
 |                                            	|                                                                                                                                 	|
 |        **Number of Starting Items**        	|                                             25% 0, 40% 1, 25% 2, 10% 3 [_see below_]                                            	|
 |      **Start With Maps And Compasses**     	|                                                               80%                                                               	|
 |     **Starting Extra Heart Containers**    	|                                                              100% 0                                                             	|
 |       **Starting Extra Heart Pieces**      	|                                                              100% 0                                                             	|
+
+\* *If **Dungeons** are on, then the weight for **Skip Boss Rematches** is set to 100%*.
 
 ## Additional Starting Items
 For starting items, you will always start with the Telescope. Depending on the value of _Number of Starting Items_, additional weighted pulls (without replacement) from the following table with be made. Note that starting items do not tell you anything about which settings are enabled.
