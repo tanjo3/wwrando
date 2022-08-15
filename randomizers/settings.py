@@ -55,27 +55,28 @@ DEFAULT_WEIGHTS = OrderedDict({
   "num_race_mode_dungeons": [(1, 5), (2, 15), (3, 25), (4, 30), (5, 15), (6, 10)],
   "randomize_music": [(True, 0), (False, 100)],
   "starting_gear": [
-    (["Progressive Picto Box"], 5.88),
-    (["Spoils Bag"], 5.88),
-    (["Grappling Hook"], 5.88),
-    (["Progressive Bow"], 5.88),
-    (["Power Bracelets"], 5.88),
-    (["Iron Boots"], 5.88),
-    (["Bait Bag"], 5.88),
-    (["Boomerang"], 5.88),
-    (["Hookshot"], 5.88),
-    (["Bombs"], 5.88),
-    (["Skull Hammer"], 5.88),
-    (["Deku Leaf"], 5.88),
-    (["Progressive Shield"], 5.88),
-    (["Empty Bottle"], 5.88),
-    (["Ghost Ship Chart"], 5.88),
-    (["Nayru's Pearl", "Din's Pearl", "Farore's Pearl"], 5.88),
-    (["Delivery Bag"], 1.20),
-    (["Delivery Bag", "Note to Mom"], 1.18),
-    (["Delivery Bag", "Maggie's Letter"], 1.18),
-    (["Delivery Bag", "Moblin's Letter"], 1.18),
-    (["Delivery Bag", "Cabana Deed"], 1.18),
+    (["Progressive Picto Box"], 5.6),
+    (["Spoils Bag"], 5.6),
+    (["Grappling Hook"], 5.6),
+    (["Progressive Bow"], 5.6),
+    (["Power Bracelets"], 5.6),
+    (["Iron Boots"], 5.6),
+    (["Bait Bag"], 5.6),
+    (["Boomerang"], 5.6),
+    (["Hookshot"], 5.6),
+    (["Bombs"], 5.6),
+    (["Skull Hammer"], 5.6),
+    (["Deku Leaf"], 5.6),
+    (["Progressive Shield"], 5.6),
+    (["Empty Bottle"], 5.6),
+    (["Ghost Ship Chart"], 5.6),
+    (["Progressive Magic Meter"], 5.6),
+    (["Nayru's Pearl", "Din's Pearl", "Farore's Pearl"], 5.6),
+    (["Delivery Bag"], 1.16),
+    (["Delivery Bag", "Note to Mom"], 0.91),
+    (["Delivery Bag", "Maggie's Letter"], 0.91),
+    (["Delivery Bag", "Moblin's Letter"], 0.91),
+    (["Delivery Bag", "Cabana Deed"], 0.91),
   ],
   "starting_pohs": [(0, 100)],
   "starting_hcs": [(0, 100)],
@@ -153,7 +154,7 @@ def randomize_settings(seed=None):
   return settings_dict
 
 def randomize_starting_gear(options, seed=None):
-  starting_gear = ["Telescope", "Progressive Magic Meter", "Ballad of Gales", "Song of Passing"]
+  starting_gear = ["Telescope", "Ballad of Gales", "Song of Passing"]
   
   values, weights = zip(*DEFAULT_WEIGHTS["num_starting_items"])
   num_starting_items = random.choices(values, weights=weights)[0]
