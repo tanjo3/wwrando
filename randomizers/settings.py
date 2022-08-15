@@ -1,6 +1,7 @@
+from collections import OrderedDict
 import random
 
-DEFAULT_WEIGHTS = {
+DEFAULT_WEIGHTS = OrderedDict({
   "progression_dungeons": [(True, 80), (False, 20)],
   "progression_great_fairies": [(True, 50), (False, 50)],
   "progression_puzzle_secret_caves": [(True, 50), (False, 50)],
@@ -81,7 +82,10 @@ DEFAULT_WEIGHTS = {
   "hint_placement": [("fishmen_hints", 0), ("hoho_hints", 10), ("korl_hints", 80), ("stone_tablet_hints", 10)],
   "num_starting_items": [(0, 25), (1, 40), (2, 25), (3, 10)],
   "start_with_maps_and_compasses": [(True, 80), (False, 20)],
-}
+})
+
+# add `skip_rematch_bosses` after initialization to ensure `progression_dungeons` is sampled first
+DEFAULT_WEIGHTS["skip_rematch_bosses"] = [(True, 75), (False, 25)]
 
 DUNGEON_NONPROGRESS_ITEMS = \
   ["DRC Dungeon Map", "DRC Compass"] + \
@@ -134,6 +138,12 @@ def randomize_settings(seed=None):
         settings_dict["starting_gear"] += items
     elif option_name == "num_starting_items":
       continue
+    elif option_name == "skip_rematch_bosses":
+      if settings_dict["progression_dungeons"]:
+        chosen_option = True
+      else:
+        chosen_option = random.choices(values, weights=weights)[0]
+      settings_dict["skip_rematch_bosses"] = chosen_option
     else:
       chosen_option = random.choices(values, weights=weights)[0]
       settings_dict[option_name] = chosen_option
