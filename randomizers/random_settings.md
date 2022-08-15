@@ -54,7 +54,9 @@ Below are the weights for the randomized settings. If only one weight is listed,
 \* *If **Dungeons** are on, then the weight for **Skip Boss Rematches** is set to 100%*.
 
 ## Additional Starting Items
-For starting items, you will always start with the Telescope. Depending on the value of _Number of Starting Items_, additional weighted pulls (without replacement) from the following table with be made. Note that starting items do not tell you anything about which settings are enabled.
+For starting items, you will always start with the Telescope. Depending on the value of _Number of Starting Items_, additional weighted pulls (without replacement) from the following table with be made.
+
+**_Importantly_**, the pool of starting items is dynamically modified based on the settings that were randomly chosen. For every option in the starting item pool, if it contains only items with **_no_** logical implications in the seed, that option is removed and its weight is evenly distributed among the remaining options. For example, if **Spoils Trading** is not on, _Spoils Bag_ is removed from the starting items pool and its weight is redistributed.
 
 |              **Starting Item(s)**              	| **Weight** 	|
 |:----------------------------------------------:	|:----------:	|
