@@ -18,8 +18,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
     QGridLayout, QGroupBox, QHBoxLayout, QLabel,
     QLineEdit, QMainWindow, QPushButton, QScrollArea,
-    QSizePolicy, QSpacerItem, QTabWidget, QVBoxLayout,
-    QWidget)
+    QSizePolicy, QSpacerItem, QTabWidget, QTextBrowser,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -47,6 +47,17 @@ class Ui_MainWindow(object):
         self.tab_randomizer_settings.setObjectName(u"tab_randomizer_settings")
         self.verticalLayout_3 = QVBoxLayout(self.tab_randomizer_settings)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.random_settings_explanation = QTextBrowser(self.tab_randomizer_settings)
+        self.random_settings_explanation.setObjectName(u"random_settings_explanation")
+        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(1)
+        sizePolicy.setHeightForWidth(self.random_settings_explanation.sizePolicy().hasHeightForWidth())
+        self.random_settings_explanation.setSizePolicy(sizePolicy)
+        self.random_settings_explanation.setFrameShape(QFrame.NoFrame)
+
+        self.verticalLayout_3.addWidget(self.random_settings_explanation)
+
         self.gridLayout_5 = QGridLayout()
         self.gridLayout_5.setObjectName(u"gridLayout_5")
         self.seed = QLineEdit(self.tab_randomizer_settings)
@@ -54,30 +65,10 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addWidget(self.seed, 2, 1, 1, 1)
 
-        self.label_for_clean_iso_path = QLabel(self.tab_randomizer_settings)
-        self.label_for_clean_iso_path.setObjectName(u"label_for_clean_iso_path")
-
-        self.gridLayout_5.addWidget(self.label_for_clean_iso_path, 0, 0, 1, 1)
-
-        self.clean_iso_path = QLineEdit(self.tab_randomizer_settings)
-        self.clean_iso_path.setObjectName(u"clean_iso_path")
-
-        self.gridLayout_5.addWidget(self.clean_iso_path, 0, 1, 1, 1)
-
         self.label_for_output_folder = QLabel(self.tab_randomizer_settings)
         self.label_for_output_folder.setObjectName(u"label_for_output_folder")
 
         self.gridLayout_5.addWidget(self.label_for_output_folder, 1, 0, 1, 1)
-
-        self.output_folder = QLineEdit(self.tab_randomizer_settings)
-        self.output_folder.setObjectName(u"output_folder")
-
-        self.gridLayout_5.addWidget(self.output_folder, 1, 1, 1, 1)
-
-        self.output_folder_browse_button = QPushButton(self.tab_randomizer_settings)
-        self.output_folder_browse_button.setObjectName(u"output_folder_browse_button")
-
-        self.gridLayout_5.addWidget(self.output_folder_browse_button, 1, 2, 1, 1)
 
         self.label_for_seed = QLabel(self.tab_randomizer_settings)
         self.label_for_seed.setObjectName(u"label_for_seed")
@@ -89,13 +80,37 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addWidget(self.generate_seed_button, 2, 2, 1, 1)
 
+        self.output_folder_browse_button = QPushButton(self.tab_randomizer_settings)
+        self.output_folder_browse_button.setObjectName(u"output_folder_browse_button")
+
+        self.gridLayout_5.addWidget(self.output_folder_browse_button, 1, 2, 1, 1)
+
+        self.clean_iso_path = QLineEdit(self.tab_randomizer_settings)
+        self.clean_iso_path.setObjectName(u"clean_iso_path")
+
+        self.gridLayout_5.addWidget(self.clean_iso_path, 0, 1, 1, 1)
+
+        self.output_folder = QLineEdit(self.tab_randomizer_settings)
+        self.output_folder.setObjectName(u"output_folder")
+
+        self.gridLayout_5.addWidget(self.output_folder, 1, 1, 1, 1)
+
         self.clean_iso_path_browse_button = QPushButton(self.tab_randomizer_settings)
         self.clean_iso_path_browse_button.setObjectName(u"clean_iso_path_browse_button")
 
         self.gridLayout_5.addWidget(self.clean_iso_path_browse_button, 0, 2, 1, 1)
 
+        self.label_for_clean_iso_path = QLabel(self.tab_randomizer_settings)
+        self.label_for_clean_iso_path.setObjectName(u"label_for_clean_iso_path")
+
+        self.gridLayout_5.addWidget(self.label_for_clean_iso_path, 0, 0, 1, 1)
+
 
         self.verticalLayout_3.addLayout(self.gridLayout_5)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_3.addItem(self.verticalSpacer)
 
         self.groupBox = QGroupBox(self.tab_randomizer_settings)
         self.groupBox.setObjectName(u"groupBox")
@@ -125,9 +140,9 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addWidget(self.groupBox)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
-        self.verticalLayout_3.addItem(self.verticalSpacer)
+        self.verticalLayout_3.addItem(self.verticalSpacer_2)
 
         self.tabWidget.addTab(self.tab_randomizer_settings, "")
         self.tab_player_customization = QWidget()
@@ -311,12 +326,30 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Wind Waker Randomizer", None))
-        self.label_for_clean_iso_path.setText(QCoreApplication.translate("MainWindow", u"Clean WW ISO", None))
+        self.random_settings_explanation.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:xx-large; font-weight:700;\">Random Settings</span> </p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This is a special client specifically for generating Wind Waker Randomizer seeds with randomized settings. Settings will be randomized according to a set of predefined weights"
+                        ". Chest Type Matches Contents (CTMC) and path hints will <span style=\" font-weight:700;\">always</span> be on. From there, you need to deduce which settings are enabled in your seed.</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">First, set up your clean WW ISO path, output folder, and seed. Additionally, ensure the additional options and your custom player model are all set. Once you're ready, hit <span style=\" font-style:italic;\">Randomize </span>to randomize the seed and generate an ISO. Note that neither a spoiler log, nor a non-spoiler log will be generated.</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-botto"
+                        "m:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">The settings are randomly determined using the seed. If there's no seed, then a random seed will be used. If you wish to share/race a seed, the seed name is all that needs to be shared.  In rare cases, certain combinations of settings will fail to generate. Often, this is because not enough progress locations end up being selected. For races, it is recommended to ensure that a seed results in a successful generation before sharing it.</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">The random setting weights can be found here: <a href=\"https://github.com/tanjo3/wwrando/blob/random-settings/randomizers/random_settings.md\"><span style=\" text-decoration: underline; color:#0000ff;\">https://git"
+                        "hub.com/tanjo3/wwrando/blob/random-settings/randomizers/random_settings.md</span></a></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; text-decoration: underline; color:#0000ff;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">A useful reference to using hints to deduce which settings are enabled can be found here: <a href=\"http://bombch.us/DVy8\"><span style=\" text-decoration: underline; color:#0000ff;\">http://bombch.us/DVy8</span></a></p></body></html>", None))
         self.label_for_output_folder.setText(QCoreApplication.translate("MainWindow", u"Output Folder", None))
-        self.output_folder_browse_button.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
         self.label_for_seed.setText(QCoreApplication.translate("MainWindow", u"Seed", None))
         self.generate_seed_button.setText(QCoreApplication.translate("MainWindow", u"New seed", None))
+        self.output_folder_browse_button.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
         self.clean_iso_path_browse_button.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
+        self.label_for_clean_iso_path.setText(QCoreApplication.translate("MainWindow", u"Clean WW ISO", None))
         self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Additional Options (Does Not Affect Seed Randomization)", None))
         self.invert_sea_compass_x_axis.setText(QCoreApplication.translate("MainWindow", u"Invert Sea Compass X-Axis", None))
         self.remove_title_and_ending_videos.setText(QCoreApplication.translate("MainWindow", u"Remove Title and Ending Videos", None))
