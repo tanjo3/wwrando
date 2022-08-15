@@ -56,7 +56,7 @@ Below are the weights for the randomized settings. If only one weight is listed,
 |     **Starting Extra Heart Containers**    	|                                                              100% 0                                                             	|
 |       **Starting Extra Heart Pieces**      	|                                                              100% 0                                                             	|
 
-\* *If **Dungeons** are on, then the weight for **Skip Boss Rematches** is set to 0%*.
+\* *If **Dungeons** are on, then the weight for **Skip Boss Rematches** is set to 100%*.
 
 ## Additional Starting Items
 For starting items, you will always start with the Telescope, Ballad of Gales, and Song of Passing. Depending on the value of _Number of Starting Items_, additional weighted pulls (without replacement) from the following table with be made.
