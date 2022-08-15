@@ -50,7 +50,6 @@ DEFAULT_WEIGHTS = OrderedDict({
   "add_shortcut_warps_between_dungeons": [(True, 80), (False, 20)],
   "do_not_generate_spoiler_log": [(True, 100), (False, 0)],
   "sword_mode": [("Start with Hero's Sword", 60), ("No Starting Sword", 35), ("Swordless", 5)],
-  "skip_rematch_bosses": [(True, 100), (False, 0)],
   "race_mode": [(True, 90), (False, 10)],
   "num_race_mode_dungeons": [(1, 5), (2, 15), (3, 25), (4, 30), (5, 15), (6, 10)],
   "randomize_music": [(True, 0), (False, 100)],
