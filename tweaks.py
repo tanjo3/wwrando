@@ -891,7 +891,7 @@ def randomize_and_update_hints(self):
   update_savage_labyrinth_hint_tablet(self, floor_30_hint, floor_50_hint)
   
   # Identify where the user wishes hints to be located.
-  variable_hint_placement_options = ["fishmen_hints", "hoho_hints", "korl_hints"]
+  variable_hint_placement_options = ["fishmen_hints", "hoho_hints", "korl_hints", "stone_tablet_hints"]
   hints_per_placement = {}
   for option in variable_hint_placement_options:
     if self.options.get(option):
