@@ -249,13 +249,18 @@ class WWRandomizerWindow(QMainWindow):
       self.randomization_failed(error_message)
       return
     
-    self.randomizer_thread = RandomizerThread(rando, profiling=self.profiling)
-    if not self.no_ui_test:
+    if self.no_ui_test:
+      randomizer_generator = rando.randomize()
+      while True:
+        next_option_description, options_finished = next(randomizer_generator)
+        if options_finished == -1:
+          break
+    else:
+      self.randomizer_thread = RandomizerThread(rando, profiling=self.profiling)
       self.randomizer_thread.update_progress.connect(self.update_progress_dialog)
-    self.randomizer_thread.randomization_complete.connect(self.randomization_complete)
-    if not self.no_ui_test:
+      self.randomizer_thread.randomization_complete.connect(self.randomization_complete)
       self.randomizer_thread.randomization_failed.connect(self.randomization_failed)
-    self.randomizer_thread.start()
+      self.randomizer_thread.start()
   
   def update_progress_dialog(self, next_option_description, options_finished):
     self.progress_dialog.setLabelText(next_option_description)
