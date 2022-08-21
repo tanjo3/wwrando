@@ -46,4 +46,5 @@ timer.start(100)
 timer.timeout.connect(lambda: None)
 
 window = WWRandomizerWindow(cmd_line_args=cmd_line_args)
-sys.exit(qApp.exec())
+if "-noui" not in cmd_line_args:
+  sys.exit(qApp.exec())
