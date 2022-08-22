@@ -1070,7 +1070,7 @@ class WWRandomizerWindow(QMainWindow):
     text = """WWR Random Settings Version %s<br><br>
       Created by LagoLunatic, Random Settings changes by tanjo3<br><br>
       Report issues here:<br><a href=\"https://github.com/tanjo3/wwrando/issues\">https://github.com/tanjo3/wwrando/issues</a><br><br>
-      Source code:<br><a href=\"https://github.com/tanjo3/wwrandov\">https://github.com/tanjo3/wwrando</a>""" % VERSION_WITHOUT_COMMIT
+      Source code:<br><a href=\"https://github.com/tanjo3/wwrando/tree/random-settings\">https://github.com/tanjo3/wwrando/tree/random-settings</a>""" % VERSION_WITHOUT_COMMIT
     
     self.about_dialog = QMessageBox()
     self.about_dialog.setTextFormat(Qt.TextFormat.RichText)
