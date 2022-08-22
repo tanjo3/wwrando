@@ -484,11 +484,11 @@ class Randomizer:
         self.write_spoiler_log()
       
       if self.randobot:
-        permalink_output_path = os.path.join(self.randomized_output_folder, "permalink_%s.txt" % self.seed)
+        permalink_output_path = os.path.join(self.randomized_output_folder, "permalink_%s.txt" % self.original_seed)
         with open(permalink_output_path, "w") as f:
           f.write(self.original_seed)
         
-        seed_hash_output_path = os.path.join(self.randomized_output_folder, "seed_hash_%s.txt" % self.seed)
+        seed_hash_output_path = os.path.join(self.randomized_output_folder, "seed_hash_%s.txt" % self.original_seed)
         with open(seed_hash_output_path, "w") as f:
           f.write(self.get_seed_hash())
       self.write_non_spoiler_log()
