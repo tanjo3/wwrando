@@ -18,7 +18,7 @@ import time
 import zipfile
 import shutil
 
-from randomizer import Randomizer, VERSION, TooFewProgressionLocationsError, InvalidCleanISOError
+from randomizer import Randomizer, VERSION_WITHOUT_COMMIT, TooFewProgressionLocationsError, InvalidCleanISOError
 from wwrando_paths import SETTINGS_PATH, ASSETS_PATH, SEEDGEN_PATH, IS_RUNNING_FROM_SOURCE, CUSTOM_MODELS_PATH
 import customizer
 from randomizers.settings import randomize_settings
@@ -102,7 +102,7 @@ class WWRandomizerWindow(QMainWindow):
     
     self.update_settings()
     
-    self.setWindowTitle("WWR Random Settings %s" % VERSION)
+    self.setWindowTitle("WWR Random Settings %s" % VERSION_WITHOUT_COMMIT)
     
     icon_path = os.path.join(ASSETS_PATH, "icon.ico")
     self.setWindowIcon(QIcon(icon_path))
@@ -188,7 +188,11 @@ class WWRandomizerWindow(QMainWindow):
     self.update_settings()
     
     original_seed = seed
-    seed = "RS_" + VERSION + "_" + seed
+    seed = "RS_" + VERSION_WITHOUT_COMMIT + "_" + seed
+    
+    # overwrite seed for randobot, remove in next release
+    if self.no_ui_test:
+      seed = "RS_v1.1-e67e532_" + original_seed
     
     n_attempts = 0
     max_attempts = 10
@@ -218,7 +222,7 @@ class WWRandomizerWindow(QMainWindow):
         failures_done = 0
         total_done = 0
         for i in range(100):
-          temp_seed = "RS_" + VERSION + "_" + str(i)
+          temp_seed = "RS_" + VERSION_WITHOUT_COMMIT + "_" + str(i)
           try:
             options = randomize_settings(seed=temp_seed)
             rando = Randomizer(temp_seed, str(i), clean_iso_path, output_folder, options, cmd_line_args=cmd_line_args)
@@ -1065,7 +1069,7 @@ class WWRandomizerWindow(QMainWindow):
     text = """WWR Random Settings Version %s<br><br>
       Created by LagoLunatic, Random Settings changes by tanjo3<br><br>
       Report issues here:<br><a href=\"https://github.com/tanjo3/wwrando/issues\">https://github.com/tanjo3/wwrando/issues</a><br><br>
-      Source code:<br><a href=\"https://github.com/tanjo3/wwrandov\">https://github.com/tanjo3/wwrando</a>""" % VERSION
+      Source code:<br><a href=\"https://github.com/tanjo3/wwrandov\">https://github.com/tanjo3/wwrando</a>""" % VERSION_WITHOUT_COMMIT
     
     self.about_dialog = QMessageBox()
     self.about_dialog.setTextFormat(Qt.TextFormat.RichText)
