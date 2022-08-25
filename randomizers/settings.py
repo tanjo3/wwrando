@@ -148,7 +148,7 @@ def randomize_settings(seed=None):
       settings_dict[option_name] = chosen_option
   
   # Randomize starting gear dynamically based on items which have logical implications in this seed
-  settings_dict["starting_gear"] = randomize_starting_gear(settings_dict, seed=seed)
+  settings_dict["starting_gear"] += randomize_starting_gear(settings_dict, seed=seed)
   
   return settings_dict
 
