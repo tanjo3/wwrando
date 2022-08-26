@@ -211,10 +211,6 @@ class WWRandomizerWindow(QMainWindow):
     original_seed = seed
     seed = "RS_" + VERSION_WITHOUT_COMMIT + "_" + seed
     
-    # overwrite seed for randobot, remove in next release
-    if self.no_ui_test:
-      seed = "RS_v1.1-e67e532_" + original_seed
-    
     n_attempts = 0
     max_attempts = 10
     error_message = ""
