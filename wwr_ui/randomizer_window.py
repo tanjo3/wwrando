@@ -116,12 +116,7 @@ class WWRandomizerWindow(QMainWindow):
     
     self.show()
     
-    if False:
-      self.update_checker_thread = UpdateCheckerThread()
-      self.update_checker_thread.finished_checking_for_updates.connect(self.show_update_check_results)
-      self.update_checker_thread.start()
-    else:
-      self.ui.update_checker_label.setText("<b>This is a build specifically for random settings.</b> For updates, please join the WWR Racing Discord server. For questions and bug reports, please contact tanjo3#5077 on Discord.")
+    self.ui.update_checker_label.setText("<b>This is a build specifically for random settings.</b> For updates, please join the WWR Racing Discord server. For questions and bug reports, please contact tanjo3#5077 on Discord.")
   
   def generate_seed(self):
     random.seed(None)
@@ -1083,10 +1078,6 @@ class WWRandomizerWindow(QMainWindow):
       self.close()
   
   def closeEvent(self, event):
-    if not IS_RUNNING_FROM_SOURCE and not self.no_ui_test:
-      # Need to wait for the update checker before exiting, or the program will crash when closing.
-      self.update_checker_thread.quit()
-      self.update_checker_thread.wait()
     event.accept()
 
 class RandomizerProgressDialog(QProgressDialog):
