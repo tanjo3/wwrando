@@ -48,10 +48,6 @@ jobs:
         id: archvars
         run: |
           echo "::set-output name=bitness::$(python -c "import struct; print(struct.calcsize('P') * 8)")"
-      - name: Set version
-        id: version
-        run: |
-          echo ${{ steps.vars.outputs.full_version }} > version.txt
       - name: Build Windows App
         run: python -m PyInstaller --log-level=WARN wwrando.spec
       - name: Bundle Windows App
@@ -109,10 +105,6 @@ jobs:
         id: archvars
         run: |
           echo "::set-output name=bitness::$(python3 -c "import struct; print(struct.calcsize('P') * 8)")"
-      - name: Set version
-        id: version
-        run: |
-          echo ${{ steps.vars.outputs.full_version }} > version.txt
       - name: Build MacOS App
         run: python3 -m PyInstaller --log-level=WARN wwrando.spec
         shell: bash -l {0}
@@ -164,10 +156,6 @@ jobs:
         id: archvars
         run: |
           echo "::set-output name=bitness::$(python -c "import struct; print(struct.calcsize('P') * 8)")"
-      - name: Set version
-        id: version
-        run: |
-          echo ${{ steps.vars.outputs.full_version }} > version.txt
       - name: Build Linux App
         run: python -m PyInstaller --log-level=WARN wwrando.spec
       - name: Bundle Linux App
