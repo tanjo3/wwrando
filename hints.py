@@ -392,20 +392,11 @@ class Hints:
     # Helper method which returns a set of guaranteed unrequired items in the seed.
     
     junk_items = set(self.logic.all_nonprogress_items)  # Start with all non-progress items in the seed.
+    junk_items -= set(self.logic.all_progress_items)    # Remove all progress items (e.g., one wallet is progress, the other is not).
     junk_items |= set(CONSUMABLE_ITEMS)                 # Add consumables like Heart Containers and Rupees.
     junk_items |= set(DUNGEON_NONPROGRESS_ITEMS)        # Add dungeon items (Dungeon Maps and Compasses).
     if not self.options.get("keylunacy"):
       junk_items |= set(DUNGEON_PROGRESS_ITEMS)         # Consider Small and Big Keys junk when key-lunacy is off.
-    
-    # Consider Empty Bottles junk only if none are logical.
-    if "Empty Bottle" in self.rando.logic.all_progress_items and "Empty Bottle" in junk_items:
-      junk_items.remove("Empty Bottle")
-    # Consider Progressive Quiver junk only if none are logical.
-    if "Progressive Quiver" in self.rando.logic.all_progress_items and "Progressive Quiver" in junk_items:
-      junk_items.remove("Progressive Quiver")
-    # Consider Progressive Wallet junk only if none are logical.
-    if "Progressive Wallet" in self.rando.logic.all_progress_items and "Progressive Wallet" in junk_items:
-      junk_items.remove("Progressive Wallet")
     
     # Consider Small and Big Keys for non-required race mode dungeons as junk when key-lunacy is on.
     if self.options.get("race_mode") and self.options.get("keylunacy"):
