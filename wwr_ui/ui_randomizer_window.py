@@ -113,6 +113,35 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addItem(self.verticalSpacer)
 
+        self.rs_settings_group = QGroupBox(self.tab_randomizer_settings)
+        self.rs_settings_group.setObjectName(u"rs_settings_group")
+        self.gridLayout_3 = QGridLayout(self.rs_settings_group)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.horizontalLayout_loggen = QHBoxLayout()
+        self.horizontalLayout_loggen.setObjectName(u"horizontalLayout_loggen")
+        self.label_for_log_generation = QLabel(self.rs_settings_group)
+        self.label_for_log_generation.setObjectName(u"label_for_log_generation")
+
+        self.horizontalLayout_loggen.addWidget(self.label_for_log_generation)
+
+        self.log_generation = QComboBox(self.rs_settings_group)
+        self.log_generation.addItem("")
+        self.log_generation.addItem("")
+        self.log_generation.addItem("")
+        self.log_generation.setObjectName(u"log_generation")
+
+        self.horizontalLayout_loggen.addWidget(self.log_generation)
+
+
+        self.gridLayout_3.addLayout(self.horizontalLayout_loggen, 1, 1, 1, 2)
+
+
+        self.verticalLayout_3.addWidget(self.rs_settings_group)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_3.addItem(self.verticalSpacer_3)
+
         self.groupBox = QGroupBox(self.tab_randomizer_settings)
         self.groupBox.setObjectName(u"groupBox")
         self.gridLayout_6 = QGridLayout(self.groupBox)
@@ -280,6 +309,21 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.option_description)
 
+        self.horizontalLayout_perma = QHBoxLayout()
+        self.horizontalLayout_perma.setObjectName(u"horizontalLayout_perma")
+        self.label_for_permalink = QLabel(self.centralwidget)
+        self.label_for_permalink.setObjectName(u"label_for_permalink")
+
+        self.horizontalLayout_perma.addWidget(self.label_for_permalink)
+
+        self.permalink = QLineEdit(self.centralwidget)
+        self.permalink.setObjectName(u"permalink")
+
+        self.horizontalLayout_perma.addWidget(self.permalink)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_perma)
+
         self.update_checker_label = QLabel(self.centralwidget)
         self.update_checker_label.setObjectName(u"update_checker_label")
         self.update_checker_label.setOpenExternalLinks(True)
@@ -352,6 +396,12 @@ class Ui_MainWindow(object):
         self.output_folder_browse_button.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
         self.clean_iso_path_browse_button.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
         self.label_for_clean_iso_path.setText(QCoreApplication.translate("MainWindow", u"Clean WW ISO", None))
+        self.rs_settings_group.setTitle(QCoreApplication.translate("MainWindow", u"Random Settings Settings (Affects difficulty of the generated seed)", None))
+        self.label_for_log_generation.setText(QCoreApplication.translate("MainWindow", u"Generate Logs", None))
+        self.log_generation.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
+        self.log_generation.setItemText(1, QCoreApplication.translate("MainWindow", u"Non-Spoiler Log", None))
+        self.log_generation.setItemText(2, QCoreApplication.translate("MainWindow", u"Spoiler and Non-Spoiler Log", None))
+
         self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Additional Options (Does Not Affect Seed Randomization)", None))
         self.invert_sea_compass_x_axis.setText(QCoreApplication.translate("MainWindow", u"Invert Sea Compass X-Axis", None))
         self.remove_title_and_ending_videos.setText(QCoreApplication.translate("MainWindow", u"Remove Title and Ending Videos", None))
@@ -370,6 +420,7 @@ class Ui_MainWindow(object):
         self.custom_model_preview_label.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_player_customization), QCoreApplication.translate("MainWindow", u"Player Customization", None))
         self.option_description.setText("")
+        self.label_for_permalink.setText(QCoreApplication.translate("MainWindow", u"Permalink (copy paste to share your random settings settings):", None))
         self.update_checker_label.setText(QCoreApplication.translate("MainWindow", u"Checking for updates to the randomizer...", None))
         self.about_button.setText(QCoreApplication.translate("MainWindow", u"About", None))
         self.reset_settings_to_default.setText(QCoreApplication.translate("MainWindow", u"Reset All Settings to Default", None))

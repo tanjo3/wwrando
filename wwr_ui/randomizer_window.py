@@ -1,10 +1,13 @@
+import base64
+import struct
 from PySide6.QtGui import *
 from PySide6.QtCore import *
 from PySide6.QtWidgets import *
 
 from wwr_ui.ui_randomizer_window import Ui_MainWindow
-from wwr_ui.options import OPTIONS, NON_PERMALINK_OPTIONS
+from wwr_ui.options import OPTIONS, NON_PERMALINK_OPTIONS, SETTINGS_RANDO_OPTIONS
 from wwr_ui.update_checker import check_for_updates, LATEST_RELEASE_DOWNLOAD_PAGE_URL
+from wwr_ui.packedbits import PackedBitsReader, PackedBitsWriter
 
 import random
 from collections import OrderedDict
@@ -18,8 +21,8 @@ import time
 import zipfile
 import shutil
 
-from randomizer import Randomizer, VERSION_WITHOUT_COMMIT, TooFewProgressionLocationsError, InvalidCleanISOError
-from wwrando_paths import SETTINGS_PATH, ASSETS_PATH, SEEDGEN_PATH, CUSTOM_MODELS_PATH
+from randomizer import VERSION, Randomizer, VERSION_WITHOUT_COMMIT, TooFewProgressionLocationsError, InvalidCleanISOError
+from wwrando_paths import SETTINGS_PATH, ASSETS_PATH, SEEDGEN_PATH, IS_RUNNING_FROM_SOURCE, CUSTOM_MODELS_PATH
 import customizer
 from randomizers.settings import randomize_settings
 from logic.logic import Logic
@@ -63,6 +66,7 @@ class WWRandomizerWindow(QMainWindow):
     self.ui.seed.editingFinished.connect(self.update_settings)
     self.ui.clean_iso_path_browse_button.clicked.connect(self.browse_for_clean_iso)
     self.ui.output_folder_browse_button.clicked.connect(self.browse_for_output_folder)
+    self.ui.permalink.textEdited.connect(self.permalink_modified)
 
     self.ui.install_custom_model.clicked.connect(self.install_custom_model_zip)
     self.ui.custom_player_model.currentIndexChanged.connect(self.custom_model_changed)
@@ -214,8 +218,12 @@ class WWRandomizerWindow(QMainWindow):
     n_attempts = 0
     max_attempts = 10
     error_message = ""
+    prefilled_options = {}
     while n_attempts < max_attempts:
-      options = randomize_settings(seed=seed+str(n_attempts))
+      for option_name in SETTINGS_RANDO_OPTIONS:
+        prefilled_options[option_name] = self.get_option_value(option_name)
+
+      options = randomize_settings(seed=seed+str(n_attempts), prefilled_options=prefilled_options)
       for option_name in NON_PERMALINK_OPTIONS + ["randomize_enemy_palettes"]:
         options[option_name] = self.get_option_value(option_name)
       
@@ -233,10 +241,9 @@ class WWRandomizerWindow(QMainWindow):
       cmd_line_args = self.cmd_line_args.copy()
       if self.no_ui_test:
         cmd_line_args["-dry"] = None
-      cmd_line_args["-nologs"] = None
       
       try:
-        rando = Randomizer(seed, original_seed, clean_iso_path, output_folder, options, cmd_line_args=cmd_line_args)
+        rando = Randomizer(seed, original_seed, clean_iso_path, output_folder, options, cmd_line_args=cmd_line_args, permalink=self.ui.permalink.text())
         break
       except (TooFewProgressionLocationsError, InvalidCleanISOError) as e:
         error_message = str(e)
@@ -336,6 +343,7 @@ class WWRandomizerWindow(QMainWindow):
       any_setting_changed = True
     
     self.update_settings()
+    self.encode_permalink()
     
     if not any_setting_changed:
       QMessageBox.information(self,
@@ -406,7 +414,119 @@ class WWRandomizerWindow(QMainWindow):
     
     if not self.no_ui_test:
       self.save_settings()
+
+    self.encode_permalink()
   
+  def permalink_modified(self):
+    permalink = self.ui.permalink.text()
+    try:
+      self.decode_permalink(permalink)
+    except Exception as e:
+      stack_trace = traceback.format_exc()
+      error_message = "Failed to parse permalink:\n" + str(e) + "\n\n" + stack_trace
+      print(error_message)
+      QMessageBox.critical(
+        self, "Invalid permalink",
+        "The permalink you pasted is invalid."
+      )
+
+    self.encode_permalink()
+
+  def encode_permalink(self):
+    seed = self.settings["seed"]
+    seed = self.sanitize_seed(seed)
+    if not seed:
+      self.ui.permalink.setText("")
+      return
+
+    permalink = b""
+    permalink += VERSION.encode("ascii")
+    permalink += b"\0"
+    permalink += seed.encode("ascii")
+    permalink += b"\0"
+
+    bitswriter = PackedBitsWriter()
+    for option_name in OPTIONS:
+      if option_name in NON_PERMALINK_OPTIONS:
+        continue
+
+      value = self.settings[option_name]
+
+      widget = getattr(self.ui, option_name)
+      if isinstance(widget, QAbstractButton):
+        bitswriter.write(int(value), 1)
+      elif isinstance(widget, QComboBox):
+        value = widget.currentIndex()
+        assert 0 <= value <= 255
+        bitswriter.write(value, 8)
+      elif isinstance(widget, QSpinBox):
+        box_length = (widget.maximum() - widget.minimum()).bit_length()
+        value = widget.value() - widget.minimum()
+        assert 0 <= value < (2 ** box_length)
+        bitswriter.write(value, box_length)
+
+    bitswriter.flush()
+
+    for byte in bitswriter.bytes:
+      permalink += struct.pack(">B", byte)
+    base64_encoded_permalink = base64.b64encode(permalink).decode("ascii")
+    self.ui.permalink.setText(base64_encoded_permalink)
+
+  def decode_permalink(self, base64_encoded_permalink):
+    base64_encoded_permalink = base64_encoded_permalink.strip()
+    if not base64_encoded_permalink:
+      # Empty
+      return
+
+    permalink = base64.b64decode(base64_encoded_permalink)
+    given_version_num, seed, options_bytes = permalink.split(b"\0", 2)
+    given_version_num = given_version_num.decode("ascii")
+    seed = seed.decode("ascii")
+    if given_version_num != VERSION:
+      if IS_RUNNING_FROM_SOURCE and VERSION.split("_")[0] == given_version_num.split("_")[0]:
+        message = "The permalink you pasted is for version %s of the randomizer, while you are currently using version %s." % (given_version_num, VERSION)
+        message += "\n\nBecause only the commit is different, the permalink may or may not still be compatible. Would you like to try loading this permalink anyway?"
+        response = QMessageBox.question(
+          self, "Potentially invalid permalink",
+          message,
+          QMessageBox.Cancel | QMessageBox.Yes,
+          QMessageBox.Cancel
+        )
+        if response == QMessageBox.Cancel:
+          return
+      else:
+        QMessageBox.critical(
+          self, "Invalid permalink",
+          "The permalink you pasted is for version %s of the randomizer, it cannot be used with the version you are currently using (%s)." % (given_version_num, VERSION)
+        )
+        return
+
+    self.ui.seed.setText(seed)
+
+    option_bytes = struct.unpack(">" + "B"*len(options_bytes), options_bytes)
+
+    bitsreader = PackedBitsReader(option_bytes)
+    for option_name in OPTIONS:
+      if option_name in NON_PERMALINK_OPTIONS:
+        continue
+
+      widget = getattr(self.ui, option_name)
+      if isinstance(widget, QAbstractButton):
+        boolean_value = bitsreader.read(1)
+        self.set_option_value(option_name, boolean_value)
+      elif isinstance(widget, QComboBox):
+        index = bitsreader.read(8)
+        if index >= widget.count() or index < 0:
+          index = 0
+        value = widget.itemText(index)
+        self.set_option_value(option_name, value)
+      elif isinstance(widget, QSpinBox):
+        box_length = (widget.maximum() - widget.minimum()).bit_length()
+        value = bitsreader.read(box_length) + widget.minimum()
+        if value > widget.maximum() or value < widget.minimum():
+          value = self.default_settings[option_name]
+        self.set_option_value(option_name, value)
+
   def browse_for_clean_iso(self):
     if self.settings["clean_iso_path"] and os.path.isfile(self.settings["clean_iso_path"]):
       default_dir = os.path.dirname(self.settings["clean_iso_path"])

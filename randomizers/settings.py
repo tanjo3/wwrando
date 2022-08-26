@@ -1,8 +1,9 @@
 from collections import OrderedDict
 import random
 
-from randomizer import Randomizer
+from randomizer import RNG_CHANGING_OPTIONS, Randomizer
 from randomizers import items
+from randomizers.enemies import randomize_enemy_params
 
 DEFAULT_WEIGHTS = OrderedDict({
   "progression_dungeons": [(True, 80), (False, 20)],
@@ -48,7 +49,6 @@ DEFAULT_WEIGHTS = OrderedDict({
   "reveal_full_sea_chart": [(True, 100), (False, 0)],
   "num_starting_triforce_shards": [(0, 60), (1, 9), (2, 8), (3, 8), (4, 5), (5, 5), (6, 2), (7, 2), (8, 1)],
   "add_shortcut_warps_between_dungeons": [(True, 80), (False, 20)],
-  "do_not_generate_spoiler_log": [(True, 100), (False, 0)],
   "sword_mode": [("Start with Hero's Sword", 60), ("No Starting Sword", 35), ("Swordless", 5)],
   "race_mode": [(True, 90), (False, 10)],
   "num_race_mode_dungeons": [(1, 5), (2, 15), (3, 25), (4, 30), (5, 15), (6, 10)],
@@ -115,12 +115,23 @@ def weighted_sample_without_replacement(population, weights, k=1):
         indices.append(i)
   return [population[i] for i in indices]
 
-def randomize_settings(seed=None):
+def randomize_settings(seed=None, prefilled_options={}):
   random.seed(seed)
-  
+
+  for i, option in enumerate(RNG_CHANGING_OPTIONS):
+    value = prefilled_options.get(option, None)
+    if value is None:
+      continue # Ignore non-prefillable options
+    if isinstance(value, str):
+      value = len(value)
+    for j in range(1, 100 + i):
+      random.getrandbits(value + 20 * i + j)
+
   settings_dict = {
     "starting_gear": [],
   }
+  settings_dict.update(prefilled_options)
+
   for option_name, option_values in DEFAULT_WEIGHTS.items():
     values, weights = zip(*option_values)
     

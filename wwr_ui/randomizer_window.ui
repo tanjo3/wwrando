@@ -152,6 +152,58 @@ p, li { white-space: pre-wrap; }
              </spacer>
             </item>
             <item>
+             <widget class="QGroupBox" name="rs_settings_group">
+              <property name="title">
+               <string>Random Settings Settings (Affects difficulty of the generated seed)</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_3">
+               <item row="1" column="1" colspan="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_loggen">
+                 <item>
+                  <widget class="QLabel" name="label_for_log_generation">
+                   <property name="text">
+                    <string>Generate Logs</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="log_generation">
+                   <item>
+                    <property name="text">
+                     <string>None</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Non-Spoiler Log</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Spoiler and Non-Spoiler Log</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
              <widget class="QGroupBox" name="groupBox">
               <property name="title">
                <string>Additional Options (Does Not Affect Seed Randomization)</string>
@@ -380,6 +432,20 @@ p, li { white-space: pre-wrap; }
        <bool>true</bool>
       </property>
      </widget>
+    </item>
+     <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_perma">
+      <item>
+       <widget class="QLabel" name="label_for_permalink">
+        <property name="text">
+         <string>Permalink (copy paste to share your random settings settings):</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="permalink"/>
+      </item>
+     </layout>
     </item>
     <item>
      <widget class="QLabel" name="update_checker_label">

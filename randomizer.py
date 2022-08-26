@@ -79,7 +79,7 @@ RNG_CHANGING_OPTIONS = [
   "only_use_ganondorf_paths",
   "clearer_hints",
   "use_always_hints",
-  "do_not_generate_spoiler_log",
+  "log_generation",
 ]
 
 class TooFewProgressionLocationsError(Exception):
@@ -122,10 +122,13 @@ class Randomizer:
         self.test_room_args = {"stage": stage, "room": int(room), "spawn": int(spawn)}
     
     seed_string = self.seed
-    if self.options.get("do_not_generate_spoiler_log"):
+    if self.options.get("log_generation") == "Spoiler and Non-Spoiler Log":
       seed_string += SEED_KEY
+    elif self.options.get("log_generation") == "Non-Spoiler Log":
+      seed_string += str(SEED_KEY)[::-1]
     
     self.integer_seed = self.convert_string_to_integer_md5(seed_string)
+    self.seed_hash = self.get_seed_hash()
     self.rng = self.get_new_rng()
     
     self.arcs_by_path = {}
@@ -480,7 +483,7 @@ class Randomizer:
     yield("Writing logs...", options_completed)
     
     if self.randomize_items:
-      if not self.options.get("do_not_generate_spoiler_log"):
+      if self.options.get("log_generation") == "Spoiler and Non-Spoiler Log":
         self.write_spoiler_log()
       
       if self.randobot:
@@ -496,18 +499,18 @@ class Randomizer:
           spoiler_log_output_path = os.path.join(self.randomized_output_folder, "spoiler_log_%s.txt" % self.original_seed)
           with open(spoiler_log_output_path, "w") as f:
             f.write(self.write_spoiler_log(return_str=True))
-      self.write_non_spoiler_log()
+      if not self.options.get("log_generation") == "None":
+        self.write_non_spoiler_log()
     
     yield("Done", -1)
   
   def get_seed_hash(self):
-    if not self.options.get("do_not_generate_spoiler_log"):
-      integer_seed = self.convert_string_to_integer_md5(self.seed)
-    else:
-      # When no spoiler log is generated, the seed key also affects randomization, not just the data in the permalink.
-      integer_seed = self.convert_string_to_integer_md5(self.seed + SEED_KEY)
+    if not self.permalink:
+      return
+
+    seed_string = self.convert_string_to_integer_md5(self.permalink)
     temp_rng = Random()
-    temp_rng.seed(integer_seed)
+    temp_rng.seed(seed_string + self.integer_seed)
     
     with open(os.path.join(SEEDGEN_PATH, "names.txt")) as f:
       all_names = f.read().splitlines()
@@ -920,6 +923,8 @@ class Randomizer:
     # Further change the RNG based on which RNG-changing options are enabled
     for i, option in enumerate(RNG_CHANGING_OPTIONS):
       value = self.options.get(option)
+      if isinstance(value, str):
+        value = len(value) # poor man's hashing function
       for j in range(1, 100 + i):
         rng.getrandbits(value + 20 * i + j)
     
