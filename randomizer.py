@@ -105,7 +105,7 @@ class Randomizer:
     self.bulk_test = ("-bulk" in cmd_line_args)
     if self.bulk_test:
       self.dry_run = True
-      self.no_logs = True
+      self.no_logs = False
     self.print_used_flags = ("-printflags" in cmd_line_args)
     if ("-noitemrando" in cmd_line_args) and IS_RUNNING_FROM_SOURCE:
       self.randomize_items = False
