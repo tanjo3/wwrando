@@ -38,6 +38,9 @@ class WWRandomizerWindow(QMainWindow):
     
     self.cmd_line_args = cmd_line_args
     self.bulk_test = ("-bulk" in cmd_line_args)
+    self.bulk_test_amount = 100
+    if self.bulk_test and cmd_line_args["-bulk"] is not None:
+      self.bulk_test_amount = int(cmd_line_args["-bulk"])
     self.no_ui_test = ("-noui" in cmd_line_args)
     self.profiling = ("-profile" in cmd_line_args)
     self.auto_seed = ("-autoseed" in cmd_line_args)
@@ -168,6 +171,29 @@ class WWRandomizerWindow(QMainWindow):
       QMessageBox.warning(self, "No output folder specified", "Must specify a valid output folder for the randomized files.")
       return
     
+    if self.bulk_test:
+      failures_done = 0
+      total_done = 0
+      for i in range(self.bulk_test_amount):
+        temp_seed = "RS_" + VERSION_WITHOUT_COMMIT + "_" + str(i)
+        try:
+          options = randomize_settings(seed=temp_seed)
+          rando = Randomizer(temp_seed, str(i), clean_iso_path, output_folder, options, cmd_line_args=self.cmd_line_args)
+          randomizer_generator = rando.randomize()
+          while True:
+            next_option_description, options_finished = next(randomizer_generator)
+            if options_finished == -1:
+              break
+          rando.write_spoiler_log()
+        except Exception as e:
+          stack_trace = traceback.format_exc()
+          error_message = "Error on seed " + temp_seed + ":\n" + str(e) + "\n\n" + stack_trace
+          print(error_message)
+          failures_done += 1
+        total_done += 1
+        print("%d/%d seeds failed" % (failures_done, total_done))
+      return
+    
     if "-seed" in self.cmd_line_args:
       seed = self.cmd_line_args["-seed"]
     else:
@@ -212,27 +238,6 @@ class WWRandomizerWindow(QMainWindow):
       if self.no_ui_test:
         cmd_line_args["-dry"] = None
       cmd_line_args["-nologs"] = None
-      
-      if self.bulk_test:
-        failures_done = 0
-        total_done = 0
-        for i in range(100):
-          temp_seed = "RS_" + VERSION_WITHOUT_COMMIT + "_" + str(i)
-          try:
-            options = randomize_settings(seed=temp_seed)
-            rando = Randomizer(temp_seed, str(i), clean_iso_path, output_folder, options, cmd_line_args=cmd_line_args)
-            randomizer_generator = rando.randomize()
-            while True:
-              next_option_description, options_finished = next(randomizer_generator)
-              if options_finished == -1:
-                break
-          except Exception as e:
-            stack_trace = traceback.format_exc()
-            error_message = "Error on seed " + temp_seed + ":\n" + str(e) + "\n\n" + stack_trace
-            print(error_message)
-            failures_done += 1
-          total_done += 1
-          print("%d/%d seeds failed" % (failures_done, total_done))
       
       try:
         rando = Randomizer(seed, original_seed, clean_iso_path, output_folder, options, cmd_line_args=cmd_line_args)
