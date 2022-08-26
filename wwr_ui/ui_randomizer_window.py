@@ -18,8 +18,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
     QGridLayout, QGroupBox, QHBoxLayout, QLabel,
     QLineEdit, QMainWindow, QPushButton, QScrollArea,
-    QSizePolicy, QSpacerItem, QTabWidget, QTextBrowser,
-    QVBoxLayout, QWidget)
+    QSizePolicy, QSpacerItem, QSpinBox, QTabWidget,
+    QTextBrowser, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -117,6 +117,21 @@ class Ui_MainWindow(object):
         self.rs_settings_group.setObjectName(u"rs_settings_group")
         self.gridLayout_3 = QGridLayout(self.rs_settings_group)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.label_for_target_checks = QLabel(self.rs_settings_group)
+        self.label_for_target_checks.setObjectName(u"label_for_target_checks")
+
+        self.gridLayout_3.addWidget(self.label_for_target_checks, 1, 1, 1, 1)
+
+        self.target_checks = QSpinBox(self.rs_settings_group)
+        self.target_checks.setObjectName(u"target_checks")
+        self.target_checks.setLayoutDirection(Qt.LeftToRight)
+        self.target_checks.setMaximum(400)
+        self.target_checks.setMinimum(0)
+        self.target_checks.setValue(150)
+        self.target_checks.setDisplayIntegerBase(10)
+
+        self.gridLayout_3.addWidget(self.target_checks, 1, 2, 1, 1)
+
         self.horizontalLayout_loggen = QHBoxLayout()
         self.horizontalLayout_loggen.setObjectName(u"horizontalLayout_loggen")
         self.label_for_log_generation = QLabel(self.rs_settings_group)
@@ -133,7 +148,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_loggen.addWidget(self.log_generation)
 
 
-        self.gridLayout_3.addLayout(self.horizontalLayout_loggen, 1, 1, 1, 2)
+        self.gridLayout_3.addLayout(self.horizontalLayout_loggen, 1, 3, 1, 2)
 
 
         self.verticalLayout_3.addWidget(self.rs_settings_group)
@@ -397,6 +412,7 @@ class Ui_MainWindow(object):
         self.clean_iso_path_browse_button.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
         self.label_for_clean_iso_path.setText(QCoreApplication.translate("MainWindow", u"Clean WW ISO", None))
         self.rs_settings_group.setTitle(QCoreApplication.translate("MainWindow", u"Random Settings Settings (Affects difficulty of the generated seed)", None))
+        self.label_for_target_checks.setText(QCoreApplication.translate("MainWindow", u"Target Difficulty", None))
         self.label_for_log_generation.setText(QCoreApplication.translate("MainWindow", u"Generate Logs", None))
         self.log_generation.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
         self.log_generation.setItemText(1, QCoreApplication.translate("MainWindow", u"Non-Spoiler Log", None))

@@ -7,6 +7,10 @@ OPTIONS = OrderedDict([
     "Choose which text files listing out information about the seed will be generated. (This also changes where items are placed in this seed.)<br><u>Generating a spoiler log is highly recommended even if you don't intend to use it</u>, just in case you get completely stuck."
   ),
   (
+    "target_checks",
+    "Select a difficulty level for random settings.<br> The number doesn't exactly mean anything per se, but would roughly correspond to the number of progression locations expected in the seed. Longer or more difficult locations count for more, close-by or easier locations for less.",
+  ),
+  (
     "invert_camera_x_axis",
     "Inverts the horizontal axis of camera movement.",
   ),
@@ -62,6 +66,7 @@ NON_PERMALINK_OPTIONS = [
 # These are options that the player can toggle, even in randomized settings
 SETTINGS_RANDO_OPTIONS = [
   "log_generation",
+  "target_checks",
 ]
 
 HIDDEN_OPTIONS = [
