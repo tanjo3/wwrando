@@ -123,7 +123,7 @@ class WWRandomizerWindow(QMainWindow):
     
     self.show()
     
-    self.ui.update_checker_label.setText("<b>This is a build specifically for random settings.</b> For updates, please join the WWR Racing Discord server. For questions and bug reports, please contact tanjo3#5077 on Discord.")
+    self.ui.update_checker_label.setText("<b>This is a build specifically for random settings.</b> For updates, please join the WWR Racing Discord server. For questions bug reports, please open issues on github.")
   
   def generate_seed(self):
     random.seed(None)
@@ -1186,21 +1186,21 @@ class WWRandomizerWindow(QMainWindow):
 
   def open_about(self):
     text = """WWR Random Settings Version %s<br><br>
-      Created by LagoLunatic, Random Settings changes by tanjo3<br><br>
-      Report issues here:<br><a href=\"https://github.com/tanjo3/wwrando/issues\">https://github.com/tanjo3/wwrando/issues</a><br><br>
-      Source code:<br><a href=\"https://github.com/tanjo3/wwrando/tree/random-settings\">https://github.com/tanjo3/wwrando/tree/random-settings</a>""" % VERSION_WITHOUT_COMMIT
-    
+      Created by LagoLunatic, Random Settings changes by tanjo3 - Adjustable difficulty build by Erilea<br><br>
+      Report issues here:<br><a href=\"https://github.com/Aelire/wwrando/issues\">https://github.com/Aelire/wwrando/issues</a><br><br>
+      Source code:<br><a href=\"https://github.com/Aelire/wwrando/tree/rs_target_checks\">https://github.com/Aelire/wwrando/tree/rs_target_checks</a>""" % VERSION_WITHOUT_COMMIT
+
     self.about_dialog = QMessageBox()
     self.about_dialog.setTextFormat(Qt.TextFormat.RichText)
     self.about_dialog.setWindowTitle("WWR Random Settings")
     self.about_dialog.setText(text)
     self.about_dialog.setWindowIcon(self.windowIcon())
     self.about_dialog.show()
-  
+
   def keyPressEvent(self, event):
     if event.key() == Qt.Key_Escape:
       self.close()
-  
+
   def closeEvent(self, event):
     event.accept()
 
