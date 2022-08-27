@@ -212,6 +212,10 @@ class WWRandomizerWindow(QMainWindow):
     self.ui.seed.setText(seed)
     self.update_settings()
     
+    max_progress_val = 20
+    if not self.no_ui_test:
+      self.progress_dialog = RandomizerProgressDialog("Randomizing", "Randomizing Settings...", max_progress_val)
+
     original_seed = seed
     seed = "RS_" + VERSION_WITHOUT_COMMIT + "_" + seed
     
@@ -231,12 +235,6 @@ class WWRandomizerWindow(QMainWindow):
       for color_name in self.get_default_custom_colors_for_current_model():
         colors[color_name] = self.get_color(color_name)
       options["custom_colors"] = colors
-      
-      max_progress_val = 20
-      if options.get("randomize_enemy_palettes"):
-        max_progress_val += 10
-      if not self.no_ui_test:
-        self.progress_dialog = RandomizerProgressDialog("Randomizing", "Initializing...", max_progress_val)
       
       cmd_line_args = self.cmd_line_args.copy()
       if self.no_ui_test:
