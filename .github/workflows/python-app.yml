@@ -2,9 +2,11 @@ name: Build
 
 on:
   push:
-    branches: [ master, random-settings ]
+    branches: [ master, rs_target_checks ]
+    tags: [ "*" ]
   pull_request:
-    branches: [ master, random-settings ]
+    branches: [ master, rs_target_checks ]
+    tags: [ "*" ]
   workflow_dispatch:
     inputs:
       version:
