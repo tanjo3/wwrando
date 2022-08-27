@@ -364,8 +364,6 @@ class WWRandomizerWindow(QMainWindow):
       self.ui.output_folder.setText(self.settings["output_folder"])
     if "seed" in self.settings:
       self.ui.seed.setText(self.settings["seed"])
-    if "target_checks" in self.settings:
-      self.ui.target_checks.setValue(self.settings["target_checks"])
     
     for option_name in OPTIONS:
       if option_name in self.settings:
@@ -405,7 +403,6 @@ class WWRandomizerWindow(QMainWindow):
     self.settings["clean_iso_path"] = self.ui.clean_iso_path.text()
     self.settings["output_folder"] = self.ui.output_folder.text()
     self.settings["seed"] = self.ui.seed.text()
-    self.settings["target_checks"] = self.ui.target_checks.value()
     
     self.disable_invalid_cosmetic_options()
     
