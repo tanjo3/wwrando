@@ -90,11 +90,6 @@ DEFAULT_WEIGHTS = OrderedDict({
 })
 
 # Initial check "cost" is inversely related to likelihood of setting, with a flat cost of 1 for 50/50 settings
-PROGRESSION_SETTINGS_CHECK_COSTS = {
-  k: 100 / (2 * v[0][1])
-  for k,v in DEFAULT_WEIGHTS.items()
-  if k.startswith("progression_")
-}
 TARGET_CHECKS_SLACK = 0.15
 # Options that are only used to decide on the settings, and not passed down to the item randomizer
 SETTINGS_RANDO_ONLY_OPTIONS = [
@@ -112,6 +107,24 @@ DUNGEON_NONPROGRESS_ITEMS = \
   ["ET Dungeon Map", "ET Compass"] + \
   ["WT Dungeon Map", "WT Compass"]
 
+def weights_to_option_cost(weights):
+  # Assume options are True/False, with True listed first, and weights sum to 100.
+  # remove the if to enforce this for testing
+  if True:
+    if (
+      len(weights) > 2 or
+      weights[0][1] + weights[1][1] != 100 or
+      (weights[0][0], weights[1][0]) != (True,False)
+    ):
+      raise ValueError("Options must be True/False and weigths must sum to 100")
+
+  return 100 / (2 * weights[0][1])
+
+PROGRESSION_SETTINGS_CHECK_COSTS = {
+  k: weights_to_option_cost(v)
+  for k,v in DEFAULT_WEIGHTS.items()
+  if k.startswith("progression_")
+}
 
 def weighted_sample_without_replacement(population, weights, k=1):
   # Perform a weighted sample of `k`` elements from `population` without replacement.
@@ -362,61 +375,79 @@ def compute_weighted_locations(settings_dict):
 
   return total_cost
 
+ADJUSTABLE_SETTINGS = {
+  # True/False toggles
+  # We want the most 50/50 options to have higher chances to be toggled, and the
+  # most/least likely options to have lower chances to be toggled
+  opt: 100 - abs(weights[0][1] - weights[1][1])
+  for opt, weights in DEFAULT_WEIGHTS.items()
+  if len(weights) == 2 and (weights[0][1] + weights[1][1]) == 100 and
+    not any(w[1] == 100 for w in weights)
+} | {
+  # Multivalued toggles. Manually weighted
+  "hint_placement": 30,
+  "sword_mode": 30,
+  "randomize_entrances": 30,
+  "num_starting_triforce_shards": 20,
+  "num_race_mode_dungeons": 100,
+}
 
-ADJUSTABLE_SETTINGS = list(PROGRESSION_SETTINGS_CHECK_COSTS.keys()) + [
-  "randomize_charts",
-  "add_shortcut_warps_between_dungeons",
-  "start_with_maps_and_compasses",
-  "only_use_ganondorf_paths",
-  # These are special, as they are multivalued
-  "hint_placement",
-  "sword_mode",
-  "randomize_entrances",
-  "num_starting_triforce_shards",
-  "num_race_mode_dungeons",
-  "progression_dungeons", "progression_dungeons",
-  "race_mode", "race_mode",
-]
+SECOND_PASS_ADJUSTABLE = {
+  "num_race_mode_dungeons": 300,
+  "num_starting_triforce_shards": 80,
+  "num_starting_items": 100,
+}
+
+class NoAcceptableSettingsException(Exception):
+  pass
+
+
 def adjust_settings_to_target(settings_dict, target_checks):
-  target_hi, target_lo = int(target_checks * (1+TARGET_CHECKS_SLACK)), int(target_checks * (1-TARGET_CHECKS_SLACK))
+  max_distance = round(target_checks * TARGET_CHECKS_SLACK)
   remaining_adjustable_settings = ADJUSTABLE_SETTINGS.copy()
-  second_pass_settings = ["num_race_mode_dungeons"] * 3 + ["num_starting_triforce_shards"] * 2 + ["num_starting_items"] * 2
+  second_pass_settings = SECOND_PASS_ADJUSTABLE.copy()
   second_pass = False
   bonus_accuracy_toggles = target_checks // 60
-  random.shuffle(remaining_adjustable_settings)
 
   ensure_min_max_difficulty(settings_dict, target_checks)
+  current_distance = float('inf')
 
-  while not (target_lo <= (current_cost := compute_weighted_locations(settings_dict)) <= target_hi) or bonus_accuracy_toggles > 0:
-    if target_lo <= current_cost <= target_hi:
-      bonus_accuracy_toggles -= 1
-      if not second_pass:
-        second_pass = True
-        remaining_adjustable_settings += second_pass_settings
-        random.shuffle(remaining_adjustable_settings)
-
-
-    if len(remaining_adjustable_settings) == 0:
-      if not second_pass:
-        # Ran out of checks. Entering second pass
-        remaining_adjustable_settings = second_pass_settings
-        random.shuffle(remaining_adjustable_settings)
-        second_pass = True
-      else:
-        break
-
-    selected = remaining_adjustable_settings.pop()
-
+  while bonus_accuracy_toggles > 0 or current_distance > max_distance:
+    current_cost = compute_weighted_locations(settings_dict)
     current_distance = abs(current_cost - target_checks)
+
+    # Set up available togglable options. This varies between first and second pass
+    if second_pass:
+      bonus_accuracy_toggles -= 1
+      if len(remaining_adjustable_settings) == 0 or current_distance > max_distance:
+        # Ran out of settings to toggle. Unlikely to happen
+        # This combined with removing one element from
+        # remaining_adjustable_settings on each iteration guarantees termination
+        if current_distance < max_distance * 2:
+          # We're within 2 times the target distance, that's not great but probably fine
+          break
+        else:
+          raise NoAcceptableSettingsException("Couldn't reach an acceptable number of checks with the starting seed")
+
+    else:
+      if len(remaining_adjustable_settings) == 0 or current_distance < max_distance:
+        second_pass = True
+        remaining_adjustable_settings |= second_pass_settings
+        bonus_accuracy_toggles -= 1
+
+    togglable, weights = list(remaining_adjustable_settings.keys()), list(remaining_adjustable_settings.values())
+    selected = random.choices(togglable,weights=weights)[0]
+
     # Small simplification, if there are only 2 options (yes/no) just try the other one
     # and see if it improves
-    # for multivalued options we'll have to try a bit more interestingly
+    # for multivalued options we'll have to try the various options
     if len(DEFAULT_WEIGHTS[selected]) == 2:
       settings_dict[selected] = not settings_dict[selected]
       new_cost = compute_weighted_locations(settings_dict)
+
       if math.isclose(new_cost, current_cost):
         # Option has no impact, will retry later
-        second_pass_settings.append(selected)
+        second_pass_settings[selected] = remaining_adjustable_settings[selected]
         settings_dict[selected] = not settings_dict[selected]
       elif abs(new_cost - target_checks) >= current_distance: # This is not getting us closer, revert
         settings_dict[selected] = not settings_dict[selected]
@@ -437,7 +468,8 @@ def adjust_settings_to_target(settings_dict, target_checks):
       # If the option has no impact, reroll it in case a related option gets toggled later.
       # Also select it for reroll on the second phase, again if a related option gets toggled in between
       if math.isclose(min(option_scores.values()), max(option_scores.values())):
-        second_pass_settings.append(selected)
+        if not selected in second_pass_settings:
+          second_pass_settings[selected] = remaining_adjustable_settings[selected]
 
         values, weights = zip(*DEFAULT_WEIGHTS[selected])
         chosen_option = random.choices(values, weights=weights)[0]
@@ -448,6 +480,7 @@ def adjust_settings_to_target(settings_dict, target_checks):
         random.shuffle(possible_values)
         settings_dict[selected] = min(possible_values, key=lambda tup: int(tup[1]))[0]
 
+    del remaining_adjustable_settings[selected]
     # Reapply constraints if we toggled them
     ensure_min_max_difficulty(settings_dict, target_checks)
 
@@ -470,8 +503,6 @@ def ensure_min_max_difficulty(settings_dict, target_checks):
     settings_dict["skip_rematch_bosses"] = True
     # non-race mode is also too volatile and best kept for normal and high difficulty
     settings_dict["race_mode"] = True
-    # Battlesquid is disproportionately random for the number of checks
-    settings_dict["progression_battlesquid"] = False
 
     if settings_dict["sword_mode"] == "Swordless":
       settings_dict["sword_mode"] = "No Starting Sword"

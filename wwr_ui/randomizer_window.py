@@ -178,10 +178,13 @@ class WWRandomizerWindow(QMainWindow):
     if self.bulk_test:
       failures_done = 0
       total_done = 0
+      prefilled_options = {}
+      for option_name in SETTINGS_RANDO_OPTIONS:
+        prefilled_options[option_name] = self.get_option_value(option_name)
       for i in range(self.bulk_test_amount):
         temp_seed = "RS_" + VERSION_WITHOUT_COMMIT + "_" + str(i)
         try:
-          options = randomize_settings(seed=temp_seed)
+          options = randomize_settings(seed=temp_seed, prefilled_options=prefilled_options)
           rando = Randomizer(temp_seed, str(i), clean_iso_path, output_folder, options, cmd_line_args=self.cmd_line_args)
           randomizer_generator = rando.randomize()
           while True:
