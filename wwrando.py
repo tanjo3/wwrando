@@ -1,5 +1,7 @@
 #!/usr/bin/python3.9
 
+import cmd
+import logging
 from PySide6.QtGui import *
 from PySide6.QtCore import *
 from PySide6.QtWidgets import *
@@ -8,6 +10,7 @@ import sys
 from collections import OrderedDict
 
 from wwr_ui.randomizer_window import WWRandomizerWindow
+from wwrando_paths import IS_RUNNING_FROM_SOURCE
 
 def signal_handler(sig, frame):
   print("Interrupt")
@@ -36,6 +39,9 @@ for arg in sys.argv[1:]:
     cmd_line_args[arg_parts[0]] = None
   else:
     cmd_line_args[arg_parts[0]] = arg_parts[1]
+
+if '-verbose' in cmd_line_args and IS_RUNNING_FROM_SOURCE:
+  logging.getLogger().setLevel(logging.DEBUG)
 
 qApp = QApplication(sys.argv)
 

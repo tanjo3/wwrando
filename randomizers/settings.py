@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import logging
 import functools
 import math
 import random
@@ -250,6 +251,10 @@ def randomize_settings(seed=None, prefilled_options={}):
   adjust_second_pass_options(settings_dict)
   # Randomize starting gear dynamically based on items which have logical implications in this seed
   settings_dict["starting_gear"] = randomize_starting_gear(settings_dict, seed=seed)
+
+  locations = Logic.get_num_progression_locations_static(ITEM_LOCATIONS, settings_dict)
+  logging.debug("Finishing with %d locations in logic and %d/%d/%d %s",
+    locations, settings_dict["num_path_hints"], settings_dict["num_barren_hints"], settings_dict["num_location_hints"], settings_dict["hint_placement"])
 
   for o in SETTINGS_RANDO_ONLY_OPTIONS:
     if o in settings_dict:
@@ -535,6 +540,7 @@ SETTINGS_WEIGHT_FUNCTIONS = {
 
 def adjust_settings_to_target(settings_dict, target_checks):
   max_distance = round(target_checks * TARGET_CHECKS_SLACK)
+  logging.debug("Target score: %d - %d", target_checks - max_distance, target_checks + max_distance)
   initial_settings_weights, second_pass_settings = SETTINGS_WEIGHT_FUNCTIONS[settings_dict["randomization_style"]]()
   remaining_adjustable_settings = initial_settings_weights.copy()
   second_pass = False
@@ -546,11 +552,13 @@ def adjust_settings_to_target(settings_dict, target_checks):
   while bonus_accuracy_toggles > 0 or current_distance > max_distance:
     current_cost = compute_weighted_locations(settings_dict)
     current_distance = abs(current_cost - target_checks)
+    logging.debug("At cost %.2f (%.2f from target)", current_cost, current_distance)
 
     # Set up available togglable options. This varies between first and second pass
     if second_pass:
       bonus_accuracy_toggles -= 1
       if len(remaining_adjustable_settings) == 0 or current_distance > max_distance:
+        logging.debug("Ran out of checks to toggle!")
         # Ran out of settings to toggle. Unlikely to happen
         # This combined with removing one element from
         # remaining_adjustable_settings on each iteration guarantees termination
@@ -558,16 +566,19 @@ def adjust_settings_to_target(settings_dict, target_checks):
           # We're within 2 times the target distance, that's not great but probably fine
           break
         else:
+          logging.debug("%d is too high (max %d)", current_distance, max_distance)
           raise NoAcceptableSettingsException("Couldn't reach an acceptable number of checks with the starting seed")
 
     else:
       if len(remaining_adjustable_settings) == 0 or current_distance < max_distance:
         second_pass = True
         remaining_adjustable_settings |= second_pass_settings
+        logging.debug("Entering second pass with %d additional toggles, total %d", bonus_accuracy_toggles, len(remaining_adjustable_settings))
         bonus_accuracy_toggles -= 1
 
     togglable, weights = list(remaining_adjustable_settings.keys()), list(remaining_adjustable_settings.values())
     selected = random.choices(togglable,weights=weights)[0]
+    logging.debug("Adjusting %s (currently %s)", selected, settings_dict[selected])
 
     # Small simplification, if there are only 2 options (yes/no) just try the other one
     # and see if it improves
@@ -616,6 +627,7 @@ def adjust_settings_to_target(settings_dict, target_checks):
           # Reduce weight, since we "consumed" one option
           remaining_adjustable_settings[selected] -= math.ceil(initial_settings_weights[selected]/len(DEFAULT_WEIGHTS[selected]))
         else:
+          logging.debug("Change too small: %.2f of %.2f", current_distance - possible_values[min_idx][1], current_distance)
           # Requeue to second phase if we didn't actually change enough to matter
           second_pass_settings[selected] = second_pass_settings.get(selected, 0) + remaining_adjustable_settings[selected]
           del remaining_adjustable_settings[selected]
@@ -624,6 +636,7 @@ def adjust_settings_to_target(settings_dict, target_checks):
 
     # Reapply constraints if we toggled them
     ensure_min_max_difficulty(settings_dict, target_checks)
+    logging.debug("Set %s to %s", selected, settings_dict[selected])
 
   return settings_dict
 

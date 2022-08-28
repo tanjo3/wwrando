@@ -1,4 +1,5 @@
 import base64
+import logging
 import struct
 from PySide6.QtGui import *
 from PySide6.QtCore import *
@@ -254,9 +255,10 @@ class WWRandomizerWindow(QMainWindow):
         error_message = str(e)
         n_attempts += 1
       except Exception as e:
+        n_attempts += 1
+        logging.debug("Rando.mization attempt %d failed", n_attempts, exc_info=True)
         stack_trace = traceback.format_exc()
         error_message = "Randomization failed with error:\n" + str(e) + "\n\n" + stack_trace
-        n_attempts += 1
     else:
       self.randomization_failed(error_message)
       return
