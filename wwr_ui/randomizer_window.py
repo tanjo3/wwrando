@@ -224,23 +224,23 @@ class WWRandomizerWindow(QMainWindow):
     error_message = ""
     prefilled_options = {}
     while n_attempts < max_attempts:
-      for option_name in SETTINGS_RANDO_OPTIONS:
-        prefilled_options[option_name] = self.get_option_value(option_name)
-
-      options = randomize_settings(seed=seed+str(n_attempts), prefilled_options=prefilled_options)
-      for option_name in NON_PERMALINK_OPTIONS + ["randomize_enemy_palettes"]:
-        options[option_name] = self.get_option_value(option_name)
-      
-      colors = OrderedDict()
-      for color_name in self.get_default_custom_colors_for_current_model():
-        colors[color_name] = self.get_color(color_name)
-      options["custom_colors"] = colors
-      
-      cmd_line_args = self.cmd_line_args.copy()
-      if self.no_ui_test:
-        cmd_line_args["-dry"] = None
-      
       try:
+        for option_name in SETTINGS_RANDO_OPTIONS:
+          prefilled_options[option_name] = self.get_option_value(option_name)
+
+        options = randomize_settings(seed=seed+str(n_attempts), prefilled_options=prefilled_options)
+        for option_name in NON_PERMALINK_OPTIONS + ["randomize_enemy_palettes"]:
+          options[option_name] = self.get_option_value(option_name)
+
+        colors = OrderedDict()
+        for color_name in self.get_default_custom_colors_for_current_model():
+          colors[color_name] = self.get_color(color_name)
+        options["custom_colors"] = colors
+
+        cmd_line_args = self.cmd_line_args.copy()
+        if self.no_ui_test:
+          cmd_line_args["-dry"] = None
+
         rando = Randomizer(seed, original_seed, clean_iso_path, output_folder, options, cmd_line_args=cmd_line_args, permalink=self.ui.permalink.text())
         break
       except (TooFewProgressionLocationsError, InvalidCleanISOError) as e:
