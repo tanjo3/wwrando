@@ -100,6 +100,7 @@ SETTINGS_RANDO_ONLY_OPTIONS = [
   "hint_placement",
   "num_starting_items",
   "start_with_maps_and_compasses",
+  "settings_adjust_mode",
 ]
 
 DUNGEON_NONPROGRESS_ITEMS = \
@@ -154,6 +155,9 @@ def weighted_sample_without_replacement(population, weights, k=1):
 
 def randomize_settings(seed=None, prefilled_options={}):
   random.seed(seed)
+
+  ## XXX
+  prefilled_options["settings_adjust_mode"] = "Chaotically"
 
   for i, option in enumerate(RNG_CHANGING_OPTIONS + ["target_checks"]):
     value = prefilled_options.get(option, None)
@@ -384,37 +388,61 @@ def compute_weighted_locations(settings_dict):
 
   return total_cost
 
-ADJUSTABLE_SETTINGS = {
-  # True/False toggles
-  # We want the most 50/50 options to have higher chances to be toggled, and the
-  # most/least likely options to have lower chances to be toggled
-  opt: 100 - abs(weights[0][1] - weights[1][1])
-  for opt, weights in DEFAULT_WEIGHTS.items()
-  if len(weights) == 2 and (weights[0][1] + weights[1][1]) == 100 and
-    not any(w[1] == 100 for w in weights)
-} | {
-  # Multivalued toggles. Manually weighted
-  "hint_placement": 30,
-  "sword_mode": 30,
-  "randomize_entrances": 30,
-  "num_starting_triforce_shards": 20,
-  "num_race_mode_dungeons": 100,
-}
-
-SECOND_PASS_ADJUSTABLE = {
-  "num_race_mode_dungeons": 300,
-  "num_starting_triforce_shards": 80,
-  "num_starting_items": 100,
-}
 
 class NoAcceptableSettingsException(Exception):
   pass
 
+def orderly_settings_weights():
+  first_phase = {
+    # True/False toggles
+    # We want the most 50/50 options to have higher chances to be toggled, and the
+    # most/least likely options to have lower chances to be toggled
+    opt: 100 - abs(int(weights[0][1] - weights[1][1]))
+    for opt, weights in DEFAULT_WEIGHTS.items()
+    if len(DEFAULT_WEIGHTS[opt]) == 2 and (weights[0][1] + weights[1][1]) == 100 and
+      not any(w[1] == 100 for w in weights)
+  } | {
+    # Multivalued toggles. Manually weighted
+    "hint_placement": 30,
+    "sword_mode": 30,
+    "randomize_entrances": 30,
+    "num_starting_triforce_shards": 20,
+    "num_race_mode_dungeons": 300, # Impacts race_mode and progression_dungeons
+  }
+  second_phase = {
+    "num_race_mode_dungeons": 300,
+    "num_starting_triforce_shards": 80,
+    "num_starting_items": 100,
+  }
+  return first_phase, second_phase
+
+# All settings have the same likelihood of getting toggled. Weird settings ahead!
+def chaotic_settings_weights():
+  opts = {}
+  for o,values in DEFAULT_WEIGHTS.items():
+    total_weight = sum(v[1] for v in values)
+    if any(v[1] == total_weight for v in values):
+      continue
+
+    if any(not v[0].__hash__ for v in values):
+      # We need to put this in a dict later
+      continue
+
+    opts[o] = 1
+
+  # Override for num_race_mode_dungeons which impacts 3 settings:
+  opts["num_race_mode_dungeons"] = 3
+  return opts, opts.copy()
+
+SETTINGS_WEIGHT_FUNCTIONS = {
+  "Orderly": orderly_settings_weights,
+  "Chaotically": chaotic_settings_weights,
+}
+
 
 def adjust_settings_to_target(settings_dict, target_checks):
   max_distance = round(target_checks * TARGET_CHECKS_SLACK)
-  remaining_adjustable_settings = ADJUSTABLE_SETTINGS.copy()
-  second_pass_settings = SECOND_PASS_ADJUSTABLE.copy()
+  remaining_adjustable_settings, second_pass_settings = SETTINGS_WEIGHT_FUNCTIONS[settings_dict["settings_adjust_mode"]]()
   second_pass = False
   bonus_accuracy_toggles = target_checks // 60
 
