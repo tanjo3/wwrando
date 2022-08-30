@@ -5,7 +5,7 @@ from PySide6.QtCore import *
 from PySide6.QtWidgets import *
 
 from wwr_ui.ui_randomizer_window import Ui_MainWindow
-from wwr_ui.options import OPTIONS, NON_PERMALINK_OPTIONS, SETTINGS_RANDO_OPTIONS
+from wwr_ui.options import OPTIONS, NON_PERMALINK_OPTIONS
 from wwr_ui.update_checker import check_for_updates, LATEST_RELEASE_DOWNLOAD_PAGE_URL
 from wwr_ui.packedbits import PackedBitsReader, PackedBitsWriter
 
@@ -179,7 +179,9 @@ class WWRandomizerWindow(QMainWindow):
       failures_done = 0
       total_done = 0
       prefilled_options = {}
-      for option_name in SETTINGS_RANDO_OPTIONS:
+      for option_name in OPTIONS:
+        if option_name in NON_PERMALINK_OPTIONS:
+          continue
         prefilled_options[option_name] = self.get_option_value(option_name)
       for i in range(self.bulk_test_amount):
         temp_seed = "RS_" + VERSION_WITHOUT_COMMIT + "_" + str(i)
@@ -228,7 +230,9 @@ class WWRandomizerWindow(QMainWindow):
     prefilled_options = {}
     while n_attempts < max_attempts:
       try:
-        for option_name in SETTINGS_RANDO_OPTIONS:
+        for option_name in OPTIONS:
+          if option_name in NON_PERMALINK_OPTIONS:
+            continue
           prefilled_options[option_name] = self.get_option_value(option_name)
 
         options = randomize_settings(seed=seed+str(n_attempts), prefilled_options=prefilled_options)

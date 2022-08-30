@@ -132,12 +132,22 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.target_checks, 1, 2, 1, 1)
 
-        self.horizontalLayout_loggen = QHBoxLayout()
-        self.horizontalLayout_loggen.setObjectName(u"horizontalLayout_loggen")
+        self.label_for_randomization_style = QLabel(self.rs_settings_group)
+        self.label_for_randomization_style.setObjectName(u"label_for_randomization_style")
+
+        self.gridLayout_3.addWidget(self.label_for_randomization_style, 1, 3, 1, 1)
+
+        self.randomization_style = QComboBox(self.rs_settings_group)
+        self.randomization_style.addItem("")
+        self.randomization_style.addItem("")
+        self.randomization_style.setObjectName(u"randomization_style")
+
+        self.gridLayout_3.addWidget(self.randomization_style, 1, 4, 1, 1)
+
         self.label_for_log_generation = QLabel(self.rs_settings_group)
         self.label_for_log_generation.setObjectName(u"label_for_log_generation")
 
-        self.horizontalLayout_loggen.addWidget(self.label_for_log_generation)
+        self.gridLayout_3.addWidget(self.label_for_log_generation, 1, 5, 1, 1)
 
         self.log_generation = QComboBox(self.rs_settings_group)
         self.log_generation.addItem("")
@@ -145,10 +155,7 @@ class Ui_MainWindow(object):
         self.log_generation.addItem("")
         self.log_generation.setObjectName(u"log_generation")
 
-        self.horizontalLayout_loggen.addWidget(self.log_generation)
-
-
-        self.gridLayout_3.addLayout(self.horizontalLayout_loggen, 1, 3, 1, 2)
+        self.gridLayout_3.addWidget(self.log_generation, 1, 6, 1, 1)
 
 
         self.verticalLayout_3.addWidget(self.rs_settings_group)
@@ -413,6 +420,10 @@ class Ui_MainWindow(object):
         self.label_for_clean_iso_path.setText(QCoreApplication.translate("MainWindow", u"Clean WW ISO", None))
         self.rs_settings_group.setTitle(QCoreApplication.translate("MainWindow", u"Random Settings Settings (Affects difficulty of the generated seed)", None))
         self.label_for_target_checks.setText(QCoreApplication.translate("MainWindow", u"Target Difficulty", None))
+        self.label_for_randomization_style.setText(QCoreApplication.translate("MainWindow", u"Randomization Style", None))
+        self.randomization_style.setItemText(0, QCoreApplication.translate("MainWindow", u"Orderly", None))
+        self.randomization_style.setItemText(1, QCoreApplication.translate("MainWindow", u"Chaotically", None))
+
         self.label_for_log_generation.setText(QCoreApplication.translate("MainWindow", u"Generate Logs", None))
         self.log_generation.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
         self.log_generation.setItemText(1, QCoreApplication.translate("MainWindow", u"Non-Spoiler Log", None))

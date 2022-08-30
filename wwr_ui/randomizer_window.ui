@@ -183,35 +183,52 @@ p, li { white-space: pre-wrap; }
                  </property>
                 </widget>
                </item>
-               <item row="1" column="3" colspan="2">
-                <layout class="QHBoxLayout" name="horizontalLayout_loggen">
+               <item row="1" column="3">
+                <widget class="QLabel" name="label_for_randomization_style">
+                 <property name="text">
+                  <string>Randomization Style</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="4">
+                <widget class="QComboBox" name="randomization_style">
                  <item>
-                  <widget class="QLabel" name="label_for_log_generation">
-                   <property name="text">
-                    <string>Generate Logs</string>
-                   </property>
-                  </widget>
+                  <property name="text">
+                   <string>Orderly</string>
+                  </property>
                  </item>
                  <item>
-                  <widget class="QComboBox" name="log_generation">
-                   <item>
-                    <property name="text">
-                     <string>None</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Non-Spoiler Log</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Spoiler and Non-Spoiler Log</string>
-                    </property>
-                   </item>
-                  </widget>
+                  <property name="text">
+                   <string>Chaotically</string>
+                  </property>
                  </item>
-                </layout>
+                </widget>
+               </item>
+               <item row="1" column="5">
+                <widget class="QLabel" name="label_for_log_generation">
+                 <property name="text">
+                  <string>Generate Logs</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="6">
+                <widget class="QComboBox" name="log_generation">
+                 <item>
+                  <property name="text">
+                   <string>None</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Non-Spoiler Log</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Spoiler and Non-Spoiler Log</string>
+                  </property>
+                 </item>
+                </widget>
                </item>
               </layout>
              </widget>

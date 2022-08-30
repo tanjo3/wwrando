@@ -100,7 +100,7 @@ SETTINGS_RANDO_ONLY_OPTIONS = [
   "hint_placement",
   "num_starting_items",
   "start_with_maps_and_compasses",
-  "settings_adjust_mode",
+  "randomization_style",
 ]
 
 DUNGEON_NONPROGRESS_ITEMS = \
@@ -155,9 +155,6 @@ def weighted_sample_without_replacement(population, weights, k=1):
 
 def randomize_settings(seed=None, prefilled_options={}):
   random.seed(seed)
-
-  ## XXX
-  prefilled_options["settings_adjust_mode"] = "Chaotically"
 
   for i, option in enumerate(RNG_CHANGING_OPTIONS + ["target_checks"]):
     value = prefilled_options.get(option, None)
@@ -442,7 +439,7 @@ SETTINGS_WEIGHT_FUNCTIONS = {
 
 def adjust_settings_to_target(settings_dict, target_checks):
   max_distance = round(target_checks * TARGET_CHECKS_SLACK)
-  remaining_adjustable_settings, second_pass_settings = SETTINGS_WEIGHT_FUNCTIONS[settings_dict["settings_adjust_mode"]]()
+  remaining_adjustable_settings, second_pass_settings = SETTINGS_WEIGHT_FUNCTIONS[settings_dict["randomization_style"]]()
   second_pass = False
   bonus_accuracy_toggles = target_checks // 60
 

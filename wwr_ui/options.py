@@ -11,6 +11,10 @@ OPTIONS = OrderedDict([
     "Select a difficulty level for random settings.<br> The number doesn't exactly mean anything per se, but would roughly correspond to the number of progression locations expected in the seed. Longer or more difficult locations count for more, close-by or easier locations for less.",
   ),
   (
+    "randomization_style",
+    "Choose between conservative settings (following original weights) or wilder settings (all options have an equal chance of being on or off)"
+  ),
+  (
     "invert_camera_x_axis",
     "Inverts the horizontal axis of camera movement.",
   ),
@@ -61,12 +65,6 @@ NON_PERMALINK_OPTIONS = [
   "remove_title_and_ending_videos",
   # Note: Options that affect music must be included in the permalink because music duration affects gameplay in some cases, like not being allowed to close the item get textbox until the item get jingle has finished playing.
   # Note: randomize_enemy_palettes has special logic to be in the permalink when enemy rando is on, but otherwise just have an unused placeholder in the permalink.
-]
-
-# These are options that the player can toggle, even in randomized settings
-SETTINGS_RANDO_OPTIONS = [
-  "log_generation",
-  "target_checks",
 ]
 
 HIDDEN_OPTIONS = [
