@@ -178,7 +178,13 @@ def randomize_settings(seed=None, prefilled_options={}):
       # Handled in second_pass_options
       continue
     else:
-      chosen_option = random.choices(values, weights=weights)[0]
+      if settings_dict["randomization_style"] == "Orderly":
+        chosen_option = random.choices(values, weights=weights)[0]
+      elif settings_dict["randomization_style"] == "Chaotically":
+        # Exclude 0 weights
+        chosen_option = random.choice([v[0] for v in DEFAULT_WEIGHTS[option_name] if v[1]])
+      else:
+        raise ValueError(f"Don't know how to randomize for {settings_dict['randomization_style']}")
       settings_dict[option_name] = chosen_option
 
   compute_derived_options(settings_dict)
@@ -413,12 +419,15 @@ def orderly_settings_weights():
   }
   return first_phase, second_phase
 
+def setting_is_guaranteed(option):
+  total_weight = sum(v[1] for v in DEFAULT_WEIGHTS[option])
+  return any(v[1] == total_weight for v in DEFAULT_WEIGHTS[option])
+
 # All settings have the same likelihood of getting toggled. Weird settings ahead!
 def chaotic_settings_weights():
   opts = {}
   for o,values in DEFAULT_WEIGHTS.items():
-    total_weight = sum(v[1] for v in values)
-    if any(v[1] == total_weight for v in values):
+    if setting_is_guaranteed(o):
       continue
 
     if any(not v[0].__hash__ for v in values):
