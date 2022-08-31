@@ -206,10 +206,17 @@ def randomize_settings(seed=None, prefilled_options={}):
 def adjust_second_pass_options(options):
   if options["progression_dungeons"]:
     options["skip_rematch_bosses"] = True
+  else:
+    values, weights = zip(*DEFAULT_WEIGHTS["skip_rematch_bosses"])
+    options["skip_rematch_bosses"] = random.choices(values, weights)[0]
 
   # Adapt hint_placement to the format the randomizer expects (individual bools for each possible placement)
   for (hint_placement, _weight) in DEFAULT_WEIGHTS["hint_placement"]:
     options[hint_placement] = (hint_placement == options["hint_placement"])
+
+  # Clamp num_race_mode_dungeons
+  compute_derived_options(options)
+  options["num_race_mode_dungeons"] = max(min(options["num_race_mode_dungeons"], 6), 1)
 
 def randomize_starting_gear(options, seed=None):
   starting_gear = ["Telescope", "Ballad of Gales", "Song of Passing"]
@@ -575,17 +582,10 @@ def ensure_min_max_difficulty(settings_dict, target_checks):
     settings_dict["progression_savage_labyrinth"] = False
     settings_dict["skip_rematch_bosses"] = True
     # non-race mode is also too volatile and best kept for normal and high difficulty
-    settings_dict["race_mode"] = True
+    settings_dict["num_race_mode_dungeons"] = min(6, settings_dict["num_race_mode_dungeons"])
 
     if settings_dict["sword_mode"] == "Swordless":
       settings_dict["sword_mode"] = "No Starting Sword"
-
-
-  # Put some min and max numbers of race mode dungeons
-  if settings_dict["num_race_mode_dungeons"] < target_checks // 100:
-    settings_dict["num_race_mode_dungeons"] = target_checks // 100
-  if settings_dict["num_race_mode_dungeons"] > target_checks // 25: # Need 150 for 6DRM
-    settings_dict["num_race_mode_dungeons"] = target_checks // 25
 
 def compute_derived_options(settings_dict):
   settings_dict["progression_dungeons"] = (settings_dict["num_race_mode_dungeons"] > 0)
