@@ -504,34 +504,6 @@ def adjust_settings_to_target(settings_dict, target_checks):
 
       del remaining_adjustable_settings[selected]
 
-    # For multivalued options, we'll take the "best" one, that takes us closest to the target score
-    # With the exception that if it doesn't change anything, we'll requeue it to retry last
-    # Because all these options affect dungeons, this gives a chance for
-    # dungeons to be enabled, then this will be retried
-    elif False:
-      option_scores = {}
-      for value, w in DEFAULT_WEIGHTS[selected]:
-        if w == 0:
-          # Skip options that aren't allowed
-          continue
-        settings_dict[selected] = value
-        option_scores[value] = abs(compute_weighted_locations(settings_dict) - target_checks)
-
-      # If the option has no impact, reroll it in case a related option gets toggled later.
-      # Also select it for reroll on the second phase, again if a related option gets toggled in between
-      if math.isclose(min(option_scores.values()), max(option_scores.values())):
-        if not selected in second_pass_settings:
-          second_pass_settings[selected] = remaining_adjustable_settings[selected]
-
-        values, weights = zip(*DEFAULT_WEIGHTS[selected])
-        chosen_option = random.choices(values, weights=weights)[0]
-        settings_dict[selected] = chosen_option
-      else:
-        # Often there are multiple minimal options, and min takes the first, so round and shuffle them first
-        possible_values = list(option_scores.items())
-        random.shuffle(possible_values)
-        settings_dict[selected] = min(possible_values, key=lambda tup: int(tup[1]))[0]
-
     # For multivalued options, we'll try the 4 "around" the current value, to avoid too large swings.
     else:
       # Find the current option
