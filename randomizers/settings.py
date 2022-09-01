@@ -368,18 +368,20 @@ def compute_weighted_locations(settings_dict):
       total_cost += triforce_charts_cost * 0.5
     # If all the charts were progression anyway, it really doesn't change anything where they are
 
-# Below this, modifiers that apply multiplicatively to the total cost rather
-# than adding or removing cost for specific subsets of checks
+  # Below this, modifiers that apply multiplicatively to the total cost rather
+  # than adding or removing cost for specific subsets of checks
 
-  starting_items = settings_dict["num_starting_items"] + settings_dict["num_starting_triforce_shards"]
-
-  # Triforce shards that cause other, progression items to show up on bosses are worth double
+  starting_items = settings_dict["num_starting_items"]
+  # individual starting triforce shards in general don't reduce the seed cost since you need
+  # to find all of them anyway, (on the contrary it reduces the number of spiky chests)
+  # but starting triforce shards that cause progression items to show up on bosses count as
+  # one less item to get
   if settings_dict["progression_dungeons"] and settings_dict["race_mode"]:
     non_shard_dungeons = (settings_dict["num_starting_triforce_shards"] + settings_dict["num_race_mode_dungeons"] - 8)
     if non_shard_dungeons > 0:
       starting_items += non_shard_dungeons
   if settings_dict["sword_mode"] == "Start with Hero's Sword":
-    starting_items += 1
+    starting_items += 2 # Counts double since it's so useful
 
   total_cost *= pow(0.985, starting_items)
 
