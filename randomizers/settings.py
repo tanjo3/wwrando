@@ -441,10 +441,10 @@ def chaotic_settings_weights():
       # We need to put this in a dict later
       continue
 
-    opts[o] = 1
+    opts[o] = sum(1 for v in values if v[1] > 0) # More values => more likelihood of being flipped
 
   # Override for num_race_mode_dungeons which impacts 3 settings:
-  opts["num_race_mode_dungeons"] = 3
+  opts["num_race_mode_dungeons"] += 4 # progression_dungeons, race_mode each 2 values
   return opts, opts.copy()
 
 SETTINGS_WEIGHT_FUNCTIONS = {
