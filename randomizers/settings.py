@@ -547,7 +547,7 @@ def adjust_settings_to_target(settings_dict, target_checks):
         try_sett[selected] = v
         option_scores[v] = abs(compute_weighted_locations(try_sett) - target_checks)
 
-      # Requeue in the same phase if moved, requeue in the next phase if not (TODO: prove that doesn't loop)
+      # Requeue in the same phase if moved, requeue in the next phase if not
       if math.isclose(min(option_scores.values()), max(option_scores.values())):
         if not second_pass:
           second_pass_settings[selected] = second_pass_settings.get(selected, 0) + 2*remaining_adjustable_settings[selected]
@@ -555,9 +555,11 @@ def adjust_settings_to_target(settings_dict, target_checks):
         # Often there are multiple minimal options, and min takes the first, so round and shuffle them first
         possible_values = list(option_scores.items())
         random.shuffle(possible_values)
-        chosen = min(possible_values, key=lambda tup: int(tup[1]))[0]
-        requeue = (settings_dict[selected] == chosen)
-        settings_dict[selected] = chosen
+        min_idx = min(enumerate(possible_values), key=lambda tup: int(tup[1][1]))[0]
+        # If we only requeue when the actual value has changed, we have a strictly decreasing distance, 
+        # and a finite number of possibilities to check, so this will terminate
+        requeue = not math.isclose(current_distance, possible_values[min_idx][1])
+        settings_dict[selected] = possible_values[min_idx][0]
 
     if not requeue:
       del remaining_adjustable_settings[selected]
