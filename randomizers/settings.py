@@ -204,6 +204,10 @@ def randomize_settings(seed=None, prefilled_options={}):
 
 # This is where we can change options that depend on other options
 def adjust_second_pass_options(options):
+  # Clamp num_race_mode_dungeons
+  compute_derived_options(options)
+  options["num_race_mode_dungeons"] = max(min(options["num_race_mode_dungeons"], 6), 1)
+
   if options["progression_dungeons"]:
     options["skip_rematch_bosses"] = True
   else:
@@ -213,10 +217,6 @@ def adjust_second_pass_options(options):
   # Adapt hint_placement to the format the randomizer expects (individual bools for each possible placement)
   for (hint_placement, _weight) in DEFAULT_WEIGHTS["hint_placement"]:
     options[hint_placement] = (hint_placement == options["hint_placement"])
-
-  # Clamp num_race_mode_dungeons
-  compute_derived_options(options)
-  options["num_race_mode_dungeons"] = max(min(options["num_race_mode_dungeons"], 6), 1)
 
 def randomize_starting_gear(options, seed=None):
   starting_gear = ["Telescope", "Ballad of Gales", "Song of Passing"]
