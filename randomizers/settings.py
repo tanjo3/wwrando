@@ -569,25 +569,25 @@ def adjust_settings_to_target(settings_dict, target_checks):
   return settings_dict
 
 def ensure_min_max_difficulty(settings_dict, target_checks):
-  # Charts are only in at >=175 difficulty.
-  # Not really as a difficulty thing, rather this helps ensure there are enough
-  # non-charts location to reduce the likelihood of having to reroll, since
-  # charts are worth 100+ locations on their own
-  if target_checks < 175:
-    settings_dict["progression_treasure_charts"] = False
-
   # 140 is the cutoff for "easy" seeds. Above this, almost anything goes, but
   # under we prevent some of the most egregious settings combinations
 
-  # Swordless and savage are disproportionately hard for the number of checks
   if target_checks < 140:
+    # Swordless and savage are disproportionately hard for the number of checks
     settings_dict["progression_savage_labyrinth"] = False
     settings_dict["skip_rematch_bosses"] = True
+
     # non-race mode is also too volatile and best kept for normal and high difficulty
     settings_dict["num_race_mode_dungeons"] = min(6, settings_dict["num_race_mode_dungeons"])
 
     if settings_dict["sword_mode"] == "Swordless":
       settings_dict["sword_mode"] = "No Starting Sword"
+
+    # Not really as a difficulty thing, rather this helps ensure there are enough
+    # non-charts location to reduce the likelihood of having to reroll, since
+    # charts are worth 100+ locations on their own, and add 40 progression
+    # locations, that need to be placed somewhere
+    settings_dict["progression_treasure_charts"] = False
 
 def compute_derived_options(settings_dict):
   settings_dict["progression_dungeons"] = (settings_dict["num_race_mode_dungeons"] > 0)
