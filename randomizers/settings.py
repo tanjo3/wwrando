@@ -495,7 +495,7 @@ def adjust_settings_to_target(settings_dict, target_checks):
       settings_dict[selected] = not settings_dict[selected]
       new_cost = compute_weighted_locations(settings_dict)
 
-      if math.isclose(new_cost, current_cost):
+      if math.isclose(new_cost, current_cost, rel_tol=0.05):
         # Option has no impact, will retry later
         second_pass_settings[selected] = remaining_adjustable_settings[selected]
         settings_dict[selected] = not settings_dict[selected]
@@ -559,11 +559,11 @@ def adjust_settings_to_target(settings_dict, target_checks):
         min_idx = min(enumerate(possible_values), key=lambda tup: int(tup[1][1]))[0]
         # If we only requeue when the actual value has changed, we have a strictly decreasing distance, 
         # and a finite number of possibilities to check, so this will terminate
-        if not math.isclose(current_distance, possible_values[min_idx][1]):
+        if not math.isclose(current_distance, possible_values[min_idx][1], rel_tol=0.05):
           # Reduce weight, since we "consumed" one option
           remaining_adjustable_settings[selected] -= math.floor(remaining_adjustable_settings[selected]/len(DEFAULT_WEIGHTS[selected]))
         else:
-          # Requeue to second phase if we didn't actually change anything
+          # Requeue to second phase if we didn't actually change enough to matter
           second_pass_settings[selected] = second_pass_settings.get(selected, 0) + remaining_adjustable_settings[selected]
 
         settings_dict[selected] = possible_values[min_idx][0]
