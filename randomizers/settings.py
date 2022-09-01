@@ -465,7 +465,6 @@ def adjust_settings_to_target(settings_dict, target_checks):
   while bonus_accuracy_toggles > 0 or current_distance > max_distance:
     current_cost = compute_weighted_locations(settings_dict)
     current_distance = abs(current_cost - target_checks)
-    requeue = False
 
     # Set up available togglable options. This varies between first and second pass
     if second_pass:
@@ -502,6 +501,8 @@ def adjust_settings_to_target(settings_dict, target_checks):
         settings_dict[selected] = not settings_dict[selected]
       elif abs(new_cost - target_checks) >= current_distance: # This is not getting us closer, revert
         settings_dict[selected] = not settings_dict[selected]
+
+      del remaining_adjustable_settings[selected]
 
     # For multivalued options, we'll take the "best" one, that takes us closest to the target score
     # With the exception that if it doesn't change anything, we'll requeue it to retry last
@@ -558,11 +559,15 @@ def adjust_settings_to_target(settings_dict, target_checks):
         min_idx = min(enumerate(possible_values), key=lambda tup: int(tup[1][1]))[0]
         # If we only requeue when the actual value has changed, we have a strictly decreasing distance, 
         # and a finite number of possibilities to check, so this will terminate
-        requeue = not math.isclose(current_distance, possible_values[min_idx][1])
+        if not math.isclose(current_distance, possible_values[min_idx][1]):
+          # Reduce weight, since we "consumed" one option
+          remaining_adjustable_settings[selected] -= math.floor(remaining_adjustable_settings[selected]/len(DEFAULT_WEIGHTS[selected]))
+        else:
+          # Requeue to second phase if we didn't actually change anything
+          second_pass_settings[selected] = second_pass_settings.get(selected, 0) + remaining_adjustable_settings[selected]
+
         settings_dict[selected] = possible_values[min_idx][0]
 
-    if not requeue:
-      del remaining_adjustable_settings[selected]
     # Reapply constraints if we toggled them
     ensure_min_max_difficulty(settings_dict, target_checks)
 
