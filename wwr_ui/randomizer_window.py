@@ -216,7 +216,7 @@ class WWRandomizerWindow(QMainWindow):
     error_message = ""
     while n_attempts < max_attempts:
       options = randomize_settings(seed=seed+str(n_attempts))
-      for option_name in NON_PERMALINK_OPTIONS:
+      for option_name in NON_PERMALINK_OPTIONS + ["randomize_enemy_palettes"]:
         options[option_name] = self.get_option_value(option_name)
       
       colors = OrderedDict()
