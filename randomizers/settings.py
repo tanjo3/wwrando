@@ -259,20 +259,20 @@ def randomize_starting_gear(options, seed=None):
   
   return list(set(starting_gear))
 
-def get_incremental_locations_for_setting(cached_item_locations, all_options, incremental_option):
+ITEM_LOCATIONS = Logic.load_and_parse_item_locations()
+def get_incremental_locations_for_setting(all_options, incremental_option):
   options = all_options.copy()
 
   options[incremental_option] = False
-  before = Logic.get_num_progression_locations_static(cached_item_locations, options)
+  before = Logic.get_num_progression_locations_static(ITEM_LOCATIONS, options)
   options[incremental_option] = True
-  after = Logic.get_num_progression_locations_static(cached_item_locations, options)
+  after = Logic.get_num_progression_locations_static(ITEM_LOCATIONS, options)
 
   return after - before
 
 def compute_weighted_locations(settings_dict):
   compute_derived_options(settings_dict)
-  cached_item_locations = Logic.load_and_parse_item_locations()
-  location_cost = lambda opt: int(settings_dict[opt]) * get_incremental_locations_for_setting(cached_item_locations, settings_dict, opt)
+  location_cost = lambda opt: int(settings_dict[opt]) * get_incremental_locations_for_setting(settings_dict, opt)
 
   # As the base case, we compute a total "cost" which is the number of checks in
   # a setting times a weight intented to convey the penibility of the setting
