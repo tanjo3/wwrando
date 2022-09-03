@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import functools
 import math
 import random
 
@@ -37,9 +38,9 @@ DEFAULT_WEIGHTS = OrderedDict({
   "chest_type_matches_contents": [(True, 100), (False, 0)],
   "keep_duplicates_in_logic": [(True, 50), (False, 50)],
   
-  "num_path_hints": [(6, 100)],
-  "num_barren_hints": [(6, 100)],
-  "num_location_hints": [(8, 100)],
+  "num_path_hints": [(0, 0), (1, 0), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1000), (7, 1), (8, 1), (9, 1)],
+  "num_barren_hints": [(0, 0), (1, 0), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1000), (7, 1), (8, 1), (9, 1), (10, 1)],
+  "num_location_hints": [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 1), (7, 1), (8, 1000), (9, 1), (10, 1), (11, 1), (12, 1)], # Need 6 because there are 6 always hints
   "num_item_hints": [(0, 100)],
   "only_use_ganondorf_paths": [(True, 25), (False, 75)],
   "clearer_hints": [(True, 100), (False, 0)],
@@ -137,6 +138,59 @@ PROGRESSION_SETTINGS_CHECK_COSTS = {
   "progression_treasure_charts": 2,
 }
 
+class Distribution():
+  @staticmethod
+  def _possible_items(opt):
+    return [v for v,w in DEFAULT_WEIGHTS[opt] if w > 0]
+
+  @staticmethod
+  def uniform(opt):
+    values = Distribution._possible_items(opt)
+    return values, [1 for _ in values]
+
+  @staticmethod
+  def _zipf(s, opt):
+    values = Distribution._possible_items(opt)
+    harmonic = sum(1/pow(i,s) for i in range(1,len(values)+1))
+    return values, [round(100/(pow(k,s)*harmonic), 2) for k in range(1,len(values)+1)]
+
+  @staticmethod
+  def zipf(s):
+    return functools.partial(Distribution._zipf, s)
+
+  @staticmethod
+  def _binomial(p, opt): # N taken from passed list length
+    values = Distribution._possible_items(opt)
+    return values, [
+      round(100*math.comb(len(values),k)*pow(p,k)*pow(1-p,len(values)-k), 2)
+      for k in range(1,len(values)+1)
+    ]
+
+  @staticmethod
+  def binomial(p):
+    return functools.partial(Distribution._binomial, p)
+
+  @staticmethod
+  def default_weights(opt):
+    return zip(*DEFAULT_WEIGHTS[opt])
+
+CHAOTIC_OPTION_DISTRIBUTIONS = {
+  "num_race_mode_dungeons": Distribution.uniform,
+  "num_starting_triforce_shards": Distribution.zipf(2),
+  "num_starting_items": Distribution.zipf(1),
+  "num_path_hints": Distribution.binomial(0.6),
+  "num_barren_hints": Distribution.binomial(0.6),
+  "num_location_hints": Distribution.binomial(0.4), # Min 6
+}
+
+def option_weights(randomization_mode, opt):
+  if randomization_mode == "Orderly":
+    return Distribution.default_weights(opt)
+  elif randomization_mode == "Chaotically":
+    return CHAOTIC_OPTION_DISTRIBUTIONS.get(opt, Distribution.uniform)(opt)
+  else:
+    raise ValueError(f"Don't know how to randomize in mode {randomization_mode}")
+
 def weighted_sample_without_replacement(population, weights, k=1):
   # Perform a weighted sample of `k`` elements from `population` without replacement.
   # Taken from: https://stackoverflow.com/a/43649323
@@ -171,21 +225,15 @@ def randomize_settings(seed=None, prefilled_options={}):
   }
   settings_dict.update(prefilled_options)
 
-  for option_name, option_values in DEFAULT_WEIGHTS.items():
-    values, weights = zip(*option_values)
+  for option_name in DEFAULT_WEIGHTS:
+    values, weights = option_weights(settings_dict["randomization_style"], option_name)
     
     if option_name == "starting_gear":
       # Handled in second_pass_options
       continue
     else:
-      if settings_dict["randomization_style"] == "Orderly":
-        chosen_option = random.choices(values, weights=weights)[0]
-      elif settings_dict["randomization_style"] == "Chaotically":
-        # Exclude 0 weights
-        chosen_option = random.choice([v[0] for v in DEFAULT_WEIGHTS[option_name] if v[1]])
-      else:
-        raise ValueError(f"Don't know how to randomize for {settings_dict['randomization_style']}")
-      settings_dict[option_name] = chosen_option
+      chosen_option = random.choices(values, weights=weights)[0]
+    settings_dict[option_name] = chosen_option
 
   compute_derived_options(settings_dict)
   
@@ -384,17 +432,25 @@ def compute_weighted_locations(settings_dict):
   total_cost *= pow(0.985, starting_items)
 
 
+  # Figure out the ratio of hints to enabled settings, and aim for that
+  # Ideally we want each hint to tell us something about one setting
+  hints_target = sum(v for s,v in settings_dict.items() if s.startswith("progression_")) * 2
+  total_hints = settings_dict["num_path_hints"] * 3 + settings_dict["num_location_hints"] * 0.3 + settings_dict["num_barren_hints"] * 2
+  hint_distance = hints_target - total_hints
+
   # Stone tablet and korl hints can end up on islands we wouldn't otherwise go
   # They also happen much later, so are less useful
   if settings_dict["hint_placement"] == "stone_tablet_hints":
     if "Secret Caves" in settings_dict["randomize_entrances"]:
       # 15% of hintstones are in pawprint / cliff plat
-      total_cost *= 1.45
+      hint_distance += abs(hints_target)
     else:
-      total_cost *= 1.3
+      hint_distance += 0.5 * abs(hints_target)
   elif settings_dict["hint_placement"] == "hoho_hints":
     # Still annoying but much less, and the locations are completely fixed. But 2 of them are item locked
-    total_cost *= 1.2
+    hint_distance += 0.15 * abs(hints_target)
+
+  total_cost += hint_distance # square, but same sign, with a tolerance of 1 hint in either direction
 
   return total_cost
 
