@@ -511,7 +511,8 @@ SETTINGS_WEIGHT_FUNCTIONS = {
 
 def adjust_settings_to_target(settings_dict, target_checks):
   max_distance = round(target_checks * TARGET_CHECKS_SLACK)
-  remaining_adjustable_settings, second_pass_settings = SETTINGS_WEIGHT_FUNCTIONS[settings_dict["randomization_style"]]()
+  initial_settings_weights, second_pass_settings = SETTINGS_WEIGHT_FUNCTIONS[settings_dict["randomization_style"]]()
+  remaining_adjustable_settings = initial_settings_weights.copy()
   second_pass = False
   bonus_accuracy_toggles = target_checks // 60
 
@@ -551,7 +552,7 @@ def adjust_settings_to_target(settings_dict, target_checks):
       settings_dict[selected] = not settings_dict[selected]
       new_cost = compute_weighted_locations(settings_dict)
 
-      if math.isclose(new_cost, current_cost, rel_tol=0.05):
+      if math.isclose(new_cost, current_cost):
         # Option has no impact, will retry later
         second_pass_settings[selected] = remaining_adjustable_settings[selected]
         settings_dict[selected] = not settings_dict[selected]
@@ -589,7 +590,7 @@ def adjust_settings_to_target(settings_dict, target_checks):
         # and a finite number of possibilities to check, so this will terminate
         if not math.isclose(current_distance, possible_values[min_idx][1], rel_tol=0.05):
           # Reduce weight, since we "consumed" one option
-          remaining_adjustable_settings[selected] -= math.floor(remaining_adjustable_settings[selected]/len(DEFAULT_WEIGHTS[selected]))
+          remaining_adjustable_settings[selected] -= math.ceil(initial_settings_weights[selected]/len(DEFAULT_WEIGHTS[selected]))
         else:
           # Requeue to second phase if we didn't actually change enough to matter
           second_pass_settings[selected] = second_pass_settings.get(selected, 0) + remaining_adjustable_settings[selected]
