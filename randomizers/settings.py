@@ -208,11 +208,9 @@ def adjust_second_pass_options(options):
   compute_derived_options(options)
   options["num_race_mode_dungeons"] = max(min(options["num_race_mode_dungeons"], 6), 1)
 
-  if options["progression_dungeons"]:
+  if not options["skip_rematch_bosses"] and options["progression_dungeons"]:
+    # Cant have dungeons and trials at the same time
     options["skip_rematch_bosses"] = True
-  else:
-    values, weights = zip(*DEFAULT_WEIGHTS["skip_rematch_bosses"])
-    options["skip_rematch_bosses"] = random.choices(values, weights)[0]
 
   # Adapt hint_placement to the format the randomizer expects (individual bools for each possible placement)
   for (hint_placement, _weight) in DEFAULT_WEIGHTS["hint_placement"]:
@@ -552,15 +550,12 @@ def ensure_min_max_difficulty(settings_dict, target_checks):
   # under we prevent some of the most egregious settings combinations
 
   if target_checks < 140:
-    # Swordless and savage are disproportionately hard for the number of checks
-    settings_dict["progression_savage_labyrinth"] = False
     settings_dict["skip_rematch_bosses"] = True
-
-    # non-race mode is also too volatile and best kept for normal and high difficulty
-    settings_dict["num_race_mode_dungeons"] = min(6, settings_dict["num_race_mode_dungeons"])
-
     if settings_dict["sword_mode"] == "Swordless":
       settings_dict["sword_mode"] = "No Starting Sword"
+
+    # Savage is too volatile to play well with the target difficulty (either nothing, or a huge slog)
+    settings_dict["progression_savage_labyrinth"] = False
 
     # Not really as a difficulty thing, rather this helps ensure there are enough
     # non-charts location to reduce the likelihood of having to reroll, since
