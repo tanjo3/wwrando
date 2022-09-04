@@ -594,6 +594,7 @@ def adjust_settings_to_target(settings_dict, target_checks):
         else:
           # Requeue to second phase if we didn't actually change enough to matter
           second_pass_settings[selected] = second_pass_settings.get(selected, 0) + remaining_adjustable_settings[selected]
+          del remaining_adjustable_settings[selected]
 
         settings_dict[selected] = possible_values[min_idx][0]
 
