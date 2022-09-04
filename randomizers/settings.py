@@ -323,12 +323,12 @@ def get_incremental_locations_for_setting(all_options, incremental_option):
 
 def compute_weighted_locations(settings_dict):
   compute_derived_options(settings_dict)
-  location_cost = lambda opt: int(settings_dict[opt]) * get_incremental_locations_for_setting(settings_dict, opt)
+  location_cost = lambda opt: int(settings_dict[opt]) * get_incremental_locations_for_setting(settings_dict, opt) * PROGRESSION_SETTINGS_CHECK_COSTS[opt]
 
   # As the base case, we compute a total "cost" which is the number of checks in
   # a setting times a weight intented to convey the penibility of the setting
   total_cost = sum(
-    PROGRESSION_SETTINGS_CHECK_COSTS[s] * location_cost(s)
+    location_cost(s)
     for s, _v in settings_dict.items() if s.startswith("progression_")
   )
 
