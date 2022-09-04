@@ -131,7 +131,10 @@ PROGRESSION_SETTINGS_CHECK_COSTS = {
   if k.startswith("progression_")
 } | {
   # We handle dungeons through num_race_mode_dungeons
-  "progression_dungeons": weights_to_option_cost([(True, 80), (False, 20)]),
+  # But they require a bunch of items and tech, so don't make them *so* cheap
+  "progression_dungeons": weights_to_option_cost([(True, 65), (False, 35)]),
+  # Most mail is a result of a separate action/check, only grandma / NTM require specific action
+  "progression_mail": weights_to_option_cost([(True, 80), (False, 20)]),
   # These are far from each other and kinda long, despite being 50/50 and few total checks
   "progression_eye_reef_chests": 1.5,
   # Some overrides for the most extreme weight, to avoid generation failures
@@ -362,14 +365,14 @@ def compute_weighted_locations(settings_dict):
     # Since each race mode dungeon means one less item in the item pool (boss
     # reward), each additional dungeon costs "less"
     # The last value is for no race mode, 
-    DUNGEON_COSTS = [0, 0.20, 0.38, 0.56, 0.74, 0.92, 1.1, 1.4]
+    DUNGEON_COSTS = [0, 0.20, 0.38, 0.56, 0.74, 0.92, 1.1, 1.5]
     dungeon_total_cost = location_cost("progression_dungeons") * PROGRESSION_SETTINGS_CHECK_COSTS["progression_dungeons"]
     # Remove dungeons from the initial cost calculation; we'll recompute after the multipliers
     total_cost -= dungeon_total_cost
 
     dungeon_total_cost *= DUNGEON_COSTS[settings_dict["num_race_mode_dungeons"]]
-    if settings_dict["only_use_ganondorf_paths"]:
-      dungeon_total_cost *= 1.05
+    if settings_dict["only_use_ganondorf_paths"] and settings_dict["race_mode"]:
+      dungeon_total_cost *= 1.15
 
     # Keylunacy means more items, and more potential dips in dungeons. Apply a flat multiplier
     if settings_dict["keylunacy"]:
