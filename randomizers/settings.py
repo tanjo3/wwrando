@@ -411,6 +411,7 @@ def compute_weighted_locations(settings_dict):
       total_cost += treasure_charts_cost * 0.05
     elif treasure_charts_cost == 0 and triforce_charts_cost > 0:
       # In the other direction, triforce charts go from 8 locations to 49, which makes them way worse
+      # And it makes the hints less useful
       total_cost += triforce_charts_cost * 0.5
     # If all the charts were progression anyway, it really doesn't change anything where they are
 
@@ -435,22 +436,38 @@ def compute_weighted_locations(settings_dict):
   # Figure out the ratio of hints to enabled settings, and aim for that
   # Ideally we want each hint to tell us something about one setting
   hints_target = sum(v for s,v in settings_dict.items() if s.startswith("progression_")) * 2
-  total_hints = settings_dict["num_path_hints"] * 3 + settings_dict["num_location_hints"] * 0.3 + settings_dict["num_barren_hints"] * 2
-  hint_distance = hints_target - total_hints
+  total_hints = settings_dict["num_path_hints"] + settings_dict["num_location_hints"] + settings_dict["num_barren_hints"]
 
   # Stone tablet and korl hints can end up on islands we wouldn't otherwise go
-  # They also happen much later, so are less useful
+  # They also happen much later, so are less useful, and they're usually doubled or more per tablet
   if settings_dict["hint_placement"] == "stone_tablet_hints":
+    accessible_tablets = 30
     if "Secret Caves" in settings_dict["randomize_entrances"]:
       # 15% of hintstones are in pawprint / cliff plat
-      hint_distance += abs(hints_target)
-    else:
-      hint_distance += 0.5 * abs(hints_target)
-  elif settings_dict["hint_placement"] == "hoho_hints":
-    # Still annoying but much less, and the locations are completely fixed. But 2 of them are item locked
-    hint_distance += 0.15 * abs(hints_target)
+      accessible_tablets -= 5
+    if "Dungeons" in settings_dict["randomize_entrances"] or not settings_dict["progression_dungeons"]:
+      # DRC tablet
+      accessible_tablets -=1
 
-  total_cost += hint_distance # square, but same sign, with a tolerance of 1 hint in either direction
+    num_dupes = accessible_tablets // total_hints
+    if num_dupes < 2:
+      single_instance_hints = (total_hints*(num_dupes+1)) % accessible_tablets
+      total_hints -= single_instance_hints * 0.5 # Easier to miss, count for less
+
+    total_hints *= 0.7 # For penibility
+  elif settings_dict["hint_placement"] == "hoho_hints":
+    # Still annoying but much less, and the locations are completely fixed
+    # However horseshoe ho-ho is leaflocked, and outset ho-ho needs grasscutting ability, so count them out
+    num_inaccessible_hoho_hints = 1 + (settings_dict["sword_mode"] != "Start with Hero's Sword")
+    total_hints -= (num_inaccessible_hoho_hints/7) * total_hints
+    total_hints *= 0.8 # for penibility
+
+  hint_distance = hints_target - total_hints
+  if settings_dict["race_mode"] and settings_dict["progression_dungeons"] and not settings_dict["only_use_ganondorf_paths"]:
+    # Ideally we want at least 1 path hint per dungeon
+    hint_distance += max(0, settings_dict["num_race_mode_dungeons"] - settings_dict["num_path_hints"])
+  hint_adjustment = hint_distance * math.log2(abs(hint_distance)+1)
+  total_cost += hint_adjustment
 
   return total_cost
 
