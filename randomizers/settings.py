@@ -3,8 +3,7 @@ import functools
 import math
 import random
 
-from randomizer import RNG_CHANGING_OPTIONS, Randomizer
-from randomizers import items
+import randomizer, randomizers
 from logic.logic import Logic
 
 DEFAULT_WEIGHTS = OrderedDict({
@@ -101,6 +100,11 @@ SETTINGS_RANDO_ONLY_OPTIONS = [
   "hint_placement",
   "num_starting_items",
   "start_with_maps_and_compasses",
+  "randomization_style",
+]
+
+RNG_CHANGING_OPTIONS = randomizer.RNG_CHANGING_OPTIONS + [
+  "target_checks",
   "randomization_style",
 ]
 
@@ -213,12 +217,12 @@ def weighted_sample_without_replacement(population, weights, k=1):
 def randomize_settings(seed=None, prefilled_options={}):
   random.seed(seed)
 
-  for i, option in enumerate(RNG_CHANGING_OPTIONS + ["target_checks"]):
+  for i, option in enumerate(RNG_CHANGING_OPTIONS):
     value = prefilled_options.get(option, None)
     if value is None:
-      continue # Ignore non-prefillable options
+      continue # Ignore non-prefillable options, they get handled in the actual rando
     if isinstance(value, str):
-      value = len(value)
+      value = sum(i*ord(s) for i,s in enumerate(value)) % 256
     for j in range(1, 100 + i):
       random.getrandbits(value + 20 * i + j)
 
@@ -280,7 +284,7 @@ def randomize_starting_gear(options, seed=None):
   # It changes seeds, and if they have the wrong type it can make randomization fail too
   try:
     rando_options = {o:v for o,v in options.items() if o not in SETTINGS_RANDO_ONLY_OPTIONS}
-    rando = Randomizer(seed, "", "", "", rando_options, cmd_line_args={"-dry": None})
+    rando = randomizer.Randomizer(seed, "", "", "", rando_options, cmd_line_args={"-dry": None})
   except Exception:
     return starting_gear
   
@@ -288,7 +292,7 @@ def randomize_starting_gear(options, seed=None):
   valid_starting_gear_indices = []
   excess_weight = 0
   for i, (gear, weight) in enumerate(DEFAULT_WEIGHTS["starting_gear"]):
-    if any(items.get_ctmc_chest_type_for_item(rando, item_name) for item_name in gear):
+    if any(randomizers.items.get_ctmc_chest_type_for_item(rando, item_name) for item_name in gear):
       valid_starting_gear_indices.append(i)
     else:
       excess_weight += weight

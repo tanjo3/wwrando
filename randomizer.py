@@ -924,7 +924,7 @@ class Randomizer:
     for i, option in enumerate(RNG_CHANGING_OPTIONS):
       value = self.options.get(option)
       if isinstance(value, str):
-        value = len(value) # poor man's hashing function
+        value = sum(i*ord(s) for i,s in enumerate(value)) % 256
       for j in range(1, 100 + i):
         rng.getrandbits(value + 20 * i + j)
     
