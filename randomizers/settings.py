@@ -448,9 +448,10 @@ def compute_weighted_locations(settings_dict):
   # Stone tablet and korl hints can end up on islands we wouldn't otherwise go
   # They also happen much later, so are less useful, and they're usually doubled or more per tablet
   if settings_dict["hint_placement"] == "stone_tablet_hints":
-    accessible_tablets = 30
+    total_cost *= 1.3 # For penibility
+    accessible_tablets = 29 # Horseshoe tablet is leaflocked
     if "Secret Caves" in settings_dict["randomize_entrances"]:
-      # 15% of hintstones are in pawprint / cliff plat
+      # 15% of hintstones are in pawprint / cliff plateau
       accessible_tablets -= 5
     if "Dungeons" in settings_dict["randomize_entrances"] or not settings_dict["progression_dungeons"]:
       # DRC tablet
@@ -461,13 +462,12 @@ def compute_weighted_locations(settings_dict):
       single_instance_hints = (total_hints*(num_dupes+1)) % accessible_tablets
       total_hints -= single_instance_hints * 0.5 # Easier to miss, count for less
 
-    total_hints *= 0.7 # For penibility
   elif settings_dict["hint_placement"] == "hoho_hints":
-    # Still annoying but much less, and the locations are completely fixed
+    # Still annoying but much less, and the locations are completely fixed regardless of entrance rando
     # However horseshoe ho-ho is leaflocked, and outset ho-ho needs grasscutting ability, so count them out
     num_inaccessible_hoho_hints = 1 + (settings_dict["sword_mode"] != "Start with Hero's Sword")
     total_hints -= (num_inaccessible_hoho_hints/7) * total_hints
-    total_hints *= 0.8 # for penibility
+    total_cost *= 1.2 # for penibility
 
   hint_distance = hints_target - total_hints
   if settings_dict["race_mode"] and settings_dict["progression_dungeons"] and not settings_dict["only_use_ganondorf_paths"]:
