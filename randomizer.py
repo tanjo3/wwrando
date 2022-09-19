@@ -1022,6 +1022,9 @@ class Randomizer:
 
     header += "Seed: %s\n" % self.seed
     
+    if "seed_metadata" in self.options:
+      header += "Seed Metadata: " + yaml.dump(self.options["seed_metadata"], indent=4) + "\n"
+
     header += "Options selected:\n  "
     non_disabled_options = [
       name for name in self.options

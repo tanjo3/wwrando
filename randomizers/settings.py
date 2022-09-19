@@ -249,12 +249,17 @@ def randomize_settings(seed=None, prefilled_options={}):
     settings_dict = adjust_settings_to_target(settings_dict, settings_dict["target_checks"])
 
   adjust_second_pass_options(settings_dict)
+  settings_dict["seed_metadata"] = {
+    "difficulty_score": round(compute_weighted_locations(settings_dict), 2),
+  }
   # Randomize starting gear dynamically based on items which have logical implications in this seed
   settings_dict["starting_gear"] = randomize_starting_gear(settings_dict, seed=seed)
 
   locations = Logic.get_num_progression_locations_static(ITEM_LOCATIONS, settings_dict)
-  logging.debug("Finishing with %d locations in logic and %d/%d/%d %s",
-    locations, settings_dict["num_path_hints"], settings_dict["num_barren_hints"], settings_dict["num_location_hints"], settings_dict["hint_placement"])
+  logging.debug("Finishing with %d locations in logic (difficulty: %d) and %d/%d/%d %s",
+    locations, settings_dict["seed_metadata"]["difficulty_score"],
+    settings_dict["num_path_hints"], settings_dict["num_barren_hints"], settings_dict["num_location_hints"], settings_dict["hint_placement"]
+  )
 
   for o in SETTINGS_RANDO_ONLY_OPTIONS:
     if o in settings_dict:
@@ -266,7 +271,8 @@ def randomize_settings(seed=None, prefilled_options={}):
 def adjust_second_pass_options(options):
   # Clamp num_race_mode_dungeons
   compute_derived_options(options)
-  options["num_race_mode_dungeons"] = max(min(options["num_race_mode_dungeons"], 6), 1)
+  if options["num_race_mode_dungeons"] > 6:
+    options["num_race_mode_dungeons"] = 0
 
   if not options["skip_rematch_bosses"] and options["progression_dungeons"]:
     # Cant have dungeons and trials at the same time
@@ -331,7 +337,12 @@ def get_incremental_locations_for_setting(all_options, incremental_option):
   return after - before
 
 def compute_weighted_locations(settings_dict):
-  compute_derived_options(settings_dict)
+  if False:
+    cleaned_settings = settings_dict.copy()
+    compute_derived_options(cleaned_settings)
+    if cleaned_settings != settings_dict:
+      raise Exception("Missing a call to compute_derived_options!")
+
   location_cost = lambda opt: int(settings_dict[opt]) * get_incremental_locations_for_setting(settings_dict, opt) * PROGRESSION_SETTINGS_CHECK_COSTS[opt]
 
   # As the base case, we compute a total "cost" which is the number of checks in
@@ -550,6 +561,7 @@ def adjust_settings_to_target(settings_dict, target_checks):
   current_distance = float('inf')
 
   while bonus_accuracy_toggles > 0 or current_distance > max_distance:
+    compute_derived_options(settings_dict)
     current_cost = compute_weighted_locations(settings_dict)
     current_distance = abs(current_cost - target_checks)
     logging.debug("At cost %.2f (%.2f from target)", current_cost, current_distance)
@@ -610,6 +622,7 @@ def adjust_settings_to_target(settings_dict, target_checks):
         if w == 0:
           continue
         try_sett[selected] = v
+        compute_derived_options(try_sett)
         option_scores[v] = abs(compute_weighted_locations(try_sett) - target_checks)
 
       # Requeue in the same phase if moved, requeue in the next phase if not
