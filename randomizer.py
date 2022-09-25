@@ -491,6 +491,11 @@ class Randomizer:
         seed_hash_output_path = os.path.join(self.randomized_output_folder, "seed_hash_%s.txt" % self.original_seed)
         with open(seed_hash_output_path, "w") as f:
           f.write(self.get_seed_hash())
+        
+        if IS_RUNNING_FROM_SOURCE:
+          spoiler_log_output_path = os.path.join(self.randomized_output_folder, "spoiler_log_%s.txt" % self.original_seed)
+          with open(spoiler_log_output_path, "w") as f:
+            f.write(self.write_spoiler_log(return_str=True))
       self.write_non_spoiler_log()
     
     yield("Done", -1)
@@ -1002,7 +1007,7 @@ class Randomizer:
   def get_log_header(self):
     header = ""
     
-    header += "Wind Waker Randomizer Version %s\n" % VERSION
+    header += "Wind Waker Randomizer Version %s\n" % VERSION_WITHOUT_COMMIT
     
     if self.permalink:
       header += "Permalink: %s\n" % self.permalink
@@ -1102,8 +1107,8 @@ class Randomizer:
     with open(nonspoiler_log_output_path, "w") as f:
       f.write(log_str)
   
-  def write_spoiler_log(self):
-    if self.no_logs:
+  def write_spoiler_log(self, return_str=False):
+    if self.no_logs and not IS_RUNNING_FROM_SOURCE:
       # We still calculate progression spheres even if we're not going to write them anywhere to catch more errors in testing.
       self.calculate_playthrough_progression_spheres()
       return
@@ -1178,9 +1183,12 @@ class Randomizer:
       island_name = self.island_number_to_name[island_number]
       spoiler_log += "  %-18s %s\n" % (chart_name+":", island_name)
     
-    spoiler_log_output_path = os.path.join(self.randomized_output_folder, "WW Random %s - Spoiler Log.txt" % self.seed)
-    with open(spoiler_log_output_path, "w") as f:
-      f.write(spoiler_log)
+    if return_str:
+      return spoiler_log
+    else:
+      spoiler_log_output_path = os.path.join(self.randomized_output_folder, "WW Random %s - Spoiler Log.txt" % self.seed)
+      with open(spoiler_log_output_path, "w") as f:
+        f.write(spoiler_log)
   
   def write_error_log(self, error_message):
     if self.no_logs:
