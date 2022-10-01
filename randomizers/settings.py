@@ -626,26 +626,22 @@ def adjust_settings_to_target(settings_dict, target_checks):
         option_scores[v] = abs(compute_weighted_locations(try_sett) - target_checks)
 
       # Requeue in the same phase if moved, requeue in the next phase if not
-      if math.isclose(min(option_scores.values()), max(option_scores.values())):
-        if not second_pass:
-          second_pass_settings[selected] = second_pass_settings.get(selected, 0) + 2*remaining_adjustable_settings[selected]
+      # Often there are multiple minimal options, and min takes the first, so round and shuffle them first
+      possible_values = list(option_scores.items())
+      random.shuffle(possible_values)
+      min_idx = min(enumerate(possible_values), key=lambda tup: int(tup[1][1]))[0]
+      # If we only requeue when the actual value has changed, we have a strictly decreasing distance, 
+      # and a finite number of possibilities to check, so this will terminate
+      if not math.isclose(current_distance, possible_values[min_idx][1], rel_tol=0.05):
+        # Reduce weight, since we "consumed" one option
+        remaining_adjustable_settings[selected] -= math.ceil(initial_settings_weights[selected]/len(DEFAULT_WEIGHTS[selected]))
       else:
-        # Often there are multiple minimal options, and min takes the first, so round and shuffle them first
-        possible_values = list(option_scores.items())
-        random.shuffle(possible_values)
-        min_idx = min(enumerate(possible_values), key=lambda tup: int(tup[1][1]))[0]
-        # If we only requeue when the actual value has changed, we have a strictly decreasing distance, 
-        # and a finite number of possibilities to check, so this will terminate
-        if not math.isclose(current_distance, possible_values[min_idx][1], rel_tol=0.05):
-          # Reduce weight, since we "consumed" one option
-          remaining_adjustable_settings[selected] -= math.ceil(initial_settings_weights[selected]/len(DEFAULT_WEIGHTS[selected]))
-        else:
-          logging.debug("Change too small: %.2f of %.2f", current_distance - possible_values[min_idx][1], current_distance)
-          # Requeue to second phase if we didn't actually change enough to matter
-          second_pass_settings[selected] = second_pass_settings.get(selected, 0) + remaining_adjustable_settings[selected]
-          del remaining_adjustable_settings[selected]
+        logging.debug("Change too small: %.2f of %.2f", current_distance - possible_values[min_idx][1], current_distance)
+        # Requeue to second phase if we didn't actually change enough to matter
+        second_pass_settings[selected] = second_pass_settings.get(selected, 0) + remaining_adjustable_settings[selected]
+        del remaining_adjustable_settings[selected]
 
-        settings_dict[selected] = possible_values[min_idx][0]
+      settings_dict[selected] = possible_values[min_idx][0]
 
     # Reapply constraints if we toggled them
     ensure_min_max_difficulty(settings_dict, target_checks)
