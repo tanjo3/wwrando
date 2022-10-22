@@ -184,7 +184,7 @@ class Distribution():
 
 CHAOTIC_OPTION_DISTRIBUTIONS = {
   "num_race_mode_dungeons": Distribution.uniform,
-  "num_starting_triforce_shards": Distribution.zipf(2),
+  "num_starting_triforce_shards": Distribution.zipf(1.5),
   "num_starting_items": Distribution.zipf(1),
   "num_path_hints": Distribution.binomial(0.6),
   "num_barren_hints": Distribution.binomial(0.6),
@@ -520,10 +520,7 @@ def chaotic_settings_weights():
       # We need to put this in a dict later
       continue
 
-    opts[o] = sum(1 for v in values if v[1] > 0) # More values => more likelihood of being flipped
-
-  # Override for num_race_mode_dungeons which impacts 3 settings:
-  opts["num_race_mode_dungeons"] += 4 # progression_dungeons, race_mode each 2 values
+    opts[o] = round(100 * math.sqrt(sum(1 for v in values if v[1] > 0))) # More values => more likelihood of being flipped
   return opts, opts.copy()
 
 SETTINGS_WEIGHT_FUNCTIONS = {
@@ -617,7 +614,7 @@ def adjust_settings_to_target(settings_dict, target_checks):
       # and a finite number of possibilities to check, so this will terminate
       if not math.isclose(current_distance, possible_values[min_idx][1], rel_tol=0.05):
         # Reduce weight, since we "consumed" one option
-        remaining_adjustable_settings[selected] -= math.ceil(initial_settings_weights[selected]/len(DEFAULT_WEIGHTS[selected]))
+        remaining_adjustable_settings[selected] -= math.ceil(initial_settings_weights[selected]/sum(1 for w in DEFAULT_WEIGHTS[selected] if w[1] > 0))
       else:
         logging.debug("Change too small: %.2f of %.2f", current_distance - possible_values[min_idx][1], current_distance)
         # Requeue to second phase if we didn't actually change enough to matter
