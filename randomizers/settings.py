@@ -354,23 +354,9 @@ def compute_weighted_locations(settings_dict):
 
   combat_caves_cost = location_cost("progression_combat_secret_caves")
   secret_caves_cost = location_cost("progression_puzzle_secret_caves")
-  if combat_caves_cost+secret_caves_cost > 0 and "Secret Caves" in settings_dict["randomize_entrances"]:
-    # If only one of combat, secret caves are enabled, randomize entrances is
-    # "worse" as it can get you to an ool location and be a waste of time
-    # If both are enabled, it's not as bad since any entrance is probably a place you'd have needed to visit anyway
-
-    # Since we already counted them as a full 1 in base_weight, this is "on top". so a 1 additional_multiplier is a total of 2 for the weight
-    if combat_caves_cost == 0 or secret_caves_cost == 0:
-      additional_multiplier = 0.75
-      # If dungeons are also in the pool together, but aren't enabled, there's even more dead entrances so bump it a little more
-      if settings_dict["randomize_entrances"] == "Dungeons & Secret Caves (Together)" and not settings_dict["progression_dungeons"]:
-        additional_multiplier = 1
-    else:
-      additional_multiplier = 0.25
-      if settings_dict["randomize_entrances"] == "Dungeons & Secret Caves (Together)" and not settings_dict["progression_dungeons"]:
-        additional_multiplier = 0.40
-
-    total_cost += (combat_caves_cost+secret_caves_cost) * additional_multiplier
+  has_any_cave = combat_caves_cost + secret_caves_cost > 0
+  should_check_caves_entrances = has_any_cave and "Secret Caves" in settings_dict["randomize_entrances"]
+  should_check_unmarked_dungeons_entrances = has_any_cave and "(Together)" in settings_dict["randomize_entrances"]
 
   if settings_dict["sword_mode"] == "Swordless":
     # Bump the cost of combat caves when you have a higher likelihood of having to clear them without sword
@@ -398,22 +384,13 @@ def compute_weighted_locations(settings_dict):
     if settings_dict["keylunacy"]:
       dungeon_total_cost *= 1.25
     # Small cost bump for dungeons randomized entrances
-    if settings_dict["randomize_entrances"] in ("Dungeons", "Dungeons & Secret Caves (Separately)") :
-      dungeon_total_cost *= 1.05
-    # Larger cost bump for dungeons randomized together with caves, and even larger if
-    # randomized with entrances to out-of-logic locations without race mode
-    elif settings_dict["randomize_entrances"] == "Dungeons & Secret Caves (Together)":
-      if settings_dict["race_mode"]:
-        # minimal bump: in race mode we know where the entrances are immediately anyway
-        dungeon_total_cost *= 1.05
-      else:
-        dungeon_total_cost *= 1.1
-        # Additional weights for when entrances are mixed with places you don't
-        # need to go to anyway
-        if combat_caves_cost == 0:
-          dungeon_total_cost *= 1.1
-        if secret_caves_cost == 0: # There's more of these
-          dungeon_total_cost *= 1.15
+    if "Dungeons" in settings_dict["randomize_entrances"]:
+      # Checking the entrance takes some time, basically is "a check"
+      total_cost += settings_dict["num_race_mode_dungeons"]
+      if "(Together)" in settings_dict["randomize_entrances"] and not settings_dict["race_mode"]:
+        should_check_caves_entrances = True
+        should_check_unmarked_dungeons_entrances = True
+
     # Another bump for missing warp pots, scaled by the number of dungeons in logic
     if not settings_dict["add_shortcut_warps_between_dungeons"]:
       dungeon_total_cost *= 1 + 0.025 * settings_dict["num_race_mode_dungeons"]
@@ -425,6 +402,16 @@ def compute_weighted_locations(settings_dict):
       dungeon_total_cost *= 0.95
 
     total_cost += dungeon_total_cost
+
+  if should_check_caves_entrances:
+    # Realistically, if any of combat or puzzle caves is on, you'll have to check all the entrances
+    # Each entrance requires going to the quadrant, potentially doing a bit of island puzzling, etc.
+    # So it's worth basically a check
+    total_cost += len(randomizers.entrances.SECRET_CAVE_ENTRANCES)
+  if should_check_unmarked_dungeons_entrances:
+    # In that case you also have to check the dungeon entrances that haven't been marked as race mode
+    race_mode_marked_dungeons = 0 if not settings_dict["race_mode"] else settings_dict["num_race_mode_dungeons"]
+    total_cost += len(randomizers.entrances.DUNGEON_ENTRANCES) - race_mode_marked_dungeons
 
   triforce_charts_cost = location_cost("progression_triforce_charts")
   treasure_charts_cost = location_cost("progression_treasure_charts")
