@@ -397,10 +397,6 @@ def compute_weighted_locations(settings_dict):
     if settings_dict["sword_mode"] == "Swordless":
       dungeon_total_cost *= 1.15
 
-    if not settings_dict["start_with_maps_and_compasses"]:
-      # 2 dead items in each dungeon that can be inferred and skipped
-      dungeon_total_cost *= 0.95
-
     total_cost += dungeon_total_cost
 
   if should_check_caves_entrances:
