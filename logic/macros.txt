@@ -97,9 +97,10 @@ Tingle Tuner Bombs:
 
 Can Reach Tower of the Gods Second Floor:
   Can Access Tower of the Gods
-  & Bombs
-  & TotG Small Key x1
-  & Can Defeat Yellow ChuChus
+  & (
+    (Bombs & TotG Small Key x1 & Can Defeat Yellow ChuChus)
+    | Trick "TotG F1 SK Skip"
+  )
 Can Reach Tower of the Gods Third Floor:
   Can Reach Tower of the Gods Second Floor
   & Can Bring East Servant of the Tower
@@ -114,12 +115,12 @@ Can Bring East Servant of the Tower:
   Nothing
 Can Bring West Servant of the Tower:
   (Grappling Hook | Can Fly With Deku Leaf Indoors)
-  & Can Play Command Melody
+  & (Can Play Command Melody | Trick "Skip Command Melody In TotG")
   & Hero's Bow
 Can Bring North Servant of the Tower:
   TotG Small Key x2
-  & Can Fly With Deku Leaf Indoors
-  & Can Play Command Melody
+  & (Can Fly With Deku Leaf Indoors | Trick "Skip Deku Leaf At North Servant In TotG")
+  & (Can Play Command Melody | Trick "Skip Command Melody In TotG")
   # Note: Deku Leaf is not strictly necessary in the north servant's room because you can jump on two decorative pillars near the side of the room, and then jump onto the wall protrusion above where the lasers are coming out of to reach the north servant. But since it's not clear the wall protrusion is something you can jump to and stand on, this is not currently required by the logic.
 
 Can Access Dungeon Entrance on Dragon Roost Island:
@@ -129,9 +130,11 @@ Can Access Forest Haven:
   # Grappling over the waterfall is very difficult without killing the Boko Baba there - but only if you start grappling from the top. You can grapple from the bottom up to avoid that Boko Baba entirely, so there's no extra requirement here for swordless.
 Can Access Dungeon Entrance in Forest Haven Sector:
   Can Access Forest Haven
-  & Grappling Hook
   & Can Fly With Deku Leaf Outdoors
-  & (Can Cut Grass | Magic Meter Upgrade)
+  & (
+    (Grappling Hook & (Can Cut Grass | Magic Meter Upgrade))
+    | Trick "Grappleless Forest Haven"
+  )
   # You either need double magic or the ability to refill your magic by cutting grass to make it all the way across.
   # Note: You don't need Grappling Hook because you can take the lower platform exit out of Forest Haven (Noob Skip), but this is not currently in the logic.
 Can Access Dungeon Entrance in Tower of the Gods Sector:
@@ -141,7 +144,7 @@ Can Access Dungeon Entrance in Tower of the Gods Sector:
 Can Access Dungeon Entrance on Headstone Island:
   Power Bracelets
 Can Access Dungeon Entrance on Gale Isle:
-  Iron Boots & Skull Hammer
+  Skull Hammer & (Iron Boots | Trick "Gale Isle Entry Without Iron Boots")
 
 # The below macros are used when dungeon entrances are not randomized.
 # When dungeon entrances are randomized, these macros are shuffled around by the randomizer logic.
@@ -165,7 +168,7 @@ Can Access Boss Entrance in Forbidden Woods:
   Can Access Forbidden Woods
   & Can Fly With Deku Leaf Indoors
   & Can Defeat Boko Babas
-  & (Can Defeat Door Flowers | Grappling Hook)
+  & (Can Defeat Door Flowers | Grappling Hook | Can Skip Grapple in FW Hub Room)
   & Can Defeat Mothulas
   & FW Big Key
 Can Access Boss Entrance in Tower of the Gods:
@@ -190,7 +193,7 @@ Can Access Boss Entrance in Wind Temple:
   & Hookshot
   & Can Defeat Blue Bubbles
   & WT Small Key x2
-  & Can Play Wind God's Aria
+  & (Can Play Wind God's Aria | Trick "Skip Wind God's Aria In WT Basement")
   & WT Big Key
 
 Can Access Gohma Boss Arena:
@@ -233,7 +236,7 @@ Can Access Secret Cave Entrance on Overlook Island:
   Hookshot
 Can Access Secret Cave Entrance on Bird's Peak Rock:
   # Need to hit the switches with a seagull.
-  Bait Bag & Can Buy Hyoi Pears
+  (Bait Bag & Can Buy Hyoi Pears) | (Trick "Grapple Clip Into Bird's Peak Rock" & Grappling Hook)
 Can Access Secret Cave Entrance on Pawprint Isle:
   Nothing
 Can Access Secret Cave Entrance on Pawprint Isle Side Isle:
@@ -253,7 +256,7 @@ Can Access Secret Cave Entrance on Cliff Plateau Isles:
   Nothing
 Can Access Secret Cave Entrance on Horseshoe Island:
   # Need Deku Leaf to play golf.
-  Can Fan With Deku Leaf
+  Can Fan With Deku Leaf | (Trick "Leafless Horseshoe" & Hero's Sword)
 Can Access Secret Cave Entrance on Star Island:
   Can Move Boulders
 
@@ -301,7 +304,7 @@ Can Access Star Island Secret Cave:
   Can Access Secret Cave Entrance on Star Island
 
 Can Get Past Forsaken Fortress Gate:
-  Bombs
+  Bombs | Trick "Enter FF Without Bombs"
   # Note: It's also possible to blow up the door without bombs by using the mounted cannons, but this is not required by the logic.
   # Note: It's also possible to get past the gate by going all the way down to Ganon's Tower, and then activating the warp up to Forsaken Fortress. But this is not currently required by the logic.
 Can Get Inside Forsaken Fortress:
@@ -362,11 +365,11 @@ Can Reach and Defeat Puppet Ganon:
   & Can Defeat Mighty Darknuts
   & Can Defeat Puppet Ganon
 Can Defeat Puppet Ganon:
-  Boomerang
+  Boomerang | Trick "Puppet Ganon Without Boomerang"
   # Boomerang isn't strictly necessary to defeat Puppet Ganon but makes things significantly easier, both to cut down Puppet Ganon's strings and to defeat the keese who drop refills.
 Can Reach and Defeat Ganondorf:
   Can Reach and Defeat Puppet Ganon
-  & Grappling Hook
+  & (Grappling Hook | Trick "Grapple Skip in Ganon's Tower")
   & Hookshot
   & Can Defeat Ganondorf
 Can Defeat Ganondorf:
@@ -860,6 +863,26 @@ In Swordless Mode:
   Option "sword_mode" Is "Swordless"
 Outside Swordless Mode:
   Option "sword_mode" Is Not "Swordless"
+
+# Macros for glitched logic
+Can Jumpslash To 2F From Hanging DRC Platform:
+  Trick "Jumpslash From Hanging DRC Platform To 2F"
+  & (Hero's Sword | Skull Hammer)
+  # Bringing a Deku stick from the first room is possible, but not expected.
+Can Reach 2F From Hanging DRC Platform:
+  Grappling Hook
+  | Can Fly With Deku Leaf Indoors
+  | Can Jumpslash To 2F From Hanging DRC Platform
+Can Do DRC Backwards:
+  Trick "Shoot Down Hanging DRC Platform"
+  & Hero's Bow
+  & Can Reach 2F From Hanging DRC Platform
+Can Skip Grapple in FW Hub Room:
+  Trick "Grappleless FW Hub Room"
+  & (Boomerang | Hero's Bow)
+Can Access ET Left Side:
+  Fire Arrows
+  | Trick "Skip Fire Arrows ET Left Side"
 
 TODO:
   Impossible

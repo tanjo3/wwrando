@@ -249,6 +249,14 @@ OPTIONS = OrderedDict([
     "Amount of extra heart containers that you start with."
   ),
   (
+    "tricks_not_in_logic",
+    "Tricks and glitches that are not in consideration in the seed's logic."
+  ),
+  (
+    "tricks_in_logic",
+    "Tricks and glitches that are in consideration in the seed's logic."
+  ),
+  (
     "remove_music",
     "Mutes all ingame music."
   ),

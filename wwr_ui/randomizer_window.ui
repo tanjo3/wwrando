@@ -1073,8 +1073,14 @@
                <string>Additional Advanced Options</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_8">
+               <item row="0" column="4">
+                <widget class="QWidget" name="widget_12" native="true"/>
+               </item>
                <item row="0" column="3">
                 <widget class="QWidget" name="widget_11" native="true"/>
+               </item>
+               <item row="0" column="2">
+                <widget class="QWidget" name="widget_10" native="true"/>
                </item>
                <item row="0" column="0">
                 <widget class="QCheckBox" name="do_not_generate_spoiler_log">
@@ -1083,27 +1089,109 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="2">
-                <widget class="QWidget" name="widget_10" native="true"/>
-               </item>
-               <item row="0" column="4">
-                <widget class="QWidget" name="widget_12" native="true"/>
-               </item>
               </layout>
              </widget>
             </item>
             <item>
-             <spacer name="verticalSpacer_3">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
+             <widget class="QFrame" name="frame">
+              <layout class="QHBoxLayout" name="horizontalLayout_18">
+               <item>
+                <layout class="QVBoxLayout" name="verticalLayout_10">
+                 <item>
+                  <widget class="QLabel" name="label_for_tricks_not_in_logic">
+                   <property name="text">
+                    <string>Glitches and Tricks Not in Logic</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QListView" name="tricks_not_in_logic">
+                   <property name="selectionMode">
+                    <enum>QAbstractItemView::ExtendedSelection</enum>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QVBoxLayout" name="verticalLayout_11">
+                 <item>
+                  <spacer name="verticalSpacer_3">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>17</width>
+                     <height>27</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="remove_trick">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>&lt;-</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="add_trick">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>-&gt;</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="verticalSpacer_4">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QVBoxLayout" name="verticalLayout_12">
+                 <item>
+                  <widget class="QLabel" name="label_for_tricks_in_logic">
+                   <property name="text">
+                    <string>Glitches and Tricks in Logic</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QListView" name="tricks_in_logic">
+                   <property name="editTriggers">
+                    <set>QAbstractItemView::NoEditTriggers</set>
+                   </property>
+                   <property name="selectionMode">
+                    <enum>QAbstractItemView::ExtendedSelection</enum>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -1213,12 +1301,12 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_14">
               <item>
-               <layout class="QVBoxLayout" name="verticalLayout_10">
+               <layout class="QVBoxLayout" name="verticalLayout_14">
                 <item>
                  <layout class="QVBoxLayout" name="custom_colors_layout"/>
                 </item>
                 <item>
-                 <spacer name="verticalSpacer_4">
+                 <spacer name="verticalSpacer_5">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
@@ -1233,7 +1321,7 @@
                </layout>
               </item>
               <item>
-               <layout class="QVBoxLayout" name="verticalLayout_11">
+               <layout class="QVBoxLayout" name="verticalLayout_15">
                 <item>
                  <widget class="QLabel" name="custom_model_preview_label">
                   <property name="text">
@@ -1242,7 +1330,7 @@
                  </widget>
                 </item>
                 <item>
-                 <spacer name="verticalSpacer_5">
+                 <spacer name="verticalSpacer_6">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>

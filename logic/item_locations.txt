@@ -77,7 +77,7 @@ Outset Island - Great Fairy:
 #  Paths:
 #    - LinkRM/Stage.arc/Event003:Ba1_Get_Itm/Actor002/Action001
 Outset Island - Jabun's Cave:
-  Need: Bombs
+  Need: Bombs | Trick "Early Jabun's Cave"
   Original item: Nayru's Pearl
   Types: Island Puzzle
   Paths:
@@ -253,8 +253,10 @@ Windfall Island - Lenzo's House - Left Chest:
   Need:
     # Need Wind's Requiem to activate the Windmill
     # Need Picto Box because Lenzo will not unlock his upper door until you talk to him after obtaining it
-    Can Play Wind's Requiem 
-    & Picto Box
+    (
+      Can Play Wind's Requiem
+      & Picto Box
+    ) | Trick "Lenzo Door Cancel"
   Original item: Treasure Chart 29
   Types: Short Sidequest
   Paths:
@@ -263,8 +265,10 @@ Windfall Island - Lenzo's House - Right Chest:
   Need:
     # Need Wind's Requiem to activate the Windmill
     # Need Picto Box because Lenzo will not unlock his upper door until you talk to him after obtaining it
-    Can Play Wind's Requiem 
-    & Picto Box
+    (
+      Can Play Wind's Requiem
+      & Picto Box
+    ) | Trick "Lenzo Door Cancel"
   Original item: Purple Rupee
   Types: Short Sidequest
   Paths:
@@ -486,8 +490,8 @@ Windfall Island - Pompie and Vera - Secret Meeting Photo:
     # Need to snap a photo of Lenzo and Minenco in Lenzo's house.
     # Need Wind's Requiem to activate the Windmill.
     # Need Picto Box because Lenzo will not unlock his upper door until you talk to him after obtaining it
-    Can Play Wind's Requiem 
-    & Picto Box
+    Picto Box
+    & (Can Play Wind's Requiem | Trick "Lenzo Door Cancel")
   Original item: Treasure Chart 24
   Types: Short Sidequest
   Paths:
@@ -654,7 +658,10 @@ Dragon Roost Cavern - Bird's Nest:
 Dragon Roost Cavern - Dark Room:
   Need:
     Can Access Dragon Roost Cavern
-    & DRC Small Key x4
+    & (
+      DRC Small Key x4
+      | (DRC Small Key x1 & Can Do DRC Backwards & (Bombs | Fire Arrows))
+    )
   Original item: Joy Pendant
   Types: Dungeon
   Paths:
@@ -662,7 +669,10 @@ Dragon Roost Cavern - Dark Room:
 Dragon Roost Cavern - Tingle Chest in Hub Room:
   Need:
     Can Access Dragon Roost Cavern
-    & DRC Small Key x4
+    & (
+      DRC Small Key x4
+      | (DRC Small Key x1 & Can Do DRC Backwards)
+    )
     & Tingle Tuner Bombs
   Original item: Yellow Rupee
   Types: Tingle Chest, Dungeon
@@ -671,7 +681,10 @@ Dragon Roost Cavern - Tingle Chest in Hub Room:
 Dragon Roost Cavern - Pot Room Chest:
   Need:
     Can Access Dragon Roost Cavern
-    & DRC Small Key x4
+    & (
+      DRC Small Key x4
+      | (DRC Small Key x1 & Can Do DRC Backwards)
+    )
   Original item: Treasure Chart 39
   Types: Dungeon
   Paths:
@@ -679,7 +692,10 @@ Dragon Roost Cavern - Pot Room Chest:
 Dragon Roost Cavern - Mini-Boss:
   Need:
     Can Access Dragon Roost Cavern
-    & DRC Small Key x4
+    & (
+      DRC Small Key x4
+      | (DRC Small Key x1 & Can Do DRC Backwards)
+    )
   # Need to escape: Grappling Hook | Can Fly With Deku Leaf Outdoors
   Original item: Grappling Hook
   Types: Dungeon
@@ -689,8 +705,10 @@ Dragon Roost Cavern - Mini-Boss:
 Dragon Roost Cavern - Under Rope Bridge:
   Need:
     Can Access Dragon Roost Cavern
-    & DRC Small Key x4
-    & (Grappling Hook | Can Fly With Deku Leaf Outdoors)
+    & (
+      (DRC Small Key x4 & (Grappling Hook | Can Fly With Deku Leaf Outdoors))
+      | (DRC Small Key x1 & Trick "Shoot Down Hanging DRC Platform" & Hero's Bow)
+    )
   # The ropes holding up the bridge can be cut with a stick - note that it takes three spin attacks instead of one.
   Original item: Joy Pendant
   Types: Dungeon
@@ -704,6 +722,7 @@ Dragon Roost Cavern - Tingle Statue Chest:
       (DRC Small Key x4 & Can Cut Down Hanging DRC Platform)
       | Can Fly With Deku Leaf Indoors
       | Ice Arrows
+      | (Trick "Shoot Down Hanging DRC Platform" & Hero's Bow)
     )
     & Grappling Hook
     & Tingle Tuner Bombs
@@ -732,7 +751,7 @@ Dragon Roost Cavern - Big Key Chest:
 Dragon Roost Cavern - Boss Stairs Right Chest:
   Need:
     Can Access Dragon Roost Cavern
-    & DRC Small Key x4
+    & (DRC Small Key x4 | (DRC Small Key x1 & Can Do DRC Backwards))
     & (Grappling Hook | Can Fly With Deku Leaf Indoors | Hookshot | Ice Arrows)
     # Hookshot can reach the torches on the other side of the lava.
     # Ice Arrows can create a platform in the lava.
@@ -743,7 +762,7 @@ Dragon Roost Cavern - Boss Stairs Right Chest:
 Dragon Roost Cavern - Boss Stairs Left Chest:
   Need:
     Can Access Dragon Roost Cavern
-    & DRC Small Key x4
+    & (DRC Small Key x4 | (DRC Small Key x1 & Can Do DRC Backwards))
     & (Grappling Hook | Can Fly With Deku Leaf Indoors | Hookshot | Ice Arrows)
     # Hookshot can reach the torches on the other side of the lava.
     # Ice Arrows can create a platform in the lava.
@@ -765,7 +784,7 @@ Dragon Roost Cavern - Gohma Heart Container:
 Forest Haven - On Tree Branch:
   Need:
     Can Access Forest Haven
-    & Grappling Hook
+    & (Grappling Hook | Trick "Grappleless Forest Haven")
   # Note: You can access this without Grappling Hook if you take the lower platform exit out of Forest Haven, fly to the pillar outside, then use the whirlwind to gain height and fly back to Forest Haven taking the middle platform exit. But this requires using glitches (either precise ledge grabbing, leaf pumping, or simply abusing the respawn mechanic to get on the FH ledge without actually reaching it) so it's not in the logic.
   Original item: Deku Leaf
   Types: Island Puzzle
@@ -781,7 +800,7 @@ Forest Haven - On Tree Branch:
 Forest Haven - Small Island Chest:
   Need:
     Can Access Forest Haven
-    & Grappling Hook
+    & (Grappling Hook | Trick "Grappleless Forest Haven")
     & Can Fly With Deku Leaf Outdoors
   # Note: You don't need Grappling Hook because you can take the lower platform exit out of Forest Haven, fly to the pillar outside, then fly east to this small island (Noob Skip). You can just barely make it without double magic meter as long as your magic meter is full. But this is not currently in the logic.
   Original item: Treasure Chart 3
@@ -832,7 +851,7 @@ Forbidden Woods - Morth Pit:
     Can Access Forbidden Woods
     & Can Fly With Deku Leaf Indoors
     & Can Defeat Boko Babas
-    & Grappling Hook
+    & (Grappling Hook | Can Skip Grapple in FW Hub Room)
   Original item: Yellow Rupee
   Types: Dungeon
   Paths:
@@ -842,7 +861,7 @@ Forbidden Woods - Vine Maze Left Chest:
     Can Access Forbidden Woods
     & Can Fly With Deku Leaf Indoors
     & Can Defeat Boko Babas
-    & Grappling Hook
+    & (Grappling Hook | Can Skip Grapple in FW Hub Room)
   Original item: Compass
   Types: Dungeon
   Paths:
@@ -852,7 +871,7 @@ Forbidden Woods - Vine Maze Right Chest:
     Can Access Forbidden Woods
     & Can Fly With Deku Leaf Indoors
     & Can Defeat Boko Babas
-    & Grappling Hook
+    & (Grappling Hook | Can Skip Grapple in FW Hub Room)
   Original item: Small Key
   Types: Dungeon
   Paths:
@@ -862,7 +881,7 @@ Forbidden Woods - Tall Room Before Mini-Boss:
     Can Access Forbidden Woods
     & Can Fly With Deku Leaf Indoors
     & Can Defeat Boko Babas
-    & Grappling Hook
+    & (Grappling Hook | Can Skip Grapple in FW Hub Room)
     & FW Small Key x1
     & Can Defeat Peahats
     # Killing the Peahats is not strictly necessary but grappling up is tricky while they're still alive since they knock you around.
@@ -875,7 +894,7 @@ Forbidden Woods - Mothula Mini-Boss Room:
     Can Access Forbidden Woods
     & Can Fly With Deku Leaf Indoors
     & Can Defeat Boko Babas
-    & Grappling Hook
+    & (Grappling Hook | Can Skip Grapple in FW Hub Room)
     & FW Small Key x1
     & Can Defeat Winged Mothulas
   # Need to escape: Can Hit Diamond Switches at Range
@@ -888,7 +907,7 @@ Forbidden Woods - Past Seeds Hanging by Vines:
     Can Access Forbidden Woods
     & Can Fly With Deku Leaf Indoors
     & Can Defeat Boko Babas
-    & Grappling Hook
+    & (Grappling Hook | Can Skip Grapple in FW Hub Room)
     & FW Small Key x1
     & Can Defeat Door Flowers
     & Can Destroy Seeds Hanging by Vines
@@ -902,8 +921,8 @@ Forbidden Woods - Chest Across Red Hanging Flower:
     Can Access Forbidden Woods
     & Can Fly With Deku Leaf Indoors
     & Can Defeat Boko Babas
-    & Grappling Hook
-    & Boomerang
+    & (Grappling Hook | Can Skip Grapple in FW Hub Room)
+    & (Boomerang | Trick "FW Basement Without Boomerang")
   Original item: Yellow Rupee
   Types: Dungeon
   Paths:
@@ -912,8 +931,8 @@ Forbidden Woods - Tingle Statue Chest:
   Need:
     Can Access Forbidden Woods
     & Can Fly With Deku Leaf Indoors
-    & Grappling Hook
-    & Boomerang
+    & (Grappling Hook | Can Skip Grapple in FW Hub Room)
+    & (Boomerang | Trick "FW Basement Without Boomerang")
     & Tingle Tuner Bombs
   Original item: Forbidden Tingle Statue
   Types: Tingle Chest, Dungeon
@@ -924,8 +943,8 @@ Forbidden Woods - Chest in Locked Tree Trunk:
     Can Access Forbidden Woods
     & Can Fly With Deku Leaf Indoors
     & Can Defeat Boko Babas
-    & Grappling Hook
-    & Boomerang
+    & (Grappling Hook | Can Skip Grapple in FW Hub Room)
+    & (Boomerang | Trick "FW Basement Without Boomerang")
   Original item: Treasure Chart 15
   Types: Dungeon
   Paths:
@@ -935,8 +954,8 @@ Forbidden Woods - Big Key Chest:
     Can Access Forbidden Woods
     & Can Fly With Deku Leaf Indoors
     & Can Defeat Boko Babas
-    & Grappling Hook
-    & Boomerang
+    & (Grappling Hook | Can Skip Grapple in FW Hub Room)
+    & (Boomerang | (Trick "FW Basement Without Boomerang" & Trick "FW BK Chest With Hookshot" & Hookshot))
   Original item: Big Key
   Types: Dungeon
   Paths:
@@ -946,7 +965,7 @@ Forbidden Woods - Double Mothula Room:
     Can Access Forbidden Woods
     & Can Fly With Deku Leaf Indoors
     & Can Defeat Boko Babas
-    & (Can Defeat Door Flowers | Grappling Hook)
+    & (Can Defeat Door Flowers | Grappling Hook | Can Skip Grapple in FW Hub Room)
     & Can Defeat Mothulas
   # This room is locked by 2 door flowers, but if you have grappling hook you can reach a nut on the floor above and bring it down to destroy them both with it.
   Original item: Joy Pendant
@@ -1316,7 +1335,7 @@ Earth Temple - Chest In Three Blocks Room:
     Can Access Earth Temple
     & Can Play Command Melody
     & ET Small Key x2
-    & Fire Arrows
+    & Can Access ET Left Side
     & Power Bracelets
     & Can Defeat Floormasters
     # Power Bracelets necessary again to move the large black pushable box and unlock a door.
@@ -1330,7 +1349,7 @@ Earth Temple - Chest Behind Statues:
     Can Access Earth Temple
     & Can Play Command Melody
     & ET Small Key x2
-    & Fire Arrows
+    & Can Access ET Left Side
     & Power Bracelets
     & Can Defeat Floormasters
   Original item: Joy Pendant
@@ -1342,7 +1361,7 @@ Earth Temple - Casket in Second Crypt:
     Can Access Earth Temple
     & Can Play Command Melody
     & ET Small Key x2
-    & Fire Arrows
+    & Can Access ET Left Side
     & Power Bracelets
     & Can Defeat Floormasters
     # The Poes don't require anything to kill and the Moblins can be tricked into hitting each other so you can steal their weapon.
@@ -1356,7 +1375,7 @@ Earth Temple - Stalfos Mini-Boss Room:
     Can Access Earth Temple
     & Can Play Command Melody
     & ET Small Key x3
-    & Fire Arrows
+    & Can Access ET Left Side
     & Power Bracelets
     & Can Defeat Floormasters
     & (Can Defeat Stalfos | Hookshot)
@@ -1870,10 +1889,14 @@ The Great Sea - Ghost Ship:
   Need:
     Ghost Ship Chart
     & Can Play Ballad of Gales
-    & Can Defeat Wizzrobes
-    & Can Defeat Poes
-    & Can Defeat ReDeads
-    & Can Defeat Stalfos
+    & (
+      (
+        Can Defeat Wizzrobes
+        & Can Defeat Poes
+        & Can Defeat ReDeads
+        & Can Defeat Stalfos
+      ) | (Trick "Leaf Pumps In Submarines" & Can Fly With Deku Leaf Indoors)
+    )
     # You don't necessarily have to fight redeads and stalfos, but the wizzrobe can summon them if you're not quick enough.
   Original item: Triforce Chart 4
   Types: Other Chest
@@ -1920,7 +1943,7 @@ Private Oasis - Chest at Top of Waterfall:
 Private Oasis - Cabana Labyrinth - Lower Floor Chest:
   Need:
     Can Access Cabana Labyrinth
-    & Skull Hammer
+    & (Skull Hammer | Trick "Hammerless Cabana")
   Original item: Orange Rupee
   Types: Puzzle Secret Cave
   Paths:
@@ -1928,7 +1951,7 @@ Private Oasis - Cabana Labyrinth - Lower Floor Chest:
 Private Oasis - Cabana Labyrinth - Upper Floor Chest:
   Need:
     Can Access Cabana Labyrinth
-    & Skull Hammer
+    & (Skull Hammer | Trick "Hammerless Cabana")
     & Can Play Wind's Requiem
   Original item: Triforce Chart 2
   Types: Puzzle Secret Cave
@@ -1960,7 +1983,7 @@ Spectacle Island - Barrel Shooting - Second Prize:
 #    - rels/d_a_npc_kg2.rel@210F
 
 Needle Rock Isle - Chest:
-  Need: Bait Bag & Can Buy Hyoi Pears
+  Need: (Bait Bag & Can Buy Hyoi Pears) | (Trick "Needle Rock Chest With Fire Arrows" & Fire Arrows)
     # Note: It might be theoretically possible to hit the switch at the top with a fire arrow's explosion, but it's not easy.
   Original item: Piece of Heart
   Types: Island Puzzle
@@ -2044,7 +2067,7 @@ Stone Watcher Island - Lookout Platform - Destroy the Cannons:
 
 Islet of Steel - Interior:
   Need:
-    Bombs
+    (Bombs | Trick "Early Islet of Steel")
     & Can Play Wind's Requiem
   Original item: Triforce Chart 1
   Types: Other Chest
@@ -2098,7 +2121,7 @@ Pawprint Isle - Chuchu Cave - Chest:
 Pawprint Isle - Chuchu Cave - Behind Left Boulder:
   Need:
     Can Access Pawprint Isle Chuchu Cave
-    & Can Move Boulders
+    & (Can Move Boulders | Trick "Sidle Behind Left Boulder In Pawprint")
   Original item: Purple Rupee
   Types: Puzzle Secret Cave
   Paths:
@@ -2459,7 +2482,7 @@ Crescent Moon Island - Chest:
   Paths:
     - sea/Room5.arc/Chest000
 Crescent Moon Island - Submarine:
-  Need: Can Defeat Miniblins
+  Need: Can Defeat Miniblins | (Trick "Leaf Pumps In Submarines" & Can Fly With Deku Leaf Indoors)
     # You only need to defeat the very first Miniblin, then wait out the timer.
   Original item: Treasure Chart 9
   Types: Submarine
@@ -2468,8 +2491,10 @@ Crescent Moon Island - Submarine:
 
 Horseshoe Island - Play Golf:
   Need:
-    Can Fan With Deku Leaf
-    & (Can Fly With Deku Leaf Outdoors | Hookshot)
+    (
+      Can Fan With Deku Leaf
+      & (Can Fly With Deku Leaf Outdoors | Hookshot)
+    ) | (Trick "Leafless Horseshoe" & Hookshot)
     # Need Deku Leaf to play golf, and then need a way to reach the chest.
   Original item: Treasure Chart 28
   Types: Island Puzzle
@@ -2512,11 +2537,13 @@ Flight Control Platform - Bird-Man Contest - First Prize:
 #    - rels/d_a_npc_bmcon1.rel@2B9F
 Flight Control Platform - Submarine:
   Need:
-    Can Defeat Wizzrobes
-    & Can Defeat Red ChuChus
-    & Can Defeat Green ChuChus
-    & Can Defeat Miniblins
-    & Can Defeat Wizzrobes at Range
+    (
+      Can Defeat Wizzrobes
+      & Can Defeat Red ChuChus
+      & Can Defeat Green ChuChus
+      & Can Defeat Miniblins
+      & Can Defeat Wizzrobes at Range
+    ) | (Trick "Leaf Pumps In Submarines" & Can Fly With Deku Leaf Indoors)
   Original item: Platform Chart
   Types: Submarine
   Paths:

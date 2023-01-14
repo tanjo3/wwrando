@@ -716,32 +716,93 @@ class Ui_MainWindow(object):
         self.groupBox_6.setObjectName(u"groupBox_6")
         self.gridLayout_8 = QGridLayout(self.groupBox_6)
         self.gridLayout_8.setObjectName(u"gridLayout_8")
+        self.widget_12 = QWidget(self.groupBox_6)
+        self.widget_12.setObjectName(u"widget_12")
+
+        self.gridLayout_8.addWidget(self.widget_12, 0, 4, 1, 1)
+
         self.widget_11 = QWidget(self.groupBox_6)
         self.widget_11.setObjectName(u"widget_11")
 
         self.gridLayout_8.addWidget(self.widget_11, 0, 3, 1, 1)
-
-        self.do_not_generate_spoiler_log = QCheckBox(self.groupBox_6)
-        self.do_not_generate_spoiler_log.setObjectName(u"do_not_generate_spoiler_log")
-
-        self.gridLayout_8.addWidget(self.do_not_generate_spoiler_log, 0, 0, 1, 1)
 
         self.widget_10 = QWidget(self.groupBox_6)
         self.widget_10.setObjectName(u"widget_10")
 
         self.gridLayout_8.addWidget(self.widget_10, 0, 2, 1, 1)
 
-        self.widget_12 = QWidget(self.groupBox_6)
-        self.widget_12.setObjectName(u"widget_12")
+        self.do_not_generate_spoiler_log = QCheckBox(self.groupBox_6)
+        self.do_not_generate_spoiler_log.setObjectName(u"do_not_generate_spoiler_log")
 
-        self.gridLayout_8.addWidget(self.widget_12, 0, 4, 1, 1)
+        self.gridLayout_8.addWidget(self.do_not_generate_spoiler_log, 0, 0, 1, 1)
 
 
         self.verticalLayout_8.addWidget(self.groupBox_6)
 
-        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.frame = QFrame(self.tab)
+        self.frame.setObjectName(u"frame")
+        self.horizontalLayout_18 = QHBoxLayout(self.frame)
+        self.horizontalLayout_18.setObjectName(u"horizontalLayout_18")
+        self.verticalLayout_10 = QVBoxLayout()
+        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
+        self.label_for_tricks_not_in_logic = QLabel(self.frame)
+        self.label_for_tricks_not_in_logic.setObjectName(u"label_for_tricks_not_in_logic")
 
-        self.verticalLayout_8.addItem(self.verticalSpacer_3)
+        self.verticalLayout_10.addWidget(self.label_for_tricks_not_in_logic)
+
+        self.tricks_not_in_logic = QListView(self.frame)
+        self.tricks_not_in_logic.setObjectName(u"tricks_not_in_logic")
+        self.tricks_not_in_logic.setSelectionMode(QAbstractItemView.ExtendedSelection)
+
+        self.verticalLayout_10.addWidget(self.tricks_not_in_logic)
+
+
+        self.horizontalLayout_18.addLayout(self.verticalLayout_10)
+
+        self.verticalLayout_11 = QVBoxLayout()
+        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
+        self.verticalSpacer_3 = QSpacerItem(17, 27, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_11.addItem(self.verticalSpacer_3)
+
+        self.remove_trick = QPushButton(self.frame)
+        self.remove_trick.setObjectName(u"remove_trick")
+        self.remove_trick.setMinimumSize(QSize(0, 50))
+
+        self.verticalLayout_11.addWidget(self.remove_trick)
+
+        self.add_trick = QPushButton(self.frame)
+        self.add_trick.setObjectName(u"add_trick")
+        self.add_trick.setMinimumSize(QSize(0, 50))
+
+        self.verticalLayout_11.addWidget(self.add_trick)
+
+        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_11.addItem(self.verticalSpacer_4)
+
+
+        self.horizontalLayout_18.addLayout(self.verticalLayout_11)
+
+        self.verticalLayout_12 = QVBoxLayout()
+        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
+        self.label_for_tricks_in_logic = QLabel(self.frame)
+        self.label_for_tricks_in_logic.setObjectName(u"label_for_tricks_in_logic")
+
+        self.verticalLayout_12.addWidget(self.label_for_tricks_in_logic)
+
+        self.tricks_in_logic = QListView(self.frame)
+        self.tricks_in_logic.setObjectName(u"tricks_in_logic")
+        self.tricks_in_logic.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.tricks_in_logic.setSelectionMode(QAbstractItemView.ExtendedSelection)
+
+        self.verticalLayout_12.addWidget(self.tricks_in_logic)
+
+
+        self.horizontalLayout_18.addLayout(self.verticalLayout_12)
+
+
+        self.verticalLayout_8.addWidget(self.frame)
 
         self.tabWidget.addTab(self.tab, "")
         self.tab_player_customization = QWidget()
@@ -832,33 +893,33 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_14 = QHBoxLayout()
         self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
-        self.verticalLayout_10 = QVBoxLayout()
-        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
+        self.verticalLayout_14 = QVBoxLayout()
+        self.verticalLayout_14.setObjectName(u"verticalLayout_14")
         self.custom_colors_layout = QVBoxLayout()
         self.custom_colors_layout.setObjectName(u"custom_colors_layout")
 
-        self.verticalLayout_10.addLayout(self.custom_colors_layout)
-
-        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.verticalLayout_10.addItem(self.verticalSpacer_4)
-
-
-        self.horizontalLayout_14.addLayout(self.verticalLayout_10)
-
-        self.verticalLayout_11 = QVBoxLayout()
-        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
-        self.custom_model_preview_label = QLabel(self.tab_player_customization)
-        self.custom_model_preview_label.setObjectName(u"custom_model_preview_label")
-
-        self.verticalLayout_11.addWidget(self.custom_model_preview_label)
+        self.verticalLayout_14.addLayout(self.custom_colors_layout)
 
         self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
-        self.verticalLayout_11.addItem(self.verticalSpacer_5)
+        self.verticalLayout_14.addItem(self.verticalSpacer_5)
 
 
-        self.horizontalLayout_14.addLayout(self.verticalLayout_11)
+        self.horizontalLayout_14.addLayout(self.verticalLayout_14)
+
+        self.verticalLayout_15 = QVBoxLayout()
+        self.verticalLayout_15.setObjectName(u"verticalLayout_15")
+        self.custom_model_preview_label = QLabel(self.tab_player_customization)
+        self.custom_model_preview_label.setObjectName(u"custom_model_preview_label")
+
+        self.verticalLayout_15.addWidget(self.custom_model_preview_label)
+
+        self.verticalSpacer_6 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_15.addItem(self.verticalSpacer_6)
+
+
+        self.horizontalLayout_14.addLayout(self.verticalLayout_15)
 
 
         self.verticalLayout_9.addLayout(self.horizontalLayout_14)
@@ -1123,6 +1184,10 @@ class Ui_MainWindow(object):
         self.label_for_num_path_hints.setText(QCoreApplication.translate("MainWindow", u"Path Hints", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))
         self.do_not_generate_spoiler_log.setText(QCoreApplication.translate("MainWindow", u"Do Not Generate Spoiler Log", None))
+        self.label_for_tricks_not_in_logic.setText(QCoreApplication.translate("MainWindow", u"Glitches and Tricks Not in Logic", None))
+        self.remove_trick.setText(QCoreApplication.translate("MainWindow", u"<-", None))
+        self.add_trick.setText(QCoreApplication.translate("MainWindow", u"->", None))
+        self.label_for_tricks_in_logic.setText(QCoreApplication.translate("MainWindow", u"Glitches and Tricks in Logic", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Advanced Options", None))
         self.label_for_custom_color_preset.setText(QCoreApplication.translate("MainWindow", u"Color Preset", None))
         self.randomize_all_custom_colors_together.setText(QCoreApplication.translate("MainWindow", u"Randomize Colors Orderly", None))

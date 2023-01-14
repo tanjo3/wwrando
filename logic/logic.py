@@ -988,6 +988,8 @@ class Logic:
       result = self.check_other_location_requirement(req_name)
     elif req_name.startswith("Option \""):
       result = self.check_option_enabled_requirement(req_name)
+    elif req_name.startswith("Trick \""):
+      result = self.check_trick_enabled_requirement(req_name)
     elif req_name in self.all_cleaned_item_names:
       result = req_name in self.currently_owned_items
     elif req_name in self.macros:
@@ -1089,6 +1091,8 @@ class Logic:
       for item_name, num_required in sub_items_needed.items():
         items_needed[item_name] = max(num_required, items_needed.setdefault(item_name, 0))
     elif req_name.startswith("Option \""):
+      pass
+    elif req_name.startswith("Trick \""):
       pass
     elif req_name in self.all_cleaned_item_names:
       items_needed[req_name] = max(1, items_needed.setdefault(req_name, 0))
@@ -1194,6 +1198,12 @@ class Logic:
       return value not in self.rando.options.get(option_name, [])
     else:
       raise Exception("Invalid option check requirement: %s" % req_name)
+  
+  def check_trick_enabled_requirement(self, req_name):
+    match = re.search(r"^Trick \"([^\"]+)\"$", req_name)
+    trick_name = match.group(1)
+    
+    return trick_name in self.rando.options.get("tricks_in_logic", [])
   
   def chart_name_for_location(self, location_name):
     reqs = self.item_locations[location_name]["Need"]

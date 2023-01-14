@@ -6,6 +6,7 @@ from wwr_ui.ui_randomizer_window import Ui_MainWindow
 from wwr_ui.options import OPTIONS, NON_PERMALINK_OPTIONS, HIDDEN_OPTIONS, POTENTIALLY_UNBEATABLE_OPTIONS
 from wwr_ui.update_checker import check_for_updates, LATEST_RELEASE_DOWNLOAD_PAGE_URL
 from wwr_ui.inventory import INVENTORY_ITEMS, REGULAR_ITEMS, PROGRESSIVE_ITEMS, DEFAULT_STARTING_ITEMS, DEFAULT_RANDOMIZED_ITEMS
+from wwr_ui.tricks import LOGICAL_TRICKS, TRICK_NAME_TO_SORTED_INDEX, DEFAULT_TRICKS_IN_LOGIC, DEFAULT_TRICKS_NOT_IN_LOGIC
 from wwr_ui.packedbits import PackedBitsReader, PackedBitsWriter
 
 import random
@@ -67,6 +68,22 @@ class WWRandomizerWindow(QMainWindow):
     self.starting_gear_model = QStringListModel()
     self.starting_gear_model.setStringList(DEFAULT_STARTING_ITEMS.copy())
     self.ui.starting_gear.setModel(self.starting_gear_model)
+    
+    self.ui.add_trick.clicked.connect(self.add_trick_to_logic)
+    self.tricks_not_in_logic_model = QStringListModel()
+    self.tricks_not_in_logic_model.setStringList(DEFAULT_TRICKS_NOT_IN_LOGIC.copy())
+    self.sorted_ntricks = ModelSortTricks()
+    self.sorted_ntricks.setSourceModel(self.tricks_not_in_logic_model)
+    self.sorted_ntricks.sort(0)
+    self.ui.tricks_not_in_logic.setModel(self.sorted_ntricks)
+    
+    self.ui.remove_trick.clicked.connect(self.remove_trick_from_logic)
+    self.tricks_in_logic_model = QStringListModel()
+    self.tricks_in_logic_model.setStringList(DEFAULT_TRICKS_IN_LOGIC.copy())
+    self.sorted_ltricks = ModelSortTricks()
+    self.sorted_ltricks.setSourceModel(self.tricks_in_logic_model)
+    self.sorted_ltricks.sort(0)
+    self.ui.tricks_in_logic.setModel(self.sorted_ltricks)
     
     self.preserve_default_settings()
     
@@ -218,6 +235,16 @@ class WWRandomizerWindow(QMainWindow):
         text += " and %d pieces" % pieces
     
     self.ui.current_health.setText(text)
+  
+  def add_trick_to_logic(self):
+    self.move_selected_rows(self.ui.tricks_not_in_logic, self.ui.tricks_in_logic)
+    self.ui.tricks_in_logic.model().sort(0)
+    self.update_settings()
+  
+  def remove_trick_from_logic(self):
+    self.move_selected_rows(self.ui.tricks_in_logic, self.ui.tricks_not_in_logic)
+    self.ui.tricks_not_in_logic.model().sort(0)
+    self.update_settings()
   
   def randomize(self):
     clean_iso_path = self.settings["clean_iso_path"].strip()
@@ -524,6 +551,11 @@ class WWRandomizerWindow(QMainWindow):
           # No Progressive Sword and there's no more than
           # 3 of any other Progressive item so two bits per item
           bitswriter.write(value.count(item), 2)
+      elif widget == self.ui.tricks_in_logic:
+        # tricks_not_in_logic is a complement of tricks_in_logic
+        for i in range(len(LOGICAL_TRICKS)):
+          bit = LOGICAL_TRICKS[i] in value
+          bitswriter.write(bit, 1)
     
     bitswriter.flush()
     
@@ -608,6 +640,16 @@ class WWRandomizerWindow(QMainWindow):
             self.append_row(self.starting_gear_model, item)
           for i in range(randamount):
             self.append_row(self.randomized_gear_model, item)
+      elif widget == self.ui.tricks_in_logic:
+        # Reset model with only the logical tricks
+        self.tricks_not_in_logic_model.setStringList(LOGICAL_TRICKS.copy())
+        self.tricks_in_logic_model.setStringList([])
+        # tricks_not_in_logic is a complement of tricks_in_logic
+        for i in range(len(LOGICAL_TRICKS)):
+          logical = bitsreader.read(1)
+          if logical == 1:
+            self.ui.tricks_not_in_logic.selectionModel().select(self.tricks_not_in_logic_model.index(i), QItemSelectionModel.Select)
+          self.move_selected_rows(self.ui.tricks_not_in_logic, self.ui.tricks_in_logic)
     
     if not self.get_option_value("randomize_enemies"):
       # If a permalink with enemy rando off was pasted, we don't want to change enemy palette rando to match the permalink.
@@ -693,7 +735,7 @@ class WWRandomizerWindow(QMainWindow):
       if widget.model() == None:
         return []
       model = widget.model();
-      if isinstance(model, ModelFilterOut):
+      if isinstance(model, ModelFilterOut) or isinstance(model, ModelSortTricks):
         model = model.sourceModel()
       model.sort(0)
       return [model.data(model.index(i)) for i in range(model.rowCount())]
@@ -1026,6 +1068,13 @@ class WWRandomizerWindow(QMainWindow):
     if not compare(all_gear, INVENTORY_ITEMS):
       print("Gear list invalid, resetting")
       for opt in ["randomized_gear", "starting_gear"]:
+        self.set_option_value(opt, self.default_settings[opt])
+    
+    all_tricks = self.get_option_value("tricks_in_logic") + self.get_option_value("tricks_not_in_logic")
+    
+    if not compare(all_tricks, LOGICAL_TRICKS):
+      print("Trick list invalid, resetting")
+      for opt in ["tricks_not_in_logic", "tricks_in_logic"]:
         self.set_option_value(opt, self.default_settings[opt])
     
     for option_name in OPTIONS:
@@ -1440,6 +1489,17 @@ class ModelFilterOut(QSortFilterProxyModel):
       if cur_data == data:
         num_occurrences -= 1
     return num_occurrences <= 0
+
+class ModelSortTricks(QSortFilterProxyModel):
+  def __init__(self):
+    super(ModelSortTricks, self).__init__()
+  
+  def lessThan(self, sourceLeft, sourceRight):
+    dataLeft = self.sourceModel().data(sourceLeft)
+    dataRight = self.sourceModel().data(sourceRight)
+    if dataLeft not in TRICK_NAME_TO_SORTED_INDEX or dataRight not in TRICK_NAME_TO_SORTED_INDEX:
+      return False
+    return TRICK_NAME_TO_SORTED_INDEX[dataLeft] < TRICK_NAME_TO_SORTED_INDEX[dataRight]
 
 class RandomizerProgressDialog(QProgressDialog):
   def __init__(self, title, description, max_val):
