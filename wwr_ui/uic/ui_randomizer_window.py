@@ -847,6 +847,33 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_8.addWidget(self.groupBox_6)
 
+        self.groupBox_random_settings = QGroupBox(self.tab_advanced)
+        self.groupBox_random_settings.setObjectName(u"groupBox_random_settings")
+        self.gridLayout_random_settings = QGridLayout(self.groupBox_random_settings)
+        self.gridLayout_random_settings.setObjectName(u"gridLayout_random_settings")
+        self.widget_rs_enable = QWidget(self.groupBox_random_settings)
+        self.widget_rs_enable.setObjectName(u"widget_rs_enable")
+
+        self.gridLayout_random_settings.addWidget(self.widget_rs_enable, 0, 3, 1, 1)
+
+        self.randomize_settings = QCheckBox(self.groupBox_random_settings)
+        self.randomize_settings.setObjectName(u"randomize_settings")
+
+        self.gridLayout_random_settings.addWidget(self.randomize_settings, 0, 0, 1, 1)
+
+        self.widget_rs_placeholder1 = QWidget(self.groupBox_random_settings)
+        self.widget_rs_placeholder1.setObjectName(u"widget_rs_placeholder1")
+
+        self.gridLayout_random_settings.addWidget(self.widget_rs_placeholder1, 0, 2, 1, 1)
+
+        self.widget_rs_placeholder2 = QWidget(self.groupBox_random_settings)
+        self.widget_rs_placeholder2.setObjectName(u"widget_rs_placeholder2")
+
+        self.gridLayout_random_settings.addWidget(self.widget_rs_placeholder2, 0, 4, 1, 1)
+
+
+        self.verticalLayout_8.addWidget(self.groupBox_random_settings)
+
         self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_8.addItem(self.verticalSpacer_3)
@@ -955,7 +982,8 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.num_path_hints, self.cryptic_hints)
         QWidget.setTabOrder(self.cryptic_hints, self.prioritize_remote_hints)
         QWidget.setTabOrder(self.prioritize_remote_hints, self.do_not_generate_spoiler_log)
-        QWidget.setTabOrder(self.do_not_generate_spoiler_log, self.permalink)
+        QWidget.setTabOrder(self.do_not_generate_spoiler_log, self.randomize_settings)
+        QWidget.setTabOrder(self.randomize_settings, self.permalink)
         QWidget.setTabOrder(self.permalink, self.about_button)
         QWidget.setTabOrder(self.about_button, self.reset_settings_to_default)
 
@@ -1075,6 +1103,8 @@ class Ui_MainWindow(object):
         self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))
         self.do_not_generate_spoiler_log.setText(QCoreApplication.translate("MainWindow", u"Do Not Generate Spoiler Log", None))
         self.dry_run.setText(QCoreApplication.translate("MainWindow", u"Dry Run", None))
+        self.groupBox_random_settings.setTitle(QCoreApplication.translate("MainWindow", u"Settings Randomizer", None))
+        self.randomize_settings.setText(QCoreApplication.translate("MainWindow", u"Randomize Settings", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_advanced), QCoreApplication.translate("MainWindow", u"Advanced Options", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_player_customization), QCoreApplication.translate("MainWindow", u"Player Customization", None))
         self.option_description.setText("")

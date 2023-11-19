@@ -686,6 +686,12 @@ class WWRandomizerWindow(QMainWindow):
       print("Gear list invalid, resetting")
       for opt in ["randomized_gear", "starting_gear"]:
         self.set_option_value(opt, self.default_options[opt])
+
+    # Disable options that the settings randomizer will overwrite to reduce confusion
+    settings_randomized = self.get_option_value("randomize_settings")
+    for option in Options.all:
+      if not option.random_settings_togglable:
+        should_enable_options[option.name] = not settings_randomized
     
     for option in Options.all:
       if option.name == "custom_colors":

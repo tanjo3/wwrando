@@ -9,12 +9,14 @@ class Option(Field):
     'description', 'choice_descriptions',
     'minimum', 'maximum',
     'permalink', 'hidden', 'unbeatable',
+    'random_settings_togglable',
   )
   
   def __init__(self, default, default_factory,
                description: str, choice_descriptions: dict[Any, str],
                minimum: Optional[int], maximum: Optional[int],
-               permalink: bool, hidden: bool, unbeatable: bool):
+               permalink: bool, hidden: bool, unbeatable: bool,
+               random_settings_togglable: bool):
     super().__init__(default, default_factory, init=True, repr=True,
                      hash=None, compare=True, metadata=None, kw_only=True)
     self.description = description
@@ -24,6 +26,7 @@ class Option(Field):
     self.permalink = permalink
     self.hidden = hidden
     self.unbeatable = unbeatable
+    self.random_settings_togglable = random_settings_togglable
   
   @_recursive_repr
   def __repr__(self):
@@ -37,14 +40,18 @@ class Option(Field):
 def option(default=MISSING, default_factory=MISSING,
            description="", choice_descriptions={},
            minimum: Optional[int] = None, maximum: Optional[int] = None,
-           permalink=True, hidden=False, unbeatable=False):
+           permalink=True, hidden=False, unbeatable=False,
+           random_settings_togglable=MISSING,):
   if default is MISSING and default_factory is MISSING:
     raise ValueError('must specify either default or default_factory')
+  if random_settings_togglable is MISSING:
+    random_settings_togglable = not permalink
   return Option(
     default, default_factory,
     description, choice_descriptions,
     minimum, maximum,
-    permalink, hidden, unbeatable
+    permalink, hidden, unbeatable,
+    random_settings_togglable
   )
 
 class BaseOptions:

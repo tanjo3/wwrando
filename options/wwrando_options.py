@@ -22,6 +22,14 @@ class TrickDifficulty(StrEnum):
 
 @dataclass
 class Options(BaseOptions):
+  #region Settings randomizer
+  # Needs to be first for permalink calculation
+  randomize_settings: bool = option(
+    default=False,
+    description="Randomize which settings are enabled. When this option is enabled, most other randomization and progression options are disabled, and their value is instead selected randomly by the chosen seed.",
+    random_settings_togglable=True,
+  )
+  #endregion Settings randomizer
   #region Progress locations
   progression_dungeons: bool = option(
     default=True,
@@ -186,16 +194,19 @@ class Options(BaseOptions):
   hero_mode: bool = option(
     default=False,
     description="In Hero Mode, you take four times more damage than normal and heart refills will not drop.",
+    random_settings_togglable=True,
   )
   logic_obscurity: TrickDifficulty = option(
     default=TrickDifficulty.NONE,
     description="Obscure tricks are ways of obtaining items that are not obvious and may involve thinking outside the box.<br>"
       "This option controls the maximum difficulty of obscure tricks the randomizer will require you to do to beat the game.",
+    random_settings_togglable=True,
   )
   logic_precision: TrickDifficulty = option(
     default=TrickDifficulty.NONE,
     description="Precise tricks are ways of obtaining items that involve difficult inputs such as accurate aiming or perfect timing.<br>"
       "This option controls the maximum difficulty of precise tricks the randomizer will require you to do to beat the game.",
+    random_settings_togglable=True,
   )
   #endregion
   
@@ -250,6 +261,7 @@ class Options(BaseOptions):
     default=False,
     permalink=True, # TODO: Has special logic to be in when enemy rando is on, but just a placeholder otherwise. How to handle this?
     description="Gives all the enemies in the game random colors.",
+    random_settings_togglable=True,
   )
   # randomize_music: bool = option(
   #   default=False,
@@ -327,10 +339,12 @@ class Options(BaseOptions):
     default=True,
     description="Text appears instantly.<br>"
       "Also, the B button is changed to instantly skip through text as long as you hold it down.",
+    random_settings_togglable=True,
   )
   reveal_full_sea_chart: bool = option(
     default=True,
     description="Start the game with the sea chart fully drawn out.",
+    random_settings_togglable=True,
   )
   add_shortcut_warps_between_dungeons: bool = option(
     default=False,
@@ -361,6 +375,7 @@ class Options(BaseOptions):
     default=False,
     permalink=True, # Music duration affects gameplay (e.g. item get textbox speed).
     description="Mutes all ingame music.",
+    random_settings_togglable=True,
   )
   #endregion
   
@@ -439,6 +454,7 @@ class Options(BaseOptions):
     default=False,
     description="Prevents the randomizer from generating a text file listing out the locations of all items in this seed. (Also changes where items are placed in this seed.)<br>"
       "<u>Generating a spoiler log is highly recommended even if you don't intend to use it</u>, just in case you get completely stuck.",
+    random_settings_togglable=True,
   )
   dry_run: bool = option(
     default=False,
