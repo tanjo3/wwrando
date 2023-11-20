@@ -380,7 +380,8 @@ class WWRandomizer:
     yield("Writing logs...", progress_completed)
     if not self.options.do_not_generate_spoiler_log:
       self.write_spoiler_log()
-    self.write_non_spoiler_log()
+    if not (self.options.do_not_generate_spoiler_log and self.options.randomize_settings):
+      self.write_non_spoiler_log()
   
   def apply_necessary_tweaks(self):
     patcher.apply_patch(self, "custom_data")
