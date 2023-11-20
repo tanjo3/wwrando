@@ -133,6 +133,8 @@ def randomize_settings(seed=None):
   # Randomize starting gear dynamically based on items which have logical implications in this seed
   settings_dict["starting_gear"] += randomize_starting_gear(settings_dict, seed=seed)
   
+  ensure_valid_settings(settings_dict)
+
   return settings_dict
 
 def randomize_starting_gear(options, seed=None):
@@ -147,6 +149,7 @@ def randomize_starting_gear(options, seed=None):
   # Options that cannot be None (used in the rng calculations)
   starting_gear_check_options["do_not_generate_spoiler_log"] = True
   starting_gear_check_options["randomize_settings"] = True
+  ensure_valid_settings(starting_gear_check_options)
   try:
     rando = WWRandomizer(seed, "", "", starting_gear_check_options, permalink="dummy_RS_starting_gear", cmd_line_args={"-dry": None})
   except Exception: # Unfortunately the rando often returns bare exceptions
@@ -177,3 +180,11 @@ def randomize_starting_gear(options, seed=None):
     starting_gear += selected_items
   
   return list(set(starting_gear))
+
+def ensure_valid_settings(settings):
+  # Disable some invalid combinations of settings to maximize likelihood that
+  # the seed will randomize successfully. Some overlap with
+  # wwr_ui.randomizer_window.WWRandomizerWindow.ensure_valid_combination_of_options
+
+  if not settings["progression_dungeons"]:
+    settings["required_bosses"] = False
