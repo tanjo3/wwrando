@@ -12,6 +12,7 @@ Below are the weights for the randomized settings. If only one weight is listed,
 |               **Free Gifts**               	|                                                               80%                                                               	|
 |              **Miscellaneous**             	|                                                               50%                                                               	|
 |              **Tingle Chests**             	|                                                               50%                                                               	|
+|             **Dungeon Secrets**             	|                                                               50%                                                               	|
 |            **Short Sidequests**            	|                                                               50%                                                               	|
 |             **Long Sidequests**            	|                                                               20%                                                               	|
 |             **Spoils Trading**             	|                                                               10%                                                               	|
@@ -28,7 +29,6 @@ Below are the weights for the randomized settings. If only one weight is listed,
 | **Sunken Treasure (From Treasure Charts)** 	|                                                                5%                                                               	|
 |                                            	|                                                                                                                                 	|
 |               **Sword Mode**               	|                                 60% Start with Hero's Sword, 35% No Starting Sword, 5% Swordless                                	|
-|           **Randomize Entrances**          	| 20% Disabled, 20%, Dungeons, 20% Secret Caves, 20% Dungeons & Secret Caves (Separately), 20% Dungeons & Secret Caves (Together) 	|
 |               **Key-Lunacy**               	|                                                               40%                                                               	|
 |                **Race Mode**               	|                                                               90%                                                               	|
 |      **Number of Race Mode Dungeons**      	|                                             5% 1, 15% 2, 25% 3, 30% 4, 15% 5, 10% 6                                             	|
@@ -37,6 +37,13 @@ Below are the weights for the randomized settings. If only one weight is listed,
 |        **Randomize Starting Island**       	|                                                               100%                                                              	|
 |       **Chest Type Matches Contents**      	|                                                               100%                                                              	|
 |                                            	|                                                                                                                                 	|
+|       **Randomize Dungeon Entrances**      	|                                                               50%                                                               	|
+|         **Randomize Boss Entrances**        	|                                                               50%                                                               	|
+|       **Randomize Miniboss Entrances**      	|                                                               50%                                                               	|
+|     **Randomize Secret Cave Entrances**    	|                                                               30%                                                               	|
+|      **Randomize Inner Cave Entrances**    	|                                                               50%                                                               	|
+|    **Randomize Fairy Fountain Entrances**  	|                                                               50%                                                               	|
+|              **Mix Entrances**             	|                       75% Separate Dungeons From Caves & Fountains, 25% Mix Dungeons & Caves & Fountains                         	|
 |             **Hint Placement**             	|                                    80% King of Red Lions, 15% Stone Tablets, 5% Old Man Ho Ho                                   	|
 |            **Hint Distribution**           	|                                      100% 6 Path Hints + 6 Barren Hints + 8 Location Hints                                      	|
 |              **Cryptic Hints**             	|                                                               0%                                                                	|
