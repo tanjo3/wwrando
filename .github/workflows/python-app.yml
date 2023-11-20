@@ -2,11 +2,11 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, rsl-* ]
     paths-ignore:
       - 'docs/**'
   pull_request:
-    branches: [ master ]
+    branches: [ master, rsl-* ]
     paths-ignore:
       - 'docs/**'
   workflow_dispatch:
@@ -73,7 +73,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ./.venv
-          key: ${{ runner.os }}-venv-${{ steps.setup-py.outputs.python-version  }}-${{ hashFiles('**/requirements*.txt') }}
+          key: ${{ matrix.os }}-venv-${{ steps.setup-py.outputs.python-version  }}-${{ hashFiles('**/requirements*.txt') }}
       - name: Create venv
         if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
@@ -91,7 +91,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y qtbase5-dev
+          sudo apt-get install -y qt6-base-dev
           sudo apt-get install -y libxcb-cursor0
       - name: Set variables
         id: vars
