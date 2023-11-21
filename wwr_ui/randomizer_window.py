@@ -17,7 +17,6 @@ from randomizer import WWRandomizer, TooFewProgressionLocationsError, InvalidCle
 from version import VERSION
 from wwrando_paths import SETTINGS_PATH, ASSETS_PATH, IS_RUNNING_FROM_SOURCE
 from seedgen import seedgen
-from randomizers.settings import randomize_settings
 from logic.logic import Logic
 
 from typing import TYPE_CHECKING, Type

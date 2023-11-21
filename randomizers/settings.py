@@ -1,8 +1,6 @@
-import random
-
 from logic.item_types import DUNGEON_NONPROGRESS_ITEMS
 
-from randomizer import WWRandomizer
+from randomizers.base_randomizer import BaseRandomizer
 
 DEFAULT_WEIGHTS = {
   "progression_dungeons": [(True, 80), (False, 20)],
@@ -64,40 +62,50 @@ DEFAULT_WEIGHTS = {
   "start_with_maps_and_compasses": [(True, 80), (False, 20)],
 }
 
-def randomize_settings(seed=None):
-  random.seed(seed)
-  
-  settings_dict = {
-    "starting_gear": ["Telescope", "Ballad of Gales", "Song of Passing"],
-  }
-  for option_name, option_values in DEFAULT_WEIGHTS.items():
-    values, weights = zip(*option_values)
-    
-    if option_name == "hint_placement":
-      chosen_hint_placement = random.choices(values, weights=weights)[0]
-      for hint_placement in values:
-        settings_dict[hint_placement] = (hint_placement == chosen_hint_placement)
-    elif option_name == "start_with_maps_and_compasses":
-      start_with_maps_and_compasses = random.choices(values, weights=weights)[0]
-      if start_with_maps_and_compasses:
-        settings_dict["starting_gear"] += DUNGEON_NONPROGRESS_ITEMS
-    elif option_name == "skip_rematch_bosses":
-      if settings_dict["progression_dungeons"] or settings_dict["required_bosses"]:
-        settings_dict["skip_rematch_bosses"] = True
+class SettingsRandomizer(BaseRandomizer):
+
+  def is_enabled(self) -> bool:
+    return self.options.randomize_settings
+
+  def _randomize(self):
+    settings_dict = {
+      "starting_gear": ["Telescope", "Ballad of Gales", "Song of Passing"],
+    }
+    for option_name, option_values in DEFAULT_WEIGHTS.items():
+      values, weights = zip(*option_values)
+      
+      if option_name == "hint_placement":
+        chosen_hint_placement = self.rng.choices(values, weights=weights)[0]
+        for hint_placement in values:
+          settings_dict[hint_placement] = (hint_placement == chosen_hint_placement)
+      elif option_name == "start_with_maps_and_compasses":
+        start_with_maps_and_compasses = self.rng.choices(values, weights=weights)[0]
+        if start_with_maps_and_compasses:
+          settings_dict["starting_gear"] += DUNGEON_NONPROGRESS_ITEMS
+      elif option_name == "skip_rematch_bosses":
+        if settings_dict["progression_dungeons"] or settings_dict["required_bosses"]:
+          settings_dict["skip_rematch_bosses"] = True
+        else:
+          settings_dict["skip_rematch_bosses"] = self.rng.choices(values, weights=weights)[0]
+
       else:
-        settings_dict["skip_rematch_bosses"] = random.choices(values, weights=weights)[0]
+        chosen_option = self.rng.choices(values, weights=weights)[0]
+        settings_dict[option_name] = chosen_option
+    
+    self.ensure_valid_settings(settings_dict)
 
-    else:
-      chosen_option = random.choices(values, weights=weights)[0]
-      settings_dict[option_name] = chosen_option
-  
-  ensure_valid_settings(settings_dict)
+    for opt,val in settings_dict.items():
+      setattr(self.options, opt, val)
+    self.rando.starting_items = self.rando.build_starting_items_from_options()
 
-  return settings_dict
+  def _save():
+    # This randomizer only modifies behavior of other randomizers, and doesn't change the seed by itself
+    pass
 
-def ensure_valid_settings(settings):
-  # Disable some invalid combinations of settings to maximize likelihood that
-  # the seed will randomize successfully. Some overlap with
-  # wwr_ui.randomizer_window.WWRandomizerWindow.ensure_valid_combination_of_options
-  if not settings["progression_dungeons"]:
-    settings["required_bosses"] = False
+  @staticmethod
+  def ensure_valid_settings(settings):
+    # Disable some invalid combinations of settings to maximize likelihood that
+    # the seed will randomize successfully. Some overlap with
+    # wwr_ui.randomizer_window.WWRandomizerWindow.ensure_valid_combination_of_options
+    if not settings["progression_dungeons"]:
+      settings["required_bosses"] = False
