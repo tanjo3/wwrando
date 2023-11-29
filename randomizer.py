@@ -175,29 +175,9 @@ class WWRandomizer:
         stage_searcher.print_all_used_switches(self)
         sys.exit(0)
     
-    # Starting items. This list is read by the Logic when initializing your currently owned items list.
-    self.starting_items = [
-      "Wind Waker",
-      "Wind's Requiem",
-      "Boat's Sail",
-    ]
-    self.starting_items += self.options.starting_gear
-    
-    if self.options.sword_mode == SwordMode.START_WITH_SWORD:
-      self.starting_items.append("Progressive Sword")
-    # Add starting Triforce Shards.
-    num_starting_triforce_shards = self.options.num_starting_triforce_shards
-    for i in range(num_starting_triforce_shards):
-      self.starting_items.append("Triforce Shard %d" % (i+1))
-    
-    for i in range(self.options.starting_pohs):
-      self.starting_items.append("Piece of Heart")
-    
-    for i in range(self.options.starting_hcs):
-      self.starting_items.append("Heart Container")
-    
-    
+    self.starting_items = self.build_starting_items_from_options()
     self.custom_model_name = self.options.custom_player_model
+
     self.using_custom_sail_texture = False
     
     self.logic = Logic(self)
@@ -469,6 +449,32 @@ class WWRandomizer:
       tweaks.update_item_names_in_letter_advertising_rock_spire_shop(self)
     tweaks.prevent_fire_mountain_lava_softlock(self)
   
+
+  def build_starting_items_from_options(self) -> list[str]:
+    if self.fully_initialized:
+      raise Exception("Can't reset logic once rando has run")
+    # Starting items. This list is read by the Logic when initializing your currently owned items list.
+    starting_items = [
+      "Wind Waker",
+      "Wind's Requiem",
+      "Boat's Sail",
+    ]
+    starting_items += self.options.starting_gear
+    
+    if self.options.sword_mode == SwordMode.START_WITH_SWORD:
+      starting_items.append("Progressive Sword")
+    # Add starting Triforce Shards.
+    for i in range(self.options.num_starting_triforce_shards):
+      starting_items.append("Triforce Shard %d" % (i+1))
+    
+    for i in range(self.options.starting_pohs):
+      starting_items.append("Piece of Heart")
+    
+    for i in range(self.options.starting_hcs):
+      starting_items.append("Heart Container")
+    
+    return starting_items
+    
   @classmethod
   def sanitize_seed(cls, seed):
     seed = str(seed)
