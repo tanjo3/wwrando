@@ -75,7 +75,16 @@ class Logic:
       self.triforce_chart_names.append("Triforce Chart %d" % i)
     for i in range(1, 41+1):
       self.treasure_chart_names.append("Treasure Chart %d" % i)
+
+    self.unplaced_progress_items: list[str]
+    self.unplaced_nonprogress_items: list[str]
+    self.unplaced_fixed_consumable_items: list[str]
+    self.currently_owned_items: list[str] = []
     
+    if self.rando.fully_initialized:
+      self.initialize_from_randomizer_state()
+
+  def initialize_from_randomizer_state(self):
     if self.options.sword_mode == SwordMode.SWORDLESS:
       self.all_progress_items = [
         item_name for item_name in self.all_progress_items
@@ -116,15 +125,6 @@ class Logic:
       if cleaned_item_name not in self.all_cleaned_item_names:
         self.all_cleaned_item_names.append(cleaned_item_name)
     
-    self.unplaced_progress_items: list[str]
-    self.unplaced_nonprogress_items: list[str]
-    self.unplaced_fixed_consumable_items: list[str]
-    self.currently_owned_items: list[str] = []
-    
-    if self.rando.fully_initialized:
-      self.initialize_from_randomizer_state()
-  
-  def initialize_from_randomizer_state(self):
     self.nested_entrance_macros.clear()
     for zone_entrance in entrances.ZoneEntrance.all.values():
       if zone_entrance.is_nested:
