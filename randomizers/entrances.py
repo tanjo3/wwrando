@@ -494,6 +494,18 @@ class EntranceRandomizer(BaseRandomizer):
     
     self.randomize_one_set_of_exits(remaining_entrances, remaining_exits, terminal_exits)
   
+  def check_if_one_exit_is_progress(self, exit: ZoneExit) -> bool:
+    locs_for_exit = self.zone_exit_to_item_location_names[exit]
+    assert locs_for_exit, f"Could not find any item locations corresponding to zone exit: {exit.unique_name}"
+    # Banned required bosses mode dungeons still technically count as progress locations, so
+    # filter them out separately first.
+    nonbanned_locs = [
+      loc for loc in locs_for_exit
+      if loc not in self.rando.boss_reqs.banned_locations
+    ]
+    progress_locs = self.logic.filter_locations_for_progression(nonbanned_locs)
+    return bool(progress_locs)
+
   def split_nonprogress_entrances_and_exits(self, relevant_entrances: list[ZoneEntrance], relevant_exits: list[ZoneExit]):
     # Splits the entrance and exit lists into two pairs: ones that should be considered nonprogress
     # on this seed (will never lead to any progress items) and ones that should be considered
@@ -501,24 +513,15 @@ class EntranceRandomizer(BaseRandomizer):
     # This is so that we can effectively randomize these two pairs separately without any convoluted
     # logic to ensure they don't connect to each other.
     
-    nonprogress_exits = []
-    for ex in relevant_exits:
-      locs_for_exit = self.zone_exit_to_item_location_names[ex]
-      assert locs_for_exit, f"Could not find any item locations corresponding to zone exit: {ex.unique_name}"
-      # Banned required bosses mode dungeons still technically count as progress locations, so
-      # filter them out separately first.
-      nonbanned_locs = [
-        loc for loc in locs_for_exit
-        if loc not in self.rando.boss_reqs.banned_locations
-      ]
-      progress_locs = self.logic.filter_locations_for_progression(nonbanned_locs)
-      if not progress_locs:
-        nonprogress_exits.append(ex)
+    nonprogress_exits = [ex for ex in relevant_exits if not self.check_if_one_exit_is_progress(ex)]
     
     nonprogress_entrances = [
-      en for en in relevant_entrances
-      if en.nested_in is not None
-      and en.nested_in in nonprogress_exits
+      en for en in relevant_entrances 
+      if en.nested_in is not None and (
+        (en.nested_in in nonprogress_exits) or
+        # The area this entrance is nested in is not randomized, but we still need to figure out if it's progression
+        (en.nested_in not in relevant_exits and not self.check_if_one_exit_is_progress(en.nested_in))
+      )
     ]
     
     # At this point, nonprogress_entrances includes only the inner entrances nested inside of the
@@ -665,7 +668,8 @@ class EntranceRandomizer(BaseRandomizer):
         if zone_entrance.island_name in self.islands_with_a_banned_dungeon:
           possible_remaining_exits = [
             ex for ex in possible_remaining_exits
-            if not (ex in BOSS_EXITS or ex not in terminal_exits)
+            if ((nest_exits := self.get_all_exits_nested_under(ex)) or True)
+               and not (set(BOSS_EXITS) & nest_exits) and None not in nest_exits
           ]
       
       if not possible_remaining_exits:
@@ -1113,4 +1117,18 @@ class EntranceRandomizer(BaseRandomizer):
     zone_exit = ZoneExit.all[boss_arena_name]
     outermost_entrance = self.get_outermost_entrance_for_exit(zone_exit)
     return outermost_entrance.island_name
+
+  def get_all_exits_nested_under(self, root_ex: ZoneExit) -> set[ZoneExit | None]:
+    # Return a set of all the exits accessible under this one. The set will
+    # contain None if any of the nested entrances are currently unassigned
+    if root_ex is None:
+      return set((None,))
+    new_entrances = {en for en in ZoneEntrance.all.values() if en.nested_in is not None and en.nested_in == root_ex}
+    accessible_exits = {self.done_entrances_to_exits.get(en, None) for en in new_entrances}
+    if accessible_exits:
+      nested_accessible_exits = (self.get_all_exits_nested_under(ex) for ex in accessible_exits if ex is not None)
+      accessible_exits.union(*nested_accessible_exits)
+    accessible_exits.add(root_ex)
+
+    return accessible_exits
   #endregion
