@@ -316,6 +316,7 @@ class EntranceRandomizer(BaseRandomizer):
     self.safety_entrance = None
     self.banned_exits: list[ZoneExit] = []
     self.islands_with_a_banned_dungeon: set[str] = set()
+    self.islands_with_a_required_dungeon: set[str] = set()
   
   def init_from_randomizer_state(self):
     self.entrance_names_with_no_requirements = []
@@ -439,6 +440,8 @@ class EntranceRandomizer(BaseRandomizer):
       for en in DUNGEON_ENTRANCES:
         if self.entrance_connections[en.entrance_name] in self.rando.boss_reqs.banned_dungeons:
           self.islands_with_a_banned_dungeon.add(en.island_name)
+        elif self.entrance_connections[en.entrance_name] in self.rando.boss_reqs.required_dungeons:
+          self.islands_with_a_required_dungeon.add(en.island_name)
     
   def randomize_one_set_of_entrances(self, relevant_entrances: list[ZoneEntrance], relevant_exits: list[ZoneExit]):
     for zone_entrance in relevant_entrances:
@@ -682,6 +685,16 @@ class EntranceRandomizer(BaseRandomizer):
       #    if x.unique_name not in ["Fire Mountain Secret Cave", "Ice Ring Isle Secret Cave"]
       #  ]
       
+      if self.options.required_bosses and doing_banned:
+        # Prevent required bosses to be randomized into an already-placed
+        # required island (usually from nonrandomized dungeon entrances with
+        # randomized boss entrances)
+        if self.get_outermost_entrance_for_entrance(zone_entrance).island_name in self.islands_with_a_required_dungeon:
+          possible_remaining_exits = [
+            ex for ex in possible_remaining_exits
+            if not self.get_all_exits_nested_under(ex) & set(self.banned_exits)
+          ]
+
       if self.options.required_bosses and zone_entrance.island_name is not None and not doing_banned:
         # Prevent required bosses (and non-terminal exits which could potentially lead to required
         # bosses) from appearing on islands where we already placed a banned boss or dungeon.
