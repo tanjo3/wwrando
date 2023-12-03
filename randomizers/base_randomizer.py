@@ -52,10 +52,14 @@ class BaseRandomizer:
     self.rng = self.rando.get_new_rng()
   
   def randomize(self):
+    self.init_from_randomizer_state()
     self.reset_rng()
     self._randomize()
     self.rng = None
     self.made_any_changes = True
+
+  def init_from_randomizer_state(self):
+    pass
   
   def _randomize(self):
     """Decide on what specific randomizations to make on this seed and store the results in instance

@@ -310,6 +310,14 @@ class EntranceRandomizer(BaseRandomizer):
       self.done_entrances_to_exits[zone_entrance] = zone_exit
       self.done_exits_to_entrances[zone_exit] = zone_entrance
     
+    self.nested_entrance_paths: list[list[str]] = []
+    self.nesting_enabled: bool = False
+    
+    self.safety_entrance = None
+    self.banned_exits: list[ZoneExit] = []
+    self.islands_with_a_banned_dungeon: list[str] = []
+  
+  def init_from_randomizer_state(self):
     self.entrance_names_with_no_requirements = []
     self.exit_names_with_no_requirements = []
     if self.options.progression_dungeons:
@@ -327,17 +335,12 @@ class EntranceRandomizer(BaseRandomizer):
       self.exit_names_with_no_requirements += COMBAT_SECRET_CAVE_EXIT_NAMES_WITH_NO_REQUIREMENTS
     # No need to check progression_savage_labyrinth, since neither of the items inside Savage have no requirements.
     
-    self.nested_entrance_paths: list[list[str]] = []
     self.nesting_enabled = any([
       self.options.randomize_miniboss_entrances,
       self.options.randomize_boss_entrances,
       self.options.randomize_secret_cave_inner_entrances,
     ])
-    
-    self.safety_entrance = None
-    self.banned_exits: list[ZoneExit] = []
-    self.islands_with_a_banned_dungeon: list[str] = []
-  
+
   def is_enabled(self) -> bool:
     return any([
       self.options.randomize_dungeon_entrances,
