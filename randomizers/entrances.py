@@ -489,15 +489,16 @@ class EntranceRandomizer(BaseRandomizer):
     remaining_entrances = relevant_entrances.copy()
     remaining_exits = relevant_exits.copy()
     
-    nonprogress_entrances, nonprogress_exits = self.split_nonprogress_entrances_and_exits(remaining_entrances, remaining_exits)
+    nonprogress_entrances, nonprogress_exits = self.split_nonprogress_entrances_and_exits(remaining_entrances, remaining_exits, terminal_exits)
     if nonprogress_entrances:
       for en in nonprogress_entrances:
         remaining_entrances.remove(en)
       for ex in nonprogress_exits:
         remaining_exits.remove(ex)
-      self.randomize_one_set_of_exits(nonprogress_entrances, nonprogress_exits, terminal_exits)
+      self.randomize_one_set_of_exits(nonprogress_entrances, nonprogress_exits, terminal_exits,
+                                      doing_banned=bool(self.banned_exits))
     
-    self.randomize_one_set_of_exits(remaining_entrances, remaining_exits, terminal_exits)
+    self.randomize_one_set_of_exits(remaining_entrances, remaining_exits, terminal_exits, doing_banned=False)
   
   def check_if_one_exit_is_progress(self, exit: ZoneExit) -> bool:
     locs_for_exit = self.zone_exit_to_item_location_names[exit]
@@ -511,7 +512,7 @@ class EntranceRandomizer(BaseRandomizer):
     progress_locs = self.logic.filter_locations_for_progression(nonbanned_locs)
     return bool(progress_locs)
 
-  def split_nonprogress_entrances_and_exits(self, relevant_entrances: list[ZoneEntrance], relevant_exits: list[ZoneExit]):
+  def split_nonprogress_entrances_and_exits(self, relevant_entrances: list[ZoneEntrance], relevant_exits: list[ZoneExit], terminal_exits: list[ZoneExit]):
     # Splits the entrance and exit lists into two pairs: ones that should be considered nonprogress
     # on this seed (will never lead to any progress items) and ones that should be considered
     # potentially required.
@@ -572,7 +573,33 @@ class EntranceRandomizer(BaseRandomizer):
     
     num_island_entrances_needed = len(nonprogress_exits) - len(nonprogress_entrances)
     if num_island_entrances_needed > len(possible_island_entrances):
-      raise Exception("Not enough island entrances left to split entrances.")
+      num_nonprogress_entrances_needed = num_island_entrances_needed - len(possible_island_entrances)
+      # Without enough island entrances, we will have to place some nonprogress exits behind progress
+      # entrances. We want these to be terminal exits so that players do not need to traverse an
+      # entire nonprogress location to access another progress location.
+      promotable_exits = [ex for ex in terminal_exits if ex in nonprogress_exits]
+      # Avoid promoting bosses in required_bosses mode, to avoid painting
+      # ourselves in a corner when assigning their exits where possible
+      if self.options.required_bosses:
+        promotable_exits_without_bosses = [ex for ex in promotable_exits if not self.get_all_exits_nested_under(ex) & set(BOSS_EXITS)]
+        if len(promotable_exits_without_bosses) >= num_nonprogress_entrances_needed:
+          promotable_exits = promotable_exits_without_bosses
+        else:
+          num_promoted_boss_exits = num_nonprogress_entrances_needed - len(promotable_exits_without_bosses)
+          promotable_boss_exits = [ex for ex in promotable_exits if set(BOSS_EXITS) & self.get_all_exits_nested_under(ex)]
+          self.rng.shuffle(promotable_boss_exits)
+
+          promotable_exits = promotable_exits_without_bosses + promotable_boss_exits[0:num_promoted_boss_exits]
+
+      if num_nonprogress_entrances_needed > len(promotable_exits):
+        raise Exception("Not enough entrances left to split entrances.")
+
+      self.rng.shuffle(promotable_exits)
+      promoted_nonprogress_exits = promotable_exits[0:num_nonprogress_entrances_needed]
+      num_island_entrances_needed -= len(promoted_nonprogress_exits)
+      for ex in promoted_nonprogress_exits:
+        nonprogress_exits.remove(ex)
+
     for i in range(num_island_entrances_needed):
       # Note: relevant_entrances is already shuffled, so we can just take the first result from
       # possible_island_entrances and it's the same as picking one randomly.
@@ -583,13 +610,9 @@ class EntranceRandomizer(BaseRandomizer):
     
     return nonprogress_entrances, nonprogress_exits
   
-  def randomize_one_set_of_exits(self, relevant_entrances: list[ZoneEntrance], relevant_exits: list[ZoneExit], terminal_exits: list[ZoneExit]):
+  def randomize_one_set_of_exits(self, relevant_entrances: list[ZoneEntrance], relevant_exits: list[ZoneExit], terminal_exits: list[ZoneExit], doing_banned: bool):
     remaining_entrances = relevant_entrances.copy()
     remaining_exits = relevant_exits.copy()
-    
-    doing_banned = False
-    if any(ex in self.banned_exits for ex in relevant_exits):
-      doing_banned = True
     
     if self.options.required_bosses and not doing_banned:
       # Prioritize entrances that share an island with an entrance randomized to lead into a
