@@ -616,21 +616,27 @@ class EntranceRandomizer(BaseRandomizer):
   def randomize_one_set_of_exits(self, relevant_entrances: list[ZoneEntrance], relevant_exits: list[ZoneExit], terminal_exits: list[ZoneExit], doing_banned: bool):
     remaining_entrances = relevant_entrances.copy()
     remaining_exits = relevant_exits.copy()
-    
-    if self.options.required_bosses and not doing_banned:
-      # Prioritize entrances that share an island with an entrance randomized to lead into a
-      # required bosses mode banned dungeon. (e.g. DRI, Pawprint, Outset, TotG sector.)
-      # This is because we need to prevent these islands from having a required boss or anything
-      # that could potentially lead to a required boss, and if we don't do this first we can get
-      # backed into a corner where there is no other option left.
+
+    if self.options.required_bosses:
       entrances_not_on_unique_islands = []
-      for zone_entrance in relevant_entrances:
-        if zone_entrance.is_nested:
-          continue
-        if zone_entrance.island_name in self.islands_with_a_banned_dungeon:
-          # This island was already used on a previous call to randomize_one_set_of_exits.
-          entrances_not_on_unique_islands.append(zone_entrance)
-          continue
+      if not doing_banned:
+        # Prioritize entrances that share an island with an entrance randomized to lead into a
+        # required bosses mode banned dungeon. (e.g. DRI, Pawprint, Outset, TotG sector.)
+        # This is because we need to prevent these islands from having a required boss or anything
+        # that could potentially lead to a required boss, and if we don't do this first we can get
+        # backed into a corner where there is no other option left.
+        entrances_not_on_unique_islands = [
+          en for en in relevant_entrances
+          if en.island_name in self.islands_with_a_banned_dungeon
+        ]
+      else:
+        # Prioritize entrances that share an island with an entrance randomized
+        # to lead into a progression dungeon, since we won't be able to place a
+        # banned dungeon, reducing our options
+        entrances_not_on_unique_islands = [
+          en for en in relevant_entrances
+          if en.island_name in self.islands_with_a_required_dungeon
+        ]
       for zone_entrance in entrances_not_on_unique_islands:
         remaining_entrances.remove(zone_entrance)
       remaining_entrances = entrances_not_on_unique_islands + remaining_entrances
