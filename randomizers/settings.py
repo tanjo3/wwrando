@@ -1,4 +1,5 @@
 from logic.item_types import DUNGEON_NONPROGRESS_ITEMS
+from logic.logic import Logic, TooFewProgressionLocationsError
 
 from randomizers.base_randomizer import BaseRandomizer
 
@@ -68,6 +69,20 @@ class SettingsRandomizer(BaseRandomizer):
     return self.options.randomize_settings
 
   def _randomize(self):
+    for _ in range(3):
+      settings_dict = self.select_settings()
+      self.ensure_valid_settings(settings_dict)
+      for opt,val in settings_dict.items():
+        setattr(self.options, opt, val)
+      self.rando.starting_items = self.rando.build_starting_items_from_options()
+      try:
+        self.check_for_valid_seed()
+        break
+      except TooFewProgressionLocationsError:
+        # Rerolling will use the already-advanced state of the rng and thus give us a new set of settings
+        continue
+
+  def select_settings(self):
     settings_dict = {
       "starting_gear": ["Telescope", "Ballad of Gales", "Song of Passing"],
     }
@@ -91,12 +106,7 @@ class SettingsRandomizer(BaseRandomizer):
       else:
         chosen_option = self.rng.choices(values, weights=weights)[0]
         settings_dict[option_name] = chosen_option
-    
-    self.ensure_valid_settings(settings_dict)
-
-    for opt,val in settings_dict.items():
-      setattr(self.options, opt, val)
-    self.rando.starting_items = self.rando.build_starting_items_from_options()
+    return settings_dict
 
   def _save():
     # This randomizer only modifies behavior of other randomizers, and doesn't change the seed by itself
@@ -109,3 +119,8 @@ class SettingsRandomizer(BaseRandomizer):
     # wwr_ui.randomizer_window.WWRandomizerWindow.ensure_valid_combination_of_options
     if not settings["progression_dungeons"]:
       settings["required_bosses"] = False
+
+  def check_for_valid_seed(self):
+    logic_for_progression_items = Logic(self.rando)
+    logic_for_progression_items.initialize_from_randomizer_state()
+    logic_for_progression_items.check_enough_progression_locations()
