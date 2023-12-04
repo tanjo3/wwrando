@@ -633,7 +633,7 @@ class EntranceRandomizer(BaseRandomizer):
         # backed into a corner where there is no other option left.
         entrances_not_on_unique_islands = [
           en for en in relevant_entrances
-          if en.island_name in self.islands_with_a_banned_dungeon
+          if (outer_entr := self.get_outermost_entrance_for_entrance(en)) and outer_entr.island_name in self.islands_with_a_banned_dungeon
         ]
       else:
         # Prioritize entrances that share an island with an entrance randomized
@@ -641,7 +641,7 @@ class EntranceRandomizer(BaseRandomizer):
         # banned dungeon, reducing our options
         entrances_not_on_unique_islands = [
           en for en in relevant_entrances
-          if en.island_name in self.islands_with_a_required_dungeon
+          if (outer_entr := self.get_outermost_entrance_for_entrance(en)) and outer_entr.island_name in self.islands_with_a_required_dungeon
         ]
       for zone_entrance in entrances_not_on_unique_islands:
         remaining_entrances.remove(zone_entrance)
@@ -751,12 +751,12 @@ class EntranceRandomizer(BaseRandomizer):
       self.done_entrances_to_exits[zone_entrance] = zone_exit
       self.done_exits_to_entrances[zone_exit] = zone_entrance
       
-      if zone_exit in self.banned_exits and zone_entrance.island_name is not None:
+      if zone_exit in self.banned_exits and self.get_outermost_entrance_for_entrance(zone_entrance) is not None:
         # Keep track of which islands have a required bosses mode banned dungeon to avoid marker overlap.
         if zone_exit in DUNGEON_EXITS + BOSS_EXITS:
           # We only keep track of dungeon exits and boss exits, not miniboss exits.
           # Banned miniboss exits can share an island with required dungeons/bosses.
-          self.islands_with_a_banned_dungeon.add(zone_entrance.island_name)
+          self.islands_with_a_banned_dungeon.add(self.get_outermost_entrance_for_entrance(zone_entrance).island_name)
   
   def finalize_all_randomized_sets_of_entrances(self):
     non_terminal_exits = []
