@@ -191,6 +191,9 @@ SECRET_CAVE_ENTRANCE_NAMES_WITH_NO_REQUIREMENTS = [
   "Secret Cave Entrance on Pawprint Isle",
   "Secret Cave Entrance on Cliff Plateau Isles",
 ]
+FAIRY_FOUNTAIN_ENTRANCE_NAMES_WITH_NO_REQUIREMENTS = [
+  "Fairy Fountain Entrance on Northern Fairy Island",
+]
 
 DUNGEON_EXIT_NAMES_WITH_NO_REQUIREMENTS = [
   "Dragon Roost Cavern",
@@ -200,9 +203,13 @@ PUZZLE_SECRET_CAVE_EXIT_NAMES_WITH_NO_REQUIREMENTS = [
   "Ice Ring Isle Secret Cave",
   "Bird's Peak Rock Secret Cave", # Technically this has requirements, but it's just Wind Waker+Wind's Requiem.
   "Diamond Steppe Island Warp Maze Cave",
+  "Cliff Plateau Isles Inner Cave",
 ]
 COMBAT_SECRET_CAVE_EXIT_NAMES_WITH_NO_REQUIREMENTS = [
   "Rock Spire Isle Secret Cave",
+]
+FAIRY_FOUNTAIN_EXIT_NAMES_WITH_NO_REQUIREMENTS = [ # All of them once you're inside
+  ex.unique_name for ex in FAIRY_FOUNTAIN_EXITS
 ]
 
 ENTRANCE_RANDOMIZABLE_ITEM_LOCATION_TYPES = [
@@ -327,6 +334,8 @@ class EntranceRandomizer(BaseRandomizer):
         or self.options.progression_combat_secret_caves \
         or self.options.progression_savage_labyrinth:
       self.entrance_names_with_no_requirements += SECRET_CAVE_ENTRANCE_NAMES_WITH_NO_REQUIREMENTS
+    if self.options.progression_great_fairies:
+      self.entrance_names_with_no_requirements += FAIRY_FOUNTAIN_ENTRANCE_NAMES_WITH_NO_REQUIREMENTS
     
     if self.options.progression_dungeons:
       self.exit_names_with_no_requirements += DUNGEON_EXIT_NAMES_WITH_NO_REQUIREMENTS
@@ -334,6 +343,8 @@ class EntranceRandomizer(BaseRandomizer):
       self.exit_names_with_no_requirements += PUZZLE_SECRET_CAVE_EXIT_NAMES_WITH_NO_REQUIREMENTS
     if self.options.progression_combat_secret_caves:
       self.exit_names_with_no_requirements += COMBAT_SECRET_CAVE_EXIT_NAMES_WITH_NO_REQUIREMENTS
+    if self.options.progression_great_fairies:
+      self.exit_names_with_no_requirements += FAIRY_FOUNTAIN_EXIT_NAMES_WITH_NO_REQUIREMENTS
     # No need to check progression_savage_labyrinth, since neither of the items inside Savage have no requirements.
     
     self.nesting_enabled = any([
@@ -447,6 +458,11 @@ class EntranceRandomizer(BaseRandomizer):
   def select_safety_entrance(self):
     self.safety_entrance = None
     if not self.rando.dungeons_and_caves_only_start:
+      return
+    nonrandomized_entrances, _nonrandomized_exits = self.get_nonrandomized_entrances()
+    if any(self.entrance_connections[en] in self.exit_names_with_no_requirements 
+           for en in {en.entrance_name for en in nonrandomized_entrances} & set(self.entrance_names_with_no_requirements)):
+      # There's a nonrandomized initially accessible entrance, we don't need a randomized safety entrance
       return
 
     possible_safety_entrances = []
