@@ -304,9 +304,9 @@ class EntranceRandomizer(BaseRandomizer):
     self.done_entrances_to_exits: dict[ZoneEntrance, ZoneExit] = {}
     self.done_exits_to_entrances: dict[ZoneExit, ZoneEntrance] = {}
     
-    for entrance_name, exit_name in self.entrance_connections.items():
-      zone_entrance = ZoneEntrance.all[entrance_name]
-      zone_exit = ZoneExit.all[exit_name]
+    fixed_entrances, _fixed_exits = self.get_nonrandomized_entrances()
+    for zone_entrance in fixed_entrances:
+      zone_exit = ZoneExit.all[self.entrance_connections[zone_entrance.entrance_name]]
       self.done_entrances_to_exits[zone_entrance] = zone_exit
       self.done_exits_to_entrances[zone_exit] = zone_entrance
     
@@ -370,6 +370,7 @@ class EntranceRandomizer(BaseRandomizer):
   
   def _randomize(self):
     self.init_banned_exits()
+    self.select_safety_entrance()
     for relevant_entrances, relevant_exits in self.get_all_entrance_sets_to_be_randomized():
       self.randomize_one_set_of_entrances(relevant_entrances, relevant_exits)
     
@@ -442,40 +443,30 @@ class EntranceRandomizer(BaseRandomizer):
           self.islands_with_a_banned_dungeon.add(en.island_name)
         elif self.entrance_connections[en.entrance_name] in self.rando.boss_reqs.required_dungeons:
           self.islands_with_a_required_dungeon.add(en.island_name)
+
+  def select_safety_entrance(self):
+    self.safety_entrance = None
+    if not self.rando.dungeons_and_caves_only_start:
+      return
+
+    possible_safety_entrances = []
+    # If the player can't access any locations at the start besides dungeon/cave entrances, we choose an entrance with no requirements that will be the first place the player goes.
+    # We will make this entrance lead to a dungeon/cave with no requirements so the player can actually get an item at the start.
+    if not self.rando.dungeons_only_start:
+      possible_safety_entrances += SECRET_CAVE_ENTRANCES
+    if not self.options.required_bosses or "Gohma" in self.rando.boss_reqs.required_bosses:
+      # In dungeons only start we've guaranteed DRC to be the initial dungeon in the boss_reqs randomizer
+      # So that ensures we have at least one possible safety entrance
+      possible_safety_entrances += DUNGEON_ENTRANCES
+
+    possible_safety_entrances = [
+      e for e in possible_safety_entrances
+      if e.entrance_name in self.entrance_names_with_no_requirements
+    ]
+    self.safety_entrance = self.rng.choice(possible_safety_entrances)
     
   def randomize_one_set_of_entrances(self, relevant_entrances: list[ZoneEntrance], relevant_exits: list[ZoneExit]):
-    for zone_entrance in relevant_entrances:
-      del self.done_entrances_to_exits[zone_entrance]
-    for zone_exit in relevant_exits:
-      del self.done_exits_to_entrances[zone_exit]
-    
-    doing_dungeons = False
-    doing_caves = False
-    if any(ex in DUNGEON_EXITS for ex in relevant_exits):
-      doing_dungeons = True
-    if any(ex in SECRET_CAVE_EXITS for ex in relevant_exits):
-      doing_caves = True
-    
     self.rng.shuffle(relevant_entrances)
-    
-    doing_progress_entrances_for_dungeons_and_caves_only_start = False
-    if self.rando.dungeons_and_caves_only_start:
-      if doing_dungeons and self.options.progression_dungeons:
-        doing_progress_entrances_for_dungeons_and_caves_only_start = True
-      if doing_caves and (self.options.progression_puzzle_secret_caves \
-          or self.options.progression_combat_secret_caves \
-          or self.options.progression_savage_labyrinth):
-        doing_progress_entrances_for_dungeons_and_caves_only_start = True
-    
-    self.safety_entrance = None
-    if doing_progress_entrances_for_dungeons_and_caves_only_start:
-      # If the player can't access any locations at the start besides dungeon/cave entrances, we choose an entrance with no requirements that will be the first place the player goes.
-      # We will make this entrance lead to a dungeon/cave with no requirements so the player can actually get an item at the start.
-      possible_safety_entrances = [
-        e for e in relevant_entrances
-        if e.entrance_name in self.entrance_names_with_no_requirements
-      ]
-      self.safety_entrance = self.rng.choice(possible_safety_entrances)
     
     # We calculate which exits are terminal (the end of a nested chain) per-set instead of for all
     # entrances. This is so that, for example, Ice Ring Isle counts as terminal when its inner cave
@@ -492,7 +483,11 @@ class EntranceRandomizer(BaseRandomizer):
     remaining_entrances = relevant_entrances.copy()
     remaining_exits = relevant_exits.copy()
     
-    nonprogress_entrances, nonprogress_exits = self.split_nonprogress_entrances_and_exits(remaining_entrances, remaining_exits, terminal_exits)
+    if relevant_entrances == [self.safety_entrance]:
+      nonprogress_entrances, nonprogress_exits = [], [ex for ex in relevant_exits if self.check_if_one_exit_is_progress(ex)]
+    else:
+      nonprogress_entrances, nonprogress_exits = self.split_nonprogress_entrances_and_exits(remaining_entrances, remaining_exits, terminal_exits)
+
     if nonprogress_entrances:
       for en in nonprogress_entrances:
         remaining_entrances.remove(en)
@@ -561,19 +556,6 @@ class EntranceRandomizer(BaseRandomizer):
         nonprogress_entrances.append(ff_boss_entrance)
         possible_island_entrances.remove(ff_boss_entrance)
     
-    if self.safety_entrance is not None:
-      # We do need to exclude the safety_entrance from being considered, as otherwise the item rando
-      # would have nowhere to put items at the start of the seed.
-      possible_island_entrances.remove(self.safety_entrance)
-      if self.options.required_bosses:
-        # If we're in required bosses mode, also exclude any other entrances one the same island as
-        # the safety entrance so that we don't risk getting a banned dungeon and a required dungeon
-        # on the same island.
-        possible_island_entrances = [
-          en for en in possible_island_entrances
-          if en.island_name != self.safety_entrance.island_name
-        ]
-    
     num_island_entrances_needed = len(nonprogress_exits) - len(nonprogress_entrances)
     if num_island_entrances_needed > len(possible_island_entrances):
       num_nonprogress_entrances_needed = num_island_entrances_needed - len(possible_island_entrances)
@@ -640,12 +622,6 @@ class EntranceRandomizer(BaseRandomizer):
       for zone_entrance in entrances_not_on_unique_islands:
         remaining_entrances.remove(zone_entrance)
       remaining_entrances = entrances_not_on_unique_islands + remaining_entrances
-    
-    if self.safety_entrance is not None and self.safety_entrance in remaining_entrances:
-      # In order to avoid using up all dungeons/caves with no requirements, we have to do this
-      # entrance first, so move it to the start of the list.
-      remaining_entrances.remove(self.safety_entrance)
-      remaining_entrances.insert(0, self.safety_entrance)
     
     while remaining_entrances:
       # Filter out boss entrances that aren't yet accessible from the sea.
@@ -965,11 +941,26 @@ class EntranceRandomizer(BaseRandomizer):
     mix_entrances = self.options.mix_entrances
     any_dungeons = dungeons or minibosses or bosses
     any_non_dungeons = secret_caves or inner_caves or fountains
-    
+
     if mix_entrances == EntranceMixMode.SEPARATE_DUNGEONS and any_dungeons and any_non_dungeons:
+      if self.safety_entrance is not None:
+        if self.safety_entrance.entrance_name in DUNGEON_ENTRANCE_NAMES_WITH_NO_REQUIREMENTS:
+          _, exits = self.get_one_entrance_set(dungeons=dungeons, minibosses=minibosses, bosses=bosses)
+          yield ([self.safety_entrance], exits)
+        else:
+          _, exits = self.get_one_entrance_set(caves=secret_caves, inner_caves=inner_caves, fountains=fountains)
+          yield ([self.safety_entrance], exits)
+
       yield self.get_one_entrance_set(dungeons=dungeons, minibosses=minibosses, bosses=bosses)
       yield self.get_one_entrance_set(caves=secret_caves, inner_caves=inner_caves, fountains=fountains)
     elif (any_dungeons or any_non_dungeons) and mix_entrances in [EntranceMixMode.SEPARATE_DUNGEONS, EntranceMixMode.MIX_DUNGEONS]:
+      if self.safety_entrance is not None:
+        _, exits = self.get_one_entrance_set(
+          dungeons=dungeons, minibosses=minibosses, bosses=bosses,
+          caves=secret_caves, inner_caves=inner_caves, fountains=fountains,
+        )
+        yield ([self.safety_entrance], exits)
+
       yield self.get_one_entrance_set(
         dungeons=dungeons, minibosses=minibosses, bosses=bosses,
         caves=secret_caves, inner_caves=inner_caves, fountains=fountains,
@@ -998,8 +989,38 @@ class EntranceRandomizer(BaseRandomizer):
     if fountains:
       relevant_entrances += FAIRY_FOUNTAIN_ENTRANCES
       relevant_exits += FAIRY_FOUNTAIN_EXITS
+    if self.safety_entrance is not None and self.safety_entrance in relevant_entrances:
+      # The safety entrance is pre-assigned to ensure it is a progression location
+      relevant_entrances.remove(self.safety_entrance)
+      if self.safety_entrance in self.done_entrances_to_exits and self.done_entrances_to_exits[self.safety_entrance] in relevant_exits:
+        relevant_exits.remove(self.done_entrances_to_exits[self.safety_entrance])
+
     return relevant_entrances, relevant_exits
   
+  def get_nonrandomized_entrances(self):
+    nonrandom_entrances: list[ZoneEntrance] = []
+    nonrandom_exits: list[ZoneExit] = []
+    if not self.options.randomize_dungeon_entrances:
+      nonrandom_entrances += DUNGEON_ENTRANCES
+      nonrandom_exits += DUNGEON_EXITS
+    if not self.options.randomize_miniboss_entrances:
+      nonrandom_entrances += MINIBOSS_ENTRANCES
+      nonrandom_exits += MINIBOSS_EXITS
+    if not self.options.randomize_boss_entrances:
+      nonrandom_entrances += BOSS_ENTRANCES
+      nonrandom_exits += BOSS_EXITS
+    if not self.options.randomize_secret_cave_entrances:
+      nonrandom_entrances += SECRET_CAVE_ENTRANCES
+      nonrandom_exits += SECRET_CAVE_EXITS
+    if not self.options.randomize_secret_cave_inner_entrances:
+      nonrandom_entrances += SECRET_CAVE_INNER_ENTRANCES
+      nonrandom_exits += SECRET_CAVE_INNER_EXITS
+    if not self.options.randomize_fairy_fountain_entrances:
+      nonrandom_entrances += FAIRY_FOUNTAIN_ENTRANCES
+      nonrandom_exits += FAIRY_FOUNTAIN_EXITS
+
+    return nonrandom_entrances, nonrandom_exits
+
   def get_outermost_entrance_for_exit(self, zone_exit: ZoneExit):
     """ Unrecurses nested dungeons to determine what the outermost (island) entrance is for a given exit."""
     zone_entrance = self.done_exits_to_entrances[zone_exit]

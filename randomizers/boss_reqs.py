@@ -86,8 +86,15 @@ class RequiredBossesRandomizer(BaseRandomizer):
       raise Exception("Number of boss item locations is incorrect: " + ", ".join(possible_boss_item_locations))
     if num_required_bosses > 6 or num_required_bosses < 1:
       raise Exception(f"Number of required bosses is invalid: {len(num_required_bosses)}")
-    
-    self.required_boss_item_locations = self.rng.sample(possible_boss_item_locations, num_required_bosses)
+
+    if self.rando.dungeons_only_start:
+      # In dungeons-only start, DRC has to be a progression dungeon since it's the safety entrance/exit.
+      # In randomized dungeon entrances, it should be possible to make TotG or FW also be a safety
+      # entrance but the item randomizer isn't plumbed for that yet (key logic needs to take it into account)
+      self.required_boss_item_locations = ["Dragon Roost Cavern - Gohma Heart Container"]
+      num_required_bosses -= 1
+
+    self.required_boss_item_locations += self.rng.sample(possible_boss_item_locations, num_required_bosses)
     
     for location_name in possible_boss_item_locations:
       assert "Boss" in self.logic.item_locations[location_name]["Types"]
