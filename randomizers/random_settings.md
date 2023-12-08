@@ -61,31 +61,11 @@ Below are the weights for the randomized settings. If only one weight is listed,
 \* *If **Dungeons** are on, then the weight for **Skip Boss Rematches** is set to 100%*.
 
 ## Additional Starting Items
-For starting items, you will always start with the Telescope, Ballad of Gales, and Song of Passing. Depending on the value of _Number of Starting Items_, additional weighted pulls (without replacement) from the following table with be made.
+For starting items, you will always start with the Telescope, Ballad of Gales, and Song of Passing. Depending on the value of _Number of Starting Items_, additional starting items will be added to the pool.
 
-**_Importantly_**, the pool of starting items is dynamically modified based on the settings that were randomly chosen. For every option in the starting item pool, if it contains only items with **_no_** logical implications in the seed, that option is removed and its weight is evenly distributed among the remaining options. For example, if **Spoils Trading** is not on, _Spoils Bag_ is removed from the starting items pool and its weight is redistributed.
+Almost all progression items can be added as a starting item, with a few exceptions:
+* Triforce shards cannot be random starting items (but the number of starting triforce shards is still randomized according to the table above)
+* Swords can only be a random starting item when starting with the Hero's Sword
+* Delivery bag items can only be a random starting item if you already have the delivery bag (in random settings, that's only if >1 starting item and the delivery bag is also one of them)
 
-|              **Starting Item(s)**              	| **Weight** 	|
-|:----------------------------------------------:	|:----------:	|
-|            **Progressive Picto Box**           	|    5.60%   	|
-|                 **Spoils Bag**                 	|    5.60%   	|
-|               **Grappling Hook**               	|    5.60%   	|
-|               **Progressive Bow**              	|    5.60%   	|
-|               **Power Bracelets**              	|    5.60%   	|
-|                 **Iron Boots**                 	|    5.60%   	|
-|                  **Bait Bag**                  	|    5.60%   	|
-|                  **Boomerang**                 	|    5.60%   	|
-|                  **Hookshot**                  	|    5.60%   	|
-|                    **Bombs**                   	|    5.60%   	|
-|                **Skull Hammer**                	|    5.60%   	|
-|                  **Deku Leaf**                 	|    5.60%   	|
-|             **Progressive Shield**             	|    5.60%   	|
-|                **Empty Bottle**                	|    5.60%   	|
-|              **Ghost Ship Chart**              	|    5.60%   	|
-|          **Progressive Magic Meter**           	|    5.60%   	|
-| **Din's Pearl, Farore's Pearl, Nayru's Pearl** 	|    5.60%   	|
-|                **Delivery Bag**                	|    1.16%   	|
-|          **Delivery Bag, Note to Mom**         	|    0.91%   	|
-|        **Delivery Bag, Maggie's Letter**       	|    0.91%   	|
-|        **Delivery Bag, Moblin's Letter**       	|    0.91%   	|
-|          **Delivery Bag, Cabana Deed**         	|    0.91%   	|
+Groups of items (Goddess Pearls, Tingle Statues) are counted as a single item if all of them are progression, and added all at once. If only some of them are progression (eg pearls when TotG entrance is not required) the subset that are progression are added individually
