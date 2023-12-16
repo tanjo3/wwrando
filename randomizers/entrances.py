@@ -347,6 +347,14 @@ class EntranceRandomizer(BaseRandomizer):
       self.exit_names_with_no_requirements += FAIRY_FOUNTAIN_EXIT_NAMES_WITH_NO_REQUIREMENTS
     # No need to check progression_savage_labyrinth, since neither of the items inside Savage have no requirements.
     
+    self.done_entrances_to_exits = {}
+    self.done_exits_to_entrances = {}
+    fixed_entrances, _fixed_exits = self.get_nonrandomized_entrances()
+    for zone_entrance in fixed_entrances:
+      zone_exit = ZoneExit.all[self.entrance_connections[zone_entrance.entrance_name]]
+      self.done_entrances_to_exits[zone_entrance] = zone_exit
+      self.done_exits_to_entrances[zone_exit] = zone_entrance
+
     self.nesting_enabled = any([
       self.options.randomize_miniboss_entrances,
       self.options.randomize_boss_entrances,
