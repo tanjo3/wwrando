@@ -61,6 +61,7 @@ DEFAULT_WEIGHTS = {
   "hint_placement": [("fishmen_hints", 0), ("hoho_hints", 10), ("korl_hints", 80), ("stone_tablet_hints", 10)],
   "num_extra_starting_items": [(0, 25), (1, 40), (2, 25), (3, 10)],
   "start_with_maps_and_compasses": [(True, 80), (False, 20)],
+  "trap_chests": [(True, 50), (False, 50)],
 }
 
 class SettingsRandomizer(BaseRandomizer):
