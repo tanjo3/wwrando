@@ -113,6 +113,22 @@ class SettingsRandomizer(BaseRandomizer):
     # This randomizer only modifies behavior of other randomizers, and doesn't change the seed by itself
     pass
 
+  @property
+  def progress_randomize_duration_weight(self) -> int:
+    return 1
+  
+  @property
+  def progress_save_duration_weight(self) -> int:
+    return 0
+  
+  @property
+  def progress_randomize_text(self) -> str:
+    return "Randomizing settings..."
+  
+  @property
+  def progress_save_text(self) -> str:
+    return ""
+  
   @staticmethod
   def ensure_valid_settings(settings):
     # Disable some invalid combinations of settings to maximize likelihood that
