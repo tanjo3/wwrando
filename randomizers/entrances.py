@@ -463,6 +463,21 @@ class EntranceRandomizer(BaseRandomizer):
         elif self.entrance_connections[en.entrance_name] in self.rando.boss_reqs.required_dungeons:
           self.islands_with_a_required_dungeon.add(en.island_name)
 
+  def can_be_safety_entrance(self, en: ZoneEntrance) -> bool:
+    if self.options.mix_entrances == EntranceMixMode.MIX_DUNGEONS:
+      return True
+    # Fortunately, init_from_randomizer_state already filters out entrance/exit
+    # without requirements so only in-logic entrances and exits are considered,
+    # so we just need to split them into 2 groups now, and only allow entrances
+    # to be safety if they're able to lead to progression
+    if en in DUNGEON_ENTRANCES:
+      return set(self.exit_names_with_no_requirements) & set(DUNGEON_EXIT_NAMES_WITH_NO_REQUIREMENTS)
+    else:
+      return (
+        set(self.exit_names_with_no_requirements) &
+        set(PUZZLE_SECRET_CAVE_EXIT_NAMES_WITH_NO_REQUIREMENTS + PUZZLE_SECRET_CAVE_EXIT_NAMES_WITH_NO_REQUIREMENTS + FAIRY_FOUNTAIN_EXIT_NAMES_WITH_NO_REQUIREMENTS)
+      )
+
   def select_safety_entrance(self):
     self.safety_entrance = None
     if not self.rando.dungeons_and_caves_only_start:
@@ -473,19 +488,11 @@ class EntranceRandomizer(BaseRandomizer):
       # There's a nonrandomized initially accessible entrance, we don't need a randomized safety entrance
       return
 
-    possible_safety_entrances = []
     # If the player can't access any locations at the start besides dungeon/cave entrances, we choose an entrance with no requirements that will be the first place the player goes.
     # We will make this entrance lead to a dungeon/cave with no requirements so the player can actually get an item at the start.
-    if not self.rando.dungeons_only_start:
-      possible_safety_entrances += SECRET_CAVE_ENTRANCES
-    if not self.options.required_bosses or "Gohma" in self.rando.boss_reqs.required_bosses:
-      # In dungeons only start we've guaranteed DRC to be the initial dungeon in the boss_reqs randomizer
-      # So that ensures we have at least one possible safety entrance
-      possible_safety_entrances += DUNGEON_ENTRANCES
-
     possible_safety_entrances = [
-      e for e in possible_safety_entrances
-      if e.entrance_name in self.entrance_names_with_no_requirements
+      ZoneEntrance.all[e] for e in self.entrance_names_with_no_requirements
+      if self.can_be_safety_entrance(ZoneEntrance.all[e])
     ]
     self.safety_entrance = self.rng.choice(possible_safety_entrances)
     
