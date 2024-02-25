@@ -11,12 +11,14 @@ import sys
 import traceback
 from enum import StrEnum
 from collections import Counter
+from dataclasses import fields
 
 from ruamel.yaml import YAML
+yaml = YAML(typ="safe")
 from ruamel.yaml.error import YAMLError
 yaml_dumper = YAML(typ="rt") # Use RoundTripDumper for pretty-formatted dumps.
 
-from options.wwrando_options import Options, SwordMode
+from options.wwrando_options import EntranceMixMode, Options, SwordMode, TrickDifficulty
 from randomizer import WWRandomizer, TooFewProgressionLocationsError, InvalidCleanISOError, PermalinkWrongVersionError, PermalinkWrongCommitError
 from version import VERSION
 from wwrando_paths import SETTINGS_PATH, ASSETS_PATH, IS_RUNNING_FROM_SOURCE, RANDO_ROOT_PATH
@@ -46,19 +48,6 @@ class WWRandomizerWindow(QMainWindow):
     self.profiling = self.cmd_line_args.profile
     self.auto_seed = self.cmd_line_args.autoseed
     
-    self.ui.add_gear.clicked.connect(self.add_to_starting_gear)
-    self.randomized_gear_model = QStringListModel()
-    self.randomized_gear_model.setStringList(DEFAULT_RANDOMIZED_ITEMS.copy())
-    
-    self.filtered_rgear = ModelFilterOut()
-    self.filtered_rgear.setSourceModel(self.randomized_gear_model)
-    
-    self.ui.randomized_gear.setModel(self.filtered_rgear)
-    self.ui.remove_gear.clicked.connect(self.remove_from_starting_gear)
-    self.starting_gear_model = QStringListModel()
-    self.starting_gear_model.setStringList(DEFAULT_STARTING_ITEMS.copy())
-    self.ui.starting_gear.setModel(self.starting_gear_model)
-    
     # We use an Options instance to represent the defaults instead of directly accessing each options default so that
     # default_factory works correctly.
     self.default_options = Options()
@@ -73,17 +62,15 @@ class WWRandomizerWindow(QMainWindow):
     
     self.cached_item_locations = Logic.load_and_parse_item_locations()
     
-    self.ui.starting_pohs.valueChanged.connect(self.update_health_label)
-    self.ui.starting_hcs.valueChanged.connect(self.update_health_label)
-    
     self.ui.clean_iso_path.editingFinished.connect(self.update_settings)
     self.ui.output_folder.editingFinished.connect(self.update_settings)
-    self.ui.seed.editingFinished.connect(self.update_settings)
+    self.ui.plando_file.editingFinished.connect(self.update_settings)
     self.ui.clean_iso_path_browse_button.clicked.connect(self.browse_for_clean_iso)
     self.ui.output_folder_browse_button.clicked.connect(self.browse_for_output_folder)
-    self.ui.permalink.textEdited.connect(self.permalink_modified)
+    self.ui.plando_file_browse_button.clicked.connect(self.browse_for_plando_file)
     
     self.ui.label_for_clean_iso_path.linkActivated.connect(self.show_clean_iso_explanation)
+    self.ui.label_for_plando_file.linkActivated.connect(self.show_plando_file_explanation)
     
     for option in Options.all():
       if option.name == "custom_colors":
@@ -103,47 +90,26 @@ class WWRandomizerWindow(QMainWindow):
       elif isinstance(widget, QSpinBox):
         widget.valueChanged.connect(self.update_settings)
       else:
-        raise Exception("Option widget is invalid: %s" % option.name)
+        continue
       
       # Install event filters to detect when the user hovers over each option.
       widget.installEventFilter(self)
       if label_for_option:
         label_for_option.installEventFilter(self)
     
-    self.ui.generate_seed_button.clicked.connect(self.generate_seed)
-    
     self.ui.randomize_button.clicked.connect(self.randomize)
-    self.ui.reset_settings_to_default.clicked.connect(self.reset_settings_to_default)
     self.ui.about_button.clicked.connect(self.open_about)
     
     self.set_option_description(None)
     
     self.update_settings()
-    self.update_health_label()
     
-    self.setWindowTitle("Wind Waker Randomizer %s" % VERSION)
+    self.setWindowTitle("The Wind Waker Archipelago Randomizer %s" % VERSION)
     
     icon_path = os.path.join(ASSETS_PATH, "icon.ico")
     self.setWindowIcon(QIcon(icon_path))
     
-    if self.cmd_line_args.seed:
-      self.ui.seed.setText(self.cmd_line_args.seed)
-    
-    if self.auto_seed:
-      self.generate_seed()
-    
-    if self.cmd_line_args.permalink:
-      self.ui.permalink.setText(self.cmd_line_args.permalink)
-      self.permalink_modified()
-    
     self.show()
-    
-    if not IS_RUNNING_FROM_SOURCE:
-      self.update_checker_thread = UpdateCheckerThread()
-      self.update_checker_thread.finished_checking_for_updates.connect(self.show_update_check_results)
-      self.update_checker_thread.start()
-    else:
-      self.ui.update_checker_label.setText("(Running from source, skipping release update check.)")
   
   def generate_seed(self):
     seed = seedgen.make_random_seed_name()
@@ -197,37 +163,34 @@ class WWRandomizerWindow(QMainWindow):
   def randomize(self):
     clean_iso_path = self.settings["clean_iso_path"].strip()
     output_folder = self.settings["output_folder"].strip()
+    plando_file = self.settings["plando_file"].strip()
     self.settings["clean_iso_path"] = clean_iso_path
     self.settings["output_folder"] = output_folder
+    self.settings["plando_file"] = plando_file
     self.ui.clean_iso_path.setText(clean_iso_path)
     self.ui.output_folder.setText(output_folder)
+    self.ui.plando_file.setText(plando_file)
     
-    if not self.settings["dry_run"] and not os.path.isfile(clean_iso_path):
+    if not os.path.isfile(clean_iso_path):
       QMessageBox.warning(self, "Vanilla ISO path not specified", "Must specify path to your vanilla Wind Waker ISO (North American version).")
       return
     if not os.path.isdir(output_folder):
       QMessageBox.warning(self, "No output folder specified", "Must specify a valid output folder for the randomized files.")
       return
-    
-    seed = self.settings["seed"]
-    seed = WWRandomizer.sanitize_seed(seed)
-    
-    if not seed:
-      self.generate_seed()
-      seed = self.settings["seed"]
-    
-    self.settings["seed"] = seed
-    self.ui.seed.setText(seed)
-    self.update_settings()
+    if not os.path.isfile(plando_file):
+      QMessageBox.warning(self, "No AP plando file specified", "Must specify a valid AP plando file.")
+      return
     
     options = self.get_all_options_from_widget_values()
+    
+    seed, locations_map, entrances_map = self.read_ap_plando_file(plando_file, options)
     
     options.custom_colors = self.ui.tab_player_customization.get_all_colors()
     
     self.progress_dialog = RandomizerProgressDialog(self, "Randomizing", "Initializing...")
     
     try:
-      rando = WWRandomizer(seed, clean_iso_path, output_folder, options, cmd_line_args=self.cmd_line_args)
+      rando = WWRandomizer(seed, clean_iso_path, output_folder, options, locations_map, entrances_map, cmd_line_args=self.cmd_line_args)
     except (TooFewProgressionLocationsError, InvalidCleanISOError) as e:
       error_message = str(e)
       self.randomization_failed(error_message)
@@ -257,7 +220,7 @@ class WWRandomizerWindow(QMainWindow):
     self.progress_dialog.reset()
     
     text = """Randomization complete.<br><br>
-      If you get stuck, check the progression spoiler log in the output folder."""
+      If you get stuck, check the Archipelago spoiler log for your room."""
     if self.randomizer_thread.randomizer.dry_run:
       text = """Randomization complete.<br><br>
       Note: You chose to do a dry run, meaning <u>no playable ISO was generated</u>.<br>
@@ -277,13 +240,6 @@ class WWRandomizerWindow(QMainWindow):
     
     if self.randomizer_thread is not None:
       self.randomizer_thread.terminate()
-      try:
-        self.randomizer_thread.randomizer.write_error_log(error_message)
-      except Exception as e:
-        # If an error happened when writing the error log just print it and then ignore it.
-        stack_trace = traceback.format_exc()
-        other_error_message = "Failed to write error log:\n" + str(e) + "\n\n" + stack_trace
-        print(other_error_message)
     
     self.randomizer_thread = None
     
@@ -325,7 +281,7 @@ class WWRandomizerWindow(QMainWindow):
         widget.setMinimum(option.minimum)
         widget.setMaximum(option.maximum)
       else:
-        raise Exception("Option widget is invalid: %s" % option.name)
+        continue
       
       # Make sure the initial values of all the GUI widgets match the defaults for the options.
       default_value = self.default_options[option.name]
@@ -372,8 +328,8 @@ class WWRandomizerWindow(QMainWindow):
       self.ui.clean_iso_path.setText(self.settings["clean_iso_path"])
     if "output_folder" in self.settings:
       self.ui.output_folder.setText(self.settings["output_folder"])
-    if "seed" in self.settings:
-      self.ui.seed.setText(self.settings["seed"])
+    if "plando_file" in self.settings:
+      self.ui.plando_file.setText(self.settings["plando_file"])
     
     for option in Options.all():
       if option.name in self.settings:
@@ -391,19 +347,14 @@ class WWRandomizerWindow(QMainWindow):
   def update_settings(self):
     self.settings["clean_iso_path"] = self.ui.clean_iso_path.text()
     self.settings["output_folder"] = self.ui.output_folder.text()
-    self.settings["seed"] = self.ui.seed.text()
+    self.settings["plando_file"] = self.ui.plando_file.text()
     
-    self.ensure_valid_combination_of_options()
     self.ui.tab_player_customization.disable_invalid_cosmetic_options()
     
     for option in Options.all():
       self.settings[option.name] = self.get_option_value(option.name)
     
     self.save_settings()
-    
-    self.encode_permalink()
-    
-    self.update_total_progress_locations()
   
   def update_total_progress_locations(self):
     options = self.get_all_options_from_widget_values()
@@ -484,6 +435,15 @@ class WWRandomizerWindow(QMainWindow):
       "conflicts, but Wind Waker mods that do not conflict with the randomizer can also be used."
     )
   
+  def show_plando_file_explanation(self):
+     QMessageBox.information(
+      self, "APTWW File",
+      "The APTWW file is necessary to randomize the game to be compatible with the Archipelago multiworld.\n\n" +
+      "Whoever generated the multiworld should have an output zip file. " +
+      "They should unzip that file to find a .aptww file for each player playing Wind Waker.\n\n" +
+      "Ask them for the .aptww file with your slot number and player name."
+    )
+  
   def browse_for_clean_iso(self):
     if self.settings["clean_iso_path"] and os.path.isfile(self.settings["clean_iso_path"]):
       default_dir = os.path.dirname(self.settings["clean_iso_path"])
@@ -506,6 +466,18 @@ class WWRandomizerWindow(QMainWindow):
     if not output_folder_path:
       return
     self.ui.output_folder.setText(output_folder_path)
+    self.update_settings()
+  
+  def browse_for_plando_file(self):
+    if self.settings["plando_file"] and os.path.isfile(self.settings["plando_file"]):
+      default_dir = os.path.dirname(self.settings["plando_file"])
+    else:
+      default_dir = None
+    
+    plando_file, selected_filter = QFileDialog.getOpenFileName(self, "Select APTWW file", default_dir, "APTWW File (*.aptww)")
+    if not plando_file:
+      return
+    self.ui.plando_file.setText(plando_file)
     self.update_settings()
   
   def get_option_from_widget(self, widget: QObject):
@@ -571,8 +543,6 @@ class WWRandomizerWindow(QMainWindow):
         model = model.sourceModel()
       model.sort(0)
       return [model.data(model.index(i, 0), Qt.ItemDataRole.DisplayRole) for i in range(model.rowCount())]
-    else:
-      print("Option widget is invalid: %s" % option_name)
     
     return None
   
@@ -622,8 +592,6 @@ class WWRandomizerWindow(QMainWindow):
           model = model.sourceModel()
         model.setStringList(new_value)
         model.sort(0)
-    else:
-      print("Option widget is invalid: %s" % option_name)
   
   def set_option_description(self, new_description):
     if new_description is None:
@@ -720,14 +688,52 @@ class WWRandomizerWindow(QMainWindow):
         # Hide certain options from the GUI (still accessible via settings.txt and permalinks).
         if self.get_option_value(option.name):
           widget.show()
+  
+  def read_ap_plando_file(self, plando_file, options):
+    with open(os.path.join(plando_file), "r") as f:
+      plando_file = yaml.load(f)
+    
+    seed = f"AP_{plando_file['Seed']}_P{plando_file['Slot']}"
+    
+    for field in fields(options):
+      if field.name in plando_file["Options"]:
+        value = plando_file["Options"][field.name]
+        
+        if field.type is int:
+          setattr(options, field.name, value)
+        elif field.type is bool:
+          setattr(options, field.name, bool(value))
+        elif field.type is SwordMode:
+          match value:
+            case 0: setattr(options, field.name, SwordMode.START_WITH_SWORD)
+            case 1: setattr(options, field.name, SwordMode.NO_STARTING_SWORD)
+            case 2: setattr(options, field.name, SwordMode.SWORDLESS)
+        elif field.type is EntranceMixMode:
+            match value:
+              case 0: setattr(options, field.name, EntranceMixMode.SEPARATE_DUNGEONS)
+              case 1: setattr(options, field.name, EntranceMixMode.MIX_DUNGEONS)
+        elif field.type is TrickDifficulty:
+            match value:
+              case 0: setattr(options, field.name, TrickDifficulty.NONE)
+              case 1: setattr(options, field.name, TrickDifficulty.NORMAL)
+              case 2: setattr(options, field.name, TrickDifficulty.HARD)
+              case 3: setattr(options, field.name, TrickDifficulty.VERY_HARD)
         else:
-          widget.hide()
+          print(f"Bad option: {field.name} = {value}")
+      else:
+        if field.name in ["randomized_gear", "starting_gear"]:
+          setattr(options, field.name, field.default_factory())
+        if getattr(options, field.name) is None:
+          setattr(options, field.name, field.default)
+    
+    return seed, plando_file["Locations"], plando_file["Entrances"]
   
   def open_about(self):
-    text = """Wind Waker Randomizer Version %s<br><br>
-      Created by LagoLunatic<br><br>
-      Report issues here:<br><a href=\"https://github.com/LagoLunatic/wwrando/issues\">https://github.com/LagoLunatic/wwrando/issues</a><br><br>
-      Source code:<br><a href=\"https://github.com/LagoLunatic/wwrando\">https://github.com/LagoLunatic/wwrando</a>""" % VERSION
+    text = """The Wind Waker Archipelago Randomizer Version %s<br><br>
+      Originally created by LagoLunatic, modified by tanjo3<br><br>
+      For instructions on how to set up a multiworld, see the <a href=\"https://github.com/tanjo3/tww_apworld/blob/master/docs/setup_en.md">setup guide</a>.<br>
+      Report issues in the Wind Waker thread in the Archipelago server.<br><br>
+      Source code:<br><a href=\"https://github.com/tanjo3/wwrando/tree/archipelago\">https://github.com/tanjo3/wwrando/tree/archipelago</a>""" % VERSION
     
     self.about_dialog = QMessageBox()
     self.about_dialog.setTextFormat(Qt.TextFormat.RichText)

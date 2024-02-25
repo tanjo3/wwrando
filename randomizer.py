@@ -88,7 +88,7 @@ class WWRandomizer:
   VALID_SEED_CHARACTERS = "-_'%%.%s%s" % (string.ascii_letters, string.digits)
   MAX_SEED_LENGTH = 42 # Limited by maximum length of game name in banner
   
-  def __init__(self, seed, clean_iso_path, randomized_output_folder, options: Options, cmd_line_args=None):
+  def __init__(self, seed, clean_iso_path, randomized_output_folder, options: Options, plando_locations: dict[str, str], plando_entrances: dict[str, str], cmd_line_args=None):
     self.fully_initialized = False
     
     options.validate()
@@ -97,7 +97,9 @@ class WWRandomizer:
     self.logs_output_folder = self.randomized_output_folder
     self.options = options
     self.seed = self.sanitize_seed(seed)
-    self.permalink = self.encode_permalink(self.seed, self.options)
+    self.plando_locations = plando_locations
+    self.plando_entrances = plando_entrances
+    self.permalink = None
     self.seed_hash = self.get_seed_hash()
     
     if cmd_line_args is None:
@@ -107,7 +109,7 @@ class WWRandomizer:
     self.dry_run = self.options.dry_run
     self.disassemble = cmd_line_args.disassemble
     self.export_disc_to_folder = cmd_line_args.exportfolder
-    self.no_logs = cmd_line_args.nologs
+    self.no_logs = True
     self.bulk_test = cmd_line_args.bulk
     if self.bulk_test:
       self.dry_run = True
@@ -177,25 +179,7 @@ class WWRandomizer:
         sys.exit(0)
     
     # Starting items. This list is read by the Logic when initializing your currently owned items list.
-    self.starting_items = [
-      "Wind Waker",
-      "Wind's Requiem",
-      "Boat's Sail",
-    ]
-    self.starting_items += self.options.starting_gear
-    
-    if self.options.sword_mode == SwordMode.START_WITH_SWORD:
-      self.starting_items.append("Progressive Sword")
-    # Add starting Triforce Shards.
-    num_starting_triforce_shards = self.options.num_starting_triforce_shards
-    for i in range(num_starting_triforce_shards):
-      self.starting_items.append("Triforce Shard %d" % (i+1))
-    
-    for i in range(self.options.starting_pohs):
-      self.starting_items.append("Piece of Heart")
-    
-    for i in range(self.options.starting_hcs):
-      self.starting_items.append("Heart Container")
+    self.starting_items = ["Boat's Sail"]
     
     
     self.custom_model_name = self.options.custom_player_model
@@ -216,36 +200,24 @@ class WWRandomizer:
     
     # This list's order is the order these randomizers will be called in.
     self.randomizers: list[BaseRandomizer] = [
-      self.charts,
+      # self.charts,
       # self.music,
-      self.boss_reqs,
+      # self.boss_reqs,
       self.entrances,
       self.starting_island,
       self.pigs,
       # Extra Starting Items must be randomized before items and enemies which depend on the
       # starting items list, but after bosses and entrances since it needs logic.
-      self.extra_start_items,
+      # self.extra_start_items,
       # Enemies must be randomized before items in order for the enemy logic to properly take into
       # account what items you do and don't start with.
       self.enemies,
       self.palettes,
       self.items,
-      self.hints,
+      # self.hints,
     ]
     
     self.logic.initialize_from_randomizer_state()
-    
-    num_progress_locations = self.logic.get_num_progression_locations()
-    max_required_bosses_banned_locations = self.logic.get_max_required_bosses_banned_locations()
-    self.all_randomized_progress_items = self.logic.unplaced_progress_items.copy()
-    if num_progress_locations - max_required_bosses_banned_locations < len(self.all_randomized_progress_items):
-      error_message = "Not enough progress locations to place all progress items.\n\n"
-      error_message += "Total progress items: %d\n" % len(self.all_randomized_progress_items)
-      error_message += "Progress locations with current options: %d\n" % num_progress_locations
-      if max_required_bosses_banned_locations > 0:
-        error_message += "Maximum Required Bosses Mode banned locations: %d\n" % max_required_bosses_banned_locations
-      error_message += "\nYou need to check more of the progress location options in order to give the randomizer enough space to place all the items."
-      raise TooFewProgressionLocationsError(error_message)
     
     # We need to determine if the user's selected options result in a dungeons-only-start.
     # Dungeons-only-start meaning that the only locations accessible at the start of the run are dungeon locations.
@@ -321,8 +293,8 @@ class WWRandomizer:
         patcher.apply_patch(self, "swordless")
         tweaks.update_text_for_swordless(self)
       tweaks.update_starting_gear(self, self.options.starting_gear)
-      if self.options.chest_type_matches_contents:
-        tweaks.replace_dark_wood_chest_texture(self)
+      # if self.options.chest_type_matches_contents:
+      #   tweaks.replace_dark_wood_chest_texture(self)
       if self.options.remove_title_and_ending_videos:
         tweaks.remove_title_and_ending_videos(self)
       if self.options.remove_music:
@@ -381,11 +353,6 @@ class WWRandomizer:
         yield("Saving randomized ISO...", progress_completed+int(percentage_done*9))
       progress_completed += 2000
     # print(f"{(time.perf_counter_ns()-start)//1_000_000:6d}: Saving ISO")
-    
-    yield("Writing logs...", progress_completed)
-    if not self.options.do_not_generate_spoiler_log:
-      self.write_spoiler_log()
-    self.write_non_spoiler_log()
   
   def apply_necessary_tweaks(self):
     patcher.apply_patch(self, "custom_data")
@@ -400,6 +367,7 @@ class WWRandomizer:
     tweaks.start_ship_at_outset(self)
     tweaks.fix_deku_leaf_model(self)
     tweaks.allow_all_items_to_be_field_items(self)
+    tweaks.fix_day_night_cycle(self)
     tweaks.remove_shop_item_forced_uniqueness_bit(self)
     tweaks.remove_forsaken_fortress_2_cutscenes(self)
     tweaks.make_items_progressive(self)
@@ -938,10 +906,10 @@ class WWRandomizer:
       self.gcm.changed_files[jpc_path] = jpc.data
     
     if self.export_disc_to_folder:
-      output_folder_path = os.path.join(self.randomized_output_folder, "WW Random %s" % self.seed)
+      output_folder_path = os.path.join(self.randomized_output_folder, "TWW %s" % self.seed)
       yield from self.gcm.export_disc_to_folder_with_changed_files(output_folder_path)
     else:
-      output_file_path = os.path.join(self.randomized_output_folder, "WW Random %s.iso" % self.seed)
+      output_file_path = os.path.join(self.randomized_output_folder, "TWW %s.iso" % self.seed)
       yield from self.gcm.export_disc_to_iso_with_changed_files(output_file_path)
   
   def convert_string_to_integer_md5(self, string):
@@ -1000,7 +968,7 @@ class WWRandomizer:
   def get_log_header(self):
     header = ""
     
-    header += "Wind Waker Randomizer Version %s\n" % VERSION
+    header += "The Wind Waker Archipelago Randomizer Version %s\n" % VERSION
     
     if self.permalink:
       header += "Permalink: %s\n" % self.permalink
@@ -1054,9 +1022,6 @@ class WWRandomizer:
   
   def write_spoiler_log(self):
     if self.no_logs:
-      if self.randomize_items:
-        # We still calculate progression spheres even if we're not going to write them anywhere to catch more errors in testing.
-        self.items.calculate_playthrough_progression_spheres()
       return
     
     spoiler_log = self.get_log_header()
