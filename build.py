@@ -6,7 +6,7 @@ import shutil
 
 from version import VERSION_WITHOUT_COMMIT
 
-base_name = "Wind Waker Randomizer"
+base_name = "The Wind Waker Archipelago Randomizer"
 
 import struct
 if (struct.calcsize("P") * 8) == 64:
