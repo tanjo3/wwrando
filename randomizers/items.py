@@ -36,6 +36,13 @@ class ItemRandomizer(BaseRandomizer):
     return "Saving items..."
   
   def _randomize(self):
+    for location_name in self.logic.remaining_item_locations:
+      if location_name in self.rando.plando_locations:
+        self.logic.done_item_locations[location_name] = "Green Rupee"
+      else:
+        self.logic.done_item_locations[location_name] = "Red Rupee"
+    return
+
     if not self.options.keylunacy:
       self.randomize_dungeon_items()
     

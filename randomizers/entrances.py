@@ -365,6 +365,14 @@ class EntranceRandomizer(BaseRandomizer):
     return "Saving entrances..."
   
   def _randomize(self):
+    entrances = {e.entrance_name: e for e in DUNGEON_ENTRANCES + MINIBOSS_ENTRANCES + BOSS_ENTRANCES + SECRET_CAVE_ENTRANCES + SECRET_CAVE_INNER_ENTRANCES + FAIRY_FOUNTAIN_ENTRANCES}
+    exits = {e.unique_name: e for e in DUNGEON_EXITS + MINIBOSS_EXITS + BOSS_EXITS + SECRET_CAVE_EXITS + SECRET_CAVE_INNER_EXITS + FAIRY_FOUNTAIN_EXITS}
+
+    for entrance, exit in self.rando.plando_entrances.items():
+      self.done_entrances_to_exits[entrances[entrance]] = exits[exit]
+      self.done_exits_to_entrances[exits[exit]] = entrances[entrance]
+    return
+     
     for relevant_entrances, relevant_exits in self.get_all_entrance_sets_to_be_randomized():
       self.randomize_one_set_of_entrances(relevant_entrances, relevant_exits)
     
