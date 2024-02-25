@@ -1,3 +1,4 @@
+from dataclasses import fields
 from PySide6.QtGui import *
 from PySide6.QtCore import *
 from PySide6.QtWidgets import *
@@ -11,8 +12,9 @@ import yaml
 import traceback
 from enum import StrEnum
 from collections import Counter
+from dataclasses import fields
 
-from options.wwrando_options import Options, SwordMode
+from options.wwrando_options import EntranceMixMode, Options, SwordMode, TrickDifficulty
 from randomizer import WWRandomizer, TooFewProgressionLocationsError, InvalidCleanISOError, PermalinkWrongVersionError, PermalinkWrongCommitError
 from version import VERSION
 from wwrando_paths import SETTINGS_PATH, ASSETS_PATH, IS_RUNNING_FROM_SOURCE
@@ -39,19 +41,6 @@ class WWRandomizerWindow(QMainWindow):
     self.profiling = self.cmd_line_args.profile
     self.auto_seed = self.cmd_line_args.autoseed
     
-    self.ui.add_gear.clicked.connect(self.add_to_starting_gear)
-    self.randomized_gear_model = QStringListModel()
-    self.randomized_gear_model.setStringList(DEFAULT_RANDOMIZED_ITEMS.copy())
-    
-    self.filtered_rgear = ModelFilterOut()
-    self.filtered_rgear.setSourceModel(self.randomized_gear_model)
-    
-    self.ui.randomized_gear.setModel(self.filtered_rgear)
-    self.ui.remove_gear.clicked.connect(self.remove_from_starting_gear)
-    self.starting_gear_model = QStringListModel()
-    self.starting_gear_model.setStringList(DEFAULT_STARTING_ITEMS.copy())
-    self.ui.starting_gear.setModel(self.starting_gear_model)
-    
     # We use an Options instance to represent the defaults instead of directly accessing each options default so that
     # default_factory works correctly.
     self.default_options = Options()
@@ -66,15 +55,12 @@ class WWRandomizerWindow(QMainWindow):
     
     self.cached_item_locations = Logic.load_and_parse_item_locations()
     
-    self.ui.starting_pohs.valueChanged.connect(self.update_health_label)
-    self.ui.starting_hcs.valueChanged.connect(self.update_health_label)
-    
     self.ui.clean_iso_path.editingFinished.connect(self.update_settings)
     self.ui.output_folder.editingFinished.connect(self.update_settings)
-    self.ui.seed.editingFinished.connect(self.update_settings)
+    self.ui.plando_file.editingFinished.connect(self.update_settings)
     self.ui.clean_iso_path_browse_button.clicked.connect(self.browse_for_clean_iso)
     self.ui.output_folder_browse_button.clicked.connect(self.browse_for_output_folder)
-    self.ui.permalink.textEdited.connect(self.permalink_modified)
+    self.ui.plando_file_browse_button.clicked.connect(self.browse_for_plando_file)
     
     self.ui.label_for_clean_iso_path.linkActivated.connect(self.show_clean_iso_explanation)
     
@@ -95,55 +81,19 @@ class WWRandomizerWindow(QMainWindow):
         pass
       elif isinstance(widget, QSpinBox):
         widget.valueChanged.connect(self.update_settings)
-      else:
-        raise Exception("Option widget is invalid: %s" % option.name)
-      
-      # Install event filters to detect when the user hovers over each option.
-      widget.installEventFilter(self)
-      if label_for_option:
-        label_for_option.installEventFilter(self)
-    
-    self.ui.generate_seed_button.clicked.connect(self.generate_seed)
     
     self.ui.randomize_button.clicked.connect(self.randomize)
-    self.ui.reset_settings_to_default.clicked.connect(self.reset_settings_to_default)
-    self.ui.about_button.clicked.connect(self.open_about)
     
     self.set_option_description(None)
     
     self.update_settings()
     
-    self.setWindowTitle("Wind Waker Randomizer %s" % VERSION)
+    self.setWindowTitle("AP The Wind Waker Randomizer Client %s" % VERSION)
     
     icon_path = os.path.join(ASSETS_PATH, "icon.ico")
     self.setWindowIcon(QIcon(icon_path))
     
-    if self.cmd_line_args.seed:
-      self.ui.seed.setText(self.cmd_line_args.seed)
-    
-    if self.auto_seed:
-      self.generate_seed()
-    
-    if self.cmd_line_args.permalink:
-      self.ui.permalink.setText(self.cmd_line_args.permalink)
-      self.permalink_modified()
-    
     self.show()
-    
-    if not IS_RUNNING_FROM_SOURCE:
-      self.update_checker_thread = UpdateCheckerThread()
-      self.update_checker_thread.finished_checking_for_updates.connect(self.show_update_check_results)
-      self.update_checker_thread.start()
-    else:
-      self.ui.update_checker_label.setText("(Running from source, skipping release update check.)")
-  
-  def generate_seed(self):
-    seed = seedgen.make_random_seed_name()
-    seed = WWRandomizer.sanitize_seed(seed)
-    
-    self.settings["seed"] = seed
-    self.ui.seed.setText(seed)
-    self.update_settings()
   
   def append_row(self, model: QAbstractListModel, value):
     model.insertRow(model.rowCount())
@@ -159,67 +109,51 @@ class WWRandomizerWindow(QMainWindow):
       source.model().removeRow(item.row())
       self.append_row(dest.model(), value)
   
-  def add_to_starting_gear(self):
-    self.move_selected_rows(self.ui.randomized_gear, self.ui.starting_gear)
-    self.ui.starting_gear.model().sort(0)
-    self.update_settings()
+  def append_row(self, model: QAbstractListModel, value):
+    model.insertRow(model.rowCount())
+    newrow = model.index(model.rowCount() - 1, 0)
+    model.setData(newrow, value)
   
-  def remove_from_starting_gear(self):
-    self.move_selected_rows(self.ui.starting_gear, self.ui.randomized_gear)
-    self.ui.randomized_gear.model().sourceModel().sort(0)
-    self.update_settings()
-  
-  def update_health_label(self):
-    pohs = self.ui.starting_pohs.value()
-    hcs = self.ui.starting_hcs.value() * 4
-    
-    health = hcs + pohs + 12
-    pieces = health % 4
-    
-    text = "Current Starting Health: %d hearts" % (health // 4) # full hearts
-    
-    if pieces != 0:
-      if pieces == 1: # grammar check
-        text += " and 1 piece"
-      else:
-        text += " and %d pieces" % pieces
-    
-    self.ui.current_health.setText(text)
+  def move_selected_rows(self, source: QListView, dest: QListView):
+    selection = source.selectionModel().selectedIndexes()
+    # Remove starting from the last so the previous indices remain valid
+    selection.sort(reverse = True, key = lambda x: x.row())
+    for item in selection:
+      value = item.data()
+      source.model().removeRow(item.row())
+      self.append_row(dest.model(), value)
   
   def randomize(self):
     clean_iso_path = self.settings["clean_iso_path"].strip()
     output_folder = self.settings["output_folder"].strip()
+    plando_file = self.settings["plando_file"].strip()
     self.settings["clean_iso_path"] = clean_iso_path
     self.settings["output_folder"] = output_folder
+    self.settings["plando_file"] = plando_file
     self.ui.clean_iso_path.setText(clean_iso_path)
     self.ui.output_folder.setText(output_folder)
+    self.ui.plando_file.setText(plando_file)
     
-    if not self.settings["dry_run"] and not os.path.isfile(clean_iso_path):
+    if not os.path.isfile(clean_iso_path):
       QMessageBox.warning(self, "Vanilla ISO path not specified", "Must specify path to your vanilla Wind Waker ISO (North American version).")
       return
     if not os.path.isdir(output_folder):
       QMessageBox.warning(self, "No output folder specified", "Must specify a valid output folder for the randomized files.")
       return
-    
-    seed = self.settings["seed"]
-    seed = WWRandomizer.sanitize_seed(seed)
-    
-    if not seed:
-      self.generate_seed()
-      seed = self.settings["seed"]
-    
-    self.settings["seed"] = seed
-    self.ui.seed.setText(seed)
-    self.update_settings()
+    if not os.path.isfile(plando_file):
+      QMessageBox.warning(self, "No AP plando file specified", "Must specify a valid AP plando file.")
+      return
     
     options = self.get_all_options_from_widget_values()
+
+    seed, locations_map, entrances_map = self.read_ap_plando_file(plando_file, options)
     
     options.custom_colors = self.ui.tab_player_customization.get_all_colors()
     
     self.progress_dialog = RandomizerProgressDialog(self, "Randomizing", "Initializing...")
     
     try:
-      rando = WWRandomizer(seed, clean_iso_path, output_folder, options, cmd_line_args=self.cmd_line_args)
+      rando = WWRandomizer(seed, clean_iso_path, output_folder, options, locations_map, entrances_map, cmd_line_args=self.cmd_line_args)
     except (TooFewProgressionLocationsError, InvalidCleanISOError) as e:
       error_message = str(e)
       self.randomization_failed(error_message)
@@ -249,7 +183,7 @@ class WWRandomizerWindow(QMainWindow):
     self.progress_dialog.reset()
     
     text = """Randomization complete.<br><br>
-      If you get stuck, check the progression spoiler log in the output folder."""
+      If you get stuck, check the Archipelago spoiler log for your room."""
     if self.randomizer_thread.randomizer.dry_run:
       text = """Randomization complete.<br><br>
       Note: You chose to do a dry run, meaning <u>no playable ISO was generated</u>.<br>
@@ -285,16 +219,6 @@ class WWRandomizerWindow(QMainWindow):
       error_message
     )
   
-  def show_update_check_results(self, new_version):
-    if not new_version:
-      self.ui.update_checker_label.setText("No new updates to the randomizer are available.")
-    elif new_version == "error":
-      self.ui.update_checker_label.setText("There was an error checking for updates.")
-    else:
-      new_text = "<b>Version %s of the randomizer is available!</b>" % new_version
-      new_text += " <a href=\"%s\">Click here</a> to go to the download page." % LATEST_RELEASE_DOWNLOAD_PAGE_URL
-      self.ui.update_checker_label.setText(new_text)
-  
   def initialize_option_widgets(self):
     for option in Options.all:
       if option.name == "custom_colors":
@@ -316,32 +240,10 @@ class WWRandomizerWindow(QMainWindow):
         assert issubclass(option.type, int)
         widget.setMinimum(option.minimum)
         widget.setMaximum(option.maximum)
-      else:
-        raise Exception("Option widget is invalid: %s" % option.name)
       
       # Make sure the initial values of all the GUI widgets match the defaults for the options.
       default_value = self.default_options[option.name]
       self.set_option_value(option.name, default_value)
-  
-  def reset_settings_to_default(self):
-    options = self.get_all_options_from_widget_values()
-    if options == self.default_options:
-      QMessageBox.information(self,
-        "Settings already default",
-        "You already have all the default randomization settings."
-      )
-      return
-    
-    for option in Options.all:
-      if option.name == "custom_colors":
-        self.ui.tab_player_customization.reset_color_selectors_to_model_default_colors()
-        continue
-      default_value = self.default_options[option.name]
-      current_value = self.get_option_value(option.name)
-      if default_value != current_value:
-        self.set_option_value(option.name, default_value)
-    
-    self.update_settings()
   
   def load_settings(self):
     if os.path.isfile(SETTINGS_PATH):
@@ -365,8 +267,8 @@ class WWRandomizerWindow(QMainWindow):
       self.ui.clean_iso_path.setText(self.settings["clean_iso_path"])
     if "output_folder" in self.settings:
       self.ui.output_folder.setText(self.settings["output_folder"])
-    if "seed" in self.settings:
-      self.ui.seed.setText(self.settings["seed"])
+    if "plando_file" in self.settings:
+      self.ui.plando_file.setText(self.settings["plando_file"])
     
     for option in Options.all:
       if option.name in self.settings:
@@ -384,89 +286,14 @@ class WWRandomizerWindow(QMainWindow):
   def update_settings(self):
     self.settings["clean_iso_path"] = self.ui.clean_iso_path.text()
     self.settings["output_folder"] = self.ui.output_folder.text()
-    self.settings["seed"] = self.ui.seed.text()
+    self.settings["plando_file"] = self.ui.plando_file.text()
     
-    self.ensure_valid_combination_of_options()
     self.ui.tab_player_customization.disable_invalid_cosmetic_options()
     
     for option in Options.all:
       self.settings[option.name] = self.get_option_value(option.name)
     
     self.save_settings()
-    
-    self.encode_permalink()
-    
-    self.update_total_progress_locations()
-  
-  def update_total_progress_locations(self):
-    options = self.get_all_options_from_widget_values()
-    num_progress_locations = Logic.get_num_progression_locations_static(self.cached_item_locations, options)
-    
-    text = "Progression Locations: Where Should Progress Items Be Placed? " \
-      f"(Selected: {num_progress_locations} Locations Available)"
-    self.ui.progression_locations_groupbox.setTitle(text)
-  
-  def permalink_modified(self):
-    permalink = self.ui.permalink.text()
-    try:
-      self.decode_permalink(permalink)
-    except Exception as e:
-      stack_trace = traceback.format_exc()
-      error_message = "Failed to parse permalink:\n" + str(e) + "\n\n" + stack_trace
-      print(error_message)
-      QMessageBox.critical(
-        self, "Invalid permalink",
-        "The permalink you pasted is invalid."
-      )
-    
-    self.encode_permalink()
-  
-  def encode_permalink(self):
-    seed = self.settings["seed"]
-    seed = WWRandomizer.sanitize_seed(seed)
-    if not seed:
-      self.ui.permalink.setText("")
-      return
-    
-    options = self.get_all_options_from_widget_values()
-    base64_encoded_permalink = WWRandomizer.encode_permalink(seed, options)
-    self.ui.permalink.setText(base64_encoded_permalink)
-  
-  def decode_permalink(self, base64_encoded_permalink):
-    base64_encoded_permalink = base64_encoded_permalink.strip()
-    if not base64_encoded_permalink:
-      # Empty
-      return
-    
-    options = self.get_all_options_from_widget_values()
-    
-    try:
-      seed, options = WWRandomizer.decode_permalink(base64_encoded_permalink, options)
-    except PermalinkWrongVersionError as e:
-      message = str(e)
-      QMessageBox.critical(self, "Invalid permalink", message)
-      return
-    except PermalinkWrongCommitError as e:
-      message = str(e)
-      message += "\n\nBecause only the commit is different, the permalink may or may not still be compatible. Would you like to try loading this permalink anyway?"
-      response = QMessageBox.question(
-        self, "Potentially invalid permalink",
-        message,
-        QMessageBox.Cancel | QMessageBox.Yes,
-        QMessageBox.Cancel
-      )
-      if response == QMessageBox.Cancel:
-        return
-      
-      options = self.get_all_options_from_widget_values()
-      seed, options = WWRandomizer.decode_permalink(base64_encoded_permalink, options, allow_different_commit=True)
-    
-    self.ui.seed.setText(seed)
-    for option in Options.all:
-      if option.permalink:
-        self.set_option_value(option.name, options[option.name])
-    
-    self.update_settings()
   
   def show_clean_iso_explanation(self):
     QMessageBox.information(
@@ -499,6 +326,18 @@ class WWRandomizerWindow(QMainWindow):
     if not output_folder_path:
       return
     self.ui.output_folder.setText(output_folder_path)
+    self.update_settings()
+
+  def browse_for_plando_file(self):
+    if self.settings["plando_file"] and os.path.isfile(self.settings["plando_file"]):
+      default_dir = os.path.dirname(self.settings["plando_file"])
+    else:
+      default_dir = None
+    
+    plando_file, selected_filter = QFileDialog.getOpenFileName(self, "Select APTWW file", default_dir, "APTWW File (*.aptww)")
+    if not plando_file:
+      return
+    self.ui.plando_file.setText(plando_file)
     self.update_settings()
   
   def get_option_from_widget(self, widget: QObject):
@@ -564,8 +403,6 @@ class WWRandomizerWindow(QMainWindow):
         model = model.sourceModel()
       model.sort(0)
       return [model.data(model.index(i)) for i in range(model.rowCount())]
-    else:
-      print("Option widget is invalid: %s" % option_name)
     
     return None
   
@@ -615,8 +452,6 @@ class WWRandomizerWindow(QMainWindow):
           model = model.sourceModel()
         model.setStringList(new_value)
         model.sort(0)
-    else:
-      print("Option widget is invalid: %s" % option_name)
   
   def set_option_description(self, new_description):
     if new_description is None:
@@ -633,101 +468,44 @@ class WWRandomizerWindow(QMainWindow):
     options = Options(**options_dict)
     return options
   
-  def ensure_valid_combination_of_options(self):
-    items_to_filter_out = []
-    should_enable_options = {}
-    for option in Options.all:
-      should_enable_options[option.name] = True
+  def read_ap_plando_file(self, plando_file, options):
+    with open(os.path.join(plando_file), "r") as f:
+      plando_file = yaml.safe_load(f)
     
-    options = self.get_all_options_from_widget_values()
+    seed = f"{plando_file["Seed"]}AP{plando_file["Slot"]}"
     
-    if not options.progression_dungeons:
-      should_enable_options["required_bosses"] = False
-    
-    if options.sword_mode == SwordMode.SWORDLESS:
-      items_to_filter_out += ["Hurricane Spin"]
-    if options.sword_mode in [SwordMode.SWORDLESS, SwordMode.NO_STARTING_SWORD]:
-      items_to_filter_out += 3 * ["Progressive Sword"]
-    
-    if not options.required_bosses:
-      should_enable_options["num_required_bosses"] = False
-    
-    if options.num_location_hints == 0:
-      should_enable_options["prioritize_remote_hints"] = False
-    
-    dungeon_entrances_random = any([
-      options.randomize_dungeon_entrances,
-      options.randomize_miniboss_entrances,
-      options.randomize_boss_entrances,
-    ])
-    non_dungeon_entrances_random = any([
-      options.randomize_secret_cave_entrances,
-      options.randomize_secret_cave_inner_entrances,
-      options.randomize_fairy_fountain_entrances,
-    ])
-    if not (dungeon_entrances_random and non_dungeon_entrances_random):
-      should_enable_options["mix_entrances"] = False
-    
-    self.filtered_rgear.setFilterStrings(items_to_filter_out)
-    
-    for item in items_to_filter_out:
-      if item in options.randomized_gear:
-        options.randomized_gear.remove(item)
-      elif item in options.starting_gear:
-        options.starting_gear.remove(item)
-    options.randomized_gear += items_to_filter_out
-    
-    self.set_option_value("starting_gear", options.starting_gear)
-    self.set_option_value("randomized_gear", options.randomized_gear)
-    
-    all_gear = self.get_option_value("starting_gear") + self.get_option_value("randomized_gear")
-    
-    if Counter(all_gear) != Counter(INVENTORY_ITEMS):
-      print("Gear list invalid, resetting")
-      for opt in ["randomized_gear", "starting_gear"]:
-        self.set_option_value(opt, self.default_options[opt])
-    
-    for option in Options.all:
-      if option.name == "custom_colors":
-        continue
-      widget = self.findChild(QWidget, option.name)
-      label_for_option = self.findChild(QLabel, "label_for_" + option.name)
-      if should_enable_options[option.name]:
-        widget.setEnabled(True)
-        if label_for_option:
-          label_for_option.setEnabled(True)
-      else:
-        widget.setEnabled(False)
-        if isinstance(widget, QAbstractButton):
-          widget.setChecked(False)
-        if label_for_option:
-          label_for_option.setEnabled(False)
-      
-      if option.unbeatable and not IS_RUNNING_FROM_SOURCE:
-        # Disable options that produce unbeatable seeds when not running from source.
-        if self.get_option_value(option.name):
-          self.set_option_value(option.name, False)
-          self.update_settings()
-      
-      if option.hidden:
-        # Hide certain options from the GUI (still accessible via settings.txt and permalinks).
-        if self.get_option_value(option.name):
-          widget.show()
+    for field in fields(options):
+      if field.name in plando_file["Options"]:
+        value = plando_file["Options"][field.name]
+
+        if field.type is int:
+          setattr(options, field.name, value)
+        elif field.type is bool:
+          setattr(options, field.name, bool(value))
+        elif field.type is SwordMode:
+          match value:
+            case 0: setattr(options, field.name, SwordMode.START_WITH_SWORD)
+            case 1: setattr(options, field.name, SwordMode.NO_STARTING_SWORD)
+            case 2: setattr(options, field.name, SwordMode.SWORDLESS)
+        elif field.type is EntranceMixMode:
+            match value:
+              case 0: setattr(options, field.name, EntranceMixMode.SEPARATE_DUNGEONS)
+              case 1: setattr(options, field.name, EntranceMixMode.MIX_DUNGEONS)
+        elif field.type is TrickDifficulty:
+            match value:
+              case 0: setattr(options, field.name, TrickDifficulty.NONE)
+              case 1: setattr(options, field.name, TrickDifficulty.NORMAL)
+              case 2: setattr(options, field.name, TrickDifficulty.HARD)
+              case 3: setattr(options, field.name, TrickDifficulty.VERY_HARD)
         else:
-          widget.hide()
-  
-  def open_about(self):
-    text = """Wind Waker Randomizer Version %s<br><br>
-      Created by LagoLunatic<br><br>
-      Report issues here:<br><a href=\"https://github.com/LagoLunatic/wwrando/issues\">https://github.com/LagoLunatic/wwrando/issues</a><br><br>
-      Source code:<br><a href=\"https://github.com/LagoLunatic/wwrando\">https://github.com/LagoLunatic/wwrando</a>""" % VERSION
+          print(f"Bad option: {field.name} = {value}")
+      else:
+        if field.name in ["randomized_gear", "starting_gear"]:
+          setattr(options, field.name, field.default_factory())
+        if getattr(options, field.name) is None:
+          setattr(options, field.name, field.default)
     
-    self.about_dialog = QMessageBox()
-    self.about_dialog.setTextFormat(Qt.TextFormat.RichText)
-    self.about_dialog.setWindowTitle("Wind Waker Randomizer")
-    self.about_dialog.setText(text)
-    self.about_dialog.setWindowIcon(self.windowIcon())
-    self.about_dialog.show()
+    return seed, plando_file["Locations"], plando_file["Entrances"]
   
   def keyPressEvent(self, event):
     if event.key() == Qt.Key_Escape:
@@ -736,10 +514,6 @@ class WWRandomizerWindow(QMainWindow):
   def closeEvent(self, event):
     if self.randomizer_thread is not None:
       self.randomizer_thread.terminate()
-    if not IS_RUNNING_FROM_SOURCE:
-      # Need to wait for the update checker before exiting, or the program will crash when closing.
-      self.update_checker_thread.quit()
-      self.update_checker_thread.wait()
     event.accept()
   
   if TYPE_CHECKING:

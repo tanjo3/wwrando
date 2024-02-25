@@ -226,6 +226,10 @@ def allow_all_items_to_be_field_items(self: WWRandomizer):
     data = BytesIO(f.read())
   self.add_new_raw_file("files/res/Object/Vscroll.arc", data)
 
+def fix_day_night_cycle(self):
+  # Sets the cycle to always be true, with ot without necessary items
+  self.dol.write_data(fs.write_float, 0x801908e4, 1.0)
+
 def remove_shop_item_forced_uniqueness_bit(self: WWRandomizer):
   # Some shop items have a bit set that disallows you from buying the item if you already own one of that item.
   # This can be undesirable depending on what we randomize the items to be, so we unset this bit.
@@ -1394,7 +1398,7 @@ def update_skip_rematch_bosses_game_variable(self: WWRandomizer):
 def update_sword_mode_game_variable(self: WWRandomizer):
   sword_mode_address = self.main_custom_symbols["sword_mode"]
   if self.options.sword_mode == SwordMode.START_WITH_SWORD:
-    self.dol.write_data(fs.write_u8, sword_mode_address, 0)
+    self.dol.write_data(fs.write_u8, sword_mode_address, 1)
   elif self.options.sword_mode == SwordMode.NO_STARTING_SWORD:
     self.dol.write_data(fs.write_u8, sword_mode_address, 1)
   elif self.options.sword_mode == SwordMode.SWORDLESS:

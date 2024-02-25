@@ -37,8 +37,8 @@ bl onEventBit__11dSv_event_cFUs
 after_sword_mode_initialization:
 
 bl item_func_normal_sail__Fv
-bl item_func_wind_tact__Fv ; Wind Waker
-bl item_func_tact_song1__Fv ; Wind's Requiem
+;bl item_func_wind_tact__Fv ; Wind Waker
+;bl item_func_tact_song1__Fv ; Wind's Requiem
 bl item_func_pirates_omamori__Fv ; Pirate's Charm
 
 ; Start the player with 30 bombs and arrows. (But not the ability to actually use them.)
