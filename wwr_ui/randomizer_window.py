@@ -472,7 +472,7 @@ class WWRandomizerWindow(QMainWindow):
     with open(os.path.join(plando_file), "r") as f:
       plando_file = yaml.safe_load(f)
     
-    seed = f"{plando_file["Seed"]}AP{plando_file["Slot"]}"
+    seed = f"AP_{plando_file['Seed']}_P{plando_file['Slot']}"
     
     for field in fields(options):
       if field.name in plando_file["Options"]:
