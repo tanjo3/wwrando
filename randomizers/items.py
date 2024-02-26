@@ -37,7 +37,13 @@ class ItemRandomizer(BaseRandomizer):
   
   def _randomize(self):
     for location_name in self.logic.remaining_item_locations:
-      if location_name in self.rando.plando_locations:
+      if location_name == "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item":
+        self.logic.done_item_locations[location_name] = "Green Rupee"
+      elif location_name == "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item":
+        self.logic.done_item_locations[location_name] = "Yellow Rupee"
+      elif location_name == "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item":
+        self.logic.done_item_locations[location_name] = "Blue Rupee"
+      elif location_name in self.rando.plando_locations:
         self.logic.done_item_locations[location_name] = "Green Rupee"
       else:
         self.logic.done_item_locations[location_name] = "Red Rupee"
