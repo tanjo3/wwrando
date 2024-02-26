@@ -934,10 +934,10 @@ class WWRandomizer:
       self.gcm.changed_files[jpc_path] = jpc.data
     
     if self.export_disc_to_folder:
-      output_folder_path = os.path.join(self.randomized_output_folder, "WW Random %s" % self.seed)
+      output_folder_path = os.path.join(self.randomized_output_folder, "TWW %s" % self.seed)
       yield from self.gcm.export_disc_to_folder_with_changed_files(output_folder_path)
     else:
-      output_file_path = os.path.join(self.randomized_output_folder, "WW Random %s.iso" % self.seed)
+      output_file_path = os.path.join(self.randomized_output_folder, "TWW %s.iso" % self.seed)
       yield from self.gcm.export_disc_to_iso_with_changed_files(output_file_path)
   
   def convert_string_to_integer_md5(self, string):
