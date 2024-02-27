@@ -89,7 +89,7 @@ class WWRandomizerWindow(QMainWindow):
     
     self.update_settings()
     
-    self.setWindowTitle("AP The Wind Waker Randomizer Client %s" % VERSION)
+    self.setWindowTitle("The Wind Waker Archipelago Randomizer %s" % VERSION)
     
     icon_path = os.path.join(ASSETS_PATH, "icon.ico")
     self.setWindowIcon(QIcon(icon_path))
