@@ -95,6 +95,7 @@ class Ui_MainWindow(object):
 
         self.label_for_plando_file = QLabel(self.tab_randomizer_settings)
         self.label_for_plando_file.setObjectName(u"label_for_plando_file")
+        self.label_for_plando_file.setTextFormat(Qt.MarkdownText)
 
         self.gridLayout.addWidget(self.label_for_plando_file, 2, 0, 1, 1)
 
@@ -175,7 +176,7 @@ class Ui_MainWindow(object):
         self.clean_iso_path_browse_button.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
         self.label_for_clean_iso_path.setText(QCoreApplication.translate("MainWindow", u"Vanilla Wind Waker ISO [[?]](help)", None))
         self.plando_file_browse_button.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
-        self.label_for_plando_file.setText(QCoreApplication.translate("MainWindow", u"APTWW File", None))
+        self.label_for_plando_file.setText(QCoreApplication.translate("MainWindow", u"APTWW File [[?]](help)", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"Convenience Tweaks", None))
         self.remove_title_and_ending_videos.setText(QCoreApplication.translate("MainWindow", u"Remove Title and Ending Videos", None))
         self.invert_sea_compass_x_axis.setText(QCoreApplication.translate("MainWindow", u"Invert Sea Compass X-Axis", None))

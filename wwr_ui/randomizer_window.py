@@ -63,6 +63,7 @@ class WWRandomizerWindow(QMainWindow):
     self.ui.plando_file_browse_button.clicked.connect(self.browse_for_plando_file)
     
     self.ui.label_for_clean_iso_path.linkActivated.connect(self.show_clean_iso_explanation)
+    self.ui.label_for_plando_file.linkActivated.connect(self.show_plando_file_explanation)
     
     for option in Options.all:
       if option.name == "custom_colors":
@@ -302,6 +303,15 @@ class WWRandomizerWindow(QMainWindow):
       "The European and Japanese versions of Wind Waker are not supported.\nWind Waker HD is also not supported.\n\n" +
       "The ISO should ideally be a vanilla/unmodified copy of the game to guarantee the randomizer works with no " +
       "conflicts, but Wind Waker mods that do not conflict with the randomizer can also be used."
+    )
+  
+  def show_plando_file_explanation(self):
+     QMessageBox.information(
+      self, "APTWW File",
+      "The APTWW file is necessary to randomize the game to be compatible with the Archipelago multiworld.\n\n" +
+      "Whoever generated the multiworld should have an output zip file. " +
+      "They should unzip that file to find a .aptww file for each player playing Wind Waker.\n\n" +
+      "Ask them for the .aptww file with your slot number and player name."
     )
   
   def browse_for_clean_iso(self):
