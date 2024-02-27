@@ -50,7 +50,7 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
-          name='Wind Waker Randomizer',
+          name='The Wind Waker Archipelago Randomizer',
           debug=False,
           strip=False,
           upx=True,
@@ -59,12 +59,12 @@ exe = EXE(pyz,
           icon="assets/icon.ico" )
 
 app = BUNDLE(exe,
-          name='Wind Waker Randomizer.app',
+          name='The Wind Waker Archipelago Randomizer.app',
           icon="assets/icon.icns",
           bundle_identifier=None,
           info_plist={
               "LSBackgroundOnly": False,
-              "CFBundleDisplayName": "Wind Waker Randomizer",
+              "CFBundleDisplayName": "The Wind Waker Archipelago Randomizer",
               "CFBundleName": "WW Randomizer", # 15 character maximum
               "CFBundleShortVersionString": randomizer_version,
           }

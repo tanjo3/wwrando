@@ -996,7 +996,7 @@ class WWRandomizer:
   def get_log_header(self):
     header = ""
     
-    header += "Wind Waker Randomizer Version %s\n" % VERSION
+    header += "The Wind Waker Archipelago Randomizer Version %s\n" % VERSION
     
     if self.permalink:
       header += "Permalink: %s\n" % self.permalink
