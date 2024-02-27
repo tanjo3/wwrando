@@ -170,7 +170,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Wind Waker Randomizer", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"The Wind Waker Archipelago Randomizer", None))
         self.output_folder_browse_button.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
         self.label_for_output_folder.setText(QCoreApplication.translate("MainWindow", u"Randomized Output Folder", None))
         self.clean_iso_path_browse_button.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
