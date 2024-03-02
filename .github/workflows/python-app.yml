@@ -2,12 +2,12 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ archipelago ]
     paths-ignore:
       - 'docs/**'
       - '.github/workflows/publish-site.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ archipelago ]
     paths-ignore:
       - 'docs/**'
       - '.github/workflows/publish-site.yml'
@@ -106,7 +106,7 @@ jobs:
           USER_INPUT_VERSION=${{ github.event.inputs.version }}
           TXT_VERSION=$(cat version.txt)
           GIT_SHA_SHORT=$(git rev-parse --short=7 ${{ github.sha }})
-          echo "full_version=${USER_INPUT_VERSION:-${TXT_VERSION}_${GIT_SHA_SHORT}}" >> $GITHUB_OUTPUT
+          echo "full_version=${USER_INPUT_VERSION:-${TXT_VERSION}}" >> $GITHUB_OUTPUT
       - name: Set version
         id: version
         run: |
@@ -118,5 +118,5 @@ jobs:
       - name: Upload Python App
         uses: actions/upload-artifact@v4
         with:
-          name: wwrando-${{ steps.vars.outputs.full_version }}-${{ matrix.artifact }}
+          name: wwrando_ap-${{ steps.vars.outputs.full_version }}-${{ matrix.artifact }}
           path: dist/release_archive_${{ steps.vars.outputs.full_version }}_x64${{ matrix.upload_path_suffix }}
