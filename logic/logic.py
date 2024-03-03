@@ -817,6 +817,9 @@ class Logic:
       self.all_progress_items.remove(item_name)
       self.all_nonprogress_items.append(item_name)
     for item_name in unplaced_items_to_make_nonprogress:
+      if item_name.endswith(" Trap Chest"):
+        # Don't remove traps from the progress items list even though they are useless.
+        continue
       self.unplaced_progress_items.remove(item_name)
       self.unplaced_nonprogress_items.append(item_name)
     
