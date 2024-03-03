@@ -84,8 +84,10 @@ class ExtraStartingItemsRandomizer(BaseRandomizer):
       # which is (maybe?) confusing and would lead you to never check octos
       # self.rando.starting_items.extend([selected])
     
-    # Confirm that we opened at least one new check if we assigned an item
-    if self.random_starting_items and len(self.logic.get_accessible_remaining_locations(for_progression=True)) <= len(initial_sphere_0_checks):
+    # Confirm that we opened at least one new check if we assigned as many items as we intended
+    if (len(self.random_starting_items) == self.options.num_extra_starting_items and 
+        len(self.logic.get_accessible_remaining_locations(for_progression=True)) <= len(initial_sphere_0_checks)
+        ):
       # This would indicate a logic bug, the filtering above should prevent it
       raise Exception("Random starting items didn't unlock at least one check")
       
