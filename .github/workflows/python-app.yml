@@ -13,6 +13,11 @@ on:
     inputs:
       version:
         description: Version
+      env:
+        description: Environment
+        type: environment
+        required: true
+        default: "Production"
 
 jobs:
   build:
@@ -24,13 +29,19 @@ jobs:
             architecture: x64
             artifact: windows
             upload_path_suffix: '/*'
+          - name: MacOS Build
+            os: macos-latest
+            architecture: x64
+            artifact: macos
+            upload_path_suffix: '.zip'
           - name: Linux Build
-            os: ubuntu-latest
+            os: ubuntu-20.04
             architecture: x64
             artifact: linux
             upload_path_suffix: '/*'
     
     runs-on: ${{ matrix.os }}
+    environment: ${{ github.event.inputs.env || 'Development' }}
     
     defaults:
       run:
@@ -41,13 +52,17 @@ jobs:
       MACOSX_DEPLOYMENT_TARGET: 10.15
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
-          ref: archipelago
           submodules: recursive
+      - name: Add keys
+        run: |
+            echo "$SEED_KEY" > keys/seed_key.py
+        env:
+          SEED_KEY: ${{ secrets.SEED_KEY }}
       - name: Set up Python
         id: setup-py
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: '3.12'
           check-latest: true
@@ -55,7 +70,7 @@ jobs:
           cache: 'pip' # Cache all pip dependency downloads
       - name: Cache venv
         id: cache-venv
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: ./.venv
           key: ${{ runner.os }}-venv-${{ steps.setup-py.outputs.python-version  }}-${{ hashFiles('**/requirements*.txt') }}
@@ -94,7 +109,7 @@ jobs:
       - name: Bundle Python App
         run: python build.py
       - name: Upload Python App
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: wwrando-${{ steps.vars.outputs.full_version }}-${{ matrix.artifact }}-${{ matrix.architecture }}
           path: dist/release_archive_${{ steps.vars.outputs.full_version }}_${{ matrix.architecture }}${{ matrix.upload_path_suffix }}
