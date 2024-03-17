@@ -63,10 +63,12 @@ Below are the weights for the randomized settings. If only one weight is listed,
 
 ## Additional Starting Items
 For starting items, you will always start with the Telescope, Ballad of Gales, and Song of Passing. Depending on the value of _Number of Starting Items_, additional starting items will be added to the pool.
+This works the same way as the option in the non-randomized build, so here's a reminder how that one works:
 
 Almost all progression items can be added as a starting item, with a few exceptions:
 * Triforce shards cannot be random starting items (but the number of starting triforce shards is still randomized according to the table above)
 * Swords can only be a random starting item when starting with the Hero's Sword
 * Delivery bag items can only be a random starting item if you already have the delivery bag (in random settings, that's only if >1 starting item and the delivery bag is also one of them)
 
-Groups of items (Goddess Pearls, Tingle Statues) are counted as a single item if all of them are progression, and added all at once. If only some of them are progression (eg pearls when TotG entrance is not required) the subset that are progression are added individually
+Every additional starting item is a progressive item for the randomizer (ie, if it were in a chest, it would be in a spiky red chest)
+Taken all together, your additional random starting items will open at least one additional location in logic
