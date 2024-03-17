@@ -57,6 +57,7 @@ Below are the weights for the randomized settings. If only one weight is listed,
 |      **Start With Maps And Compasses**     	|                                                               80%                                                               	|
 |     **Starting Extra Heart Containers**    	|                                                              100% 0                                                             	|
 |       **Starting Extra Heart Pieces**      	|                                                              100% 0                                                             	|
+|           **Enable Trap Chests**           	|                                                               50%                                                               	|
 
 \* *If **Dungeons** are on, then the weight for **Skip Boss Rematches** is set to 100%*.
 
