@@ -88,7 +88,7 @@ class WWRandomizer:
   VALID_SEED_CHARACTERS = "-_'%%.%s%s" % (string.ascii_letters, string.digits)
   MAX_SEED_LENGTH = 42 # Limited by maximum length of game name in banner
   
-  def __init__(self, seed, clean_iso_path, randomized_output_folder, options: Options, plando_locations: dict[str, str], plando_entrances: dict[str, str], cmd_line_args=None):
+  def __init__(self, seed, clean_iso_path, randomized_output_folder, options: Options, plando_locations: dict[str, dict[str, str]], plando_entrances: dict[str, str], cmd_line_args=None):
     self.fully_initialized = False
     
     options.validate()
@@ -430,6 +430,8 @@ class WWRandomizer:
     tweaks.change_starting_clothes(self)
     tweaks.check_hide_ship_sail(self)
     customizer.change_player_custom_colors(self)
+    
+    tweaks.apply_changes_for_archipelago(self)
   
   def apply_necessary_post_randomization_tweaks(self):
     if self.randomize_items:
