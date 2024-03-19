@@ -1,5 +1,6 @@
 from dataclasses import dataclass, KW_ONLY
 from enum import StrEnum
+from typing import override
 
 from options.base_options import BaseOptions, option
 
@@ -29,6 +30,17 @@ class Options(BaseOptions):
     description="Randomize which settings are enabled. When this option is enabled, most other randomization and progression options are disabled, and their value is instead selected randomly by the chosen seed.",
     random_settings_togglable=True,
   )
+
+  @override
+  def validate(self):
+    super().validate()
+    if self.randomize_settings:
+      # Make a default option object to get all the default values
+      # both for fields with a .default and fields with a .default_factory
+      all_default_values = self.__class__()
+      for option in self.all:
+        if not option.random_settings_togglable:
+          self[option.name] = all_default_values[option.name]
   #endregion Settings randomizer
   #region Progress locations
   progression_dungeons: bool = option(
