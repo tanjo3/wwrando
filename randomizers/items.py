@@ -37,15 +37,21 @@ class ItemRandomizer(BaseRandomizer):
   
   def _randomize(self):
     for location_name in self.logic.remaining_item_locations:
-      if location_name == "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item":
-        self.logic.done_item_locations[location_name] = "Green Rupee"
-      elif location_name == "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item":
-        self.logic.done_item_locations[location_name] = "Yellow Rupee"
-      elif location_name == "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item":
-        self.logic.done_item_locations[location_name] = "Blue Rupee"
-      elif location_name in self.rando.plando_locations:
-        self.logic.done_item_locations[location_name] = "Green Rupee"
+      if location_name in self.rando.plando_locations:
+        item_info = self.rando.plando_locations[location_name]
+        
+        if item_info["game"] == "The Wind Waker":
+          if item_info["name"] == "Nothing":
+            # If location has no item, just place a red rupee
+            self.logic.done_item_locations[location_name] = "Red Rupee"
+          else:
+            # Wind Waker items will use their in-game models
+            self.logic.done_item_locations[location_name] = item_info["name"]
+        else:
+          # Items that are from other AP games are represented by renamed Father's Letter
+          self.logic.done_item_locations[location_name] = "Archipelago Item"
       else:
+        # Place a red rupee on unsupported locations
         self.logic.done_item_locations[location_name] = "Red Rupee"
     return
     
