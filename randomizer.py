@@ -106,7 +106,7 @@ class WWRandomizer:
     self.dry_run = self.options.dry_run
     self.disassemble = cmd_line_args.disassemble
     self.export_disc_to_folder = cmd_line_args.exportfolder
-    self.no_logs = cmd_line_args.nologs
+    self.no_logs = True
     self.bulk_test = cmd_line_args.bulk
     if self.bulk_test:
       self.dry_run = True
@@ -375,10 +375,10 @@ class WWRandomizer:
       progress_completed += 2000
     # print(f"{(time.perf_counter_ns()-start)//1_000_000:6d}: Saving ISO")
     
-    # yield("Writing logs...", progress_completed)
-    # if not self.options.do_not_generate_spoiler_log:
-    #   self.write_spoiler_log()
-    # self.write_non_spoiler_log()
+    yield("Writing logs...", progress_completed)
+    if not self.options.do_not_generate_spoiler_log:
+      self.write_spoiler_log()
+    self.write_non_spoiler_log()
   
   def apply_necessary_tweaks(self):
     patcher.apply_patch(self, "custom_data")
@@ -1052,9 +1052,9 @@ class WWRandomizer:
   
   def write_spoiler_log(self):
     if self.no_logs:
-      if self.randomize_items:
-        # We still calculate progression spheres even if we're not going to write them anywhere to catch more errors in testing.
-        self.items.calculate_playthrough_progression_spheres()
+      # if self.randomize_items:
+      #   # We still calculate progression spheres even if we're not going to write them anywhere to catch more errors in testing.
+      #   self.items.calculate_playthrough_progression_spheres()
       return
     
     spoiler_log = self.get_log_header()
