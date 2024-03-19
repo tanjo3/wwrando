@@ -293,8 +293,8 @@ class WWRandomizer:
         patcher.apply_patch(self, "swordless")
         tweaks.update_text_for_swordless(self)
       tweaks.update_starting_gear(self, self.options.starting_gear)
-      # if self.options.chest_type_matches_contents:
-      #   tweaks.replace_dark_wood_chest_texture(self)
+      if self.options.chest_type_matches_contents:
+        tweaks.replace_dark_wood_chest_texture(self)
       if self.options.remove_title_and_ending_videos:
         tweaks.remove_title_and_ending_videos(self)
       if self.options.remove_music:
