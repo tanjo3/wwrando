@@ -56,8 +56,10 @@ class Logic:
     self.prerandomization_item_locations = {}
     
     self.done_item_locations: dict[str, str | None] = {}
+    self.done_item_locations_info: dict[str, dict[str, str | None]] = {}
     for location_name in self.item_locations:
       self.done_item_locations[location_name] = None
+      self.done_item_locations_info[location_name] = {"game": None, "classification": None}
     
     self.rock_spire_shop_ship_locations = []
     for location_name in self.item_locations:
