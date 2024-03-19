@@ -98,8 +98,7 @@ jobs:
         run: |
           USER_INPUT_VERSION=${{ github.event.inputs.version }}
           TXT_VERSION=$(cat version.txt)
-          GIT_SHA_SHORT=$(git rev-parse --short=7 ${{ github.sha }})
-          echo "full_version=${USER_INPUT_VERSION:-${TXT_VERSION}_${GIT_SHA_SHORT}}" >> $GITHUB_OUTPUT
+          echo "full_version=${USER_INPUT_VERSION:-${TXT_VERSION}}" >> $GITHUB_OUTPUT
       - name: Set version
         id: version
         run: |
@@ -111,5 +110,5 @@ jobs:
       - name: Upload Python App
         uses: actions/upload-artifact@v3
         with:
-          name: wwrando-${{ steps.vars.outputs.full_version }}-${{ matrix.artifact }}-${{ matrix.architecture }}
+          name: wwrando_ap-${{ steps.vars.outputs.full_version }}-${{ matrix.artifact }}-${{ matrix.architecture }}
           path: dist/release_archive_${{ steps.vars.outputs.full_version }}_${{ matrix.architecture }}${{ matrix.upload_path_suffix }}
