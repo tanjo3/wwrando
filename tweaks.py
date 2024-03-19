@@ -2705,3 +2705,15 @@ def enable_hero_mode(self: WWRandomizer):
 def set_default_targeting_mode_to_switch(self: WWRandomizer):
   targeting_mode_addr = self.main_custom_symbols["option_targeting_mode"]
   self.dol.write_data(fs.write_u8, targeting_mode_addr, 1)
+  
+def apply_changes_for_archipelago(self: WWRandomizer):
+  # Apply necessary changes for Archipelago
+  patcher.apply_patch(self, "archipelago")
+  
+  # Repurpose the randomizer-unused Father's Letter to represent an Archipelago item.
+  self.register_renamed_item(0x98, "Archipelago Item")
+  
+  # Change the item get text
+  msg = self.bmg.messages_by_id[253]
+  msg.string = "\\{1A 05 00 00 01}You found an \\{1A 06 FF 00 00 01}Archipelago item\\{1A 06 FF 00 00 00}!"
+  msg.word_wrap_string(self.bfn)
