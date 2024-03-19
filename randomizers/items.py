@@ -39,6 +39,10 @@ class ItemRandomizer(BaseRandomizer):
     for location_name in self.logic.remaining_item_locations:
       if location_name in self.rando.plando_locations:
         item_info = self.rando.plando_locations[location_name]
+        self.logic.done_item_locations_info[location_name] = {
+          "game": item_info["game"],
+          "classification": item_info["classification"],
+        }
         
         if item_info["game"] == "The Wind Waker":
           if item_info["name"] == "Nothing":
@@ -53,6 +57,7 @@ class ItemRandomizer(BaseRandomizer):
       else:
         # Place a red rupee on unsupported locations
         self.logic.done_item_locations[location_name] = "Red Rupee"
+        self.logic.done_item_locations_info[location_name]["classification"] = "filler"
     return
     
     if not self.options.keylunacy:
@@ -75,7 +80,7 @@ class ItemRandomizer(BaseRandomizer):
     for location_name, item_name in self.logic.done_item_locations.items():
       paths = self.logic.item_locations[location_name]["Paths"]
       for path in paths:
-        self.change_item(path, item_name)
+        self.change_item(path, item_name, self.logic.done_item_locations_info[location_name])
   
   def write_to_non_spoiler_log(self) -> str:
     log_str = ""
@@ -388,7 +393,7 @@ class ItemRandomizer(BaseRandomizer):
   
   
   #region Saving
-  def change_item(self, path, item_name):
+  def change_item(self, path, item_name, item_info):
     rel_match = re.search(r"^(rels/[^.]+\.rel)@([0-9A-F]{4})$", path)
     main_dol_match = re.search(r"^main.dol@(8[0-9A-F]{7})$", path)
     custom_symbol_match = re.search(r"^CustomSymbol:(.+)$", path)
@@ -424,7 +429,7 @@ class ItemRandomizer(BaseRandomizer):
       arc_path = "files/res/Stage/" + chest_match.group(1)
       layer = DZxLayer(chest_match.group(2))
       chest_index = int(chest_match.group(3), 16)
-      self.change_chest_item(arc_path, chest_index, layer, item_name)
+      self.change_chest_item(arc_path, chest_index, layer, item_name, item_info)
     elif event_match:
       arc_path = "files/res/Stage/" + event_match.group(1)
       event_index = int(event_match.group(2), 16)
@@ -453,7 +458,7 @@ class ItemRandomizer(BaseRandomizer):
     rel = self.rando.get_rel(path)
     rel.write_data(fs.write_u8, offset, item_id)
 
-  def change_chest_item(self, arc_path: str, chest_index: int, layer: DZxLayer, item_name: str):
+  def change_chest_item(self, arc_path: str, chest_index: int, layer: DZxLayer, item_name: str, item_info: dict[str, str]):
     if arc_path.endswith("Stage.arc"):
       dzx = self.rando.get_arc(arc_path).get_file("stage.dzs", DZx)
     else:
@@ -478,25 +483,18 @@ class ItemRandomizer(BaseRandomizer):
       chest.item_id = item_id
     
     if self.options.chest_type_matches_contents:
-      chest.chest_type = self.get_ctmc_chest_type_for_item(item_name)
+      chest.chest_type = self.get_ctmc_chest_type_for_item(item_name, item_info)
     
     chest.save_changes()
 
-  def get_ctmc_chest_type_for_item(self, item_name: str):
-    if item_name not in self.logic.all_progress_items:
-      return 0 # Light wood chests for non-progress items and consumables
-    if not item_name.endswith(" Key"):
-      return 2 # Metal chests for progress items
-    if not self.options.required_bosses:
-      return 1 # Dark wood chest for Small and Big Keys
-    
-    # In required bosses mode, only put the dungeon keys for required dungeons in dark wood chests.
-    # The other keys go into light wood chests.
-    dungeon_short_name = item_name.split()[0]
-    if self.logic.DUNGEON_NAMES[dungeon_short_name] in self.rando.boss_reqs.required_dungeons:
-      return 1
+  def get_ctmc_chest_type_for_item(self, item_name: str, item_info: dict[str, str]):
+    if item_info["classification"] in ["progression", "progression_skip_balancing", "trap"]:
+      if item_info["game"] == "The Wind Waker" and item_name.endswith(" Key"):
+        return 1 # Dark wood chest for Wind Waker dungeon keys
+      else:
+        return 2 # Metal chests for progression items
     else:
-      return 0
+      return 0 # Light wood chests for non-progression items (filler, useful, skip_balancing)
 
   def change_event_item(self, arc_path: str, event_index: int, actor_index: int, action_index: int, item_name: str):
     item_id = self.rando.item_name_to_id[item_name]
