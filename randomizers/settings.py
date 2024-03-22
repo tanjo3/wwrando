@@ -10,28 +10,28 @@ DEFAULT_WEIGHTS = {
   "progression_combat_secret_caves": [(True, 50), (False, 50)],
   "progression_short_sidequests": [(True, 50), (False, 50)],
   "progression_long_sidequests": [(True, 20), (False, 80)],
-  "progression_spoils_trading": [(True, 10), (False, 90)],
+  "progression_spoils_trading": [(True, 0), (False, 100)],
   "progression_minigames": [(True, 50), (False, 50)],
   "progression_free_gifts": [(True, 80), (False, 20)],
   "progression_mail": [(True, 50), (False, 50)],
-  "progression_platforms_rafts": [(True, 50), (False, 50)],
+  "progression_platforms_rafts": [(True, 30), (False, 70)],
   "progression_submarines": [(True, 50), (False, 50)],
-  "progression_eye_reef_chests": [(True, 50), (False, 50)],
-  "progression_big_octos_gunboats": [(True, 50), (False, 50)],
+  "progression_eye_reef_chests": [(True, 30), (False, 70)],
+  "progression_big_octos_gunboats": [(True, 0), (False, 100)],
   "progression_triforce_charts": [(True, 20), (False, 80)],
-  "progression_treasure_charts": [(True, 5), (False, 95)],
+  "progression_treasure_charts": [(True, 0), (False, 100)],
   "progression_expensive_purchases": [(True, 20), (False, 80)],
   "progression_misc": [(True, 50), (False, 50)],
   "progression_tingle_chests": [(True, 50), (False, 50)],
   "progression_battlesquid": [(True, 20), (False, 80)],
-  "progression_savage_labyrinth": [(True, 35), (False, 65)],
+  "progression_savage_labyrinth": [(True, 0), (False, 100)],
   "progression_island_puzzles": [(True, 50), (False, 50)],
   "progression_dungeon_secrets": [(True, 50), (False, 50)],
   
   "keylunacy": [(True, 40), (False, 60)],
   "randomize_dungeon_entrances": [(True, 50), (False, 50)],
   "randomize_secret_cave_entrances": [(True, 30), (False, 70)],
-  "randomize_secret_cave_inner_entrances": [(True, 50), (False, 50)],
+  "randomize_secret_cave_inner_entrances": [(True, 30), (False, 70)],
   "randomize_boss_entrances": [(True, 50), (False, 50)],
   "randomize_miniboss_entrances": [(True, 50), (False, 50)],
   "randomize_fairy_fountain_entrances": [(True, 50), (False, 50)],
@@ -58,7 +58,7 @@ DEFAULT_WEIGHTS = {
   "randomize_enemies": [(True, 0), (False, 100)],
   
   "skip_rematch_bosses": [(True, 75), (False, 25)],
-  "hint_placement": [("fishmen_hints", 0), ("hoho_hints", 10), ("korl_hints", 80), ("stone_tablet_hints", 10)],
+  "hint_placement": [("fishmen_hints", 0), ("hoho_hints", 20), ("korl_hints", 80), ("stone_tablet_hints", 0)],
   "num_extra_starting_items": [(0, 25), (1, 40), (2, 25), (3, 10)],
   "start_with_maps_and_compasses": [(True, 80), (False, 20)],
   "trap_chests": [(True, 50), (False, 50)],
@@ -70,7 +70,7 @@ class SettingsRandomizer(BaseRandomizer):
     return self.options.randomize_settings
 
   def _randomize(self):
-    for _ in range(3):
+    for _ in range(4):
       settings_dict = self.select_settings()
       self.ensure_valid_settings(settings_dict)
       for opt,val in settings_dict.items():
