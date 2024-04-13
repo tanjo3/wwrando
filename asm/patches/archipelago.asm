@@ -22,7 +22,7 @@ give_archipelago_item:
   li      r31, 0
   
   give_archipelago_item_loop:
-  # If we've looped through the entire array, return
+  ; If we've looped through the entire array, return
   cmpwi   r31, num_give_archipelago_item_array_entries
   bge     give_archipelago_item_end
   
@@ -73,7 +73,18 @@ give_archipelago_item_array:
 ; more than your current shard count. This is not true for Archipelago as you normally receive the item before the demo
 ; message is created. Thus, we need to decrement the return value of `dSv_player_collect_c::getTriforceNum` by one.
 .org 0x80215724 ; In dMsg_Create
-  subi    r4, r3, 1       ; r3 holds the return value of `dSv_player_collect_c::getTriforceNum`
+  b       modify_triforce_count
+
+.org @NextFreeSpace
+.global modify_triforce_count
+modify_triforce_count:
+  cmpwi   r3, 0
+  beq     modify_triforce_count_return
+  subi    r3, r3, 1       ; r3 holds the return value of `dSv_player_collect_c::getTriforceNum`
+  
+  modify_triforce_count_return:
+  mr      r4, r3          ; this is the line we overwrote on 0x80215724
+  b       0x80215728
 
 .close
 
