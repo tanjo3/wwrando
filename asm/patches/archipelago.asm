@@ -103,9 +103,11 @@ modify_triforce_count:
 check_give_item:
   lbz     r3, 1594(r31) ; r3 = m_itemNo (This is the line we replaced.)
 
-check_elixir_soup:
+check_potions:
+  cmplwi  r3, 0x51
+  blt     check_deciphered_triforce_charts
   cmplwi  r3, 0x55
-  beq     call_execItemGet
+  ble     call_execItemGet
 
 check_deciphered_triforce_charts:
   cmplwi  r3, 0x79
