@@ -555,7 +555,7 @@ def modify_title_screen_logo(self: WWRandomizer):
   fs.write_u16(data, 0x162, 0x106) # Increase Y pos by 16 pixels (0xF6 -> 0x106)
 
 def update_game_name_icon_and_banners(self: WWRandomizer):
-  new_game_name = "Wind Waker Randomized %s" % self.seed
+  new_game_name = "Wind Waker Randomized %s_%s" % (self.seed, self.player_name)
   banner_data = self.get_raw_file("files/opening.bnr")
   fs.write_magic_str(banner_data, 0x1860, new_game_name, 0x40)
   
@@ -2724,3 +2724,6 @@ def apply_changes_for_archipelago(self: WWRandomizer):
   msg = self.bmg.messages_by_id[253]
   msg.string = "\\{1A 05 00 00 01}You found an \\{1A 06 FF 00 00 01}Archipelago item\\{1A 06 FF 00 00 00}!"
   msg.word_wrap_string(self.bfn)
+  
+  # Record the player's slot name
+  self.dol.write_data(fs.write_str, 0x803FE88C, self.player_name, 0x40)
