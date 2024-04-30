@@ -2713,3 +2713,6 @@ def apply_changes_for_archipelago(self: WWRandomizer):
   msg = self.bmg.messages_by_id[253]
   msg.string = "\\{1A 05 00 00 01}You found an \\{1A 06 FF 00 00 01}Archipelago item\\{1A 06 FF 00 00 00}!"
   msg.word_wrap_string(self.bfn)
+  
+  # Record the player's slot name
+  self.dol.write_data(fs.write_str, 0x803FE88C, self.player_name, 0x40)
