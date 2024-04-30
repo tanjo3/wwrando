@@ -88,7 +88,7 @@ class WWRandomizer:
   VALID_SEED_CHARACTERS = "-_'%%.%s%s" % (string.ascii_letters, string.digits)
   MAX_SEED_LENGTH = 42 # Limited by maximum length of game name in banner
   
-  def __init__(self, seed, clean_iso_path, randomized_output_folder, options: Options, plando_locations: dict[str, dict[str, str]], plando_entrances: dict[str, str], cmd_line_args=None):
+  def __init__(self, seed, clean_iso_path, randomized_output_folder, options: Options, player_name: str, plando_locations: dict[str, dict[str, str]], plando_entrances: dict[str, str], cmd_line_args=None):
     self.fully_initialized = False
     
     options.validate()
@@ -97,6 +97,7 @@ class WWRandomizer:
     self.logs_output_folder = self.randomized_output_folder
     self.options = options
     self.seed = self.sanitize_seed(seed)
+    self.player_name = player_name
     self.plando_locations = plando_locations
     self.plando_entrances = plando_entrances
     self.permalink = None
@@ -910,10 +911,10 @@ class WWRandomizer:
       self.gcm.changed_files[jpc_path] = jpc.data
     
     if self.export_disc_to_folder:
-      output_folder_path = os.path.join(self.randomized_output_folder, "TWW %s" % self.seed)
+      output_folder_path = os.path.join(self.randomized_output_folder, "TWW %s_%s" % (self.seed, self.player_name))
       yield from self.gcm.export_disc_to_folder_with_changed_files(output_folder_path)
     else:
-      output_file_path = os.path.join(self.randomized_output_folder, "TWW %s.iso" % self.seed)
+      output_file_path = os.path.join(self.randomized_output_folder, "TWW %s_%s.iso" % (self.seed, self.player_name))
       yield from self.gcm.export_disc_to_iso_with_changed_files(output_file_path)
   
   def convert_string_to_integer_md5(self, string):
