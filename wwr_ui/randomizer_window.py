@@ -183,14 +183,14 @@ class WWRandomizerWindow(QMainWindow):
     
     options = self.get_all_options_from_widget_values()
     
-    seed, locations_map, entrances_map = self.read_ap_plando_file(plando_file, options)
+    seed, name, locations_map, entrances_map = self.read_ap_plando_file(plando_file, options)
     
     options.custom_colors = self.ui.tab_player_customization.get_all_colors()
     
     self.progress_dialog = RandomizerProgressDialog(self, "Randomizing", "Initializing...")
     
     try:
-      rando = WWRandomizer(seed, clean_iso_path, output_folder, options, locations_map, entrances_map, cmd_line_args=self.cmd_line_args)
+      rando = WWRandomizer(seed, clean_iso_path, output_folder, options, name, locations_map, entrances_map, cmd_line_args=self.cmd_line_args)
     except (TooFewProgressionLocationsError, InvalidCleanISOError) as e:
       error_message = str(e)
       self.randomization_failed(error_message)
@@ -694,6 +694,7 @@ class WWRandomizerWindow(QMainWindow):
       plando_file = yaml.load(f)
     
     seed = f"AP_{plando_file['Seed']}_P{plando_file['Slot']}"
+    name = plando_file["Name"]
     
     for field in fields(options):
       if field.name in plando_file["Options"]:
@@ -726,7 +727,7 @@ class WWRandomizerWindow(QMainWindow):
         if getattr(options, field.name) is None:
           setattr(options, field.name, field.default)
     
-    return seed, plando_file["Locations"], plando_file["Entrances"]
+    return seed, name, plando_file["Locations"], plando_file["Entrances"]
   
   def open_about(self):
     text = """The Wind Waker Archipelago Randomizer Version %s<br><br>
