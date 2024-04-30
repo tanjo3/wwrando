@@ -86,6 +86,13 @@ modify_triforce_count:
   mr      r4, r3          ; this is the line we overwrote on 0x80215724
   b       0x80215728
 
+
+; Allocate 0x40 bytes in memory for the player's slot name
+.global archipelago_slot_name
+archipelago_slot_name:
+  .space 0x40
+.align 2 ; Align to the next 4 bytes
+
 .close
 
 
