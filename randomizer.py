@@ -85,7 +85,18 @@ class WWRandomizer:
   VALID_SEED_CHARACTERS = "-_'%%.%s%s" % (string.ascii_letters, string.digits)
   MAX_SEED_LENGTH = 42 # Limited by maximum length of game name in banner
   
-  def __init__(self, seed, clean_iso_path, randomized_output_folder, options: Options, player_name: str, plando_locations: dict[str, dict[str, str]], plando_entrances: dict[str, str], cmd_line_args=None):
+  def __init__(
+    self,
+    seed,
+    clean_iso_path,
+    randomized_output_folder,
+    options: Options,
+    player_name: str,
+    required_boss_item_locations: list[str],
+    plando_locations: dict[str, dict[str, str]],
+    plando_entrances: dict[str, str],
+    cmd_line_args=None,
+  ):
     self.fully_initialized = False
     
     options.validate()
@@ -95,6 +106,7 @@ class WWRandomizer:
     self.options = options
     self.seed = self.sanitize_seed(seed)
     self.player_name = player_name
+    self.required_boss_item_locations = required_boss_item_locations
     self.plando_locations = plando_locations
     self.plando_entrances = plando_entrances
     self.permalink = self.encode_permalink(self.seed, self.options)
@@ -214,7 +226,7 @@ class WWRandomizer:
     self.randomizers: list[BaseRandomizer] = [
       # self.charts,
       # self.music,
-      # self.boss_reqs,
+      self.boss_reqs,
       self.entrances,
       self.starting_island,
       self.pigs,

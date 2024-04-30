@@ -48,7 +48,7 @@ class RequiredBossesRandomizer(BaseRandomizer):
   
   def _randomize(self):
     self.randomize_required_bosses()
-    self.logic.update_required_bosses_macro()
+    # self.logic.update_required_bosses_macro()
   
   def _save(self):
     self.show_quest_markers_on_sea_chart_for_dungeons()
@@ -87,7 +87,7 @@ class RequiredBossesRandomizer(BaseRandomizer):
     if num_required_bosses > 6 or num_required_bosses < 1:
       raise Exception(f"Number of required bosses is invalid: {len(num_required_bosses)}")
     
-    self.required_boss_item_locations = self.rng.sample(possible_boss_item_locations, num_required_bosses)
+    # self.required_boss_item_locations = self.rng.sample(possible_boss_item_locations, num_required_bosses)
     
     for location_name in possible_boss_item_locations:
       assert "Boss" in self.logic.item_locations[location_name]["Types"]
@@ -95,26 +95,26 @@ class RequiredBossesRandomizer(BaseRandomizer):
       assert specific_location_name.endswith(" Heart Container")
       boss_name = specific_location_name.removesuffix(" Heart Container")
       
-      if location_name in self.required_boss_item_locations:
+      if location_name in self.rando.required_boss_item_locations:
         self.required_dungeons.append(dungeon_name)
         self.required_bosses.append(boss_name)
       else:
         self.banned_dungeons.append(dungeon_name)
         self.banned_bosses.append(boss_name)
     
-    for location_name in self.logic.item_locations:
-      zone_name, specific_location_name = self.logic.split_location_name_by_zone(location_name)
+    # for location_name in self.logic.item_locations:
+    #   zone_name, specific_location_name = self.logic.split_location_name_by_zone(location_name)
       
-      if self.logic.is_dungeon_location(location_name) and zone_name in self.banned_dungeons:
-        self.banned_locations.append(location_name)
-      elif location_name == "Mailbox - Letter from Orca" and "Forbidden Woods" in self.banned_dungeons:
-        self.banned_locations.append(location_name)
-      elif location_name == "Mailbox - Letter from Baito" and "Earth Temple" in self.banned_dungeons:
-        self.banned_locations.append(location_name)
-      elif location_name == "Mailbox - Letter from Aryll" and "Forsaken Fortress" in self.banned_dungeons:
-        self.banned_locations.append(location_name)
-      elif location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in self.banned_dungeons:
-        self.banned_locations.append(location_name)
+    #   if self.logic.is_dungeon_location(location_name) and zone_name in self.banned_dungeons:
+    #     self.banned_locations.append(location_name)
+    #   elif location_name == "Mailbox - Letter from Orca" and "Forbidden Woods" in self.banned_dungeons:
+    #     self.banned_locations.append(location_name)
+    #   elif location_name == "Mailbox - Letter from Baito" and "Earth Temple" in self.banned_dungeons:
+    #     self.banned_locations.append(location_name)
+    #   elif location_name == "Mailbox - Letter from Aryll" and "Forsaken Fortress" in self.banned_dungeons:
+    #     self.banned_locations.append(location_name)
+    #   elif location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in self.banned_dungeons:
+    #     self.banned_locations.append(location_name)
 
   def show_quest_markers_on_sea_chart_for_dungeons(self):
     # Uses the blue quest markers on the sea chart to highlight certain dungeons.
