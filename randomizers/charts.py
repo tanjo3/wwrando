@@ -9,64 +9,13 @@ class ChartRandomizer(BaseRandomizer):
   
   def __init__(self, rando):
     super().__init__(rando)
-    
-    # Default charts for each island.
-    self.island_number_to_chart_name = {
-      1 : "Treasure Chart 25",
-      2 : "Treasure Chart 7",
-      3 : "Treasure Chart 24",
-      4 : "Triforce Chart 2",
-      5 : "Treasure Chart 11",
-      6 : "Triforce Chart 7",
-      7 : "Treasure Chart 13",
-      8 : "Treasure Chart 41",
-      9 : "Treasure Chart 29",
-      10: "Treasure Chart 22",
-      11: "Treasure Chart 18",
-      12: "Treasure Chart 30",
-      13: "Treasure Chart 39",
-      14: "Treasure Chart 19",
-      15: "Treasure Chart 8",
-      16: "Treasure Chart 2",
-      17: "Treasure Chart 10",
-      18: "Treasure Chart 26",
-      19: "Treasure Chart 3",
-      20: "Treasure Chart 37",
-      21: "Treasure Chart 27",
-      22: "Treasure Chart 38",
-      23: "Triforce Chart 1",
-      24: "Treasure Chart 21",
-      25: "Treasure Chart 6",
-      26: "Treasure Chart 14",
-      27: "Treasure Chart 34",
-      28: "Treasure Chart 5",
-      29: "Treasure Chart 28",
-      30: "Treasure Chart 35",
-      31: "Triforce Chart 3",
-      32: "Triforce Chart 6",
-      33: "Treasure Chart 1",
-      34: "Treasure Chart 20",
-      35: "Treasure Chart 36",
-      36: "Treasure Chart 23",
-      37: "Treasure Chart 12",
-      38: "Treasure Chart 16",
-      39: "Treasure Chart 4",
-      40: "Treasure Chart 17",
-      41: "Treasure Chart 31",
-      42: "Triforce Chart 5",
-      43: "Treasure Chart 9",
-      44: "Triforce Chart 4",
-      45: "Treasure Chart 40",
-      46: "Triforce Chart 8",
-      47: "Treasure Chart 15",
-      48: "Treasure Chart 32",
-      49: "Treasure Chart 33",
-    }
   
   def is_enabled(self) -> bool:
     return self.options.randomize_charts
   
   def _randomize(self):
+    # Chart randomization is done by the AP generator.
+    return
     original_item_names = list(self.island_number_to_chart_name.values())
     
     # Shuffles the list of island numbers.
@@ -84,7 +33,7 @@ class ChartRandomizer(BaseRandomizer):
     randomizable_charts = [chart for chart in self.rando.chart_list.charts if chart.type in [0, 1, 2, 6]]
     original_charts = copy.deepcopy(randomizable_charts)
     
-    for island_number, original_item_name in self.island_number_to_chart_name.items():
+    for island_number, original_item_name in self.rando.island_number_to_chart_name.items():
       # Finds the corresponding charts for the shuffled island number and original item name.
       chart_to_copy_from = next(chart for chart in original_charts if chart.island_number == island_number)
       chart = next(chart for chart in randomizable_charts if chart.item_name == original_item_name)
