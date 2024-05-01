@@ -229,7 +229,7 @@ class WWRandomizer:
       self.enemies,
       self.palettes,
       self.items,
-      # self.hints,
+      self.hints,
     ]
     
     self.logic.initialize_from_randomizer_state()
