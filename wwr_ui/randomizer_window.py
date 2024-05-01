@@ -161,14 +161,14 @@ class WWRandomizerWindow(QMainWindow):
     
     options = self.get_all_options_from_widget_values()
 
-    seed, name, required_boss_item_locations, locations_map, entrances_map = self.read_ap_plando_file(plando_file, options)
+    seed, name, required_boss_item_locations, locations_map, entrances_map, charts_map = self.read_ap_plando_file(plando_file, options)
     
     options.custom_colors = self.ui.tab_player_customization.get_all_colors()
     
     self.progress_dialog = RandomizerProgressDialog(self, "Randomizing", "Initializing...")
     
     try:
-      rando = WWRandomizer(seed, clean_iso_path, output_folder, options, name, required_boss_item_locations, locations_map, entrances_map, cmd_line_args=self.cmd_line_args)
+      rando = WWRandomizer(seed, clean_iso_path, output_folder, options, name, required_boss_item_locations, locations_map, entrances_map, charts_map, cmd_line_args=self.cmd_line_args)
     except (TooFewProgressionLocationsError, InvalidCleanISOError) as e:
       error_message = str(e)
       self.randomization_failed(error_message)
@@ -530,7 +530,7 @@ class WWRandomizerWindow(QMainWindow):
         if getattr(options, field.name) is None:
           setattr(options, field.name, field.default)
     
-    return seed, name, plando_file["Required Bosses"], plando_file["Locations"], plando_file["Entrances"]
+    return seed, name, plando_file["Required Bosses"], plando_file["Locations"], plando_file["Entrances"], plando_file["Charts"]
   
   def keyPressEvent(self, event):
     if event.key() == Qt.Key_Escape:
