@@ -826,9 +826,12 @@ def update_battlesquid_item_names(self: WWRandomizer):
   #msg = self.bmg.messages_by_id[7523]
 
 def update_item_names_in_letter_advertising_rock_spire_shop(self: WWRandomizer):
-  item_name_1 = self.logic.done_item_locations["Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item"]
-  item_name_2 = self.logic.done_item_locations["Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item"]
-  item_name_3 = self.logic.done_item_locations["Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item"]
+  item_info_1 = self.plando_locations["Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item"]
+  item_name_1 = f"P{item_info_1['player']}'s {item_info_1['name']}"
+  item_info_2 = self.plando_locations["Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item"]
+  item_name_2 = f"P{item_info_2['player']}'s {item_info_2['name']}"
+  item_info_3 = self.plando_locations["Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item"]
+  item_name_3 = f"P{item_info_2['player']}'s {item_info_3['name']}"
   msg = self.bmg.messages_by_id[3325]
   
   lines = msg.string.split("\n")
@@ -836,9 +839,9 @@ def update_item_names_in_letter_advertising_rock_spire_shop(self: WWRandomizer):
   unchanged_string_after = "\n".join(lines[12:])
   
   hint_string = (
-    "Do you have need of %s \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}, " % (get_indefinite_article(item_name_1), item_name_1) +
-    "%s \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}, " % (get_indefinite_article(item_name_2), item_name_2) +
-    "or %s \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}? " % (get_indefinite_article(item_name_3), item_name_3) +
+    "Do you have need of \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}, " % item_name_1 +
+    "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}, " % item_name_2 +
+    "or \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}? " % item_name_3 +
     "We have them at special bargain prices."
   )
   
