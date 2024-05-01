@@ -132,7 +132,7 @@ class HintsRandomizer(BaseRandomizer):
     self.max_item_hints = self.options.num_item_hints
     self.total_num_hints = self.max_path_hints + self.max_barren_hints + self.max_location_hints + self.max_item_hints
     
-    self.cryptic_hints = self.options.cryptic_hints
+    self.cryptic_hints = False  # force non-cryptic hints
     self.prioritize_remote_hints = self.options.prioritize_remote_hints
     
     self.floor_30_hint: Hint = None
@@ -144,10 +144,10 @@ class HintsRandomizer(BaseRandomizer):
     
     HintsRandomizer.load_hint_text_files()
     
-    for item_name in self.logic.all_progress_items:
-      if self.check_item_can_be_hinted_at(item_name):
-        item_name = HintsRandomizer.get_hint_item_name(item_name)
-        assert item_name in HintsRandomizer.cryptic_item_hints, f"Progress item is missing hint text: {item_name!r}"
+    # for item_name in self.logic.all_progress_items:
+    #   if self.check_item_can_be_hinted_at(item_name):
+    #     item_name = HintsRandomizer.get_hint_item_name(item_name)
+    #     assert item_name in HintsRandomizer.cryptic_item_hints, f"Progress item is missing hint text: {item_name!r}"
     
     # Validate location names in location hints file.
     for location_name in self.location_hints:
@@ -184,13 +184,14 @@ class HintsRandomizer(BaseRandomizer):
     self.floor_30_hint = self.generate_savage_labyrinth_hint("Outset Island - Savage Labyrinth - Floor 30")
     self.floor_50_hint = self.generate_savage_labyrinth_hint("Outset Island - Savage Labyrinth - Floor 50")
     
-    if not any(self.check_item_can_be_hinted_at(item_name) for item_name in self.rando.all_randomized_progress_items):
-      # If the player chose to start the game with every single progress item, there will be no way
-      # to generate any hints. Therefore we leave all the hint location text as the vanilla text,
-      # except Savage Labyrinth's hint tablet.
-      return
+    # if not any(self.check_item_can_be_hinted_at(item_name) for item_name in self.rando.all_randomized_progress_items):
+    #   # If the player chose to start the game with every single progress item, there will be no way
+    #   # to generate any hints. Therefore we leave all the hint location text as the vanilla text,
+    #   # except Savage Labyrinth's hint tablet.
+    #   return
     
     self.octo_fairy_hint = self.generate_octo_fairy_hint()
+    return
     
     variable_hint_placement_options = ("fishmen_hints", "hoho_hints", "korl_hints")
     self.hints_per_placement.clear()
@@ -255,13 +256,14 @@ class HintsRandomizer(BaseRandomizer):
   def _save(self):
     self.update_savage_labyrinth_hint_tablet(self.floor_30_hint, self.floor_50_hint)
     
-    if not any(self.check_item_can_be_hinted_at(item_name) for item_name in self.rando.all_randomized_progress_items):
-      # See above.
-      return
+    # if not any(self.check_item_can_be_hinted_at(item_name) for item_name in self.rando.all_randomized_progress_items):
+    #   # See above.
+    #   return
     
     patcher.apply_patch(self.rando, "flexible_hint_locations")
     
     self.update_big_octo_great_fairy_item_name_hint(self.octo_fairy_hint)
+    return
     
     # Send the list of hints for each hint placement option to its respective distribution function.
     # Each hint placement option will handle how to place the hints in-game in their own way.
@@ -335,12 +337,11 @@ class HintsRandomizer(BaseRandomizer):
     msg.string = "\\{1A 06 FF 00 00 05}In \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 05}, you will find an item." % hint.formatted_place(self.cryptic_hints)
     msg.word_wrap_string(self.rando.bfn)
     msg = self.rando.bmg.messages_by_id[12016]
-    msg.string = "\\{1A 06 FF 00 00 05}...\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 05}, which may help you on your quest." % tweaks.upper_first_letter(hint.formatted_reward(self.cryptic_hints))
+    msg.string = "\\{1A 06 FF 00 00 05}...\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 05}, which may help them on their quest." % tweaks.upper_first_letter(hint.formatted_reward(self.cryptic_hints))
     msg.word_wrap_string(self.rando.bfn)
     msg = self.rando.bmg.messages_by_id[12017]
-    msg.string = "\\{1A 06 FF 00 00 05}When you find you have need of such an item, you must journey to that place."
+    msg.string = "\\{1A 06 FF 00 00 05}When they find they have need of such an item, you must journey to that place."
     msg.word_wrap_string(self.rando.bfn)
-  
   def update_fishmen_hints(self):
     for fishman_island_number, hint in self.island_to_fishman_hint.items():
       hint_lines = []
@@ -516,25 +517,31 @@ class HintsRandomizer(BaseRandomizer):
     return hint_string
   
   @staticmethod
-  def get_formatted_item_name(item_name):
-    if item_name.endswith("Small Key"):
-      short_dungeon_name = item_name.split(" Small Key")[0]
-      dungeon_name = Logic.DUNGEON_NAMES[short_dungeon_name]
-      item_name = "%s small key" % dungeon_name
-    elif item_name.endswith("Big Key"):
-      short_dungeon_name = item_name.split(" Big Key")[0]
-      dungeon_name = Logic.DUNGEON_NAMES[short_dungeon_name]
-      item_name = "%s Big Key" % dungeon_name
-    elif item_name.endswith("Dungeon Map"):
-      short_dungeon_name = item_name.split(" Dungeon Map")[0]
-      dungeon_name = Logic.DUNGEON_NAMES[short_dungeon_name]
-      item_name = "%s Dungeon Map" % dungeon_name
-    elif item_name.endswith("Compass"):
-      short_dungeon_name = item_name.split(" Compass")[0]
-      dungeon_name = Logic.DUNGEON_NAMES[short_dungeon_name]
-      item_name = "%s Compass" % dungeon_name
+  def get_formatted_item_name(item_info):
+    item_player = item_info["player"]
+    item_name = item_info["name"]
+    item_game = item_info["game"]
+
+    if item_game == "The Wind Waker":
+      if item_name.endswith("Small Key"):
+        short_dungeon_name = item_name.split(" Small Key")[0]
+        dungeon_name = Logic.DUNGEON_NAMES[short_dungeon_name]
+        item_name = "%s small key" % dungeon_name
+      elif item_name.endswith("Big Key"):
+        short_dungeon_name = item_name.split(" Big Key")[0]
+        dungeon_name = Logic.DUNGEON_NAMES[short_dungeon_name]
+        item_name = "%s Big Key" % dungeon_name
+      elif item_name.endswith("Dungeon Map"):
+        short_dungeon_name = item_name.split(" Dungeon Map")[0]
+        dungeon_name = Logic.DUNGEON_NAMES[short_dungeon_name]
+        item_name = "%s Dungeon Map" % dungeon_name
+      elif item_name.endswith("Compass"):
+        short_dungeon_name = item_name.split(" Compass")[0]
+        dungeon_name = Logic.DUNGEON_NAMES[short_dungeon_name]
+        item_name = "%s Compass" % dungeon_name
     
-    item_name = tweaks.add_article_before_item_name(item_name)
+    item_name = f"P{item_player}'s {item_name}"
+    # item_name = tweaks.add_article_before_item_name(item_name)
     return item_name
   
   @staticmethod
@@ -795,7 +802,15 @@ class HintsRandomizer(BaseRandomizer):
     
     return new_hintable_locations
   
-  def check_item_can_be_hinted_at(self, item_name: str):
+  def check_item_can_be_hinted_at(self, item_info):
+    item_name = item_info["name"]
+    item_game = item_info["game"]
+    item_classification = item_info["classification"]
+    
+    # Any progression Archipelago item is hintable.
+    if item_game != "The Wind Waker" and item_classification not in ["useful", "filler"]:
+      return True
+    
     # Don't hint at non-progress items.
     if item_name not in self.logic.all_progress_items:
       return False
@@ -811,9 +826,9 @@ class HintsRandomizer(BaseRandomizer):
     return True
   
   def check_is_legal_item_hint(self, location_name, progress_locations, previously_hinted_locations):
-    item_name = self.logic.done_item_locations[location_name]
+    item_info = self.rando.plando_locations[location_name]
     
-    if not self.check_item_can_be_hinted_at(item_name):
+    if not self.check_item_can_be_hinted_at(item_info):
       return False
     
     # Don't hint at item in non-progress locations.
@@ -835,13 +850,13 @@ class HintsRandomizer(BaseRandomizer):
     
     # Filter out locations which are invalid to be hinted at for item hints.
     hintable_locations = [
-      loc for loc in self.logic.done_item_locations
+      loc for loc in self.rando.plando_locations.keys()
       if self.check_is_legal_item_hint(loc, progress_locations, previously_hinted_locations)
     ]
     
-    new_hintable_locations = self.filter_out_hinted_barren_locations(hintable_locations, hinted_barren_zones)
+    # new_hintable_locations = self.filter_out_hinted_barren_locations(hintable_locations, hinted_barren_zones)
     
-    return new_hintable_locations
+    return hintable_locations
   
   def get_item_hint(self, hintable_locations):
     if len(hintable_locations) == 0:
@@ -851,10 +866,10 @@ class HintsRandomizer(BaseRandomizer):
     location_name = self.rng.choice(hintable_locations)
     hintable_locations.remove(location_name)
     
-    item_name = self.logic.done_item_locations[location_name]
+    item_info = self.rando.plando_locations[location_name]
     entrance_zone = self.rando.entrances.get_entrance_zone_for_item_location(location_name)
     
-    item_hint = Hint(HintType.ITEM, entrance_zone, item_name)
+    item_hint = Hint(HintType.ITEM, entrance_zone, item_info)
     
     return item_hint, location_name
   
@@ -922,8 +937,8 @@ class HintsRandomizer(BaseRandomizer):
   
   def generate_savage_labyrinth_hint(self, location_name):
     # Get an item hint for one of the two checks in Savage Labyrinth.
-    item_name = self.logic.done_item_locations[location_name]
-    hint = Hint(HintType.FIXED_LOCATION, location_name, item_name)
+    item_info = self.rando.plando_locations[location_name]
+    hint = Hint(HintType.FIXED_LOCATION, location_name, item_info)
     return hint
   
   def generate_hints(self):
