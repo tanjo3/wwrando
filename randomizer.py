@@ -98,6 +98,7 @@ class WWRandomizer:
     required_boss_item_locations: list[str],
     plando_locations: dict[str, dict[str, str]],
     plando_entrances: dict[str, str],
+    charts: list[str],
     cmd_line_args=None,
   ):
     self.fully_initialized = False
@@ -112,6 +113,7 @@ class WWRandomizer:
     self.required_boss_item_locations = required_boss_item_locations
     self.plando_locations = plando_locations
     self.plando_entrances = plando_entrances
+    self.island_number_to_chart_name = charts
     self.permalink = None
     self.seed_hash = self.get_seed_hash()
     
@@ -213,7 +215,7 @@ class WWRandomizer:
     
     # This list's order is the order these randomizers will be called in.
     self.randomizers: list[BaseRandomizer] = [
-      # self.charts,
+      self.charts,
       # self.music,
       self.boss_reqs,
       self.entrances,
