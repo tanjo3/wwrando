@@ -831,7 +831,7 @@ def update_item_names_in_letter_advertising_rock_spire_shop(self: WWRandomizer):
   item_info_2 = self.plando_locations["Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item"]
   item_name_2 = f"P{item_info_2['player']}'s {item_info_2['name']}"
   item_info_3 = self.plando_locations["Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item"]
-  item_name_3 = f"P{item_info_2['player']}'s {item_info_3['name']}"
+  item_name_3 = f"P{item_info_3['player']}'s {item_info_3['name']}"
   msg = self.bmg.messages_by_id[3325]
   
   lines = msg.string.split("\n")
