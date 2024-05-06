@@ -342,6 +342,7 @@ class HintsRandomizer(BaseRandomizer):
     msg = self.rando.bmg.messages_by_id[12017]
     msg.string = "\\{1A 06 FF 00 00 05}When they find they have need of such an item, you must journey to that place."
     msg.word_wrap_string(self.rando.bfn)
+
   def update_fishmen_hints(self):
     for fishman_island_number, hint in self.island_to_fishman_hint.items():
       hint_lines = []
