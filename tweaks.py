@@ -555,7 +555,7 @@ def modify_title_screen_logo(self: WWRandomizer):
   fs.write_u16(data, 0x162, 0x106) # Increase Y pos by 16 pixels (0xF6 -> 0x106)
 
 def update_game_name_icon_and_banners(self: WWRandomizer):
-  new_game_name = "Wind Waker Randomized %s_%s" % (self.seed, self.player_name)
+  new_game_name = "TWW %s (%s)" % (self.seed, self.player_name)
   banner_data = self.get_raw_file("files/opening.bnr")
   fs.write_magic_str(banner_data, 0x1860, new_game_name, 0x40)
   
