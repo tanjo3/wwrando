@@ -336,6 +336,13 @@ class Options(BaseOptions):
       "Only progress items will have these additions; non-progress items are trivially not required."
   )
   #endregion
+
+  #region Logic Tweaks
+  open_drc: bool = option(
+    default=True,
+    description="Allow DRC entrance to be accessed from the beginning of the game with no items"
+  )
+  #endregion
   
   #region Tweaks
   swift_sail: bool = option(
