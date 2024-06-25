@@ -2,11 +2,11 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ s7-tournament ]
     paths-ignore:
       - 'docs/**'
   pull_request:
-    branches: [ master ]
+    branches: [ s7-tournament ]
     paths-ignore:
       - 'docs/**'
   workflow_dispatch:
