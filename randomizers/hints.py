@@ -915,7 +915,7 @@ class HintsRandomizer(BaseRandomizer):
       return ItemImportance.POSSIBLY_REQUIRED
   
   def check_is_legal_item_hint(self, location_name, progress_locations, previously_hinted_locations):
-    item_info = self.rando.plando_locations[location_name]
+    item_info = self.rando.plando.locations[location_name]
     
     if not self.check_item_can_be_hinted_at(item_info):
       return False
@@ -939,7 +939,7 @@ class HintsRandomizer(BaseRandomizer):
     
     # Filter out locations which are invalid to be hinted at for item hints.
     hintable_locations = [
-      loc for loc in list(self.rando.plando_locations.keys())
+      loc for loc in list(self.rando.plando.locations.keys())
       if self.check_is_legal_item_hint(loc, progress_locations, previously_hinted_locations)
     ]
     
@@ -953,7 +953,7 @@ class HintsRandomizer(BaseRandomizer):
     location_name = self.rng.choice(hintable_locations)
     hintable_locations.remove(location_name)
     
-    item_info = self.rando.plando_locations[location_name]
+    item_info = self.rando.plando.locations[location_name]
     entrance_zone = self.rando.entrances.get_entrance_zone_for_item_location(location_name)
     
     item_importance = self.get_importance_for_location(location_name)
@@ -1030,7 +1030,7 @@ class HintsRandomizer(BaseRandomizer):
   
   def generate_savage_labyrinth_hint(self, location_name):
     # Get an item hint for one of the two checks in Savage Labyrinth.
-    item_info = self.rando.plando_locations[location_name]
+    item_info = self.rando.plando.locations[location_name]
     item_importance = self.get_importance_for_location(location_name)
     hint = Hint(HintType.FIXED_LOCATION, location_name, item_info, item_importance)
     return hint
