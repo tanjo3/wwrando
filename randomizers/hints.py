@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from ruamel.yaml import YAML
 yaml = YAML(typ="safe")
 
+from options.wwrando_options import KeyLunacyMode
 from logic.logic import Logic
 from randomizers.base_randomizer import BaseRandomizer
 from wwlib.dzx import DZx, ACTR, MULT
@@ -882,6 +883,7 @@ class HintsRandomizer(BaseRandomizer):
     return new_hintable_locations
   
   def check_item_can_be_hinted_at(self, item_info: dict[str, dict[str, str | None]]):
+    item_player = int(item_info["player"])
     item_name = item_info["name"]
     item_game = item_info["game"]
     item_classification = item_info["classification"]
@@ -890,9 +892,14 @@ class HintsRandomizer(BaseRandomizer):
     if item_classification in ["useful", "filler"]:
       return False
     
-    # Don't hint at dungeon keys when key-lunacy is not enabled.
-    if self.logic.is_dungeon_item(item_name) and not self.options.keylunacy:
-      return False
+    if item_player == self.rando.plando.slot and item_game == "The Wind Waker":
+      # Don't hint at Big Keys when they are intentionally placed inisde of their own dungeon.
+      if item_name.endswith(" Big Key") and self.options.randomize_bigkeys in KeyLunacyMode.VANILLA | KeyLunacyMode.DUNGEON:
+          return False
+      
+      # Don't hint at small keys when they are intentionally placed inisde of their own dungeon.
+      if item_name.endswith(" Small Key") and self.options.randomize_smallkeys in KeyLunacyMode.VANILLA | KeyLunacyMode.DUNGEON:
+          return False
     
     return True
   
