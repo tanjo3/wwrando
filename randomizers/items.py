@@ -37,8 +37,8 @@ class ItemRandomizer(BaseRandomizer):
   
   def _randomize(self):
     for location_name in self.logic.remaining_item_locations:
-      if location_name in self.rando.plando_locations:
-        item_info = self.rando.plando_locations[location_name]
+      if location_name in self.rando.plando.locations:
+        item_info = self.rando.plando.locations[location_name]
         self.logic.done_item_locations_info[location_name] = {
           "game": item_info["game"],
           "classification": item_info["classification"],
