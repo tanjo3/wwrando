@@ -92,7 +92,7 @@ class RequiredBossesRandomizer(BaseRandomizer):
       assert specific_location_name.endswith(" Heart Container")
       boss_name = specific_location_name.removesuffix(" Heart Container")
       
-      if location_name in self.rando.required_boss_item_locations:
+      if location_name in self.rando.plando.required_bosses:
         self.required_dungeons.append(dungeon_name)
         self.required_bosses.append(boss_name)
       else:

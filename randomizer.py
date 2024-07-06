@@ -1,4 +1,5 @@
 
+from dataclasses import dataclass
 import os
 import re
 from random import Random
@@ -83,6 +84,17 @@ class PermalinkWrongCommitError(Exception): pass
 
 T = TypeVar('T')
 
+@dataclass(frozen=True)
+class Plando:
+  seed: str
+  slot: int
+  name: str
+  required_bosses: list[str]
+  locations: dict[str, dict[str, str]]
+  entrances: dict[str, str]
+  charts: dict[int, str]
+
+
 class WWRandomizer:
   CLEAN_WIND_WAKER_ISO_MD5 = 0xd8e4d45af2032a081a0f446384e9261b
   VALID_SEED_CHARACTERS = "-_'%%.%s%s" % (string.ascii_letters, string.digits)
@@ -94,11 +106,7 @@ class WWRandomizer:
     clean_iso_path,
     randomized_output_folder,
     options: Options,
-    player_name: str,
-    required_boss_item_locations: list[str],
-    plando_locations: dict[str, dict[str, str]],
-    plando_entrances: dict[str, str],
-    charts: list[str],
+    plando: Plando,
     cmd_line_args=None,
   ):
     self.fully_initialized = False
@@ -109,11 +117,7 @@ class WWRandomizer:
     self.logs_output_folder = self.randomized_output_folder
     self.options = options
     self.seed = self.sanitize_seed(seed)
-    self.player_name = player_name
-    self.required_boss_item_locations = required_boss_item_locations
-    self.plando_locations = plando_locations
-    self.plando_entrances = plando_entrances
-    self.island_number_to_chart_name = charts
+    self.plando = plando
     self.permalink = None
     self.seed_hash = self.get_seed_hash()
     
@@ -923,10 +927,10 @@ class WWRandomizer:
       self.gcm.changed_files[jpc_path] = jpc.data
     
     if self.export_disc_to_folder:
-      output_folder_path = os.path.join(self.randomized_output_folder, "TWW %s (%s)" % (self.seed, self.player_name))
+      output_folder_path = os.path.join(self.randomized_output_folder, "TWW %s (%s)" % (self.seed, self.plando.name))
       yield from self.gcm.export_disc_to_folder_with_changed_files(output_folder_path)
     else:
-      output_file_path = os.path.join(self.randomized_output_folder, "TWW %s (%s).iso" % (self.seed, self.player_name))
+      output_file_path = os.path.join(self.randomized_output_folder, "TWW %s (%s).iso" % (self.seed, self.plando.name))
       yield from self.gcm.export_disc_to_iso_with_changed_files(output_file_path)
   
   def convert_string_to_integer_md5(self, string):
