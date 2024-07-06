@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from enum import StrEnum
+from enum import Flag, StrEnum, auto
 
 from options.base_options import BaseOptions, option
 
@@ -19,6 +19,14 @@ class TrickDifficulty(StrEnum):
   NORMAL = "Normal"
   HARD = "Hard"
   VERY_HARD = "Very Hard"
+
+class KeyLunacyMode(Flag):
+  START_WITH = auto()
+  VANILLA = auto()
+  DUNGEON = auto()
+  ANY_DUNGEON = auto()
+  LOCAL = auto()
+  KEYLUNACY = auto()
 
 @dataclass
 class Options(BaseOptions):
@@ -141,9 +149,17 @@ class Options(BaseOptions):
   #endregion
   
   #region Modes
-  keylunacy: bool = option(
-    default=False,
-    description="Allows dungeon keys (as well as maps and compasses) to appear anywhere in the game, not just in the dungeon they're for.",
+  randomize_mapcompass: KeyLunacyMode = option(
+    default=KeyLunacyMode.DUNGEON,
+    description="Controls how dungeon maps and compasses are randomized.",
+  )
+  randomize_smallkeys: KeyLunacyMode = option(
+    default=KeyLunacyMode.DUNGEON,
+    description="Controls how small keys are randomized.",
+  )
+  randomize_bigkeys: KeyLunacyMode = option(
+    default=KeyLunacyMode.DUNGEON,
+    description="Controls how big keys are randomized.",
   )
   sword_mode: SwordMode = option(
     default=SwordMode.START_WITH_SWORD,
