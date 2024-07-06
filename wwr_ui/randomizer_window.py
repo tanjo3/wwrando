@@ -18,7 +18,7 @@ yaml = YAML(typ="safe")
 from ruamel.yaml.error import YAMLError
 yaml_dumper = YAML(typ="rt") # Use RoundTripDumper for pretty-formatted dumps.
 
-from options.wwrando_options import EntranceMixMode, Options, SwordMode, TrickDifficulty
+from options.wwrando_options import EntranceMixMode, KeyLunacyMode, Options, SwordMode, TrickDifficulty
 from randomizer import WWRandomizer, TooFewProgressionLocationsError, InvalidCleanISOError, PermalinkWrongVersionError, PermalinkWrongCommitError, Plando
 from version import VERSION
 from wwrando_paths import SETTINGS_PATH, ASSETS_PATH, IS_RUNNING_FROM_SOURCE, RANDO_ROOT_PATH
@@ -717,6 +717,14 @@ class WWRandomizerWindow(QMainWindow):
               case 1: setattr(options, field.name, TrickDifficulty.NORMAL)
               case 2: setattr(options, field.name, TrickDifficulty.HARD)
               case 3: setattr(options, field.name, TrickDifficulty.VERY_HARD)
+        elif field.type is KeyLunacyMode:
+            match value:
+              case 0: setattr(options, field.name, KeyLunacyMode.START_WITH)
+              case 1: setattr(options, field.name, KeyLunacyMode.VANILLA)
+              case 2: setattr(options, field.name, KeyLunacyMode.DUNGEON)
+              case 3: setattr(options, field.name, KeyLunacyMode.ANY_DUNGEON)
+              case 4: setattr(options, field.name, KeyLunacyMode.LOCAL)
+              case 5: setattr(options, field.name, KeyLunacyMode.KEYLUNACY)
         else:
           print(f"Bad option: {field.name} = {value}")
       else:
