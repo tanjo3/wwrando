@@ -16,16 +16,16 @@ class ChartRandomizer(BaseRandomizer):
   def _randomize(self):
     # Chart randomization is done by the AP generator.
     return
-    original_item_names = list(self.island_number_to_chart_name.values())
+    original_item_names = list(self.rando.plando.charts.values())
     
     # Shuffles the list of island numbers.
     # The shuffled island numbers determine which sector each chart points to.
-    shuffled_island_numbers = list(self.island_number_to_chart_name.keys())
+    shuffled_island_numbers = list(self.rando.plando.charts.keys())
     self.rng.shuffle(shuffled_island_numbers)
     
     for original_item_name in original_item_names:
       shuffled_island_number = shuffled_island_numbers.pop()
-      self.island_number_to_chart_name[shuffled_island_number] = original_item_name
+      self.rando.plando.charts[shuffled_island_number] = original_item_name
     
     self.logic.update_chart_macros()
   
@@ -33,7 +33,7 @@ class ChartRandomizer(BaseRandomizer):
     randomizable_charts = [chart for chart in self.rando.chart_list.charts if chart.type in [0, 1, 2, 6]]
     original_charts = copy.deepcopy(randomizable_charts)
     
-    for island_number, original_item_name in self.rando.island_number_to_chart_name.items():
+    for island_number, original_item_name in self.rando.plando.charts.items():
       # Finds the corresponding charts for the shuffled island number and original item name.
       chart_to_copy_from = next(chart for chart in original_charts if chart.island_number == island_number)
       chart = next(chart for chart in randomizable_charts if chart.item_name == original_item_name)
