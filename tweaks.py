@@ -2733,4 +2733,5 @@ def apply_changes_for_archipelago(self: WWRandomizer):
   msg.word_wrap_string(self.bfn)
   
   # Record the player's slot name
-  self.dol.write_data(fs.write_str, 0x803FE88C, self.plando.name, 0x40)
+  slot_name_address = self.main_custom_symbols["archipelago_slot_name"]
+  self.dol.write_data(fs.write_str, slot_name_address, self.plando.name, 0x40)
