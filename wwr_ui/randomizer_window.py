@@ -419,8 +419,6 @@ class WWRandomizerWindow(QMainWindow):
     for option in Options.all():
       self.settings[option.name] = self.get_option_value(option.name)
     
-    self.save_settings()
-    
     self.encode_permalink()
     
     self.update_total_progress_locations()
