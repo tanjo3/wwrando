@@ -90,6 +90,75 @@ class WWRandomizer:
   def __init__(self, seed, clean_iso_path, randomized_output_folder, options: Options, cmd_line_args=None):
     self.fully_initialized = False
     
+    if cmd_line_args.modifiers is None:
+      self.modifiers = []
+    else:
+      self.modifiers = cmd_line_args.modifiers.strip().split(",")
+    for modifier in self.modifiers:
+      match modifier:
+        case "4rbm":
+          options.required_bosses = True
+          options.num_required_bosses = 4
+        case "nosword":
+          options.sword_mode = SwordMode.NO_STARTING_SWORD
+        case "der":
+          options.randomize_dungeon_entrances = True
+        case "ber":
+          options.randomize_boss_entrances = True
+        case "keys":
+          options.keylunacy = True
+        case "tingle":
+          options.progression_tingle_chests = True
+          options.progression_dungeon_secrets = False
+        case "expen":
+          options.progression_expensive_purchases = True
+          for item_cost in (500, 950, 900):
+            beedle_location = f"Rock Spire Isle - Beedle's Special Shop Ship - {item_cost} Rupee Item"
+            if beedle_location in options.excluded_locations:
+              options.excluded_locations.remove(beedle_location)
+        case "subs":
+          options.progression_submarines = True
+        case "minis":
+          options.progression_minigames = True
+          if options.progression_expensive_purchases == True:
+            for item_cost in (5, 40, 60, 80):
+              auction_location = f"Windfall Island - {item_cost} Rupee Auction"
+              if auction_location not in options.excluded_locations:
+                options.excluded_locations.append(auction_location)
+        case "plats":
+          options.progression_platforms_rafts = True
+          excluded_platforms = [
+            "Fire Mountain - Lookout Platform Chest",
+            "Fire Mountain - Lookout Platform - Destroy the Cannons",
+            "Boating Course - Raft",
+            "Stone Watcher Island - Lookout Platform Chest",
+            "Stone Watcher Island - Lookout Platform - Destroy the Cannons",
+            "Pawprint Isle - Lookout Platform - Defeat the Enemies",
+            "Thorned Fairy Island - Northeastern Lookout Platform - Destroy the Cannons",
+            "Thorned Fairy Island - Southwestern Lookout Platform - Defeat the Enemies",
+            "Eastern Fairy Island - Lookout Platform - Defeat the Cannons and Enemies",
+            "Western Fairy Island - Lookout Platform",
+            "Bomb Island - Lookout Platform - Defeat the Enemies",
+            "Rock Spire Isle - Western Lookout Platform - Destroy the Cannons",
+            "Rock Spire Isle - Eastern Lookout Platform - Destroy the Cannons",
+            "Rock Spire Isle - Center Lookout Platform",
+            "Cliff Plateau Isles - Lookout Platform",
+            "Horseshoe Island - Northwestern Lookout Platform",
+            "Horseshoe Island - Southeastern Lookout Platform",
+            "Star Island - Lookout Platform",
+            "Star Belt Archipelago - Lookout Platform",
+            "Five-Star Isles - Lookout Platform - Destroy the Cannons",
+            "Five-Star Isles - Raft",
+            "Cyclops Reef - Lookout Platform - Defeat the Enemies",
+            "Two-Eye Reef - Lookout Platform",
+            "Five-Eye Reef - Lookout Platform",
+            "Six-Eye Reef - Lookout Platform - Destroy the Cannons",
+          ]
+          for platform_location in excluded_platforms:
+            if platform_location not in options.excluded_locations:
+              options.excluded_locations.append(platform_location)
+        case _:
+          print(f"Skipped unknown modifier: {modifier}")
     options.validate()
     
     self.randomized_output_folder = randomized_output_folder
@@ -396,7 +465,13 @@ class WWRandomizer:
     yield("Writing logs...", progress_completed)
     if not self.options.do_not_generate_spoiler_log:
       self.write_spoiler_log()
-    self.write_non_spoiler_log()
+    permalink_output_path = os.path.join(self.randomized_output_folder, "permalink_%s.txt" % self.seed)
+    with open(permalink_output_path, "w") as f:
+      f.write(self.permalink)
+    
+    seed_hash_output_path = os.path.join(self.randomized_output_folder, "seed_hash_%s.txt" % self.seed)
+    with open(seed_hash_output_path, "w") as f:
+      f.write(self.seed_hash)
   
   def apply_necessary_tweaks(self):
     patcher.apply_patch(self, "custom_data")
@@ -1037,14 +1112,6 @@ class WWRandomizer:
     
     header += "Wind Waker Randomizer Version %s\n" % VERSION
     
-    if self.permalink:
-      header += "Permalink: %s\n" % self.permalink
-    
-    if self.seed_hash:
-      header += "Seed Hash: %s\n" % self.seed_hash
-
-    header += "Seed: %s\n" % self.seed
-    
     header += "Options selected:\n  "
     non_disabled_options = [
       option.name for option in Options.all
@@ -1113,8 +1180,7 @@ class WWRandomizer:
     if self.randomize_items:
       spoiler_log += self.hints.write_to_spoiler_log()
     
-    os.makedirs(self.logs_output_folder, exist_ok=True)
-    spoiler_log_output_path = os.path.join(self.logs_output_folder, "WW Random %s - Spoiler Log.txt" % self.seed)
+    spoiler_log_output_path = os.path.join(self.logs_output_folder, "spoiler_log_%s.txt" % self.seed)
     with open(spoiler_log_output_path, "w") as f:
       f.write(spoiler_log)
   
@@ -1130,7 +1196,6 @@ class WWRandomizer:
     
     error_log_str += error_message
     
-    os.makedirs(self.logs_output_folder, exist_ok=True)
     error_log_output_path = os.path.join(self.logs_output_folder, "WW Random %s - Error Log.txt" % self.seed)
     with open(error_log_output_path, "w") as f:
       f.write(error_log_str)

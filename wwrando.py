@@ -101,6 +101,10 @@ def make_argparser() -> argparse.ArgumentParser:
     '--profile', action='store_true',
     help="Profile the randomization code and store the results to a file.",
   )
+  parser.add_argument(
+    '--modifiers', type=str,
+    help="Modify the settings with predefined modifiers.",
+  )
   
   return parser
 
@@ -187,25 +191,17 @@ def run_no_ui(args):
   import cProfile, pstats
   
   options = Options()
-  with open(SETTINGS_PATH) as f:
-    settings: dict = yaml.safe_load(f)
-    for option_name, option_value in settings.items():
-      if option_name not in options.by_name:
-        continue
-      options[option_name] = option_value
-  
-  seed = settings["seed"]
   
   if args.permalink:
-    seed, options = WWRandomizer.decode_permalink(args.permalink, options)
+    seed, options = WWRandomizer.decode_permalink(args.permalink, options, allow_different_commit=True)
   
   if args.seed:
     seed = args.seed
   
   rando_kwargs = {
     "seed": seed,
-    "clean_iso_path": settings["clean_iso_path"].strip(),
-    "randomized_output_folder": settings["output_folder"],
+    "clean_iso_path": None,
+    "randomized_output_folder": "",
     "options": options, # TODO filter out invalid options
     "cmd_line_args": args,
   }
