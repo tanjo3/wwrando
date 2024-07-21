@@ -706,7 +706,8 @@ class WWRandomizerWindow(QMainWindow):
           match value:
             case 0: setattr(options, field.name, SwordMode.START_WITH_SWORD)
             case 1: setattr(options, field.name, SwordMode.NO_STARTING_SWORD)
-            case 2: setattr(options, field.name, SwordMode.SWORDLESS)
+            case 2: setattr(options, field.name, SwordMode.SWORDS_OPTIONAL)
+            case 3: setattr(options, field.name, SwordMode.SWORDLESS)
         elif field.type is EntranceMixMode:
             match value:
               case 0: setattr(options, field.name, EntranceMixMode.SEPARATE_DUNGEONS)
