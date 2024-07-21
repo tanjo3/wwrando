@@ -8,6 +8,7 @@ from wwr_ui.inventory import DEFAULT_STARTING_ITEMS, DEFAULT_RANDOMIZED_ITEMS
 class SwordMode(StrEnum):
   START_WITH_SWORD = "Start with Hero's Sword"
   NO_STARTING_SWORD = "No Starting Sword"
+  SWORDS_OPTIONAL = "Swords Optional"
   SWORDLESS = "Swordless"
 
 class EntranceMixMode(StrEnum):
@@ -170,6 +171,9 @@ class Options(BaseOptions):
         "Start with Hero's Sword: You will start the game with the basic Hero's Sword already in your inventory (the default).",
       SwordMode.NO_STARTING_SWORD:
         "No Starting Sword: You will start the game with no sword, and have to find it somewhere in the world like other randomized items.",
+      SwordMode.SWORDS_OPTIONAL:
+        "You will start the game with no sword, but they'll still be randomized.<br>"
+        "However, they are not necessary to beat the game as the Hyrule Barrier will be gone, Phantom Ganon in FF is vulnerable to Skull Hammer, and the logic not expect you to have a sword.",
       SwordMode.SWORDLESS:
         "Swordless: You will start the game with no sword, and won't be able to find it anywhere. You have to beat the entire game using other items as weapons instead of the sword.<br>"
         "(Note that Phantom Ganon in FF becomes vulnerable to Skull Hammer in this mode.)",
