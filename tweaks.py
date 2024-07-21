@@ -1416,6 +1416,8 @@ def update_sword_mode_game_variable(self: WWRandomizer):
     self.dol.write_data(fs.write_u8, sword_mode_address, 1)
   elif self.options.sword_mode == SwordMode.NO_STARTING_SWORD:
     self.dol.write_data(fs.write_u8, sword_mode_address, 1)
+  elif self.options.sword_mode == SwordMode.SWORDS_OPTIONAL:
+    self.dol.write_data(fs.write_u8, sword_mode_address, 2)
   elif self.options.sword_mode == SwordMode.SWORDLESS:
     self.dol.write_data(fs.write_u8, sword_mode_address, 2)
   else:
@@ -1451,7 +1453,10 @@ def update_starting_gear(self: WWRandomizer, starting_gear: list[str]):
 
 def update_text_for_swordless(self: WWRandomizer):
   msg = self.bmg.messages_by_id[1128]
-  msg.string = "\\{1A 05 00 00 00}, you may not have the\nMaster Sword, but do not be afraid!\n\n\n"
+  if self.options.sword_mode == SwordMode.SWORDS_OPTIONAL:
+    msg.string = "\\{1A 05 00 00 00}, even if you have the\nMaster Sword, it will not work!\n\n\n"
+  elif self.options.sword_mode == SwordMode.SWORDLESS:
+    msg.string = "\\{1A 05 00 00 00}, you may not have the\nMaster Sword, but do not be afraid!\n\n\n"
   msg.string += "The hammer of the dead is all you\nneed to crush your foe...\n\n\n"
   msg.string += "Even as his ball of fell magic bears down\non you, you can \\{1A 06 FF 00 00 01}knock it back\nwith an empty bottle\\{1A 06 FF 00 00 00}!\n\n"
   msg.string += "...I am sure you will have a shot at victory!"
