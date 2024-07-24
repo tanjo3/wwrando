@@ -93,6 +93,13 @@ archipelago_slot_name:
   .space 0x40
 .align 2 ; Align to the next 4 bytes
 
+
+; Allocate 49 shorts in memory for the charts mapping
+.global archipelago_charts_mapping
+archipelago_charts_mapping:
+  .space 0x62
+.align 2 ; Align to the next 4 bytes
+
 .close
 
 
