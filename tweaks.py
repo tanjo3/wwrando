@@ -2731,8 +2731,8 @@ def enable_hero_mode(self: WWRandomizer):
 def set_default_targeting_mode_to_switch(self: WWRandomizer):
   targeting_mode_addr = self.main_custom_symbols["option_targeting_mode"]
   self.dol.write_data(fs.write_u8, targeting_mode_addr, 1)
-  
-def apply_changes_for_archipelago(self: WWRandomizer):
+
+def apply_pre_randomization_changes_for_archipelago(self: WWRandomizer):
   # Apply necessary changes for Archipelago
   patcher.apply_patch(self, "archipelago")
   
@@ -2747,3 +2747,9 @@ def apply_changes_for_archipelago(self: WWRandomizer):
   # Record the player's slot name
   slot_name_address = self.main_custom_symbols["archipelago_slot_name"]
   self.dol.write_data(fs.write_str, slot_name_address, self.plando.name, 0x40)
+
+def apply_post_randomization_changes_for_archipelago(self: WWRandomizer):
+  # Record the mapping of the charts
+  chart_mapping_address = self.main_custom_symbols["archipelago_charts_mapping"]
+  for offset in range(49):
+    self.dol.write_data(fs.write_u16, chart_mapping_address + offset * 2, self.plando.charts[offset])
