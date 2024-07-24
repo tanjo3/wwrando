@@ -92,7 +92,7 @@ class Plando:
   required_bosses: list[str]
   locations: dict[str, dict[str, str]]
   entrances: dict[str, str]
-  charts: dict[int, str]
+  charts: list[int]
 
 
 class WWRandomizer:
@@ -450,7 +450,7 @@ class WWRandomizer:
     tweaks.check_hide_ship_sail(self)
     customizer.change_player_custom_colors(self)
     
-    tweaks.apply_changes_for_archipelago(self)
+    tweaks.apply_pre_randomization_changes_for_archipelago(self)
   
   def apply_necessary_post_randomization_tweaks(self):
     if self.randomize_items:
@@ -459,6 +459,8 @@ class WWRandomizer:
       tweaks.update_battlesquid_item_names(self)
       tweaks.update_item_names_in_letter_advertising_rock_spire_shop(self)
     tweaks.prevent_fire_mountain_lava_softlock(self)
+    
+    tweaks.apply_post_randomization_changes_for_archipelago(self)
   
   @classmethod
   def sanitize_seed(cls, seed):
