@@ -336,8 +336,9 @@ class HintsRandomizer(BaseRandomizer):
   def update_savage_labyrinth_hint_tablet(self, floor_30_hint: Hint, floor_50_hint: Hint, importance: bool):
     # Update the tablet on the first floor of savage labyrinth to give hints as to the items inside the labyrinth.
     
-    floor_30_is_valid = self.check_item_can_be_hinted_at(floor_30_hint.reward)
-    floor_50_is_valid = self.check_item_can_be_hinted_at(floor_50_hint.reward)
+    # Always hint both items.
+    floor_30_is_valid = True
+    floor_50_is_valid = True
     
     if importance:
       floor_30_item_importance = floor_30_hint.formatted_importance()
