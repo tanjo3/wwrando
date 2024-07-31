@@ -34,6 +34,8 @@ if os.environ["QT_API"] == "pyside6":
 else:
   Ui_MainWindow = load_ui_file(os.path.join(RANDO_ROOT_PATH, "wwr_ui", "randomizer_window.ui"))
 
+class APTWWFileError(Exception): pass
+
 class WWRandomizerWindow(QMainWindow):
   def __init__(self, cmd_line_args):
     super(WWRandomizerWindow, self).__init__()
@@ -183,17 +185,20 @@ class WWRandomizerWindow(QMainWindow):
     
     options = self.get_all_options_from_widget_values()
     
-    plando = self.read_ap_plando_file(plando_file, options)
-    
     options.custom_colors = self.ui.tab_player_customization.get_all_colors()
     
     self.progress_dialog = RandomizerProgressDialog(self, "Randomizing", "Initializing...")
     
     try:
+      plando = self.read_ap_plando_file(plando_file, options)
       rando = WWRandomizer(plando.seed, clean_iso_path, output_folder, options, plando, cmd_line_args=self.cmd_line_args)
     except (TooFewProgressionLocationsError, InvalidCleanISOError) as e:
       error_message = str(e)
       self.randomization_failed(error_message)
+      return
+    except APTWWFileError as e:
+      error_message = str(e)
+      self.randomization_failed(error_message, use_richtext=True)
       return
     except Exception as e:
       stack_trace = traceback.format_exc()
@@ -235,7 +240,7 @@ class WWRandomizerWindow(QMainWindow):
     self.complete_dialog.setWindowIcon(self.windowIcon())
     self.complete_dialog.show()
   
-  def randomization_failed(self, error_message):
+  def randomization_failed(self, error_message, use_richtext=False):
     self.progress_dialog.reset()
     
     if self.randomizer_thread is not None:
@@ -244,10 +249,19 @@ class WWRandomizerWindow(QMainWindow):
     self.randomizer_thread = None
     
     print(error_message)
-    QMessageBox.critical(
-      self, "Randomization Failed",
-      error_message
-    )
+    if use_richtext:
+      error_dialog = QMessageBox()
+      error_dialog.setIcon(QMessageBox.Critical)
+      error_dialog.setTextFormat(Qt.TextFormat.RichText)
+      error_dialog.setWindowTitle("Randomization Failed")
+      error_dialog.setText(error_message)
+      error_dialog.setStandardButtons(QMessageBox.Ok)
+      error_dialog.exec_()
+    else:
+      QMessageBox.critical(
+        self, "Randomization Failed",
+        error_message
+      )
   
   def show_update_check_results(self, new_version):
     if not new_version:
@@ -440,7 +454,7 @@ class WWRandomizerWindow(QMainWindow):
       self, "APTWW File",
       "The APTWW file is necessary to randomize the game to be compatible with the Archipelago multiworld.\n\n" +
       "Whoever generated the multiworld should have an output zip file. " +
-      "They should unzip that file to find a .aptww file for each player playing Wind Waker.\n\n" +
+      "They should unzip that file to find a .aptww file for each player playing The Wind Waker.\n\n" +
       "Ask them for the .aptww file with your slot number and player name."
     )
   
@@ -689,9 +703,50 @@ class WWRandomizerWindow(QMainWindow):
         if self.get_option_value(option.name):
           widget.show()
   
+  def load_and_validate_ap_plando_file(self, plando_file: str) -> dict[str, dict]:
+    try:
+      f = open(os.path.join(plando_file), "r")
+    except:
+      raise APTWWFileError(
+        """The APTWW file could not be opened.<br><br>
+        Please ensure that the program has read permissions for the file and try again."""
+      )
+    else:
+      with f:
+        try:
+          plando_dict = yaml.load(f)
+        except:
+          raise APTWWFileError(
+            """There was an error trying to read the APTWW file.<br><br>
+            Please ensure that the file has not been modified or corrupted and try again."""
+          )
+      
+      # Check the APTWW version.
+      error_msg = None
+      if "Version" not in plando_dict:
+        # Pre v2.5.0
+        if "Name" in plando_dict:
+          error_msg = """The APTWW file appears to have been generated on v2.4.0 of the APWorld.<br><br>
+            You should use the 2.2.0 version of the randomizer build instead.<br>
+            Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.2.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.2.0</a>"""
+        else:
+          test_location = plando_dict["Locations"]["Outset Island - Underneath Link's House"]
+          if isinstance(test_location, dict):
+            error_msg = """The APTWW file appears to have been generated on v2.3.x of the APWorld.<br><br>
+              You should use the 2.1.0 version of the randomizer build instead.<br>
+              Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.1.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.1.0</a>"""
+          else:
+            error_msg = """The APTWW file appears to have been generated on a pre-v2.3.0 of the APWorld.<br><br>
+              You should use the 2.0.0 version of the randomizer build instead.<br>
+              Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.0.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.0.0</a>"""
+
+      if error_msg:
+        raise APTWWFileError(error_msg)
+      else:
+        return plando_dict
+  
   def read_ap_plando_file(self, plando_file: str, options: Options) -> Plando:
-    with open(os.path.join(plando_file), "r") as f:
-      plando_file = yaml.load(f)
+    plando_file = self.load_and_validate_ap_plando_file(plando_file)
     
     # Set options dataclass from the plando file
     for field in fields(options):
