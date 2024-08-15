@@ -858,38 +858,38 @@ blr
 
 
 
-.global progressive_magic_meter_item_func
-progressive_magic_meter_item_func:
+.global magic_meter_item_func
+magic_meter_item_func:
 ; Function start stuff
 stwu sp, -0x10 (sp)
 mflr r0
 stw r0, 0x14 (sp)
 
-
-lis r3, 0x803C4C1B@ha
-addi r3, r3, 0x803C4C1B@l
-lbz r4, 0 (r3) ; Max magic meter
-cmpwi r4, 0
-beq progressive_magic_meter_item_func_get_normal_magic_meter
-cmpwi r4, 16
-beq progressive_magic_meter_item_func_get_magic_meter_upgrade
-b progressive_magic_meter_item_func_end
-
-progressive_magic_meter_item_func_get_normal_magic_meter:
 bl normal_magic_meter_item_func
-b progressive_magic_meter_item_func_end
 
-progressive_magic_meter_item_func_get_magic_meter_upgrade:
-bl item_func_max_mp_up1__Fv
-
-
-progressive_magic_meter_item_func_end:
 ; Function end stuff
 lwz r0, 0x14 (sp)
 mtlr r0
 addi sp, sp, 0x10
 blr
 
+
+
+
+.global magic_meter_upgrade_item_func
+magic_meter_upgrade_item_func:
+; Function start stuff
+stwu sp, -0x10 (sp)
+mflr r0
+stw r0, 0x14 (sp)
+
+bl item_func_max_mp_up1__Fv
+
+; Function end stuff
+lwz r0, 0x14 (sp)
+mtlr r0
+addi sp, sp, 0x10
+blr
 
 
 
