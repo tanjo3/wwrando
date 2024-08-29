@@ -791,7 +791,7 @@ class WWRandomizerWindow(QMainWindow):
     
     # Save the rest of the plando in a dataclass
     return Plando(
-      f"AP_{'%020d' % plando_file['Seed']}_P{plando_file['Slot']}",
+      f"AP_{'%020d' % int(plando_file['Seed'])}_P{plando_file['Slot']}",
       plando_file["Slot"],
       plando_file["Name"],
       plando_file["Required Bosses"],
