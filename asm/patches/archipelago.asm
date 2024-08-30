@@ -33,12 +33,12 @@ give_archipelago_item:
   cmpwi   r3, 0xFF
   beq     give_archipelago_item_loop_end
   
+  ; Else, overwrite item ID with 0xFF
+  li      r4, 0xFF
+  stbx    r4, r30, r31
+  
   ; Else, branch to execItemGet
   bl      execItemGet__FUc
-  
-  ; Overwrite item ID with 0xFF
-  li      r3, 0xFF
-  stbx    r3, r30, r31
   
   give_archipelago_item_loop_end:
   ; Increment loop counter and continue
@@ -120,7 +120,7 @@ check_give_item:
 
   ; Rupees, Piece of Heart, Heart Container
   cmpwi   r3, 0x01
-  blt     execItemGet
+  blt     call_execItemGet
   cmpwi   r3, 0x08
   ble     skip_execItemGet
 
@@ -130,43 +130,43 @@ check_give_item:
 
   ; DRC Keys
   cmpwi   r3, 0x13
-  blt     execItemGet
+  blt     call_execItemGet
   cmpwi   r3, 0x14
   ble     skip_execItemGet
 
   ; DRC Dungeon Map and Compass, FW Small Key
   cmpwi   r3, 0x1B
-  blt     execItemGet
+  blt     call_execItemGet
   cmpwi   r3, 0x1D
   ble     skip_execItemGet
 
   ; Joy Pendant, some progression items
   cmpwi   r3, 0x1F
-  blt     execItemGet
+  blt     call_execItemGet
   cmpwi   r3, 0x2A
   ble     skip_execItemGet
 
   ; Bait Bag, Boomerang
   cmpwi   r3, 0x2C
-  blt     execItemGet
+  blt     call_execItemGet
   cmpwi   r3, 0x2D
   ble     skip_execItemGet
 
   ; Hookshot, Delivery Bag, Bombs
   cmpwi   r3, 0x2F
-  blt     execItemGet
+  blt     call_execItemGet
   cmpwi   r3, 0x31
   ble     skip_execItemGet
 
   ; Skull Hammer, Deku Leaf
   cmpwi   r3, 0x33
-  blt     execItemGet
+  blt     call_execItemGet
   cmpwi   r3, 0x34
   ble     skip_execItemGet
 
   ; Swords, Shields, Piece of Heart (Alternate Message), FW Big Key, FW Dungeon Map
   cmpwi   r3, 0x38
-  blt     execItemGet
+  blt     call_execItemGet
   cmpwi   r3, 0x41
   ble     skip_execItemGet
 
@@ -176,7 +176,7 @@ check_give_item:
 
   ; Spoils
   cmpwi   r3, 0x45
-  blt     execItemGet
+  blt     call_execItemGet
   cmpwi   r3, 0x4A
   ble     skip_execItemGet
 
@@ -186,25 +186,25 @@ check_give_item:
 
   ; FW Compass, TotG and FF Dungeon Items, Triforce Shards, Goddess Pearls
   cmpwi   r3, 0x5A
-  blt     execItemGet
+  blt     call_execItemGet
   cmpwi   r3, 0x6B
   ble     skip_execItemGet
 
   ; Songs, ET Dungeon Items, WT Small Key
   cmpwi   r3, 0x6D
-  blt     execItemGet
+  blt     call_execItemGet
   cmpwi   r3, 0x77
   ble     skip_execItemGet
 
   ; WT Big Key, Bait, WT Dungeon Map and Compass
   cmpwi   r3, 0x81
-  blt     execItemGet
+  blt     call_execItemGet
   cmpwi   r3, 0x85
   ble     skip_execItemGet
 
   ; Delivery Bag Items
   cmpwi   r3, 0x99
-  blt     execItemGet
+  blt     call_execItemGet
   cmpwi   r3, 0x9C
   ble     skip_execItemGet
 
@@ -214,13 +214,13 @@ check_give_item:
 
   ; Tingle Statues
   cmpwi   r3, 0xA3
-  blt     execItemGet
+  blt     call_execItemGet
   cmpwi   r3, 0xA7
   ble     skip_execItemGet
 
   ; Hurricane Spin, Wallet, Bomb Bag, Quiver, Magic Meter
   cmpwi   r3, 0xAA
-  blt     execItemGet
+  blt     call_execItemGet
   cmpwi   r3, 0xB2
   ble     skip_execItemGet
 
@@ -230,12 +230,12 @@ check_give_item:
 
   ; Charts
   cmpwi   r3, 0xC2
-  blt     execItemGet
+  blt     call_execItemGet
   cmpwi   r3, 0xFE
   ble     skip_execItemGet
 
   ; Else, branch to execItemGet
-  b       execItemGet
+  b       call_execItemGet
 
 skip_execItemGet:
   b 0xA08 ; skip execItemGet
