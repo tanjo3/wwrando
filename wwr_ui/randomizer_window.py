@@ -739,7 +739,13 @@ class WWRandomizerWindow(QMainWindow):
             error_msg = """The APTWW file appears to have been generated on a pre-v2.3.0 of the APWorld.<br><br>
               You should use the 2.0.0 version of the randomizer build instead.<br>
               Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.0.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.0.0</a>"""
-
+      else:
+        major, minor, patch = plando_dict["Version"]
+        if major == 2 and minor == 5:
+          error_msg = """The APTWW file appears to have been generated on v%d.%d.%d of the APWorld.<br><br>
+            You should use the 2.3.0 version of the randomizer build instead.<br>
+            Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.3.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.3.0</a>""" % (major, minor, patch)
+      
       if error_msg:
         raise APTWWFileError(error_msg)
       else:
