@@ -203,7 +203,7 @@ check_give_item:
   ble     skip_execItemGet
 
   ; Delivery Bag Items
-  cmpwi   r3, 0x99
+  cmpwi   r3, 0x98
   blt     call_execItemGet
   cmpwi   r3, 0x9C
   ble     skip_execItemGet
