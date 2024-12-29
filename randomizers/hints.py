@@ -334,14 +334,12 @@ class HintsRandomizer(BaseRandomizer):
   
   #region Saving
   def update_savage_labyrinth_hint_tablet(self, floor_30_hint: Hint, floor_50_hint: Hint, importance: bool):
-    if floor_30_hint is None and floor_50_hint is None:
-      return
-    
     # Update the tablet on the first floor of savage labyrinth to give hints as to the items inside the labyrinth.
     
-    # Always hint both items.
-    floor_30_is_valid = True
-    floor_50_is_valid = True
+    # Always hint both items if Savage Labyrinth is in logic.
+    floor_30_is_valid = floor_30_hint is not None
+    floor_50_is_valid = floor_50_hint is not None
+    importance = False
     
     if importance:
       floor_30_item_importance = floor_30_hint.formatted_importance()
