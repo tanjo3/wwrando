@@ -158,10 +158,10 @@ check_give_item:
   cmpwi   r3, 0x31
   ble     skip_execItemGet
 
-  ; Skull Hammer, Deku Leaf
+  ; Skull Hammer, Deku Leaf, Progressive Bows
   cmpwi   r3, 0x33
   blt     call_execItemGet
-  cmpwi   r3, 0x34
+  cmpwi   r3, 0x36
   ble     skip_execItemGet
 
   ; Swords, Shields, Piece of Heart (Alternate Message), FW Big Key, FW Dungeon Map
