@@ -55,8 +55,17 @@ class ItemRandomizer(BaseRandomizer):
           # Items that are from other AP games are represented by renamed Father's Letter
           self.logic.done_item_locations[location_name] = "Archipelago Item"
       else:
-        # Place a red rupee on unsupported locations
-        self.logic.done_item_locations[location_name] = "Red Rupee"
+        # If the nonrandomized locations is expensive Beedle's shop ship, ensure the items sold are distinct
+        if location_name == "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item":
+          self.logic.done_item_locations[location_name] = "Blue Rupee"
+        elif location_name == "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item":
+          self.logic.done_item_locations[location_name] = "Yellow Rupee"
+        elif location_name == "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item":
+          self.logic.done_item_locations[location_name] = "Green Rupee"
+        else:
+          # Place the yellow rupee with a joke message on nonrandomized locations
+          # The joke message is modified for Archipelago
+          self.logic.done_item_locations[location_name] = "Yellow Rupee (Joke Message)"
         self.logic.done_item_locations_info[location_name]["classification"] = "filler"
     return
     
