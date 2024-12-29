@@ -334,6 +334,9 @@ class HintsRandomizer(BaseRandomizer):
   
   #region Saving
   def update_savage_labyrinth_hint_tablet(self, floor_30_hint: Hint, floor_50_hint: Hint, importance: bool):
+    if floor_30_hint is None and floor_50_hint is None:
+      return
+    
     # Update the tablet on the first floor of savage labyrinth to give hints as to the items inside the labyrinth.
     
     # Always hint both items.
@@ -1037,6 +1040,9 @@ class HintsRandomizer(BaseRandomizer):
     return item_hint
   
   def generate_savage_labyrinth_hint(self, location_name):
+    if location_name not in self.rando.plando.locations:
+      return None
+    
     # Get an item hint for one of the two checks in Savage Labyrinth.
     item_info = self.rando.plando.locations[location_name]
     item_importance = self.get_importance_for_location(location_name)
