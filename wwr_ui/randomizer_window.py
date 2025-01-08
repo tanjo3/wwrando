@@ -1,3 +1,4 @@
+from base64 import b64decode
 from qtpy.QtGui import *
 from qtpy.QtCore import *
 from qtpy.QtWidgets import *
@@ -714,7 +715,7 @@ class WWRandomizerWindow(QMainWindow):
     else:
       with f:
         try:
-          plando_dict = yaml.load(f)
+          plando_dict = yaml.load(b64decode(f.read()))
         except:
           raise APTWWFileError(
             """There was an error trying to read the APTWW file.<br><br>
