@@ -717,10 +717,14 @@ class WWRandomizerWindow(QMainWindow):
         try:
           plando_dict = yaml.load(b64decode(f.read()))
         except:
-          raise APTWWFileError(
-            """There was an error trying to read the APTWW file.<br><br>
-            Please ensure that the file has not been modified or corrupted and try again."""
-          )
+          try:
+            f.seek(0)
+            plando_dict = yaml.load(f)
+          except:
+            raise APTWWFileError(
+              """There was an error trying to read the APTWW file.<br><br>
+              Please ensure that the file has not been modified or corrupted and try again."""
+            )
       
       # Check the APTWW version.
       error_msg = None
@@ -742,7 +746,11 @@ class WWRandomizerWindow(QMainWindow):
               Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.0.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.0.0</a>"""
       else:
         major, minor, patch = plando_dict["Version"]
-        if major == 2 and minor == 5:
+        if major == 2 and minor == 6:
+          error_msg = """The APTWW file appears to have been generated on v%d.%d.%d of the APWorld.<br><br>
+            You should use the 2.4.0 version of the randomizer build instead.<br>
+            Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.4.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.4.0</a>""" % (major, minor, patch)
+        elif major == 2 and minor == 5:
           error_msg = """The APTWW file appears to have been generated on v%d.%d.%d of the APWorld.<br><br>
             You should use the 2.3.0 version of the randomizer build instead.<br>
             Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.3.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.3.0</a>""" % (major, minor, patch)
