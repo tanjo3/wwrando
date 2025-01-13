@@ -1,4 +1,5 @@
 from base64 import b64decode
+import zipfile
 from qtpy.QtGui import *
 from qtpy.QtCore import *
 from qtpy.QtWidgets import *
@@ -705,60 +706,61 @@ class WWRandomizerWindow(QMainWindow):
           widget.show()
   
   def load_and_validate_ap_plando_file(self, plando_file: str) -> dict[str, dict]:
-    try:
-      f = open(os.path.join(plando_file), "r")
-    except:
+    if not os.access(plando_file, os.R_OK):
       raise APTWWFileError(
         """The APTWW file could not be opened.<br><br>
         Please ensure that the program has read permissions for the file and try again."""
       )
-    else:
-      with f:
-        try:
-          plando_dict = yaml.load(b64decode(f.read()))
-        except:
-          try:
-            f.seek(0)
-            plando_dict = yaml.load(f)
-          except:
-            raise APTWWFileError(
-              """There was an error trying to read the APTWW file.<br><br>
-              Please ensure that the file has not been modified or corrupted and try again."""
-            )
-      
-      # Check the APTWW version.
-      error_msg = None
-      if "Version" not in plando_dict:
-        # Pre v2.5.0
-        if "Name" in plando_dict:
-          error_msg = """The APTWW file appears to have been generated on v2.4.0 of the APWorld.<br><br>
-            You should use the 2.2.0 version of the randomizer build instead.<br>
-            Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.2.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.2.0</a>"""
+    
+    try:
+      with zipfile.ZipFile(plando_file, "r") as z:
+        with z.open("plando") as plando_in_zip:
+          plando_dict = yaml.load(b64decode(plando_in_zip.read()))
+    except:
+      try:
+        with open(plando_file, "r") as f:
+          plando_dict = yaml.load(f)
+      except:
+        raise APTWWFileError(
+          """There was an error trying to read the APTWW file.<br><br>
+          Please ensure that the file has not been modified or corrupted and try again."""
+        )
+    
+    # Check the APTWW version.
+    error_msg = None
+    if "Version" not in plando_dict:
+      # Pre v2.5.0
+      if "Name" in plando_dict:
+        error_msg = """The APTWW file appears to have been generated on v2.4.0 of the APWorld.<br><br>
+          You should use the 2.2.0 version of the randomizer build instead.<br>
+          Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.2.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.2.0</a>"""
+      else:
+        test_location = plando_dict["Locations"]["Outset Island - Underneath Link's House"]
+        if isinstance(test_location, dict):
+          error_msg = """The APTWW file appears to have been generated on v2.3.x of the APWorld.<br><br>
+            You should use the 2.1.0 version of the randomizer build instead.<br>
+            Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.1.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.1.0</a>"""
         else:
-          test_location = plando_dict["Locations"]["Outset Island - Underneath Link's House"]
-          if isinstance(test_location, dict):
-            error_msg = """The APTWW file appears to have been generated on v2.3.x of the APWorld.<br><br>
-              You should use the 2.1.0 version of the randomizer build instead.<br>
-              Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.1.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.1.0</a>"""
-          else:
-            error_msg = """The APTWW file appears to have been generated on a pre-v2.3.0 of the APWorld.<br><br>
-              You should use the 2.0.0 version of the randomizer build instead.<br>
-              Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.0.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.0.0</a>"""
-      else:
-        major, minor, patch = plando_dict["Version"]
-        if major == 2 and minor == 6:
-          error_msg = """The APTWW file appears to have been generated on v%d.%d.%d of the APWorld.<br><br>
-            You should use the 2.4.0 version of the randomizer build instead.<br>
-            Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.4.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.4.0</a>""" % (major, minor, patch)
-        elif major == 2 and minor == 5:
-          error_msg = """The APTWW file appears to have been generated on v%d.%d.%d of the APWorld.<br><br>
-            You should use the 2.3.0 version of the randomizer build instead.<br>
-            Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.3.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.3.0</a>""" % (major, minor, patch)
-      
-      if error_msg:
-        raise APTWWFileError(error_msg)
-      else:
-        return plando_dict
+          error_msg = """The APTWW file appears to have been generated on a pre-v2.3.0 of the APWorld.<br><br>
+            You should use the 2.0.0 version of the randomizer build instead.<br>
+            Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.0.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.0.0</a>"""
+    else:
+      major, minor, patch = plando_dict["Version"]
+      if major == 2 and minor == 6:
+        error_msg = """The APTWW file appears to have been generated on v%d.%d.%d of the APWorld.<br><br>
+          You should use the 2.4.0 version of the randomizer build instead.<br>
+          Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.4.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.4.0</a>""" % (major, minor, patch)
+      elif major == 2 and minor == 5:
+        error_msg = """The APTWW file appears to have been generated on v%d.%d.%d of the APWorld.<br><br>
+          You should use the 2.3.0 version of the randomizer build instead.<br>
+          Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.3.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.3.0</a>""" % (major, minor, patch)
+    
+    if error_msg:
+      error_msg += """<br><br>
+      However, The Wind Waker is now officially supported in Archipelago. Consider updating Archipelago and regenerating your multiworld."""
+      raise APTWWFileError(error_msg)
+    else:
+      return plando_dict
   
   def read_ap_plando_file(self, plando_file: str, options: Options) -> Plando:
     plando_file = self.load_and_validate_ap_plando_file(plando_file)
