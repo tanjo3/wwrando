@@ -47,10 +47,10 @@ PROGRESS_ITEMS = [
   "Earth Tingle Statue",
   "Wind Tingle Statue",
   
-  "Progressive Bomb Bag",
-  "Progressive Bomb Bag",
-  "Progressive Quiver",
-  "Progressive Quiver",
+  "Bomb Bag Capacity Upgrade",
+  "Bomb Bag Capacity Upgrade",
+  "Quiver Capacity Upgrade",
+  "Quiver Capacity Upgrade",
   
   "Ghost Ship Chart",
   "Magic Armor",
@@ -58,7 +58,7 @@ PROGRESS_ITEMS = [
   ["Progressive Sword"]*4 + \
   ["Progressive Shield"]*2 + \
   ["Progressive Bow"]*3 + \
-  ["Progressive Wallet"]*2 + \
+  ["Wallet Capacity Upgrade"]*2 + \
   ["Progressive Picto Box"]*2 + \
   ["Progressive Magic Meter"]*2 + \
   ["Empty Bottle"]*4
