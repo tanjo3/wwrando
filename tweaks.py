@@ -307,9 +307,9 @@ def make_items_progressive(self: WWRandomizer):
   self.register_renamed_item(0x38, "Progressive Sword")
   self.register_renamed_item(0x3B, "Progressive Shield")
   self.register_renamed_item(0x27, "Progressive Bow")
-  self.register_renamed_item(0xAB, "Progressive Wallet")
-  self.register_renamed_item(0xAD, "Progressive Bomb Bag")
-  self.register_renamed_item(0xAF, "Progressive Quiver")
+  self.register_renamed_item(0xAB, "Wallet Capacity Upgrade")
+  self.register_renamed_item(0xAD, "Bomb Bag Capacity Upgrade")
+  self.register_renamed_item(0xAF, "Quiver Capacity Upgrade")
   self.register_renamed_item(0x23, "Progressive Picto Box")
   self.register_renamed_item(0xB1, "Progressive Magic Meter")
   
