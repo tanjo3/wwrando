@@ -903,7 +903,7 @@ class Logic:
     assert req_name not in reqs_being_checked, f"Recursive requirement check on non-whitelisted macro: {req_name!r}, {reqs_being_checked}"
     reqs_being_checked.add(req_name)
     
-    if req_name.startswith("Progressive "):
+    if req_name.startswith("Progressive ") or " Capacity Upgrade" in req_name:
       result = self.check_progressive_item_req(req_name)
     elif " Small Key x" in req_name:
       result = self.check_small_key_req(req_name)
@@ -1004,6 +1004,11 @@ class Logic:
       item_name = match.group(1)
       num_required = int(match.group(2))
       items_needed[item_name] = max(num_required, items_needed.setdefault(item_name, 0))
+    elif " Capacity Upgrade" in req_name:
+      match = re.search(r"^(.+ Capacity Upgrade) x(\d+)$", req_name)
+      item_name = match.group(1)
+      num_required = int(match.group(2))
+      items_needed[item_name] = max(num_required, items_needed.setdefault(item_name, 0))
     elif " Small Key x" in req_name:
       match = re.search(r"^(.+ Small Key) x(\d+)$", req_name)
       small_key_name = match.group(1)
@@ -1071,6 +1076,8 @@ class Logic:
   
   def check_progressive_item_req(self, req_name: str):
     match = re.search(r"^(Progressive .+) x(\d+)$", req_name)
+    if match is None:
+      match = re.search(r"^(.+ Capacity Upgrade) x(\d+)$", req_name)
     assert match
     item_name = match.group(1)
     num_required = int(match.group(2))
