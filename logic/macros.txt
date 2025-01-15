@@ -66,19 +66,19 @@ Ice Arrows:
 Light Arrows:
   Progressive Bow x3 & Magic Meter
 Any Wallet Upgrade:
-  Progressive Wallet x1
+  Wallet Capacity Upgrade x1
 Picto Box:
   Progressive Picto Box x1
 Deluxe Picto Box:
   Progressive Picto Box x2
 60 Bomb Bomb Bag:
-  Progressive Bomb Bag x1
+  Bomb Bag Capacity Upgrade x1
 99 Bomb Bomb Bag:
-  Progressive Bomb Bag x2
+  Bomb Bag Capacity Upgrade x2
 60 Arrow Quiver:
-  Progressive Quiver x1
+  Quiver Capacity Upgrade x1
 99 Arrow Quiver:
-  Progressive Quiver x2
+  Quiver Capacity Upgrade x2
 Magic Meter:
   Progressive Magic Meter x1
 Magic Meter Upgrade:

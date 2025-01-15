@@ -61,14 +61,14 @@ REGULAR_ITEMS += DUNGEON_NONPROGRESS_ITEMS
 REGULAR_ITEMS.sort()
 
 PROGRESSIVE_ITEMS = \
-  ["Progressive Bow"]         * 3 + \
-  ["Progressive Quiver"]      * 2 + \
-  ["Progressive Bomb Bag"]    * 2 + \
-  ["Progressive Wallet"]      * 2 + \
-  ["Progressive Picto Box"]   * 2 + \
-  ["Progressive Sword"]       * 3 + \
-  ["Progressive Shield"]      * 2 + \
-  ["Progressive Magic Meter"] * 2
+  ["Progressive Bow"]           * 3 + \
+  ["Quiver Capacity Upgrade"]   * 2 + \
+  ["Bomb Bag Capacity Upgrade"] * 2 + \
+  ["Wallet Capacity Upgrade"]   * 2 + \
+  ["Progressive Picto Box"]     * 2 + \
+  ["Progressive Sword"]         * 3 + \
+  ["Progressive Shield"]        * 2 + \
+  ["Progressive Magic Meter"]   * 2
 PROGRESSIVE_ITEMS.sort()
 
 INVENTORY_ITEMS = REGULAR_ITEMS + PROGRESSIVE_ITEMS

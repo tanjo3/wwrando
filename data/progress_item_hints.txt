@@ -64,7 +64,7 @@ Progressive Sword:
   an upgrade for your blade
 Progressive Bow:
   an upgrade for your bow
-Progressive Wallet:
+Wallet Capacity Upgrade:
   an upgrade for your Rupee bag
 Progressive Picto Box:
   an upgrade for your camera
@@ -80,9 +80,9 @@ Triforce Chart:
   a purple map
 Tingle Statue:
   a statue of a fairy
-Progressive Bomb Bag:
+Bomb Bag Capacity Upgrade:
   an upgrade for your bomb bag
-Progressive Quiver:
+Quiver Capacity Upgrade:
   an upgrade for your quiver
 Magic Armor:
   a protective crystal
