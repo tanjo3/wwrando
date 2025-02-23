@@ -22,7 +22,7 @@ if getattr(sys, 'frozen', False) and hasattr(sys, "_MEIPASS"):
     SETTINGS_PATH = os.path.join(".", "settings.txt")
 else:
   RANDO_ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
-  IS_RUNNING_FROM_SOURCE = True
+  IS_RUNNING_FROM_SOURCE = False
   SETTINGS_PATH = os.path.join(RANDO_ROOT_PATH, "settings.txt")
   CUSTOM_MODELS_PATH = os.path.join(RANDO_ROOT_PATH, "models")
 
