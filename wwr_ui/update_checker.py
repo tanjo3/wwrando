@@ -20,6 +20,8 @@ def string_to_version(string: str):
   return version
 
 def check_for_updates():
+  return "error"
+  
   try:
     with urllib.request.urlopen(LATEST_RELEASE_API_URL, context=ssl.create_default_context(cafile=certifi.where())) as page:
       data = json.loads(page.read().decode())
