@@ -928,11 +928,14 @@ class WWRandomizer:
       jpc.save()
       self.gcm.changed_files[jpc_path] = jpc.data
     
+    # Remove reserved characters from player name before writing as file name.
+    cleaned_name = "".join(c for c in self.plando.name if c not in '<>:"/\\|?*')
+    
     if self.export_disc_to_folder:
-      output_folder_path = os.path.join(self.randomized_output_folder, "TWW %s (%s)" % (self.seed, self.plando.name))
+      output_folder_path = os.path.join(self.randomized_output_folder, "TWW %s (%s)" % (self.seed, cleaned_name))
       yield from self.gcm.export_disc_to_folder_with_changed_files(output_folder_path)
     else:
-      output_file_path = os.path.join(self.randomized_output_folder, "TWW %s (%s).iso" % (self.seed, self.plando.name))
+      output_file_path = os.path.join(self.randomized_output_folder, "TWW %s (%s).iso" % (self.seed, cleaned_name))
       yield from self.gcm.export_disc_to_iso_with_changed_files(output_file_path)
   
   def convert_string_to_integer_md5(self, string):

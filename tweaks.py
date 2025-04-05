@@ -8,6 +8,7 @@ from gclib.j3d import BDL
 
 import re
 import os
+import unicodedata
 from io import BytesIO
 from dataclasses import dataclass
 import copy
@@ -560,7 +561,13 @@ def modify_title_screen_logo(self: WWRandomizer):
   fs.write_u16(data, 0x162, 0x106) # Increase Y pos by 16 pixels (0xF6 -> 0x106)
 
 def update_game_name_icon_and_banners(self: WWRandomizer):
-  new_game_name = "TWW %s (%s)" % (self.seed, self.plando.name)
+  # Clean game name, attempting to replace UTF-8 characters with Shift JIS equivalents.
+  cleaned_name = "".join(
+    c for c in unicodedata.normalize("NFKD", self.plando.name)
+    if unicodedata.category(c) != "Mn"
+  ).encode("shift_jis", "replace").decode("shift_jis")
+  
+  new_game_name = "TWW %s (%s)" % (self.seed, cleaned_name)
   banner_data = self.get_raw_file("files/opening.bnr")
   fs.write_magic_str(banner_data, 0x1860, new_game_name, 0x40)
   
@@ -2780,6 +2787,20 @@ def set_default_targeting_mode_to_switch(self: WWRandomizer):
   targeting_mode_addr = self.main_custom_symbols["option_targeting_mode"]
   self.dol.write_data(fs.write_u8, targeting_mode_addr, 1)
 
+def write_slot_name(data, offset: int, new_string: str, max_length: int):
+  encoded_string = new_string.encode()
+  
+  str_len = len(encoded_string)
+  if str_len >= max_length:
+    raise Exception("String \"%s\" is too long (max length including null byte: 0x%X)" % (new_string, max_length))
+  
+  padding_length = max_length - str_len
+  null_padding = b"\0"*padding_length
+  new_value = encoded_string + null_padding
+  
+  data.seek(offset)
+  data.write(new_value)
+
 def apply_pre_randomization_changes_for_archipelago(self: WWRandomizer):
   # Apply necessary changes for Archipelago
   patcher.apply_patch(self, "archipelago")
@@ -2802,7 +2823,7 @@ def apply_pre_randomization_changes_for_archipelago(self: WWRandomizer):
   
   # Record the player's slot name
   slot_name_address = self.main_custom_symbols["archipelago_slot_name"]
-  self.dol.write_data(fs.write_str, slot_name_address, self.plando.name, 0x40)
+  self.dol.write_data(write_slot_name, slot_name_address, self.plando.name, 0x40)
 
 def apply_post_randomization_changes_for_archipelago(self: WWRandomizer):
   # Record the mapping of the charts
