@@ -2,12 +2,12 @@ name: Build
 
 on:
   push:
-    branches: [ dev-build ]
+    branches: [ s8-tournament ]
     paths-ignore:
       - 'docs/**'
       - '.github/workflows/publish-site.yml'
   pull_request:
-    branches: [ dev-build ]
+    branches: [ s8-tournament ]
     paths-ignore:
       - 'docs/**'
       - '.github/workflows/publish-site.yml'
@@ -105,8 +105,7 @@ jobs:
         run: |
           USER_INPUT_VERSION=${{ github.event.inputs.version }}
           TXT_VERSION=$(cat version.txt)
-          GIT_SHA_SHORT=$(git rev-parse --short=7 ${{ github.sha }})
-          echo "full_version=${USER_INPUT_VERSION:-${TXT_VERSION}_${GIT_SHA_SHORT}}" >> $GITHUB_OUTPUT
+          echo "full_version=${USER_INPUT_VERSION:-${TXT_VERSION}}" >> $GITHUB_OUTPUT
       - name: Set version
         id: version
         run: |
