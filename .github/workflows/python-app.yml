@@ -2,12 +2,12 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ dev-build ]
     paths-ignore:
       - 'docs/**'
       - '.github/workflows/publish-site.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ dev-build ]
     paths-ignore:
       - 'docs/**'
       - '.github/workflows/publish-site.yml'
