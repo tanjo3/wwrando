@@ -2,12 +2,12 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ s8-tournament ]
     paths-ignore:
       - 'docs/**'
       - '.github/workflows/publish-site.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ s8-tournament ]
     paths-ignore:
       - 'docs/**'
       - '.github/workflows/publish-site.yml'
