@@ -15,11 +15,11 @@ class ZoneEntrance:
   scls_exit_index: int
   spawn_id: int
   entrance_name: str
-  island_name: str | None = None
-  warp_out_stage_name: str | None = None
-  warp_out_room_num: int | None = None
-  warp_out_spawn_id: int | None = None
-  nested_in: 'ZoneExit | None' = None
+  island_name: str = None
+  warp_out_stage_name: str = None
+  warp_out_room_num: int = None
+  warp_out_spawn_id: int = None
+  nested_in: 'ZoneExit' = None
   
   @property
   def is_nested(self):
@@ -41,12 +41,12 @@ class ZoneEntrance:
 class ZoneExit:
   stage_name: str
   room_num: int
-  scls_exit_index: int | None
+  scls_exit_index: int
   spawn_id: int
   unique_name: str
   _: KW_ONLY
-  boss_stage_name: str | None = None
-  zone_name: str | None = None
+  boss_stage_name: str = None
+  zone_name: str = None
   # If zone_name is specified, this exit will assume by default that it owns all item locations in
   # that zone which are behind randomizable entrances. If a single zone has multiple randomizable
   # entrances, only one of them at most can use zone_name. The rest must have their item locations
@@ -185,7 +185,7 @@ FAIRY_FOUNTAIN_EXITS = [
 
 
 DUNGEON_ENTRANCE_NAMES_WITH_NO_REQUIREMENTS = [
-  "Dungeon Entrance on Dragon Roost Island",
+  "Dungeon Entrance on Dragon Roost Island", # Conditional on the "Open DRC" option
 ]
 SECRET_CAVE_ENTRANCE_NAMES_WITH_NO_REQUIREMENTS = [
   "Secret Cave Entrance on Pawprint Isle",
@@ -314,7 +314,7 @@ class EntranceRandomizer(BaseRandomizer):
         or self.options.progression_savage_labyrinth:
       self.entrance_names_with_no_requirements += SECRET_CAVE_ENTRANCE_NAMES_WITH_NO_REQUIREMENTS
     
-    if self.options.progression_dungeons:
+    if self.options.progression_dungeons and self.options.open_drc:
       self.exit_names_with_no_requirements += DUNGEON_EXIT_NAMES_WITH_NO_REQUIREMENTS
     if self.options.progression_puzzle_secret_caves:
       self.exit_names_with_no_requirements += PUZZLE_SECRET_CAVE_EXIT_NAMES_WITH_NO_REQUIREMENTS
@@ -464,7 +464,8 @@ class EntranceRandomizer(BaseRandomizer):
         e for e in relevant_entrances
         if e.entrance_name in self.entrance_names_with_no_requirements
       ]
-      self.safety_entrance = self.rng.choice(possible_safety_entrances)
+      if possible_safety_entrances:
+        self.safety_entrance = self.rng.choice(possible_safety_entrances)
     
     # We calculate which exits are terminal (the end of a nested chain) per-set instead of for all
     # entrances. This is so that, for example, Ice Ring Isle counts as terminal when its inner cave
@@ -665,8 +666,7 @@ class EntranceRandomizer(BaseRandomizer):
         if zone_entrance.island_name in self.islands_with_a_banned_dungeon:
           possible_remaining_exits = [
             ex for ex in possible_remaining_exits
-            if ex in terminal_exits and
-            ex not in (DUNGEON_EXITS + BOSS_EXITS)
+            if not (ex in BOSS_EXITS or ex not in terminal_exits)
           ]
       
       if not possible_remaining_exits:
@@ -701,19 +701,12 @@ class EntranceRandomizer(BaseRandomizer):
       self.done_entrances_to_exits[zone_entrance] = zone_exit
       self.done_exits_to_entrances[zone_exit] = zone_entrance
       
-      if zone_exit in self.banned_exits:
+      if zone_exit in self.banned_exits and zone_entrance.island_name is not None:
         # Keep track of which islands have a required bosses mode banned dungeon to avoid marker overlap.
         if zone_exit in DUNGEON_EXITS + BOSS_EXITS:
           # We only keep track of dungeon exits and boss exits, not miniboss exits.
           # Banned miniboss exits can share an island with required dungeons/bosses.
-          outer_entrance = self.get_outermost_entrance_for_entrance(zone_entrance)
-          # Because we filter above so that we always assign entrances from the sea inwards,
-          # we can assume when we assign an entrance that it has a path back to the sea. 
-          # If we're assigning a nonterminal entrance, any nested entrances will get assigned after this one
-          # and we'll run through this code again (so we can reason based on zone_exit only,
-          # instead of having to recurse through the nested exits to find banned dungeons/bosses)
-          assert outer_entrance
-          self.islands_with_a_banned_dungeon.add(outer_entrance.island_name)
+          self.islands_with_a_banned_dungeon.add(zone_entrance.island_name)
   
   def finalize_all_randomized_sets_of_entrances(self):
     non_terminal_exits = []
@@ -1047,7 +1040,7 @@ class EntranceRandomizer(BaseRandomizer):
     outermost_entrance = self.get_outermost_entrance_for_exit(zone_exit)
     return outermost_entrance.island_name
   
-  def get_all_zones_for_item_location(self, location_name: str) -> set[str]:
+  def get_all_zones_for_item_location(self, location_name: str) -> list[str]:
     # Helper function to return a set of zone names that include the location.
     #
     # All returned zones are either an island name or a dungeon name - that is, if the entrance to
@@ -1138,4 +1131,18 @@ class EntranceRandomizer(BaseRandomizer):
     zone_exit = ZoneExit.all[boss_arena_name]
     outermost_entrance = self.get_outermost_entrance_for_exit(zone_exit)
     return outermost_entrance.island_name
+  
+  def can_assign_safety_entrance(self) -> bool:
+    # We need to be able to assign at least one safety entrance with progression
+    # in one of the sets of entrances to be randomized
+    if not self.is_enabled():
+      return True
+    for entrances, exits in self.get_all_entrance_sets_to_be_randomized():
+      if (
+        any(entr.entrance_name in self.entrance_names_with_no_requirements for entr in entrances)
+        and any(ex.unique_name in self.exit_names_with_no_requirements for ex in exits)
+      ):
+        return True
+    return False
+  
   #endregion

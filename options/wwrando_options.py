@@ -337,6 +337,13 @@ class Options(BaseOptions):
   )
   #endregion
   
+  #region Logic Tweaks
+  open_drc: bool = option(
+    default=True,
+    description="Allow DRC entrance to be accessed from the beginning of the game with no items"
+  )
+  #endregion
+  
   #region Tweaks
   swift_sail: bool = option(
     default=True,
