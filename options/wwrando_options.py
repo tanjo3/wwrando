@@ -423,6 +423,54 @@ class Options(BaseOptions):
     maximum=9,
     description="Amount of extra heart containers that you start with.",
   )
+  starting_joy_pendant: int = option(
+    default=0,
+    minimum=0,
+    maximum=99,
+    description="Amount of Joy Pendants to start with."
+  )
+  starting_skull_necklace: int = option(
+    default=0,
+    minimum=0,
+    maximum=99,
+    description="Amount of Skull Necklaces to start with."
+  )
+  starting_boko_baba_seed: int = option(
+    default=0,
+    minimum=0,
+    maximum=99,
+    description="Amount of Boko Baba Seeds to start with."
+  )
+  starting_golden_feather: int = option(
+    default=0,
+    minimum=0,
+    maximum=99,
+    description="Amount of Golden Feathers to start with."
+  )
+  starting_knights_crest: int = option(
+    default=0,
+    minimum=0,
+    maximum=99,
+    description="Amount of Knight's Crests to start with."
+  )
+  starting_red_chu_jelly: int = option(
+    default=0,
+    minimum=0,
+    maximum=99,
+    description="Amount of Red Chu Jellies to start with."
+  )
+  starting_green_chu_jelly: int = option(
+    default=0,
+    minimum=0,
+    maximum=99,
+    description="Amount of Green Chu Jellies to start with."
+  )
+  starting_blue_chu_jelly: int = option(
+    default=0,
+    minimum=0,
+    maximum=99,
+    description="Amount of Blue Chu Jellies to start with."
+  )
   num_extra_starting_items: int = option(
     default=0,
     minimum=0,
