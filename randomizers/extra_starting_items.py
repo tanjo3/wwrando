@@ -33,11 +33,20 @@ DELIVERY_BAG_ITEMS = set([
 class ExtraStartingItemsRandomizer(BaseRandomizer):
   def __init__(self, rando):
     super().__init__(rando)
+    self.starting_spoils = []
     self.random_starting_items = []
   
   def is_enabled(self) -> bool:
     return (
       self.rando.items.is_enabled() and
+      self.options.starting_joy_pendant > 0 or
+      self.options.starting_skull_necklace > 0 or
+      self.options.starting_boko_baba_seed > 0 or
+      self.options.starting_golden_feather > 0 or
+      self.options.starting_knights_crest > 0 or
+      self.options.starting_red_chu_jelly > 0 or
+      self.options.starting_green_chu_jelly > 0 or
+      self.options.starting_blue_chu_jelly > 0 or
       self.options.num_extra_starting_items > 0
     )
   
@@ -50,6 +59,21 @@ class ExtraStartingItemsRandomizer(BaseRandomizer):
     return 0
   
   def _randomize(self):
+    # Add desired starting spoils to the player's inventory.
+    # This currently has no logical implications, since apart from Blue
+    # Chu Jelly, the player could sell all the spoils they start with
+    # and still need logical access to spoils.
+    # The logic behind starting Blue Chu Jelly could be considered in
+    # the future.
+    self.starting_spoils.extend(["Joy Pendant"]     * self.options.starting_joy_pendant)
+    self.starting_spoils.extend(["Skull Necklace"]  * self.options.starting_skull_necklace)
+    self.starting_spoils.extend(["Boko Baba Seed"]  * self.options.starting_boko_baba_seed)
+    self.starting_spoils.extend(["Golden Feather"]  * self.options.starting_golden_feather)
+    self.starting_spoils.extend(["Knight's Crest"]  * self.options.starting_knights_crest)
+    self.starting_spoils.extend(["Red Chu Jelly"]   * self.options.starting_red_chu_jelly)
+    self.starting_spoils.extend(["Green Chu Jelly"] * self.options.starting_green_chu_jelly)
+    self.starting_spoils.extend(["Blue Chu Jelly"]  * self.options.starting_blue_chu_jelly)
+    
     initial_sphere_0_checks = self.logic.get_accessible_remaining_locations(for_progression=True)
     for remaining_random_starting_items in range(self.options.num_extra_starting_items, 0, -1):
       max_fraction = remaining_random_starting_items
@@ -135,7 +159,7 @@ class ExtraStartingItemsRandomizer(BaseRandomizer):
     # This tweak is written in an idempotent way, so this should be ok to call a second time.
     tweaks.update_starting_gear(
       self.rando,
-      self.options.starting_gear + self.random_starting_items
+      self.options.starting_gear + self.starting_spoils + self.random_starting_items
     )
   
   def write_to_spoiler_log(self) -> str:
