@@ -903,22 +903,6 @@ class Ui_MainWindow(object):
         self.groupBox_5.setObjectName(u"groupBox_5")
         self.gridLayout_7 = QGridLayout(self.groupBox_5)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.hoho_hints = QCheckBox(self.groupBox_5)
-        self.hoho_hints.setObjectName(u"hoho_hints")
-        self.hoho_hints.setChecked(True)
-
-        self.gridLayout_7.addWidget(self.hoho_hints, 4, 0, 1, 1)
-
-        self.prioritize_remote_hints = QCheckBox(self.groupBox_5)
-        self.prioritize_remote_hints.setObjectName(u"prioritize_remote_hints")
-
-        self.gridLayout_7.addWidget(self.prioritize_remote_hints, 6, 1, 1, 1)
-
-        self.korl_hints = QCheckBox(self.groupBox_5)
-        self.korl_hints.setObjectName(u"korl_hints")
-
-        self.gridLayout_7.addWidget(self.korl_hints, 4, 2, 1, 1)
-
         self.horizontalLayout_16 = QHBoxLayout()
         self.horizontalLayout_16.setObjectName(u"horizontalLayout_16")
         self.label_for_num_barren_hints = QLabel(self.groupBox_5)
@@ -942,42 +926,6 @@ class Ui_MainWindow(object):
 
 
         self.gridLayout_7.addLayout(self.horizontalLayout_16, 5, 2, 1, 1)
-
-        self.cryptic_hints = QCheckBox(self.groupBox_5)
-        self.cryptic_hints.setObjectName(u"cryptic_hints")
-        self.cryptic_hints.setChecked(True)
-
-        self.gridLayout_7.addWidget(self.cryptic_hints, 6, 0, 1, 1)
-
-        self.fishmen_hints = QCheckBox(self.groupBox_5)
-        self.fishmen_hints.setObjectName(u"fishmen_hints")
-        self.fishmen_hints.setChecked(True)
-
-        self.gridLayout_7.addWidget(self.fishmen_hints, 4, 1, 1, 1)
-
-        self.horizontalLayout_17 = QHBoxLayout()
-        self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
-        self.label_for_num_location_hints = QLabel(self.groupBox_5)
-        self.label_for_num_location_hints.setObjectName(u"label_for_num_location_hints")
-
-        self.horizontalLayout_17.addWidget(self.label_for_num_location_hints)
-
-        self.num_location_hints = QSpinBox(self.groupBox_5)
-        self.num_location_hints.setObjectName(u"num_location_hints")
-        self.num_location_hints.setCorrectionMode(QAbstractSpinBox.CorrectToNearestValue)
-        self.num_location_hints.setMinimum(0)
-        self.num_location_hints.setMaximum(15)
-        self.num_location_hints.setValue(5)
-
-        self.horizontalLayout_17.addWidget(self.num_location_hints)
-
-        self.widget_8 = QWidget(self.groupBox_5)
-        self.widget_8.setObjectName(u"widget_8")
-
-        self.horizontalLayout_17.addWidget(self.widget_8)
-
-
-        self.gridLayout_7.addLayout(self.horizontalLayout_17, 5, 1, 1, 1)
 
         self.horizontalLayout_9 = QHBoxLayout()
         self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
@@ -1003,6 +951,63 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addLayout(self.horizontalLayout_9, 5, 0, 1, 1)
 
+        self.korl_hints = QCheckBox(self.groupBox_5)
+        self.korl_hints.setObjectName(u"korl_hints")
+
+        self.gridLayout_7.addWidget(self.korl_hints, 4, 2, 1, 1)
+
+        self.fishmen_hints = QCheckBox(self.groupBox_5)
+        self.fishmen_hints.setObjectName(u"fishmen_hints")
+        self.fishmen_hints.setChecked(True)
+
+        self.gridLayout_7.addWidget(self.fishmen_hints, 4, 1, 1, 1)
+
+        self.hint_importance = QCheckBox(self.groupBox_5)
+        self.hint_importance.setObjectName(u"hint_importance")
+
+        self.gridLayout_7.addWidget(self.hint_importance, 6, 2, 1, 1)
+
+        self.prioritize_remote_hints = QCheckBox(self.groupBox_5)
+        self.prioritize_remote_hints.setObjectName(u"prioritize_remote_hints")
+
+        self.gridLayout_7.addWidget(self.prioritize_remote_hints, 6, 1, 1, 1)
+
+        self.horizontalLayout_17 = QHBoxLayout()
+        self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
+        self.label_for_num_location_hints = QLabel(self.groupBox_5)
+        self.label_for_num_location_hints.setObjectName(u"label_for_num_location_hints")
+
+        self.horizontalLayout_17.addWidget(self.label_for_num_location_hints)
+
+        self.num_location_hints = QSpinBox(self.groupBox_5)
+        self.num_location_hints.setObjectName(u"num_location_hints")
+        self.num_location_hints.setCorrectionMode(QAbstractSpinBox.CorrectToNearestValue)
+        self.num_location_hints.setMinimum(0)
+        self.num_location_hints.setMaximum(15)
+        self.num_location_hints.setValue(5)
+
+        self.horizontalLayout_17.addWidget(self.num_location_hints)
+
+        self.widget_8 = QWidget(self.groupBox_5)
+        self.widget_8.setObjectName(u"widget_8")
+
+        self.horizontalLayout_17.addWidget(self.widget_8)
+
+
+        self.gridLayout_7.addLayout(self.horizontalLayout_17, 5, 1, 1, 1)
+
+        self.hoho_hints = QCheckBox(self.groupBox_5)
+        self.hoho_hints.setObjectName(u"hoho_hints")
+        self.hoho_hints.setChecked(True)
+
+        self.gridLayout_7.addWidget(self.hoho_hints, 4, 0, 1, 1)
+
+        self.cryptic_hints = QCheckBox(self.groupBox_5)
+        self.cryptic_hints.setObjectName(u"cryptic_hints")
+        self.cryptic_hints.setChecked(True)
+
+        self.gridLayout_7.addWidget(self.cryptic_hints, 6, 0, 1, 1)
+
         self.horizontalLayout_15 = QHBoxLayout()
         self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
         self.label_for_num_path_hints = QLabel(self.groupBox_5)
@@ -1027,10 +1032,10 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addLayout(self.horizontalLayout_15, 5, 3, 1, 1)
 
-        self.hint_importance = QCheckBox(self.groupBox_5)
-        self.hint_importance.setObjectName(u"hint_importance")
+        self.kreeb_hints_bows = QCheckBox(self.groupBox_5)
+        self.kreeb_hints_bows.setObjectName(u"kreeb_hints_bows")
 
-        self.gridLayout_7.addWidget(self.hint_importance, 6, 2, 1, 1)
+        self.gridLayout_7.addWidget(self.kreeb_hints_bows, 7, 0, 1, 1)
 
 
         self.verticalLayout_8.addWidget(self.groupBox_5)
@@ -1352,16 +1357,17 @@ class Ui_MainWindow(object):
         self.logic_precision.setItemText(3, QCoreApplication.translate("MainWindow", u"Very Hard", None))
 
         self.groupBox_5.setTitle(QCoreApplication.translate("MainWindow", u"Hint Options", None))
-        self.hoho_hints.setText(QCoreApplication.translate("MainWindow", u"Place Hints on Old Man Ho Ho", None))
-        self.prioritize_remote_hints.setText(QCoreApplication.translate("MainWindow", u"Prioritize Remote Location Hints", None))
-        self.korl_hints.setText(QCoreApplication.translate("MainWindow", u"Place Hints on King of Red Lions", None))
         self.label_for_num_barren_hints.setText(QCoreApplication.translate("MainWindow", u"Barren Hints", None))
-        self.cryptic_hints.setText(QCoreApplication.translate("MainWindow", u"Use Cryptic Text for Hints", None))
-        self.fishmen_hints.setText(QCoreApplication.translate("MainWindow", u"Place Hints on Fishmen", None))
-        self.label_for_num_location_hints.setText(QCoreApplication.translate("MainWindow", u"Location Hints", None))
         self.label_for_num_item_hints.setText(QCoreApplication.translate("MainWindow", u"Item Hints", None))
-        self.label_for_num_path_hints.setText(QCoreApplication.translate("MainWindow", u"Path Hints", None))
+        self.korl_hints.setText(QCoreApplication.translate("MainWindow", u"Place Hints on King of Red Lions", None))
+        self.fishmen_hints.setText(QCoreApplication.translate("MainWindow", u"Place Hints on Fishmen", None))
         self.hint_importance.setText(QCoreApplication.translate("MainWindow", u"Hint Importance", None))
+        self.prioritize_remote_hints.setText(QCoreApplication.translate("MainWindow", u"Prioritize Remote Location Hints", None))
+        self.label_for_num_location_hints.setText(QCoreApplication.translate("MainWindow", u"Location Hints", None))
+        self.hoho_hints.setText(QCoreApplication.translate("MainWindow", u"Place Hints on Old Man Ho Ho", None))
+        self.cryptic_hints.setText(QCoreApplication.translate("MainWindow", u"Use Cryptic Text for Hints", None))
+        self.label_for_num_path_hints.setText(QCoreApplication.translate("MainWindow", u"Path Hints", None))
+        self.kreeb_hints_bows.setText(QCoreApplication.translate("MainWindow", u"Kreeb Hints Bows", None))
         self.groupBox_logic_tweaks.setTitle(QCoreApplication.translate("MainWindow", u"Logic Tweaks", None))
         self.open_drc.setText(QCoreApplication.translate("MainWindow", u"Open DRC", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))
