@@ -1372,7 +1372,7 @@ class Ui_MainWindow(object):
         self.prioritize_remote_hints.setText(QCoreApplication.translate("MainWindow", u"Prioritize Remote Location Hints", None))
         self.label_for_num_barren_hints.setText(QCoreApplication.translate("MainWindow", u"Barren Hints", None))
         self.hoho_hints.setText(QCoreApplication.translate("MainWindow", u"Place Hints on Old Man Ho Ho", None))
-        self.korl_hints_swords.setText(QCoreApplication.translate("MainWindow", u"KoRL in Hyrule Hints Swords", None))
+        self.korl_hints_swords.setText(QCoreApplication.translate("MainWindow", u"King of Red Lions in Hyrule Hints Swords", None))
         self.kreeb_hints_bows.setText(QCoreApplication.translate("MainWindow", u"Kreeb Hints Bows", None))
         self.groupBox_logic_tweaks.setTitle(QCoreApplication.translate("MainWindow", u"Logic Tweaks", None))
         self.open_drc.setText(QCoreApplication.translate("MainWindow", u"Open DRC", None))
