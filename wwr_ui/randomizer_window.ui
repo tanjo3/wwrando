@@ -1442,7 +1442,7 @@
                <item row="7" column="0">
                 <widget class="QCheckBox" name="korl_hints_swords">
                  <property name="text">
-                  <string>KoRL in Hyrule Hints Swords</string>
+                  <string>King of Red Lions in Hyrule Hints Swords</string>
                  </property>
                 </widget>
                </item>
