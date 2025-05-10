@@ -683,6 +683,9 @@ class WWRandomizerWindow(QMainWindow):
     if options.num_location_hints == 0:
       should_enable_options["prioritize_remote_hints"] = False
     
+    if options.hoho_hints:
+      should_enable_options["hoho_hint_shards"] = False
+    
     dungeon_entrances_random = any([
       options.randomize_dungeon_entrances,
       options.randomize_miniboss_entrances,
