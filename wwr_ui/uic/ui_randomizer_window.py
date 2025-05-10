@@ -1032,15 +1032,20 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addWidget(self.hoho_hints, 4, 0, 1, 1)
 
-        self.korl_hints_swords = QCheckBox(self.groupBox_5)
-        self.korl_hints_swords.setObjectName(u"korl_hints_swords")
-
-        self.gridLayout_7.addWidget(self.korl_hints_swords, 7, 0, 1, 1)
-
         self.kreeb_hints_bows = QCheckBox(self.groupBox_5)
         self.kreeb_hints_bows.setObjectName(u"kreeb_hints_bows")
 
-        self.gridLayout_7.addWidget(self.kreeb_hints_bows, 7, 1, 1, 1)
+        self.gridLayout_7.addWidget(self.kreeb_hints_bows, 7, 2, 1, 1)
+
+        self.korl_hints_swords = QCheckBox(self.groupBox_5)
+        self.korl_hints_swords.setObjectName(u"korl_hints_swords")
+
+        self.gridLayout_7.addWidget(self.korl_hints_swords, 7, 1, 1, 1)
+
+        self.hoho_hint_shards = QCheckBox(self.groupBox_5)
+        self.hoho_hint_shards.setObjectName(u"hoho_hint_shards")
+
+        self.gridLayout_7.addWidget(self.hoho_hint_shards, 7, 0, 1, 1)
 
 
         self.verticalLayout_8.addWidget(self.groupBox_5)
@@ -1372,8 +1377,9 @@ class Ui_MainWindow(object):
         self.prioritize_remote_hints.setText(QCoreApplication.translate("MainWindow", u"Prioritize Remote Location Hints", None))
         self.label_for_num_barren_hints.setText(QCoreApplication.translate("MainWindow", u"Barren Hints", None))
         self.hoho_hints.setText(QCoreApplication.translate("MainWindow", u"Place Hints on Old Man Ho Ho", None))
-        self.korl_hints_swords.setText(QCoreApplication.translate("MainWindow", u"King of Red Lions in Hyrule Hints Swords", None))
         self.kreeb_hints_bows.setText(QCoreApplication.translate("MainWindow", u"Kreeb Hints Bows", None))
+        self.korl_hints_swords.setText(QCoreApplication.translate("MainWindow", u"King of Red Lions in Hyrule Hints Swords", None))
+        self.hoho_hint_shards.setText(QCoreApplication.translate("MainWindow", u"Old Man Ho Ho Hint Shards", None))
         self.groupBox_logic_tweaks.setTitle(QCoreApplication.translate("MainWindow", u"Logic Tweaks", None))
         self.open_drc.setText(QCoreApplication.translate("MainWindow", u"Open DRC", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))

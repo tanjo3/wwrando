@@ -173,6 +173,7 @@ class HintsRandomizer(BaseRandomizer):
     self.prioritize_remote_hints = self.options.prioritize_remote_hints
     self.hint_importance = self.options.hint_importance
     
+    self.hoho_hint_shards = self.options.hoho_hint_shards
     self.korl_hints_swords = self.options.korl_hints_swords
     self.kreeb_hints_bows = self.options.kreeb_hints_bows
     
@@ -246,6 +247,9 @@ class HintsRandomizer(BaseRandomizer):
     
     self.octo_fairy_hint = self.generate_octo_fairy_hint()
     
+    if self.hoho_hint_shards:
+      self.hoho_shard_hints = self.generate_hoho_shard_hints()
+      self.rng.shuffle(self.hoho_shard_hints)
     if self.korl_hints_swords:
       self.korl_sword_hints = self.generate_korl_sword_hints()
     if self.kreeb_hints_bows:
@@ -319,6 +323,8 @@ class HintsRandomizer(BaseRandomizer):
     
     self.update_big_octo_great_fairy_item_name_hint(self.octo_fairy_hint, self.hint_importance)
     
+    if self.hoho_hint_shards:
+      self.update_hoho_item_hints(self.hoho_shard_hints)
     if self.korl_hints_swords:
       self.update_korl_item_hints(self.korl_sword_hints)
     if self.kreeb_hints_bows:
@@ -445,6 +451,23 @@ class HintsRandomizer(BaseRandomizer):
     else:
       msg.string = "\\{1A 06 FF 00 00 05}When you find you have need of such an item, you must journey to that place."
     msg.word_wrap_string(self.rando.bfn)
+  
+  def update_hoho_item_hints(self, hints: list[Hint]):
+    # If there are no shards, then don't change the Old Man Ho Hos' text
+    if len(hints) == 0:
+      return
+    
+    for hoho_index in range(10):
+      hint = hints[hoho_index % len(hints)]
+      hint_prefix = "\\{1A 05 01 01 03}Ho ho! To think that "
+      hint_suffix = "..."
+      
+      msg_id = 14001 + hoho_index
+      msg = self.rando.bmg.messages_by_id[msg_id]
+      msg.string = HintsRandomizer.get_formatted_hint_text(hint, self.cryptic_hints, self.hint_importance, prefix=hint_prefix, suffix=hint_suffix)
+      msg.word_wrap_string(self.rando.bfn)
+      
+      self.rotate_hoho_to_face_hint(hoho_index, [hint])
   
   def update_korl_item_hints(self, hints: list[Hint]):
     # If there are no swords, then don't change KoRL's text
@@ -1101,6 +1124,19 @@ class HintsRandomizer(BaseRandomizer):
     item_importance = self.get_importance_for_location(location_name)
     hint = Hint(HintType.FIXED_LOCATION, location_name, item_name, item_importance)
     return hint
+  
+  def generate_hoho_shard_hints(self):
+    shard_locations = [
+      (loc, item) for loc, item in self.logic.done_item_locations.items() if item.startswith("Triforce Shard ")
+    ]
+    
+    hoho_shard_hints = []
+    for shard_location, shard_name in shard_locations:
+      entrance_zone = self.rando.entrances.get_entrance_zone_for_item_location(shard_location)
+      item_importance = self.get_importance_for_location(shard_location)
+      hoho_shard_hints.append(Hint(HintType.ITEM, entrance_zone, shard_name, item_importance))
+    
+    return hoho_shard_hints
   
   def generate_korl_sword_hints(self):
     sword_locations = [loc for loc, item in self.logic.done_item_locations.items() if item == "Progressive Sword"]
