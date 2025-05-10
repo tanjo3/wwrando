@@ -335,6 +335,10 @@ class Options(BaseOptions):
     description="When this option is selected, item and location hints will also indicate if the hinted item is required, possibly required, or not required.<br>"
       "Only progress items will have these additions; non-progress items are trivially not required."
   )
+  korl_hints_swords: bool = option(
+    default=False,
+    description="When this option is selected, the King of Red Lions will give an item hint for each Progressive Sword if spoken to in Hyrule."
+  )
   kreeb_hints_bows: bool = option(
     default=False,
     description="When this option is selected, Kreeb will give an item hint for each Progressive Bow after Link reactivates the Windfall lighthouse."
