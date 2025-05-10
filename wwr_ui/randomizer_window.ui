@@ -1268,35 +1268,12 @@
                <string>Hint Options</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_7">
-               <item row="5" column="2">
-                <layout class="QHBoxLayout" name="horizontalLayout_16">
-                 <item>
-                  <widget class="QLabel" name="label_for_num_barren_hints">
-                   <property name="text">
-                    <string>Barren Hints</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QSpinBox" name="num_barren_hints">
-                   <property name="correctionMode">
-                    <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
-                   </property>
-                   <property name="minimum">
-                    <number>0</number>
-                   </property>
-                   <property name="maximum">
-                    <number>15</number>
-                   </property>
-                   <property name="value">
-                    <number>0</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QWidget" name="widget_7" native="true"/>
-                 </item>
-                </layout>
+               <item row="6" column="2">
+                <widget class="QCheckBox" name="hint_importance">
+                 <property name="text">
+                  <string>Hint Importance</string>
+                 </property>
+                </widget>
                </item>
                <item row="5" column="0">
                 <layout class="QHBoxLayout" name="horizontalLayout_9">
@@ -1335,27 +1312,43 @@
                  </property>
                 </widget>
                </item>
-               <item row="4" column="1">
-                <widget class="QCheckBox" name="fishmen_hints">
+               <item row="5" column="3">
+                <layout class="QHBoxLayout" name="horizontalLayout_15">
+                 <item>
+                  <widget class="QLabel" name="label_for_num_path_hints">
+                   <property name="text">
+                    <string>Path Hints</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="num_path_hints">
+                   <property name="correctionMode">
+                    <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+                   </property>
+                   <property name="minimum">
+                    <number>0</number>
+                   </property>
+                   <property name="maximum">
+                    <number>15</number>
+                   </property>
+                   <property name="value">
+                    <number>0</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QWidget" name="widget_6" native="true"/>
+                 </item>
+                </layout>
+               </item>
+               <item row="6" column="0">
+                <widget class="QCheckBox" name="cryptic_hints">
                  <property name="text">
-                  <string>Place Hints on Fishmen</string>
+                  <string>Use Cryptic Text for Hints</string>
                  </property>
                  <property name="checked">
                   <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="2">
-                <widget class="QCheckBox" name="hint_importance">
-                 <property name="text">
-                  <string>Hint Importance</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="1">
-                <widget class="QCheckBox" name="prioritize_remote_hints">
-                 <property name="text">
-                  <string>Prioritize Remote Location Hints</string>
                  </property>
                 </widget>
                </item>
@@ -1389,37 +1382,34 @@
                  </item>
                 </layout>
                </item>
-               <item row="4" column="0">
-                <widget class="QCheckBox" name="hoho_hints">
+               <item row="4" column="1">
+                <widget class="QCheckBox" name="fishmen_hints">
                  <property name="text">
-                  <string>Place Hints on Old Man Ho Ho</string>
+                  <string>Place Hints on Fishmen</string>
                  </property>
                  <property name="checked">
                   <bool>true</bool>
                  </property>
                 </widget>
                </item>
-               <item row="6" column="0">
-                <widget class="QCheckBox" name="cryptic_hints">
+               <item row="6" column="1">
+                <widget class="QCheckBox" name="prioritize_remote_hints">
                  <property name="text">
-                  <string>Use Cryptic Text for Hints</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
+                  <string>Prioritize Remote Location Hints</string>
                  </property>
                 </widget>
                </item>
-               <item row="5" column="3">
-                <layout class="QHBoxLayout" name="horizontalLayout_15">
+               <item row="5" column="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_16">
                  <item>
-                  <widget class="QLabel" name="label_for_num_path_hints">
+                  <widget class="QLabel" name="label_for_num_barren_hints">
                    <property name="text">
-                    <string>Path Hints</string>
+                    <string>Barren Hints</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QSpinBox" name="num_path_hints">
+                  <widget class="QSpinBox" name="num_barren_hints">
                    <property name="correctionMode">
                     <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
                    </property>
@@ -1435,11 +1425,28 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QWidget" name="widget_6" native="true"/>
+                  <widget class="QWidget" name="widget_7" native="true"/>
                  </item>
                 </layout>
                </item>
+               <item row="4" column="0">
+                <widget class="QCheckBox" name="hoho_hints">
+                 <property name="text">
+                  <string>Place Hints on Old Man Ho Ho</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
                <item row="7" column="0">
+                <widget class="QCheckBox" name="korl_hints_swords">
+                 <property name="text">
+                  <string>KoRL in Hyrule Hints Swords</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
                 <widget class="QCheckBox" name="kreeb_hints_bows">
                  <property name="text">
                   <string>Kreeb Hints Bows</string>

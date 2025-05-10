@@ -173,6 +173,7 @@ class HintsRandomizer(BaseRandomizer):
     self.prioritize_remote_hints = self.options.prioritize_remote_hints
     self.hint_importance = self.options.hint_importance
     
+    self.korl_hints_swords = self.options.korl_hints_swords
     self.kreeb_hints_bows = self.options.kreeb_hints_bows
     
     self.path_locations: set[str] = None
@@ -245,6 +246,8 @@ class HintsRandomizer(BaseRandomizer):
     
     self.octo_fairy_hint = self.generate_octo_fairy_hint()
     
+    if self.korl_hints_swords:
+      self.korl_sword_hints = self.generate_korl_sword_hints()
     if self.kreeb_hints_bows:
       self.kreeb_hints = self.generate_kreeb_hints()
     
@@ -316,6 +319,8 @@ class HintsRandomizer(BaseRandomizer):
     
     self.update_big_octo_great_fairy_item_name_hint(self.octo_fairy_hint, self.hint_importance)
     
+    if self.korl_hints_swords:
+      self.update_korl_item_hints(self.korl_sword_hints)
     if self.kreeb_hints_bows:
       self.update_kreeb_item_hints(self.kreeb_hints)
     
@@ -440,6 +445,25 @@ class HintsRandomizer(BaseRandomizer):
     else:
       msg.string = "\\{1A 06 FF 00 00 05}When you find you have need of such an item, you must journey to that place."
     msg.word_wrap_string(self.rando.bfn)
+  
+  def update_korl_item_hints(self, hints: list[Hint]):
+    # If there are no swords, then don't change KoRL's text
+    if len(hints) == 0:
+      return
+    
+    hint_lines = []
+    for i, hint in enumerate(hints):
+      hint_prefix = "They say that " if i == 0 else "and that "
+      hint_suffix = "." if i == len(hints) - 1 else ","
+      hint_lines.append(HintsRandomizer.get_formatted_hint_text(hint, self.cryptic_hints, False, prefix=hint_prefix, suffix=hint_suffix))
+      
+      if self.options.instant_text_boxes and i > 0:
+        # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
+        hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
+    
+    for msg_id in (3444, 3445):
+      msg = self.rando.bmg.messages_by_id[msg_id]
+      msg.construct_string_from_parts(self.rando.bfn, hint_lines)
   
   def update_kreeb_item_hints(self, hints: list[Hint]):
     # If there are no bows, then don't change Kreeb's text
@@ -1077,6 +1101,17 @@ class HintsRandomizer(BaseRandomizer):
     item_importance = self.get_importance_for_location(location_name)
     hint = Hint(HintType.FIXED_LOCATION, location_name, item_name, item_importance)
     return hint
+  
+  def generate_korl_sword_hints(self):
+    sword_locations = [loc for loc, item in self.logic.done_item_locations.items() if item == "Progressive Sword"]
+    
+    korl_sword_hints = []
+    for sword_location in sword_locations:
+      entrance_zone = self.rando.entrances.get_entrance_zone_for_item_location(sword_location)
+      item_importance = self.get_importance_for_location(sword_location)
+      korl_sword_hints.append(Hint(HintType.ITEM, entrance_zone, "Progressive Sword", item_importance))
+    
+    return korl_sword_hints
   
   def generate_kreeb_hints(self):
     bow_locations = [loc for loc, item in self.logic.done_item_locations.items() if item == "Progressive Bow"]
