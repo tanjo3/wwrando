@@ -70,7 +70,21 @@ class RequiredBossesRandomizer(BaseRandomizer):
     spoiler_log += "\n\n\n"
     return spoiler_log
   
-
+  def weighted_sample_without_replacement(self, population, weights, k=1):
+    # From: https://stackoverflow.com/a/43649323
+    weights = list(weights)
+    positions = range(len(population))
+    indices = []
+    while True:
+      needed = k - len(indices)
+      if not needed:
+        break
+      for i in self.rng.choices(positions, weights, k=needed):
+        if weights[i]:
+          weights[i] = 0.0
+          indices.append(i)
+    return [population[i] for i in indices]
+  
   def randomize_required_bosses(self):
     if not self.options.progression_dungeons:
       raise Exception("Cannot make bosses required when progression dungeons are disabled.")
@@ -87,7 +101,11 @@ class RequiredBossesRandomizer(BaseRandomizer):
     if num_required_bosses > 6 or num_required_bosses < 1:
       raise Exception(f"Number of required bosses is invalid: {num_required_bosses}")
     
-    self.required_boss_item_locations = self.rng.sample(possible_boss_item_locations, num_required_bosses)
+    locations_weights = [
+      2 if self.options.helm_more_likely and loc.endswith("Helmaroc King Heart Container") else 1
+      for loc in possible_boss_item_locations
+    ]
+    self.required_boss_item_locations = self.weighted_sample_without_replacement(possible_boss_item_locations, locations_weights, k=num_required_bosses)
     
     for location_name in possible_boss_item_locations:
       assert "Boss" in self.logic.item_locations[location_name]["Types"]

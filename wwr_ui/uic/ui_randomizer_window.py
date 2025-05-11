@@ -814,6 +814,11 @@ class Ui_MainWindow(object):
 
         self.gridLayout_6.addWidget(self.required_bosses, 0, 0, 1, 1)
 
+        self.widget_4 = QWidget(self.groupBox_4)
+        self.widget_4.setObjectName(u"widget_4")
+
+        self.gridLayout_6.addWidget(self.widget_4, 0, 2, 1, 1)
+
         self.horizontalLayout_8 = QHBoxLayout()
         self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
         self.label_for_num_required_bosses = QLabel(self.groupBox_4)
@@ -831,15 +836,15 @@ class Ui_MainWindow(object):
 
         self.gridLayout_6.addLayout(self.horizontalLayout_8, 0, 1, 1, 1)
 
-        self.widget_4 = QWidget(self.groupBox_4)
-        self.widget_4.setObjectName(u"widget_4")
-
-        self.gridLayout_6.addWidget(self.widget_4, 0, 2, 1, 1)
-
         self.widget_5 = QWidget(self.groupBox_4)
         self.widget_5.setObjectName(u"widget_5")
 
         self.gridLayout_6.addWidget(self.widget_5, 0, 3, 1, 1)
+
+        self.helm_more_likely = QCheckBox(self.groupBox_4)
+        self.helm_more_likely.setObjectName(u"helm_more_likely")
+
+        self.gridLayout_6.addWidget(self.helm_more_likely, 1, 0, 1, 1)
 
 
         self.verticalLayout_8.addWidget(self.groupBox_4)
@@ -1397,6 +1402,7 @@ class Ui_MainWindow(object):
         self.groupBox_4.setTitle(QCoreApplication.translate("MainWindow", u"Required Bosses", None))
         self.required_bosses.setText(QCoreApplication.translate("MainWindow", u"Required Bosses Mode", None))
         self.label_for_num_required_bosses.setText(QCoreApplication.translate("MainWindow", u"Number of Required Bosses", None))
+        self.helm_more_likely.setText(QCoreApplication.translate("MainWindow", u"Make Helmaroc King More Likely", None))
         self.groupBox_9.setTitle(QCoreApplication.translate("MainWindow", u"Difficulty Options", None))
         self.hero_mode.setText(QCoreApplication.translate("MainWindow", u"Hero Mode", None))
         self.label_for_logic_obscurity.setText(QCoreApplication.translate("MainWindow", u"Obscure Tricks Required", None))
