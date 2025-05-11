@@ -902,6 +902,25 @@ blr
 
 
 
+.global double_magic_meter_item_func
+double_magic_meter_item_func:
+stwu sp, -0x10 (sp)
+mflr r0
+stw r0, 0x14 (sp)
+
+lis r3, 0x803C4C1B@ha
+addi r3, r3, 0x803C4C1B@l
+lbz r4, 0 (r3) ; Max magic meter
+bl item_func_max_mp_up1__Fv
+
+lwz r0, 0x14 (sp)
+mtlr r0
+addi sp, sp, 0x10
+blr
+
+
+
+
 ; Write our own base magic meter item get function because the vanilla one (item_func_magic_power__Fv) was just a placeholder.
 .global normal_magic_meter_item_func
 normal_magic_meter_item_func:

@@ -355,6 +355,11 @@ class Options(BaseOptions):
     default=True,
     description="Allow DRC entrance to be accessed from the beginning of the game with no items."
   )
+  always_double_magic: bool = option(
+    default=False,
+    description="Progressive Magic Meters will always give double magic. Finding a second Progressive Magic Meter wil have no effect (i.e., will not quadruple your magic).<br>"
+      "This setting only has an effect when starting with no magic. If you start with one Magic Meter, you will not start with double magic."
+  )
   #endregion
   
   #region Miscellaneous Dev Features
