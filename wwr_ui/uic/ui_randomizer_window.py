@@ -1059,8 +1059,50 @@ class Ui_MainWindow(object):
 
         self.gridLayout_logic_tweaks.addWidget(self.open_drc, 0, 0, 1, 1)
 
+        self.widget_16 = QWidget(self.groupBox_logic_tweaks)
+        self.widget_16.setObjectName(u"widget_16")
+
+        self.gridLayout_logic_tweaks.addWidget(self.widget_16, 0, 2, 1, 1)
+
+        self.widget_15 = QWidget(self.groupBox_logic_tweaks)
+        self.widget_15.setObjectName(u"widget_15")
+
+        self.gridLayout_logic_tweaks.addWidget(self.widget_15, 0, 3, 1, 1)
+
+        self.widget_17 = QWidget(self.groupBox_logic_tweaks)
+        self.widget_17.setObjectName(u"widget_17")
+
+        self.gridLayout_logic_tweaks.addWidget(self.widget_17, 0, 1, 1, 1)
+
 
         self.verticalLayout_8.addWidget(self.groupBox_logic_tweaks)
+
+        self.groupBox_misc_dev = QGroupBox(self.tab_advanced)
+        self.groupBox_misc_dev.setObjectName(u"groupBox_misc_dev")
+        self.gridLayout_11 = QGridLayout(self.groupBox_misc_dev)
+        self.gridLayout_11.setObjectName(u"gridLayout_11")
+        self.widget = QWidget(self.groupBox_misc_dev)
+        self.widget.setObjectName(u"widget")
+
+        self.gridLayout_11.addWidget(self.widget, 0, 3, 1, 1)
+
+        self.widget_3 = QWidget(self.groupBox_misc_dev)
+        self.widget_3.setObjectName(u"widget_3")
+
+        self.gridLayout_11.addWidget(self.widget_3, 0, 2, 1, 1)
+
+        self.rainbow_rupee_progress = QCheckBox(self.groupBox_misc_dev)
+        self.rainbow_rupee_progress.setObjectName(u"rainbow_rupee_progress")
+
+        self.gridLayout_11.addWidget(self.rainbow_rupee_progress, 0, 0, 1, 1)
+
+        self.widget_14 = QWidget(self.groupBox_misc_dev)
+        self.widget_14.setObjectName(u"widget_14")
+
+        self.gridLayout_11.addWidget(self.widget_14, 0, 1, 1, 1)
+
+
+        self.verticalLayout_8.addWidget(self.groupBox_misc_dev)
 
         self.groupBox_6 = QGroupBox(self.tab_advanced)
         self.groupBox_6.setObjectName(u"groupBox_6")
@@ -1073,6 +1115,9 @@ class Ui_MainWindow(object):
 
         self.widget_11 = QWidget(self.groupBox_6)
         self.widget_11.setObjectName(u"widget_11")
+        self.widget_13 = QWidget(self.widget_11)
+        self.widget_13.setObjectName(u"widget_13")
+        self.widget_13.setGeometry(QRect(0, 0, 225, 20))
 
         self.gridLayout_8.addWidget(self.widget_11, 0, 2, 1, 1)
 
@@ -1382,6 +1427,8 @@ class Ui_MainWindow(object):
         self.hoho_hint_shards.setText(QCoreApplication.translate("MainWindow", u"Old Man Ho Ho Hint Shards", None))
         self.groupBox_logic_tweaks.setTitle(QCoreApplication.translate("MainWindow", u"Logic Tweaks", None))
         self.open_drc.setText(QCoreApplication.translate("MainWindow", u"Open DRC", None))
+        self.groupBox_misc_dev.setTitle(QCoreApplication.translate("MainWindow", u"Miscellaneous Dev Features", None))
+        self.rainbow_rupee_progress.setText(QCoreApplication.translate("MainWindow", u"Make Rainbow Rupee Progression", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))
         self.do_not_generate_spoiler_log.setText(QCoreApplication.translate("MainWindow", u"Do Not Generate Spoiler Log", None))
         self.dry_run.setText(QCoreApplication.translate("MainWindow", u"Dry Run", None))
