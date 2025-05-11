@@ -353,7 +353,15 @@ class Options(BaseOptions):
   #region Logic Tweaks
   open_drc: bool = option(
     default=True,
-    description="Allow DRC entrance to be accessed from the beginning of the game with no items"
+    description="Allow DRC entrance to be accessed from the beginning of the game with no items."
+  )
+  #endregion
+  
+  #region Miscellaneous Dev Features
+  rainbow_rupee_progress: bool = option(
+    default=False,
+    description="Place the Rainbow Rupee into the progression item pool. This means that it will be found in a progress location. If CTMC is enabled, it will be in a metal chest.<br>"
+      "This setting has no effect on the logic."
   )
   #endregion
   

@@ -1476,6 +1476,40 @@
                  </property>
                 </widget>
                </item>
+               <item row="0" column="2">
+                <widget class="QWidget" name="widget_16" native="true"/>
+               </item>
+               <item row="0" column="3">
+                <widget class="QWidget" name="widget_15" native="true"/>
+               </item>
+               <item row="0" column="1">
+                <widget class="QWidget" name="widget_17" native="true"/>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_misc_dev">
+              <property name="title">
+               <string>Miscellaneous Dev Features</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_11">
+               <item row="0" column="3">
+                <widget class="QWidget" name="widget" native="true"/>
+               </item>
+               <item row="0" column="2">
+                <widget class="QWidget" name="widget_3" native="true"/>
+               </item>
+               <item row="0" column="0">
+                <widget class="QCheckBox" name="rainbow_rupee_progress">
+                 <property name="text">
+                  <string>Make Rainbow Rupee Progression</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QWidget" name="widget_14" native="true"/>
+               </item>
               </layout>
              </widget>
             </item>
@@ -1493,7 +1527,18 @@
                 </widget>
                </item>
                <item row="0" column="2">
-                <widget class="QWidget" name="widget_11" native="true"/>
+                <widget class="QWidget" name="widget_11" native="true">
+                 <widget class="QWidget" name="widget_13" native="true">
+                  <property name="geometry">
+                   <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>225</width>
+                    <height>20</height>
+                   </rect>
+                  </property>
+                 </widget>
+                </widget>
                </item>
                <item row="0" column="3">
                 <widget class="QWidget" name="widget_12" native="true"/>
