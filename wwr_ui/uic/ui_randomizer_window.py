@@ -1054,11 +1054,6 @@ class Ui_MainWindow(object):
         self.groupBox_logic_tweaks.setObjectName(u"groupBox_logic_tweaks")
         self.gridLayout_logic_tweaks = QGridLayout(self.groupBox_logic_tweaks)
         self.gridLayout_logic_tweaks.setObjectName(u"gridLayout_logic_tweaks")
-        self.open_drc = QCheckBox(self.groupBox_logic_tweaks)
-        self.open_drc.setObjectName(u"open_drc")
-
-        self.gridLayout_logic_tweaks.addWidget(self.open_drc, 0, 0, 1, 1)
-
         self.widget_16 = QWidget(self.groupBox_logic_tweaks)
         self.widget_16.setObjectName(u"widget_16")
 
@@ -1069,10 +1064,15 @@ class Ui_MainWindow(object):
 
         self.gridLayout_logic_tweaks.addWidget(self.widget_15, 0, 3, 1, 1)
 
-        self.widget_17 = QWidget(self.groupBox_logic_tweaks)
-        self.widget_17.setObjectName(u"widget_17")
+        self.open_drc = QCheckBox(self.groupBox_logic_tweaks)
+        self.open_drc.setObjectName(u"open_drc")
 
-        self.gridLayout_logic_tweaks.addWidget(self.widget_17, 0, 1, 1, 1)
+        self.gridLayout_logic_tweaks.addWidget(self.open_drc, 0, 0, 1, 1)
+
+        self.always_double_magic = QCheckBox(self.groupBox_logic_tweaks)
+        self.always_double_magic.setObjectName(u"always_double_magic")
+
+        self.gridLayout_logic_tweaks.addWidget(self.always_double_magic, 0, 1, 1, 1)
 
 
         self.verticalLayout_8.addWidget(self.groupBox_logic_tweaks)
@@ -1427,6 +1427,7 @@ class Ui_MainWindow(object):
         self.hoho_hint_shards.setText(QCoreApplication.translate("MainWindow", u"Old Man Ho Ho Hint Shards", None))
         self.groupBox_logic_tweaks.setTitle(QCoreApplication.translate("MainWindow", u"Logic Tweaks", None))
         self.open_drc.setText(QCoreApplication.translate("MainWindow", u"Open DRC", None))
+        self.always_double_magic.setText(QCoreApplication.translate("MainWindow", u"Progressive Magic Meters are Double", None))
         self.groupBox_misc_dev.setTitle(QCoreApplication.translate("MainWindow", u"Miscellaneous Dev Features", None))
         self.rainbow_rupee_progress.setText(QCoreApplication.translate("MainWindow", u"Make Rainbow Rupee Progression", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))

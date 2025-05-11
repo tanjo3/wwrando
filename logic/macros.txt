@@ -82,7 +82,7 @@ Deluxe Picto Box:
 Magic Meter:
   Progressive Magic Meter x1
 Magic Meter Upgrade:
-  Progressive Magic Meter x2
+  Progressive Magic Meter x2 | (Progressive Magic Meter x1 & Option "always_double_magic" Enabled)
 All 8 Triforce Shards:
   Triforce Shard 1
   & Triforce Shard 2

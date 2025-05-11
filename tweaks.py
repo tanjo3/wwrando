@@ -292,7 +292,10 @@ def make_items_progressive(self: WWRandomizer):
   
   for magic_meter_item_id in [0xB1, 0xB2]:
     magic_meter_item_get_func_addr = item_get_funcs_list + magic_meter_item_id*4
-    self.dol.write_data(fs.write_u32, magic_meter_item_get_func_addr, self.main_custom_symbols["progressive_magic_meter_item_func"])
+    if self.options.always_double_magic:
+      self.dol.write_data(fs.write_u32, magic_meter_item_get_func_addr, self.main_custom_symbols["double_magic_meter_item_func"])
+    else:
+      self.dol.write_data(fs.write_u32, magic_meter_item_get_func_addr, self.main_custom_symbols["progressive_magic_meter_item_func"])
   
   # Register which item ID is for which progressive item.
   self.register_renamed_item(0x38, "Progressive Sword")

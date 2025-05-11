@@ -1469,6 +1469,12 @@
                <string>Logic Tweaks</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_logic_tweaks">
+               <item row="0" column="2">
+                <widget class="QWidget" name="widget_16" native="true"/>
+               </item>
+               <item row="0" column="3">
+                <widget class="QWidget" name="widget_15" native="true"/>
+               </item>
                <item row="0" column="0">
                 <widget class="QCheckBox" name="open_drc">
                  <property name="text">
@@ -1476,14 +1482,12 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="2">
-                <widget class="QWidget" name="widget_16" native="true"/>
-               </item>
-               <item row="0" column="3">
-                <widget class="QWidget" name="widget_15" native="true"/>
-               </item>
                <item row="0" column="1">
-                <widget class="QWidget" name="widget_17" native="true"/>
+                <widget class="QCheckBox" name="always_double_magic">
+                 <property name="text">
+                  <string>Progressive Magic Meters are Double</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>
