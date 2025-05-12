@@ -1016,10 +1016,11 @@ class WWRandomizer:
     rng.seed(self.integer_seed)
     
     # Further change the RNG based on which RNG-changing options are enabled
+    sample_rng = Random()
     for i, option in enumerate(RNG_CHANGING_OPTIONS):
-      value = self.options[option]
-      for j in range(1, 100 + i):
-        rng.getrandbits(value + 20 * i + j)
+      sample_rng.seed(self.options[option])
+      for j in range(100):
+        rng.getrandbits(sample_rng.randint(0, 100))
     
     return rng
   
