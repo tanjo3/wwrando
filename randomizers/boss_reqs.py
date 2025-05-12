@@ -92,7 +92,7 @@ class RequiredBossesRandomizer(BaseRandomizer):
     num_required_bosses = self.options.num_required_bosses
     
     possible_boss_item_locations = [
-      loc for loc in self.logic.item_locations.keys()
+      loc for loc in sorted(self.logic.item_locations.keys())
       if "Boss" in self.logic.item_locations[loc]["Types"]
     ]
     
@@ -133,6 +133,7 @@ class RequiredBossesRandomizer(BaseRandomizer):
         self.banned_locations.append(location_name)
       elif location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in self.banned_dungeons:
         self.banned_locations.append(location_name)
+    self.banned_locations.sort()
 
   def show_quest_markers_on_sea_chart_for_dungeons(self):
     # Uses the blue quest markers on the sea chart to highlight certain dungeons.
