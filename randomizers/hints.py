@@ -1026,10 +1026,10 @@ class HintsRandomizer(BaseRandomizer):
     # Helper function to build a list of locations which may be hinted as item hints in this seed.
     
     # Filter out locations which are invalid to be hinted at for item hints.
-    hintable_locations = [
+    hintable_locations = sorted([
       loc for loc in self.logic.done_item_locations
       if self.check_is_legal_item_hint(loc, progress_locations, previously_hinted_locations)
-    ]
+    ])
     
     new_hintable_locations = self.filter_out_hinted_barren_locations(hintable_locations, hinted_barren_zones)
     
@@ -1126,20 +1126,18 @@ class HintsRandomizer(BaseRandomizer):
     return hint
   
   def generate_hoho_shard_hints(self):
-    shard_locations = [
-      (loc, item) for loc, item in self.logic.done_item_locations.items() if item.startswith("Triforce Shard ")
-    ]
+    shard_locations = sorted([loc for loc, item in self.logic.done_item_locations.items() if item.startswith("Triforce Shard ")])
     
     hoho_shard_hints = []
-    for shard_location, shard_name in shard_locations:
+    for shard_location in shard_locations:
       entrance_zone = self.rando.entrances.get_entrance_zone_for_item_location(shard_location)
       item_importance = self.get_importance_for_location(shard_location)
-      hoho_shard_hints.append(Hint(HintType.ITEM, entrance_zone, shard_name, item_importance))
+      hoho_shard_hints.append(Hint(HintType.ITEM, entrance_zone, self.logic.done_item_locations[shard_location], item_importance))
     
     return hoho_shard_hints
   
   def generate_korl_sword_hints(self):
-    sword_locations = [loc for loc, item in self.logic.done_item_locations.items() if item == "Progressive Sword"]
+    sword_locations = sorted([loc for loc, item in self.logic.done_item_locations.items() if item == "Progressive Sword"])
     
     korl_sword_hints = []
     for sword_location in sword_locations:
@@ -1150,7 +1148,7 @@ class HintsRandomizer(BaseRandomizer):
     return korl_sword_hints
   
   def generate_kreeb_hints(self):
-    bow_locations = [loc for loc, item in self.logic.done_item_locations.items() if item == "Progressive Bow"]
+    bow_locations = sorted([loc for loc, item in self.logic.done_item_locations.items() if item == "Progressive Bow"])
     
     kreeb_hints = []
     for bow_location in bow_locations:
