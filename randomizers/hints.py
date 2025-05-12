@@ -744,6 +744,7 @@ class HintsRandomizer(BaseRandomizer):
       # Only consider progress locations.
       accessible_locations = self.path_logic.get_accessible_remaining_locations(for_progression=True)
       accessible_locations = list(set(accessible_locations) - set(self.rando.boss_reqs.banned_locations))
+      accessible_locations.sort()
       
       locations_in_this_sphere = [
         loc for loc in accessible_locations
