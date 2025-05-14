@@ -484,7 +484,7 @@ class HintsRandomizer(BaseRandomizer):
         # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
     
-    for msg_id in (3444, 3445):
+    for msg_id in (3444, 3445, 3446, 3447, 3448):
       msg = self.rando.bmg.messages_by_id[msg_id]
       msg.construct_string_from_parts(self.rando.bfn, hint_lines)
   
