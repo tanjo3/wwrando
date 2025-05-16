@@ -48,7 +48,7 @@ REGULAR_ITEMS = [
   "Tingle's Chart",
 ]
 
-REGULAR_ITEMS += DUNGEON_PROGRESS_ITEMS + DUNGEON_NONPROGRESS_ITEMS
+REGULAR_ITEMS += [item for item in DUNGEON_PROGRESS_ITEMS if item.endswith(" Big Key")] + DUNGEON_NONPROGRESS_ITEMS
 REGULAR_ITEMS.sort()
 
 PROGRESSIVE_ITEMS = \
@@ -60,6 +60,8 @@ PROGRESSIVE_ITEMS = \
   ["Progressive Sword"]       * 3 + \
   ["Progressive Shield"]      * 2 + \
   ["Progressive Magic Meter"] * 2
+
+PROGRESSIVE_ITEMS += [item for item in DUNGEON_PROGRESS_ITEMS if item.endswith(" Small Key")]
 PROGRESSIVE_ITEMS.sort()
 
 INVENTORY_ITEMS = REGULAR_ITEMS + PROGRESSIVE_ITEMS
