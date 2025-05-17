@@ -323,13 +323,6 @@ class HintsRandomizer(BaseRandomizer):
     
     self.update_big_octo_great_fairy_item_name_hint(self.octo_fairy_hint, self.hint_importance)
     
-    if self.hoho_hint_shards:
-      self.update_hoho_item_hints(self.hoho_shard_hints)
-    if self.korl_hints_swords:
-      self.update_korl_item_hints(self.korl_sword_hints)
-    if self.kreeb_hints_bows:
-      self.update_kreeb_item_hints(self.kreeb_hints)
-    
     # Send the list of hints for each hint placement option to its respective distribution function.
     # Each hint placement option will handle how to place the hints in-game in their own way.
     for hint_placement in self.hints_per_placement:
@@ -341,6 +334,13 @@ class HintsRandomizer(BaseRandomizer):
         self.update_korl_hints(self.hints_per_placement["korl_hints"])
       else:
         print("Invalid hint placement option: %s" % hint_placement)
+    
+    if self.hoho_hint_shards:
+      self.update_hoho_item_hints(self.hoho_shard_hints)
+    if self.korl_hints_swords:
+      self.update_korl_item_hints(self.korl_sword_hints)
+    if self.kreeb_hints_bows:
+      self.update_kreeb_item_hints(self.kreeb_hints)
   
   def write_to_spoiler_log(self) -> str:
     rows = []
@@ -484,7 +484,7 @@ class HintsRandomizer(BaseRandomizer):
         # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
         hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
     
-    for msg_id in (3444, 3445, 3446, 3447, 3448):
+    for msg_id in (3444, 3445, 3446):
       msg = self.rando.bmg.messages_by_id[msg_id]
       msg.construct_string_from_parts(self.rando.bfn, hint_lines)
   
