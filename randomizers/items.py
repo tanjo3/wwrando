@@ -41,7 +41,10 @@ class ItemRandomizer(BaseRandomizer):
     if not self.options.keylunacy:
       self.randomize_dungeon_items()
     
-    self.randomize_progression_items_forward_fill()
+    if self.options.use_assumed_fill:
+      self.randomize_progression_items_assumed_fill()
+    else:
+      self.randomize_progression_items_forward_fill()
     
     self.randomize_unique_nonprogress_items()
     
@@ -336,6 +339,76 @@ class ItemRandomizer(BaseRandomizer):
       if location_name in self.logic.remaining_item_locations:
         dungeon_item_name = self.logic.prerandomization_item_locations[location_name]
         self.logic.set_location_to_item(location_name, dungeon_item_name)
+    
+    game_beatable = self.logic.check_requirement_met("Can Reach and Defeat Ganondorf")
+    if not game_beatable:
+      raise Exception("Game is not beatable on this seed! This error shouldn't happen.")
+  
+  def randomize_progression_items_assumed_fill(self):
+    accessible_undone_locations = self.logic.get_accessible_remaining_locations(for_progression=True)
+    if self.logic.unplaced_progress_items and len(accessible_undone_locations) == 0:
+      raise Exception("No progress locations are accessible at the very start of the game!")
+    
+    # Place all predetermined item locations.
+    for location_name, item_name in self.logic.prerandomization_item_locations.items():
+      self.logic.set_location_to_item(location_name, item_name)
+    
+    fill_logic = Logic(self.rando)
+    fill_logic_initial_state = self.logic.save_simulated_playthrough_state()
+    
+    fill_item_placements = {}
+    num_attempts = 0
+    max_attempts = 10
+    while num_attempts < max_attempts:
+      fill_item_placements = {}
+      items_to_place = self.logic.unplaced_progress_items.copy()
+      
+      # In assummed fill, start will all progress items.
+      fill_logic.load_simulated_playthrough_state(fill_logic_initial_state)
+      for item_name in items_to_place:
+        fill_logic.add_owned_item(item_name)
+      
+      while len(items_to_place):
+        # Select a random item and remove it from the itempool.
+        item_name = self.rng.choice(items_to_place)
+        items_to_place.remove(item_name)
+        fill_logic.remove_owned_item(item_name)
+        
+        # Determine which locations are still accessible.
+        accessible_undone_locations = fill_logic.get_accessible_remaining_locations(for_progression=True)
+        
+        # Filter out locations which have an prerandomized item or in which we have already placed an item.
+        accessible_undone_locations = [
+          loc for loc in accessible_undone_locations
+          if loc not in self.logic.prerandomization_item_locations
+          and loc not in fill_item_placements
+        ]
+        
+        # Filter out item locations that have been banned by required bosses mode.
+        if self.options.required_bosses:
+          accessible_undone_locations = [
+            loc for loc in accessible_undone_locations
+            if loc not in self.rando.boss_reqs.banned_locations
+          ]
+        
+        if len(accessible_undone_locations) == 0:
+          break
+        
+        # Choose a random location and place that item there.
+        location_name = self.rng.choice(accessible_undone_locations)
+        fill_item_placements[location_name] = item_name
+      
+      # If all items were placed, then we can break the fill loop and return.
+      if len(items_to_place) == 0:
+        break
+      num_attempts += 1
+    
+    if num_attempts == max_attempts:
+      raise Exception("Could not fill item placements with assumed fill! Try a different seed name.")
+    
+    # Finalize item placement.
+    for location_name, item_name in fill_item_placements.items():
+      self.logic.set_location_to_item(location_name, item_name)
     
     game_beatable = self.logic.check_requirement_met("Can Reach and Defeat Ganondorf")
     if not game_beatable:

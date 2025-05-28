@@ -1508,9 +1508,6 @@
                <item row="0" column="3">
                 <widget class="QWidget" name="widget" native="true"/>
                </item>
-               <item row="0" column="2">
-                <widget class="QWidget" name="widget_3" native="true"/>
-               </item>
                <item row="0" column="0">
                 <widget class="QCheckBox" name="rainbow_rupee_progress">
                  <property name="text">
@@ -1518,8 +1515,15 @@
                  </property>
                 </widget>
                </item>
+               <item row="0" column="2">
+                <widget class="QWidget" name="widget_3" native="true"/>
+               </item>
                <item row="0" column="1">
-                <widget class="QWidget" name="widget_14" native="true"/>
+                <widget class="QCheckBox" name="use_assumed_fill">
+                 <property name="text">
+                  <string>Use Assumed Fill</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>

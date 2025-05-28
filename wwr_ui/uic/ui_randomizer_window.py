@@ -1091,20 +1091,20 @@ class Ui_MainWindow(object):
 
         self.gridLayout_11.addWidget(self.widget, 0, 3, 1, 1)
 
-        self.widget_3 = QWidget(self.groupBox_misc_dev)
-        self.widget_3.setObjectName(u"widget_3")
-
-        self.gridLayout_11.addWidget(self.widget_3, 0, 2, 1, 1)
-
         self.rainbow_rupee_progress = QCheckBox(self.groupBox_misc_dev)
         self.rainbow_rupee_progress.setObjectName(u"rainbow_rupee_progress")
 
         self.gridLayout_11.addWidget(self.rainbow_rupee_progress, 0, 0, 1, 1)
 
-        self.widget_14 = QWidget(self.groupBox_misc_dev)
-        self.widget_14.setObjectName(u"widget_14")
+        self.widget_3 = QWidget(self.groupBox_misc_dev)
+        self.widget_3.setObjectName(u"widget_3")
 
-        self.gridLayout_11.addWidget(self.widget_14, 0, 1, 1, 1)
+        self.gridLayout_11.addWidget(self.widget_3, 0, 2, 1, 1)
+
+        self.use_assumed_fill = QCheckBox(self.groupBox_misc_dev)
+        self.use_assumed_fill.setObjectName(u"use_assumed_fill")
+
+        self.gridLayout_11.addWidget(self.use_assumed_fill, 0, 1, 1, 1)
 
 
         self.verticalLayout_8.addWidget(self.groupBox_misc_dev)
@@ -1436,6 +1436,7 @@ class Ui_MainWindow(object):
         self.always_double_magic.setText(QCoreApplication.translate("MainWindow", u"Progressive Magic Meters are Double", None))
         self.groupBox_misc_dev.setTitle(QCoreApplication.translate("MainWindow", u"Miscellaneous Dev Features", None))
         self.rainbow_rupee_progress.setText(QCoreApplication.translate("MainWindow", u"Make Rainbow Rupee Progression", None))
+        self.use_assumed_fill.setText(QCoreApplication.translate("MainWindow", u"Use Assumed Fill", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))
         self.do_not_generate_spoiler_log.setText(QCoreApplication.translate("MainWindow", u"Do Not Generate Spoiler Log", None))
         self.dry_run.setText(QCoreApplication.translate("MainWindow", u"Dry Run", None))
