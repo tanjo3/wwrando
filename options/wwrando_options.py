@@ -372,6 +372,11 @@ class Options(BaseOptions):
     description="Place the Rainbow Rupee into the progression item pool. This means that it will be found in a progress location. If CTMC is enabled, it will be in a metal chest.<br>"
       "This setting has no effect on the logic."
   )
+  use_assumed_fill: bool = option(
+    default=False,
+    description="Use assumed fill to place items rather than forward fill.<br>"
+      "Warning: This fill method is still a work in progress. If the randomizer fails to generate, try a different seed name."
+  )
   #endregion
   
   #region Tweaks
