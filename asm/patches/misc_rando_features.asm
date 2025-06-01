@@ -877,7 +877,7 @@ spawn_drc_shortcut_warp:
   addi r3, r3, 0x803C5114@l
   lbz r4, 0x10 (r3)
   
-  andi. r0, r4, 0x80
+  andi. r4, r4, 0x80
   beq spawn_drc_shortcut_warp_return
   
   lis r3, 0x803C5380@ha ; Currently loaded stage info
