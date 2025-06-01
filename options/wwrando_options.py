@@ -5,6 +5,77 @@ from options.base_options import BaseOptions, option
 
 from wwr_ui.inventory import DEFAULT_STARTING_ITEMS, DEFAULT_RANDOMIZED_ITEMS
 
+DEFAULT_EXCLUDED_LOCATIONS = [
+  "Bird's Peak Rock - Cave",
+  "Boating Course - Cave",
+  "Boating Course - Raft",
+  "Cyclops Reef - Lookout Platform - Defeat the Enemies",
+  "Diamond Steppe Island - Big Octo",
+  "Dragon Roost Island - Secret Cave",
+  "Earth Temple - Behind Curtain Next to Hammer Button",
+  "Eastern Fairy Island - Great Fairy",
+  "Eastern Fairy Island - Lookout Platform - Defeat the Cannons and Enemies",
+  "Fire Mountain - Big Octo",
+  "Fire Mountain - Cave - Chest",
+  "Fire Mountain - Lookout Platform - Destroy the Cannons",
+  "Fire Mountain - Lookout Platform Chest",
+  "Five-Eye Reef - Lookout Platform",
+  "Five-Star Isles - Lookout Platform - Destroy the Cannons",
+  "Five-Star Isles - Raft",
+  "Five-Star Isles - Submarine",
+  "Flight Control Platform - Submarine",
+  "Greatfish Isle - Hidden Chest",
+  "Headstone Island - Submarine",
+  "Headstone Island - Top of the Island",
+  "Horseshoe Island - Northwestern Lookout Platform",
+  "Horseshoe Island - Southeastern Lookout Platform",
+  "Mother and Child Isles - Inside Mother Isle",
+  "Outset Island - Great Fairy",
+  "Overlook Island - Cave",
+  "Pawprint Isle - Wizzrobe Cave",
+  "Private Oasis - Big Octo",
+  "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item",
+  "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item",
+  "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item",
+  "Rock Spire Isle - Cave",
+  "Rock Spire Isle - Center Lookout Platform",
+  "Rock Spire Isle - Eastern Lookout Platform - Destroy the Cannons",
+  "Rock Spire Isle - Southeast Gunboat",
+  "Rock Spire Isle - Western Lookout Platform - Destroy the Cannons",
+  "Seven-Star Isles - Big Octo",
+  "Seven-Star Isles - Center Lookout Platform",
+  "Seven-Star Isles - Northern Lookout Platform",
+  "Seven-Star Isles - Southern Lookout Platform",
+  "Shark Island - Cave",
+  "Six-Eye Reef - Lookout Platform - Destroy the Cannons",
+  "Six-Eye Reef - Submarine",
+  "Star Belt Archipelago - Lookout Platform",
+  "Star Island - Cave",
+  "Star Island - Lookout Platform",
+  "Stone Watcher Island - Cave",
+  "Stone Watcher Island - Lookout Platform - Destroy the Cannons",
+  "Stone Watcher Island - Lookout Platform Chest",
+  "The Great Sea - Goron Trading Reward",
+  "The Great Sea - Withered Trees",
+  "Thorned Fairy Island - Great Fairy",
+  "Thorned Fairy Island - Northeastern Lookout Platform - Destroy the Cannons",
+  "Thorned Fairy Island - Southwestern Lookout Platform - Defeat the Enemies",
+  "Tingle Island - Ankle - Reward for All Tingle Statues",
+  "Tingle Island - Big Octo",
+  "Two-Eye Reef - Big Octo Great Fairy",
+  "Two-Eye Reef - Lookout Platform",
+  "Western Fairy Island - Great Fairy",
+  "Western Fairy Island - Lookout Platform",
+  "Windfall Island - Kamo - Full Moon Photo",
+  "Windfall Island - Lenzo's House - Become Lenzo's Assistant",
+  "Windfall Island - Lenzo's House - Bring Forest Firefly",
+  "Windfall Island - Linda and Anton",
+  "Windfall Island - Mrs. Marie - Give 1 Joy Pendant",
+  "Windfall Island - Mrs. Marie - Give 21 Joy Pendants",
+  "Windfall Island - Mrs. Marie - Give 40 Joy Pendants",
+  "Windfall Island - Sam - Decorate the Town",
+]
+
 class SwordMode(StrEnum):
   START_WITH_SWORD = "Start with Hero's Sword"
   NO_STARTING_SWORD = "No Starting Sword"
@@ -23,7 +94,8 @@ class TrickDifficulty(StrEnum):
 def get_default_progression_locations():
   from logic.logic import Logic # lazy import
   
-  return list(Logic.load_and_parse_item_locations().keys())
+  base_progression_locations = set(Logic.load_and_parse_item_locations().keys())
+  return list(base_progression_locations - set(DEFAULT_EXCLUDED_LOCATIONS))
 
 @dataclass
 class Options(BaseOptions):
@@ -39,7 +111,7 @@ class Options(BaseOptions):
       "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
   )
   progression_dungeon_secrets: bool = option(
-    default=False,
+    default=True,
     description="DRC, FW, TotG, ET, and WT each have 2-3 secret items within them (11 in total). This controls whether they can be progress items.<br>"
       "The items are fairly well-hidden (they aren't in chests), so don't select this option unless you're prepared to search each dungeon high and low!",
   )
@@ -49,7 +121,7 @@ class Options(BaseOptions):
       "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
   )
   progression_combat_secret_caves: bool = option(
-    default=False,
+    default=True,
     description="This controls whether combat-focused secret caves (besides Savage Labyrinth) can contain progress items.<br>"
       "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
   )
@@ -64,17 +136,17 @@ class Options(BaseOptions):
       "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
   )
   progression_short_sidequests: bool = option(
-    default=False,
+    default=True,
     description="This controls whether sidequests that can be completed quickly can reward progress items.<br>"
       "<u>If this is not checked, they will still be randomized</u>, but will only reward optional items you don't need to beat the game.",
   )
   progression_long_sidequests: bool = option(
-    default=False,
+    default=True,
     description="This controls whether long sidequests (e.g. Lenzo's assistant, withered trees, goron trading) can reward progress items.<br>"
       "<u>If this is not checked, they will still be randomized</u>, but will only reward optional items you don't need to beat the game.",
   )
   progression_spoils_trading: bool = option(
-    default=False,
+    default=True,
     description="This controls whether the items you get by trading in spoils to NPCs can be progress items.<br>"
       "<u>If this is not checked, they will still be randomized</u>, but will only reward optional items you don't need to beat the game.",
   )
@@ -94,17 +166,17 @@ class Options(BaseOptions):
       "<u>If this is not checked, they will still be randomized</u>, but will only be optional items you don't need to beat the game.",
   )
   progression_mail: bool = option(
-    default=False,
+    default=True,
     description="This controls whether mail can contain progress items.<br>"
       "<u>If this is not checked, mail will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
   )
   progression_platforms_rafts: bool = option(
-    default=False,
+    default=True,
     description="This controls whether lookout platforms and rafts can contain progress items.<br>"
       "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
   )
   progression_submarines: bool = option(
-    default=False,
+    default=True,
     description="This controls whether submarines can contain progress items.<br>"
       "<u>If this is not checked, submarines will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
   )
@@ -114,7 +186,7 @@ class Options(BaseOptions):
       "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
   )
   progression_big_octos_gunboats: bool = option(
-    default=False,
+    default=True,
     description="This controls whether the items dropped by Big Octos and Gunboats can contain progress items.<br>"
       "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
   )
@@ -134,7 +206,7 @@ class Options(BaseOptions):
       "<u>If this is not checked, they will still be randomized</u>, but will only be optional items you don't need to beat the game.",
   )
   progression_island_puzzles: bool = option(
-    default=False,
+    default=True,
     description="This controls whether various island puzzles can contain progress items (e.g. chests hidden in unusual places).<br>"
       "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
   )
@@ -149,7 +221,7 @@ class Options(BaseOptions):
     description="Randomized locations that can have progress items.",
   )
   excluded_locations: list[str] = option(
-    default_factory=lambda: [],
+    default_factory=lambda: DEFAULT_EXCLUDED_LOCATIONS,
     description="Randomized locations that cannot have progress items.",
   )
   #endregion
@@ -174,7 +246,7 @@ class Options(BaseOptions):
     },
   )
   required_bosses: bool = option(
-    default=False,
+    default=True,
     description="In this mode, you will not be allowed to beat the game until certain randomly-chosen bosses are defeated. Nothing in dungeons for other bosses will ever be required.<br>"
       "You can see which islands have the required bosses on them by opening the sea chart and checking which islands have blue quest markers.",
   )
@@ -186,11 +258,11 @@ class Options(BaseOptions):
       "The door to Puppet Ganon will not unlock until you've defeated all of these bosses. Nothing in dungeons for other bosses will ever be required.",
   )
   helm_more_likely: bool = option(
-    default=False,
+    default=True,
     description="Make Helmaroc King twice as likely as other bosses to be chosen as a required boss.",
   )
   chest_type_matches_contents: bool = option(
-    default=False,
+    default=True,
     description="Changes the chest type to reflect its contents. A metal chest has a progress item, a wooden chest has a non-progress item or a consumable, and a green chest has a potentially required dungeon key.",
   )
   trap_chests: bool = option(
@@ -206,7 +278,7 @@ class Options(BaseOptions):
     description="In Hero Mode, you take four times more damage than normal and heart refills will not drop.",
   )
   logic_obscurity: TrickDifficulty = option(
-    default=TrickDifficulty.NONE,
+    default=TrickDifficulty.HARD,
     description="Obscure tricks are ways of obtaining items that are not obvious and may involve thinking outside the box.<br>"
       "This option controls the maximum difficulty of obscure tricks the randomizer will require you to do to beat the game.",
   )
@@ -219,7 +291,7 @@ class Options(BaseOptions):
   
   #region Entrance randomizer
   randomize_dungeon_entrances: bool = option(
-    default=False,
+    default=True,
     description="Shuffles around which dungeon entrances take you into which dungeons.<br>"
       "(No effect on Forsaken Fortress or Ganon's Tower.)",
   )
@@ -276,7 +348,7 @@ class Options(BaseOptions):
   #   description="Shuffles around all the music in the game. This affects background music, combat music, fanfares, etc.",
   # ),
   randomize_starting_island: bool = option(
-    default=False,
+    default=True,
     description="Randomizes which island you start the game on.",
   )
   randomize_charts: bool = option(
@@ -287,80 +359,80 @@ class Options(BaseOptions):
   
   #region Hints
   hoho_hints: bool = option(
-    default=True,
+    default=False,
     description="Places hints on Old Man Ho Ho. Old Man Ho Ho appears at 10 different islands in the game. Talk to Old Man Ho Ho to get hints.",
   )
   fishmen_hints: bool = option(
-    default=True,
+    default=False,
     description="Places hints on the fishmen. There is one fishman at each of the 49 islands of the Great Sea. Each fishman must be fed an All-Purpose Bait before he will give a hint.",
   )
   korl_hints: bool = option(
-    default=False,
+    default=True,
     description="Places hints on the King of Red Lions. Talk to the King of Red Lions to get hints.",
   )
   num_item_hints: int = option(
-    default=15,
+    default=0,
     minimum=0,
     maximum=15,
     description="The number of item hints that will be placed. Item hints tell you which area contains a particular progress item in this seed.<br>"
       "If multiple hint placement options are selected, the hint count will be split evenly among the placement options.",
   )
   num_location_hints: int = option(
-    default=5,
+    default=4,
     minimum=0,
     maximum=15,
     description="The number of location hints that will be placed. Location hints tell you what item is at a specific location in this seed.<br>"
       "If multiple hint placement options are selected, the hint count will be split evenly among the placement options.",
   )
   num_barren_hints: int = option(
-    default=0,
+    default=4,
     minimum=0,
     maximum=15,
     description="The number of barren hints that will be placed. Barren hints tell you that an area does not contain any required items in this seed.<br>"
       "If multiple hint placement options are selected, the hint count will be split evenly among the placement options.",
   )
   num_path_hints: int = option(
-    default=0,
+    default=4,
     minimum=0,
     maximum=15,
     description="The number of path hints that will be placed. Path hints tell you that an area contains an item that is required to reach a particular goal in this seed.<br>"
       "If multiple hint placement options are selected, the hint count will be split evenly among the placement options.",
   )
   cryptic_hints: bool = option(
-    default=True,
+    default=False,
     description="When this option is selected, all hints will be phrased cryptically instead of telling you the names of locations and items directly.",
   )
   prioritize_remote_hints: bool = option(
-    default=False,
+    default=True,
     description="When this option is selected, certain locations that are out of the way and time-consuming to complete will take precedence over normal location hints.",
   )
   hint_importance: bool = option(
-    default=False,
+    default=True,
     description="When this option is selected, item and location hints will also indicate if the hinted item is required, possibly required, or not required.<br>"
       "Only progress items will have these additions; non-progress items are trivially not required."
   )
   hoho_hint_shards: bool = option(
-    default=False,
+    default=True,
     description="When this option is selected, each Old Man Ho Ho will give an item hint for a random Triforce Shard. Hints are not repeated until each Shard is hinted once.<br>"
       "This setting is not compatible with Old Man Ho Ho as a hint placement option."
   )
   korl_hints_swords: bool = option(
-    default=False,
+    default=True,
     description="When this option is selected, the King of Red Lions will give an item hint for each Progressive Sword if spoken to in Hyrule."
   )
   kreeb_hints_bows: bool = option(
-    default=False,
+    default=True,
     description="When this option is selected, Kreeb will give an item hint for each Progressive Bow after Link reactivates the Windfall lighthouse."
   )
   #endregion
   
   #region Logic Tweaks
   open_drc: bool = option(
-    default=True,
+    default=False,
     description="Allow DRC entrance to be accessed from the beginning of the game with no items."
   )
   always_double_magic: bool = option(
-    default=False,
+    default=True,
     description="Progressive Magic Meters will always give double magic. Finding a second Progressive Magic Meter wil have no effect (i.e., will not quadruple your magic).<br>"
       "This setting only has an effect when starting with no magic. If you start with one Magic Meter, you will not start with double magic."
   )
@@ -394,7 +466,7 @@ class Options(BaseOptions):
     description="Start the game with the sea chart fully drawn out.",
   )
   add_shortcut_warps_between_dungeons: bool = option(
-    default=False,
+    default=True,
     description="Adds new warp pots that act as shortcuts connecting dungeons to each other directly. (DRC, FW, TotG, and separately FF, ET, WT.)<br>"
       "Each pot must be unlocked before it can be used, so you cannot use them to access dungeons you wouldn't already have access to.",
   )
@@ -440,7 +512,7 @@ class Options(BaseOptions):
     description="Items that will be in your inventory at the start of a new game.",
   )
   num_starting_triforce_shards: int = option(
-    default=0,
+    default=3,
     minimum=0,
     maximum=8,
     description="Change the number of Triforce Shards you start the game with.<br>"
@@ -465,7 +537,7 @@ class Options(BaseOptions):
     description="Amount of Joy Pendants to start with."
   )
   starting_skull_necklace: int = option(
-    default=0,
+    default=20,
     minimum=0,
     maximum=99,
     description="Amount of Skull Necklaces to start with."
@@ -477,13 +549,13 @@ class Options(BaseOptions):
     description="Amount of Boko Baba Seeds to start with."
   )
   starting_golden_feather: int = option(
-    default=0,
+    default=20,
     minimum=0,
     maximum=99,
     description="Amount of Golden Feathers to start with."
   )
   starting_knights_crest: int = option(
-    default=0,
+    default=10,
     minimum=0,
     maximum=99,
     description="Amount of Knight's Crests to start with."
@@ -495,19 +567,19 @@ class Options(BaseOptions):
     description="Amount of Red Chu Jellies to start with."
   )
   starting_green_chu_jelly: int = option(
-    default=0,
+    default=15,
     minimum=0,
     maximum=99,
     description="Amount of Green Chu Jellies to start with."
   )
   starting_blue_chu_jelly: int = option(
-    default=0,
+    default=10,
     minimum=0,
     maximum=99,
     description="Amount of Blue Chu Jellies to start with."
   )
   num_extra_starting_items: int = option(
-    default=0,
+    default=1,
     minimum=0,
     maximum=3,
     description="Amount of extra random progression items that you start with.<br>"
@@ -550,7 +622,7 @@ class Options(BaseOptions):
   
   #region Meta
   do_not_generate_spoiler_log: bool = option(
-    default=False,
+    default=True,
     description="Prevents the randomizer from generating a text file listing out the locations of all items in this seed. (Also changes where items are placed in this seed.)<br>"
       "<u>Generating a spoiler log is highly recommended even if you don't intend to use it</u>, just in case you get completely stuck.",
   )

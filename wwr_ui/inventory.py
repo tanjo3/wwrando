@@ -67,11 +67,22 @@ PROGRESSIVE_ITEMS.sort()
 INVENTORY_ITEMS = REGULAR_ITEMS + PROGRESSIVE_ITEMS
 
 DEFAULT_STARTING_ITEMS = [
-  "Progressive Shield",
-  "Progressive Magic Meter",
+  "Telescope",
+  "Din's Pearl",
+  "Nayru's Pearl",
   "Ballad of Gales",
   "Song of Passing",
+  "Command Melody",
+  "Earth God's Lyric",
+  "Wind God's Aria",
+  "DRC Big Key",
+  "DRC Small Key",
+  "FW Big Key",
+  "TotG Big Key",
+  "ET Big Key",
+  "WT Big Key",
 ]
+DEFAULT_STARTING_ITEMS += DUNGEON_NONPROGRESS_ITEMS
 
 DEFAULT_RANDOMIZED_ITEMS = INVENTORY_ITEMS.copy()
 for item_name in DEFAULT_STARTING_ITEMS:
