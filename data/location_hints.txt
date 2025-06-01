@@ -11,9 +11,6 @@ Outset Island - Dig up Black Soil:
   Type: Standard
   Text: teaching a pig to dig for treasure
 
-Windfall Island - Chu Jelly Juice Shop - Give 15 Green Chu Jelly:
-  Type: Standard
-  Text: giving a potion master green jelly
 Windfall Island - Chu Jelly Juice Shop - Give 15 Blue Chu Jelly:
   Type: Remote
   Text: giving a potion master blue jelly
@@ -26,9 +23,6 @@ Windfall Island - Lenzo's House - Become Lenzo's Assistant:
 Windfall Island - Lenzo's House - Bring Forest Firefly:
   Type: Standard
   Text: catching a firefly in a bottle
-Windfall Island - Maggie's Father - Give 20 Skull Necklaces:
-  Type: Standard
-  Text: giving a wealthy man twenty necklaces
 Windfall Island - Zunari - Stock Exotic Flower in Zunari's Shop:
   Type: Standard
   Text: stocking a shop with three flowers
@@ -54,9 +48,6 @@ Windfall Island - Linda and Anton:
   Type: Standard
   Text: uniting a young couple with the power of photography
 
-Dragon Roost Island - Rito Aerie - Give Hoskit 20 Golden Feathers:
-  Type: Standard
-  Text: gathering feathers for a charitable lover
 Dragon Roost Island - Fly Across Platforms Around Island:
   Type: Standard
   Text: gliding around the home of bird people
@@ -146,9 +137,6 @@ Ganon's Tower - Maze Chest:
   Type: Remote
   Text: navigating the labyrinth in the stronghold of the evil king
 
-Mailbox - Letter from Hoskit's Girlfriend:
-  Type: Standard
-  Text: the writing of a grateful girlfriend
 Mailbox - Letter from Baito:
   Type: Standard
   Text: the writing of a bewildered letter sorter
