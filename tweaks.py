@@ -27,6 +27,7 @@ from data_tables import DataTables
 from wwlib.events import EventList
 from wwlib.dzx import DZx, DZxLayer, ACTR, EVNT, FILI, PLYR, SCLS, SCOB, SHIP, TGDR, TRES, Pale
 from options.wwrando_options import SwordMode
+from randomizers.entrances import DUNGEON_ENTRANCES
 
 try:
   from keys.seed_key import SEED_KEY # type: ignore
@@ -2189,6 +2190,63 @@ def add_shortcut_warps_into_dungeons(self: WWRandomizer):
   swc00.scale_z = 3 * 0x10
   
   fh_dzr.save_changes()
+  
+  
+  # Add a similar shortcut for DRC entrance.
+  dri_dzr = self.get_arc("files/res/Stage/sea/Room13.arc").get_file("room.dzr", DZx)
+  should_spawn_warp_switch = 0x7E # Unused in the vanilla game.
+  
+  # Add a new exit for the entrance into the dungeon.
+  dest = self.entrances.done_entrances_to_exits[DUNGEON_ENTRANCES[0]]
+  scls_exit = dri_dzr.add_entity(SCLS)
+  scls_exit.dest_stage_name = dest.stage_name
+  scls_exit.spawn_id = dest.spawn_id
+  scls_exit.room_index = dest.room_num
+  dri_entrance_scls_exit_index = 3
+  
+  # Add the white light beam warp in the DRI pond.
+  warp = dri_dzr.add_entity(SCOB)
+  warp.name = "Ysdls00"
+  warp.type = 1
+  warp.activation_switch = should_spawn_warp_switch
+  warp.exit_index = dri_entrance_scls_exit_index
+  warp.activated_event_index = 0xFF
+  warp.x_pos =  196383.1
+  warp.y_pos =  68.89603
+  warp.z_pos = -201463.4
+  
+  # Copy over necessary particle.
+  dri_jpc = self.get_jpc("files/res/Particle/Pscene023.jpc")
+  fh_jpc = self.get_jpc("files/res/Particle/Pscene022.jpc")
+  
+  particle = fh_jpc.particles_by_id[0x8225]
+  copied_particle = copy.deepcopy(particle)
+  dri_jpc.add_particle(copy.deepcopy(particle))
+  
+  for texture_filename in copied_particle.tdb1.texture_filenames:
+    texture = fh_jpc.textures_by_filename[texture_filename]
+    copied_texture = copy.deepcopy(texture)
+    dri_jpc.add_texture(copied_texture)
+  
+  dri_dzr.save_changes()
+  
+  
+  adanmae_dzr = self.get_arc("files/res/Stage/Adanmae/Room0.arc").get_file("room.dzr", DZx)
+  dri_entrance_touched_switch = 0x7F # Unused in the vanilla game.
+  
+  # Add a SW_C00 (switch setting trigger region) around the entrance to the dungeon.
+  # This will set the switch when the player enters the dungeon.
+  # Komali's actor outside will check this switch. If it's set, it will enable the warp for later use.
+  swc00 = adanmae_dzr.add_entity(SCOB)
+  swc00.name = "SW_C00"
+  swc00.switch_to_set = dri_entrance_touched_switch
+  swc00.behavior_type = 3 # Don't unset the switch when leaving the region
+  swc00.prerequisite_switch = 0xFF
+  swc00.x_pos = -298.9791
+  swc00.y_pos =  1196.644
+  swc00.z_pos = -4674.544
+  
+  adanmae_dzr.save_changes()
 
 def replace_dark_wood_chest_texture(self: WWRandomizer):
   # Replaces the texture of the dark wood chest texture with a custom texture based on the Big Key chest texture.
