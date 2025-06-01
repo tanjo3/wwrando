@@ -37,4 +37,4 @@ if IS_RUNNING_FROM_SOURCE:
       # Detached head, commit hash directly in the HEAD file
       version_suffix = "_" + head_file_contents[:7]
   
-  VERSION += version_suffix
+  # VERSION += version_suffix
