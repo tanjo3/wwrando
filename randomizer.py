@@ -427,7 +427,13 @@ class WWRandomizer:
     yield("Writing logs...", progress_completed)
     if not self.options.do_not_generate_spoiler_log:
       self.write_spoiler_log()
-    self.write_non_spoiler_log()
+    permalink_output_path = os.path.join(self.randomized_output_folder, "permalink_%s.txt" % self.seed)
+    with open(permalink_output_path, "w") as f:
+      f.write(self.permalink)
+    
+    seed_hash_output_path = os.path.join(self.randomized_output_folder, "seed_hash_%s.txt" % self.seed)
+    with open(seed_hash_output_path, "w") as f:
+      f.write(self.seed_hash)
   
   def apply_necessary_tweaks(self):
     patcher.apply_patch(self, "custom_data")
@@ -1067,14 +1073,6 @@ class WWRandomizer:
     
     header += "Wind Waker Randomizer Version %s\n" % VERSION
     
-    if self.permalink:
-      header += "Permalink: %s\n" % self.permalink
-    
-    if self.seed_hash:
-      header += "Seed Hash: %s\n" % self.seed_hash
-
-    header += "Seed: %s\n" % self.seed
-    
     header += "Options selected:\n  "
     non_disabled_options = [
       option.name for option in Options.all()
@@ -1143,8 +1141,7 @@ class WWRandomizer:
     if self.randomize_items:
       spoiler_log += self.hints.write_to_spoiler_log()
     
-    os.makedirs(self.logs_output_folder, exist_ok=True)
-    spoiler_log_output_path = os.path.join(self.logs_output_folder, "WW Random %s - Spoiler Log.txt" % self.seed)
+    spoiler_log_output_path = os.path.join(self.logs_output_folder, "spoiler_log_%s.txt" % self.seed)
     with open(spoiler_log_output_path, "w") as f:
       f.write(spoiler_log)
   
@@ -1160,7 +1157,6 @@ class WWRandomizer:
     
     error_log_str += error_message
     
-    os.makedirs(self.logs_output_folder, exist_ok=True)
     error_log_output_path = os.path.join(self.logs_output_folder, "WW Random %s - Error Log.txt" % self.seed)
     with open(error_log_output_path, "w") as f:
       f.write(error_log_str)
