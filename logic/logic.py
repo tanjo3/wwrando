@@ -11,10 +11,20 @@ from contextlib import contextmanager
 from ruamel.yaml import YAML
 yaml = YAML(typ="safe")
 
-from logic.item_types import PROGRESS_ITEMS, NONPROGRESS_ITEMS, CONSUMABLE_ITEMS, DUPLICATABLE_CONSUMABLE_ITEMS, DUNGEON_PROGRESS_ITEMS, DUNGEON_NONPROGRESS_ITEMS
+from logic.item_types import (
+    PROGRESS_ITEMS,
+    NONPROGRESS_ITEMS,
+    CONSUMABLE_ITEMS,
+    DUPLICATABLE_CONSUMABLE_ITEMS,
+    DUNGEON_PROGRESS_ITEMS,
+    DUNGEON_NONPROGRESS_ITEMS,
+    DUNGEON_SMALL_KEYS,
+    DUNGEON_BIG_KEYS,
+    DUNGEON_MAPS_AND_COMPASSES,
+)
 from wwrando_paths import LOGIC_PATH
 from randomizers import entrances
-from options.wwrando_options import Options, SwordMode
+from options.wwrando_options import Options, SwordMode, DungeonItemShuffleMode
 
 class Logic:
   DUNGEON_NAMES = {
@@ -552,21 +562,54 @@ class Logic:
     
     return filtered_locations
   
-  def check_item_valid_in_location(self, item_name: str, location_name: str):
+  def get_dungeon_item_shuffle_mode(self, item_name):
+    if item_name in DUNGEON_SMALL_KEYS:
+      return self.options.shuffle_small_keys
+    elif item_name in DUNGEON_BIG_KEYS:
+      return self.options.shuffle_big_keys
+    elif item_name in DUNGEON_MAPS_AND_COMPASSES:
+      return self.options.shuffle_maps_and_compasses
+    else:
+      return DungeonItemShuffleMode.OWN_DUNGEON
+  
+  def check_dungeon_item_valid_in_location(self, item_name, location_name):
     types = self.item_locations[location_name]["Types"]
-    paths = self.item_locations[location_name]["Paths"]
+    shuffle_mode = self.get_dungeon_item_shuffle_mode(item_name)
     
-    # Don't allow dungeon items to appear outside their proper dungeon when Key-Lunacy is off.
-    if self.is_dungeon_item(item_name) and not self.options.keylunacy:
-      short_dungeon_name = item_name.split(" ")[0]
-      dungeon_name = self.DUNGEON_NAMES[short_dungeon_name]
-      if not self.is_dungeon_location(location_name, dungeon_name_to_match=dungeon_name):
+    short_dungeon_name = item_name.split(" ")[0]
+    dungeon_name = self.DUNGEON_NAMES[short_dungeon_name]
+    is_in_any_dungeon = self.is_dungeon_location(location_name)
+    is_in_own_dungeon = self.is_dungeon_location(location_name, dungeon_name_to_match=dungeon_name)
+    
+    if shuffle_mode == DungeonItemShuffleMode.START_WITH:
+      return False
+    elif shuffle_mode == DungeonItemShuffleMode.VANILLA or shuffle_mode == DungeonItemShuffleMode.OWN_DUNGEON:
+      if not is_in_own_dungeon:
         return False
+    elif shuffle_mode == DungeonItemShuffleMode.ANY_DUNGEON:
+      if not is_in_any_dungeon or location_name in self.rando.boss_reqs.banned_locations:
+        return False
+    elif shuffle_mode == DungeonItemShuffleMode.OVERWORLD:
+      if is_in_any_dungeon:
+        return False
+    
+    if is_in_any_dungeon:
       if "Boss" in types:
         # Don't allow dungeon items to be placed on the dungeon boss.
         return False
       if "Randomizable Miniboss Room" in types and self.options.randomize_miniboss_entrances:
         # Don't allow dungeon items to be placed in miniboss rooms when they are randomized.
+        return False
+    
+    return True
+  
+  def check_item_valid_in_location(self, item_name: str, location_name: str):
+    types = self.item_locations[location_name]["Types"]
+    paths = self.item_locations[location_name]["Paths"]
+    
+    # Check dungeon item placement based on shuffle mode.
+    if self.is_dungeon_item(item_name):
+      if not self.check_dungeon_item_valid_in_location(item_name, location_name):
         return False
     
     # Beedle's shop does not work properly if the same item is in multiple slots of the same shop.
