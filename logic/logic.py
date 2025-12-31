@@ -160,8 +160,12 @@ class Logic:
     self.clear_req_caches()
     self.make_useless_progress_items_nonprogress()
     
-    # Add the randomly-selected extra starting items (without incidence on other progress items).
     if self.rando.extra_start_items.is_enabled():
+      # Add starting dungeon items.
+      for item in self.rando.extra_start_items.starting_dungeon_items:
+        self.add_owned_item(item)
+      
+      # Add the randomly-selected extra starting items (without incidence on other progress items).
       for item in self.rando.extra_start_items.random_starting_items:
         # Needs to happen after make useless_progress_items_nonprogress to ensure other progress
         # items aren't made nonprogress by the extra random items being in the starting inventory
@@ -587,7 +591,10 @@ class Logic:
       if not is_in_own_dungeon:
         return False
     elif shuffle_mode == DungeonItemShuffleMode.ANY_DUNGEON:
-      if not is_in_any_dungeon or location_name in self.rando.boss_reqs.banned_locations:
+      if not is_in_any_dungeon:
+        return False
+      # Don't allow items from required dungeons to be placed in banned locations.
+      if dungeon_name in self.rando.boss_reqs.required_dungeons and location_name in self.rando.boss_reqs.banned_locations:
         return False
     elif shuffle_mode == DungeonItemShuffleMode.OVERWORLD:
       if is_in_any_dungeon:
