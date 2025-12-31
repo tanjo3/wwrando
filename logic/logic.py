@@ -894,6 +894,45 @@ class Logic:
       return False
     return True
   
+  def get_vanilla_item_locations(self, vanilla_item_name: str, zone_name: str | None = None) -> list[str]:
+    # Filter down locations to search to a specific zone, if specified.
+    if zone_name is not None:
+      if zone_name not in self.locations_by_zone_name:
+        return []
+      locations_to_search = self.locations_by_zone_name[zone_name]
+    else:
+      locations_to_search = self.item_locations.keys()
+    
+    # Loop through all locations in the zone, identifying all that have the item as the original item.
+    matching_locations = []
+    for location_name in locations_to_search:
+      original_item = self.item_locations[location_name].get("Original item")
+      if original_item == vanilla_item_name:
+        matching_locations.append(location_name)
+    
+    return matching_locations
+  
+  def get_vanilla_dungeon_item_locations(self, item_name: str) -> list[str]:
+    # Get the dungeon name of the item.
+    short_dungeon_name = item_name.split(" ")[0]
+    dungeon_name = self.DUNGEON_NAMES.get(short_dungeon_name)
+    if not dungeon_name:
+      return []
+    
+    # Determine the base item type (without dungeon prefix).
+    if item_name.endswith(" Small Key"):
+      vanilla_item_name = "Small Key"
+    elif item_name.endswith(" Big Key"):
+      vanilla_item_name = "Big Key"
+    elif item_name.endswith(" Dungeon Map"):
+      vanilla_item_name = "Dungeon Map"
+    elif item_name.endswith(" Compass"):
+      vanilla_item_name = "Compass"
+    else:
+      return []
+    
+    return self.get_vanilla_item_locations(vanilla_item_name, zone_name=dungeon_name)
+  
   @staticmethod
   def parse_logic_expression(string: str):
     tokens = [substring.strip() for substring in re.split("([&|()])", string)]
