@@ -8,6 +8,7 @@ from ruamel.yaml import YAML
 yaml = YAML(typ="safe")
 
 from logic.logic import Logic
+from options.wwrando_options import DungeonItemShuffleMode
 from randomizers.base_randomizer import BaseRandomizer
 from wwlib.dzx import DZx, ACTR, MULT
 from wwrando_paths import DATA_PATH
@@ -677,7 +678,7 @@ class HintsRandomizer(BaseRandomizer):
         break
       
       
-      if not self.options.keylunacy:
+      if self.options.shuffle_small_keys in (DungeonItemShuffleMode.VANILLA, DungeonItemShuffleMode.OWN_DUNGEON, DungeonItemShuffleMode.ANY_DUNGEON):
         # If the player gained access to any small keys, we need to give them the keys without counting that as a new sphere.
         newly_accessible_predetermined_item_locations = [
           loc for loc in locations_in_this_sphere
@@ -793,6 +794,13 @@ class HintsRandomizer(BaseRandomizer):
     return path_hint, hinted_location
   
   
+  def should_hint_dungeon_item(self, item_name: str) -> bool:
+    if not self.logic.is_dungeon_item(item_name):
+      return True
+    
+    shuffle_mode = self.logic.get_dungeon_item_shuffle_mode(item_name)
+    return shuffle_mode in (DungeonItemShuffleMode.ANY_DUNGEON, DungeonItemShuffleMode.OVERWORLD, DungeonItemShuffleMode.ANYWHERE)
+  
   def get_barren_zones(self, progress_locations, hinted_remote_locations):
     # Helper function to build a list of barren zones in this seed.
     # The list includes only zones which are allowed to be hinted at as barren.
@@ -829,8 +837,8 @@ class HintsRandomizer(BaseRandomizer):
       if item_name in items_checked or item_name not in progress_items:
         continue
       
-      # Don't consider dungeon keys when keylunacy is not enabled.
-      if self.logic.is_dungeon_item(item_name) and not self.options.keylunacy:
+      # Don't consider dungeon items unless they can appear outside of their original dungeons.
+      if not self.should_hint_dungeon_item(item_name):
         continue
       
       items_checked.append(item_name)
@@ -898,8 +906,8 @@ class HintsRandomizer(BaseRandomizer):
     if item_name not in self.logic.all_progress_items:
       return False
     
-    # Don't hint at dungeon keys when key-lunacy is not enabled.
-    if self.logic.is_dungeon_item(item_name) and not self.options.keylunacy:
+    # Don't consider dungeon items unless they can appear outside of their original dungeons.
+    if not self.should_hint_dungeon_item(item_name):
       return False
     
     # Don't hint at the existence of traps.
@@ -1097,14 +1105,13 @@ class HintsRandomizer(BaseRandomizer):
       for placed_item in path_locations:
         self.path_locations.add("%s - %s" % (placed_item.zone_name, placed_item.specific_location_name))
     
-    # Filter out the locations of dungeon keys as being path when key-lunacy is disabled
-    if not self.options.keylunacy:
-      for dungeon_name, dungeon_paths in required_locations_for_paths.items():
-        required_locations_for_paths[dungeon_name] = [
-          placed_item
-          for placed_item in dungeon_paths
-          if not placed_item.item_name.endswith(" Key")
-        ]
+    # Filter out dungeon items that shouldn't be hinted from path locations.
+    for dungeon_name, dungeon_paths in required_locations_for_paths.items():
+      required_locations_for_paths[dungeon_name] = [
+        placed_item
+        for placed_item in dungeon_paths
+        if self.should_hint_dungeon_item(placed_item.item_name)
+      ]
     
     # Generate path hints.
     # We hint at max `self.max_path_hints` zones at random.
