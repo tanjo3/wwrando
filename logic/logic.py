@@ -214,15 +214,28 @@ class Logic:
     )
     num_progress_locations = len(progress_locations)
     
-    num_charts_excluded = sum(location_name.endswith(" - Sunken Treasure") for location_name in options.excluded_locations)
     max_sunken_treasure_locations = 0
     if options.progression_triforce_charts:
       max_sunken_treasure_locations += 8
     if options.progression_treasure_charts:
       max_sunken_treasure_locations += 41
+    
     if options.randomize_charts:
+      # Any sunken treasure could be a progress location, so we count all excluded sunken treasures, up to 49.
+      num_charts_excluded = sum(location_name.endswith(" - Sunken Treasure") for location_name in options.excluded_locations)
       num_progress_locations += min(max_sunken_treasure_locations, 49 - num_charts_excluded)
     else:
+      # Only count excluded sunken treasures that would actually be a progress location.
+      num_charts_excluded = 0
+      for location_name in options.excluded_locations:
+        if location_name not in item_locations or not location_name.endswith(" - Sunken Treasure"):
+          continue
+        original_item = item_locations[location_name]["Original item"]
+        is_triforce_shard = original_item.startswith("Triforce Shard ")
+        if is_triforce_shard and options.progression_triforce_charts:
+          num_charts_excluded += 1
+        elif not is_triforce_shard and options.progression_treasure_charts:
+          num_charts_excluded += 1
       num_progress_locations += max_sunken_treasure_locations - num_charts_excluded
     
     return num_progress_locations
