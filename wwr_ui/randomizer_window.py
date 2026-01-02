@@ -36,6 +36,10 @@ if os.environ["QT_API"] == "pyside6":
 else:
   Ui_MainWindow = load_ui_file(os.path.join(RANDO_ROOT_PATH, "wwr_ui", "randomizer_window.ui"))
 
+# The APWorld version this build is compatible with.
+# If the APTWW file's version is higher than this, the user needs a newer build.
+EXPECTED_APWORLD_VERSION = (3, 1)
+
 class APTWWFileError(Exception): pass
 
 class WWRandomizerWindow(QMainWindow):
@@ -744,23 +748,31 @@ class WWRandomizerWindow(QMainWindow):
           error_msg = """The APTWW file appears to have been generated on a pre-v2.3.0 of the APWorld.<br><br>
             You should use the 2.0.0 version of the randomizer build instead.<br>
             Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.0.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.0.0</a>"""
-    else:
-      major, minor, patch = plando_dict["Version"]
-      if major == 2 and minor == 6:
-        error_msg = """The APTWW file appears to have been generated on v%d.%d.%d of the APWorld.<br><br>
-          You should use the 2.4.0 version of the randomizer build instead.<br>
-          Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.4.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.4.0</a>""" % (major, minor, patch)
-      elif major == 2 and minor == 5:
-        error_msg = """The APTWW file appears to have been generated on v%d.%d.%d of the APWorld.<br><br>
-          You should use the 2.3.0 version of the randomizer build instead.<br>
-          Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.3.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.3.0</a>""" % (major, minor, patch)
-    
-    if error_msg:
-      error_msg += """<br><br>
-      However, The Wind Waker is now officially supported in Archipelago. Consider updating Archipelago and regenerating your multiworld."""
+      error_msg += "<br><br>However, The Wind Waker is now officially supported in Archipelago. Consider updating Archipelago and regenerating your multiworld."
       raise APTWWFileError(error_msg)
     else:
-      return plando_dict
+      major, minor, patch = plando_dict["Version"]
+      expected_major, expected_minor = EXPECTED_APWORLD_VERSION
+      if major == 2:
+        if major == 2 and minor == 6:
+          error_msg = """The APTWW file appears to have been generated on v%d.%d.%d of the APWorld.<br><br>
+            You should use the 2.4.0 version of the randomizer build instead.<br>
+            Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.4.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.4.0</a>""" % (major, minor, patch)
+        elif major == 2 and minor == 5:
+          error_msg = """The APTWW file appears to have been generated on v%d.%d.%d of the APWorld.<br><br>
+            You should use the 2.3.0 version of the randomizer build instead.<br>
+            Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.3.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.3.0</a>""" % (major, minor, patch)
+        error_msg += "<br><br>However, The Wind Waker is now officially supported in Archipelago. Consider updating Archipelago and regenerating your multiworld."
+        raise APTWWFileError(error_msg)
+      else:
+        if major > expected_major or (major == expected_major and minor > expected_minor):
+          error_msg = """The APTWW file was generated with v%d.%d.%d of the APWorld, which is newer than this build supports (v%d.%d.x).<br><br>
+            Please download the correct version of the randomizer build.<br>
+            Check the release notes for vesion compatibility.<br>""" % (major, minor, patch, expected_major, expected_minor)
+          error_msg += "Download here: <a href=\"https://github.com/tanjo3/wwrando/releases?q=tag%3Aap_2\">https://github.com/tanjo3/wwrando/releases?q=tag%3Aap_2</a>"
+          raise APTWWFileError(error_msg)
+    
+    return plando_dict
   
   def read_ap_plando_file(self, plando_file: str, options: Options) -> Plando:
     plando_file = self.load_and_validate_ap_plando_file(plando_file)
