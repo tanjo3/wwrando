@@ -1,55 +1,42 @@
 .open "sys/main.dol"
 .org 0x80234FE0 ; In dScnPly_Execute
   bl      give_archipelago_item
-; Every frame, loop through the Archipelago item array and give items to the player.
-; The array is cleared as items are given. We put this function in `dScnPly_Execute`, which is run every frame.
+; Every frame, check if the Archipelago client has set an item ID to give to the player.
+; The byte is cleared after the item is given. We put this function in `dScnPly_Execute`, which is run every frame.
 .org @NextFreeSpace
 .global give_archipelago_item
 give_archipelago_item:
   stwu    sp, -0x10 (sp)
   mflr    r0
   stw     r0, 0x14 (sp)
-  stmw    r29, 0x8 (sp)
+  stw     r31, 0xC (sp)
   
-  ; Store values of r3 in r29
-  mr      r29, r3
+  ; Store value of r3 in r31
+  mr      r31, r3
   
-  ; Load give_archipelago_item_array into r30
-  lis     r30, give_archipelago_item_array@ha
-  addi    r30, r30, give_archipelago_item_array@l
-  
-  ; Initialize loop counter r31 at 0
-  li      r31, 0
-  
-  give_archipelago_item_loop:
-  ; If we've looped through the entire array, return
-  cmpwi   r31, num_give_archipelago_item_array_entries
-  bge     give_archipelago_item_end
+  ; Load the address of give_archipelago_item_byte into r4
+  lis     r4, give_archipelago_item_byte@ha
+  addi    r4, r4, give_archipelago_item_byte@l
   
   ; Load the item ID into r3
-  lbzx    r3, r30, r31
+  lbz     r3, 0 (r4)
   
-  ; If item ID is 0xFF, ignore
+  ; If item ID is 0xFF, there's no item to give
   cmpwi   r3, 0xFF
-  beq     give_archipelago_item_loop_end
+  beq     give_archipelago_item_end
   
-  ; Else, overwrite item ID with 0xFF
-  li      r4, 0xFF
-  stbx    r4, r30, r31
+  ; Else, clear the byte to 0xFF before giving the item
+  li      r5, 0xFF
+  stb     r5, 0 (r4)
   
-  ; Else, branch to execItemGet
+  ; Branch to execItemGet to give the item
   bl      execItemGet__FUc
   
-  give_archipelago_item_loop_end:
-  ; Increment loop counter and continue
-  addi    r31, r31, 1
-  b       give_archipelago_item_loop
-  
   give_archipelago_item_end:
-  ; Retore the value of r3
-  mr      r3, r29
+  ; Restore the value of r3
+  mr      r3, r31
   
-  lmw     r29, 0x8 (sp)
+  lwz     r31, 0xC (sp)
   lwz     r0, 0x14 (sp)
   mtlr    r0
   addi    sp, sp, 0x10
@@ -58,13 +45,9 @@ give_archipelago_item:
   
   blr
 
-.global give_archipelago_item_equ
-give_archipelago_item_equ:
-.equ num_give_archipelago_item_array_entries, 0x10
-
-.global give_archipelago_item_array
-give_archipelago_item_array:
-  .space num_give_archipelago_item_array_entries, 0xFF
+.global give_archipelago_item_byte
+give_archipelago_item_byte:
+  .byte 0xFF
 .align 2 ; Align to the next 4 bytes
 
 
