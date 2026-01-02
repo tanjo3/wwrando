@@ -4,8 +4,8 @@ sys/main.dol:
   ballad_of_gales_warp_float_bank: 0x803FCFF8
   custom_DynamicNameTable: 0x803FD050
   custom_l_objectName: 0x803FD084
-  custom_l_objectName_end: 0x803FD09C
   custom_DMC: 0x803FD09C
+  custom_l_objectName_end: 0x803FD09C
   init_save_with_tweaks: 0x803FD87C
   init_starting_gear: 0x803FDC20
   num_triforce_shards_to_start_with: 0x803FDC68
@@ -62,49 +62,48 @@ sys/main.dol:
   check_tingle_statue_owned: 0x803FE760
   custom_isTbox_for_unloaded_stage_save_info: 0x803FE7E8
   give_archipelago_item: 0x803FE818
-  give_archipelago_item_array: 0x803FE87C
-  give_archipelago_item_equ: 0x803FE87C
-  modify_triforce_count: 0x803FE88C
-  archipelago_slot_name: 0x803FE8A0
-  archipelago_charts_mapping: 0x803FE8E0
-  hookshot_sight_failsafe_check: 0x803FE944
-  deluxe_picto_box_item_func_fix_equipped_picto_box: 0x803FE95C
-  stop_sub_bgm_when_unloading_stage: 0x803FE990
-  zero_out_arrow_on_hit_callback: 0x803FE9A8
-  check_can_defend: 0x803FE9B8
-  check_ganondorf_in_phase_3: 0x803FE9E8
-  check_play_special_item_get_music: 0x803FEA04
-  multiply_damage_amount: 0x803FEA6C
-  damage_multiplier: 0x803FEA90
-  invert_camera_horizontal_axis: 0x803FEA94
-  convert_progressive_item_id_for_createDemoItem: 0x803FEAA0
-  convert_progressive_item_id_for_daItem_create: 0x803FEACC
-  convert_progressive_item_id_for_dProcGetItem_init_1: 0x803FEAF8
-  convert_progressive_item_id_for_dProcGetItem_init_2: 0x803FEB20
-  check_open_map_select: 0x803FEB48
-  set_starting_health: 0x803FEBA8
-  get_current_health_for_file_select_screen: 0x803FEBC4
-  get_max_health_for_file_select_screen: 0x803FEBEC
-  fully_refill_magic_meter_and_cap_health_on_load_save: 0x803FEC10
-  turn_while_swinging: 0x803FEC40
-  check_animate_rainbow_rupee_color: 0x803FECA0
-  rainbow_rupee_keyframe: 0x803FECE0
-  check_run_new_text_commands: 0x803FECF0
-  exec_curr_num_keys_text_command: 0x803FED30
-  set_warp_confirm_dialog_message_id_for_custom_warps: 0x803FEE10
-  check_player_in_casual_clothes: 0x803FEE28
-  read_custom_DynamicNameTable_loop: 0x803FEE64
-  read_custom_l_objectName_loop_for_dStage_searchName: 0x803FEE90
-  read_custom_l_objectName_loop_for_dStage_getName: 0x803FEEB8
-  get_num_owned_tingle_statues: 0x803FEEE4
-  ladder_up_check_unequip_held_item: 0x803FEF58
-  ladder_down_check_unequip_held_item: 0x803FEF70
-  gameover_continue_reset_life: 0x803FEF88
-  give_pearl_and_raise_totg_if_necessary: 0x803FEFA4
-  remove_low_health_anim_at_full_health: 0x803FF038
-  give_temporary_sword_during_ganondorf_fight_in_swordless: 0x803FF05C
-  give_temporary_sword_in_orcas_house_in_swordless: 0x803FF078
-  remove_temporary_sword_when_loading_stage_in_swordless: 0x803FF0C0
+  give_archipelago_item_byte: 0x803FE868
+  modify_triforce_count: 0x803FE86C
+  archipelago_slot_name: 0x803FE880
+  archipelago_charts_mapping: 0x803FE8C0
+  hookshot_sight_failsafe_check: 0x803FE924
+  deluxe_picto_box_item_func_fix_equipped_picto_box: 0x803FE93C
+  stop_sub_bgm_when_unloading_stage: 0x803FE970
+  zero_out_arrow_on_hit_callback: 0x803FE988
+  check_can_defend: 0x803FE998
+  check_ganondorf_in_phase_3: 0x803FE9C8
+  check_play_special_item_get_music: 0x803FE9E4
+  multiply_damage_amount: 0x803FEA4C
+  damage_multiplier: 0x803FEA70
+  invert_camera_horizontal_axis: 0x803FEA74
+  convert_progressive_item_id_for_createDemoItem: 0x803FEA80
+  convert_progressive_item_id_for_daItem_create: 0x803FEAAC
+  convert_progressive_item_id_for_dProcGetItem_init_1: 0x803FEAD8
+  convert_progressive_item_id_for_dProcGetItem_init_2: 0x803FEB00
+  check_open_map_select: 0x803FEB28
+  set_starting_health: 0x803FEB88
+  get_current_health_for_file_select_screen: 0x803FEBA4
+  get_max_health_for_file_select_screen: 0x803FEBCC
+  fully_refill_magic_meter_and_cap_health_on_load_save: 0x803FEBF0
+  turn_while_swinging: 0x803FEC20
+  check_animate_rainbow_rupee_color: 0x803FEC80
+  rainbow_rupee_keyframe: 0x803FECC0
+  check_run_new_text_commands: 0x803FECD0
+  exec_curr_num_keys_text_command: 0x803FED10
+  set_warp_confirm_dialog_message_id_for_custom_warps: 0x803FEDF0
+  check_player_in_casual_clothes: 0x803FEE08
+  read_custom_DynamicNameTable_loop: 0x803FEE44
+  read_custom_l_objectName_loop_for_dStage_searchName: 0x803FEE70
+  read_custom_l_objectName_loop_for_dStage_getName: 0x803FEE98
+  get_num_owned_tingle_statues: 0x803FEEC4
+  ladder_up_check_unequip_held_item: 0x803FEF38
+  ladder_down_check_unequip_held_item: 0x803FEF50
+  gameover_continue_reset_life: 0x803FEF68
+  give_pearl_and_raise_totg_if_necessary: 0x803FEF84
+  remove_low_health_anim_at_full_health: 0x803FF018
+  give_temporary_sword_during_ganondorf_fight_in_swordless: 0x803FF03C
+  give_temporary_sword_in_orcas_house_in_swordless: 0x803FF058
+  remove_temporary_sword_when_loading_stage_in_swordless: 0x803FF0A0
   test_room_stage_name: 0x8022D034
   test_room_starting_items_list: 0x8022D03C
   test_room_spawn_id: 0x800531E3
