@@ -14,6 +14,7 @@ from dataclasses import dataclass
 import copy
 import math
 import colorsys
+import hashlib
 
 from gclib import fs_helpers as fs
 from asm import patcher
@@ -2820,6 +2821,14 @@ def apply_pre_randomization_changes_for_archipelago(self: WWRandomizer):
   msg = self.bmg.messages_by_id[253]
   msg.string = "\\{1A 05 00 00 01}You found an \\{1A 06 FF 00 00 01}Archipelago item\\{1A 06 FF 00 00 00}!"
   msg.word_wrap_string(self.bfn)
+  
+  # Generate and record the seed identifier.
+  # The seed identifier is used to validate that the save file matches the loaded ISO.
+  unique_string = f"{self.plando.seed}_{self.plando.slot}"
+  hash_bytes = hashlib.md5(unique_string.encode()).digest()
+  seed_identifier = int.from_bytes(hash_bytes[:2], "big")
+  seed_identifier_address = self.main_custom_symbols["archipelago_seed_identifier"]
+  self.dol.write_data(fs.write_u16, seed_identifier_address, seed_identifier)
   
   # Record the player's slot name
   slot_name_address = self.main_custom_symbols["archipelago_slot_name"]
