@@ -313,6 +313,16 @@ li r4, 0x3A80 ; Recollection Molgera defeated
 bl onEventBit__11dSv_event_cFUs
 after_skipping_rematch_bosses:
 
+
+; Copy the Archipelago seed identifier to save data.
+; The identifier is used to validate that the save file matches the loaded ISO.
+lis r3, archipelago_seed_identifier@ha
+addi r3, r3, archipelago_seed_identifier@l
+lhz r3, 0 (r3) ; Load the seed identifier (2 bytes)
+lis r4, 0x803C528A@ha
+addi r4, r4, 0x803C528A@l
+sth r3, 0 (r4) ; Store seed identifier to save data (event bit bytes 0x5E-0x5F)
+
 ; Function end stuff
 lwz r0, 0x14 (sp)
 mtlr r0
@@ -380,6 +390,12 @@ captured_prologue_pigs_bitfield:
 option_targeting_mode:
 .byte 0x00 ; By default, use the "Hold" targeting mode
 
+; Allocate a short in memory for a seed identifier unique for each (seed, slot number) tuple.
+; Upon creating a save file, this is copied to save data at event bit 0x5E-0x5F. The identifier is used to validate that
+; the save file matches the loaded ISO.
+.global archipelago_seed_identifier
+archipelago_seed_identifier:
+  .space 0x2
 .align 2 ; Align to the next 4 bytes
 
 
