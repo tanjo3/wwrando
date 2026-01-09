@@ -1,3 +1,4 @@
+from logic.item_types import DUNGEON_MAPS_AND_COMPASSES, DUNGEON_SMALL_KEYS, DUNGEON_BIG_KEYS
 
 # Can't use logic's PROGRESS_ITEMS because there's some items that we can't start with, and also because progressive items require special handling.
 REGULAR_ITEMS = [
@@ -47,15 +48,9 @@ REGULAR_ITEMS = [
   "Tingle's Chart",
 ]
 
-DUNGEON_NONPROGRESS_ITEMS = \
-  ["DRC Dungeon Map", "DRC Compass"] + \
-  ["FW Dungeon Map", "FW Compass"] + \
-  ["TotG Dungeon Map", "TotG Compass"] + \
-  ["FF Dungeon Map", "FF Compass"] + \
-  ["ET Dungeon Map", "ET Compass"] + \
-  ["WT Dungeon Map", "WT Compass"]
-
-REGULAR_ITEMS += DUNGEON_NONPROGRESS_ITEMS
+REGULAR_ITEMS += DUNGEON_MAPS_AND_COMPASSES
+REGULAR_ITEMS += DUNGEON_SMALL_KEYS
+REGULAR_ITEMS += DUNGEON_BIG_KEYS
 REGULAR_ITEMS.sort()
 
 PROGRESSIVE_ITEMS = \

@@ -16,7 +16,7 @@ from ruamel.yaml import YAML
 from ruamel.yaml.error import YAMLError
 yaml_dumper = YAML(typ="rt") # Use RoundTripDumper for pretty-formatted dumps.
 
-from logic.item_types import DUNGEON_MAPS_AND_COMPASSES
+from logic.item_types import DUNGEON_MAPS_AND_COMPASSES, DUNGEON_SMALL_KEYS, DUNGEON_BIG_KEYS
 from logic.logic import Logic
 from options.wwrando_options import DungeonItemShuffleMode, Options, SwordMode
 from randomizer import WWRandomizer, TooFewProgressionLocationsError, InvalidCleanISOError, PermalinkWrongVersionError, PermalinkWrongCommitError
@@ -659,6 +659,10 @@ class WWRandomizerWindow(QMainWindow):
     
     if options.shuffle_maps_and_compasses in [DungeonItemShuffleMode.VANILLA, DungeonItemShuffleMode.START_WITH]:
       items_to_filter_out += DUNGEON_MAPS_AND_COMPASSES
+    if options.shuffle_small_keys in [DungeonItemShuffleMode.VANILLA, DungeonItemShuffleMode.START_WITH]:
+      items_to_filter_out += DUNGEON_SMALL_KEYS
+    if options.shuffle_big_keys in [DungeonItemShuffleMode.VANILLA, DungeonItemShuffleMode.START_WITH]:
+      items_to_filter_out += DUNGEON_BIG_KEYS
     
     if not options.required_bosses:
       should_enable_options["num_required_bosses"] = False
