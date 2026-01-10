@@ -4,8 +4,8 @@ sys/main.dol:
   ballad_of_gales_warp_float_bank: 0x803FCFF8
   custom_DynamicNameTable: 0x803FD050
   custom_l_objectName: 0x803FD084
-  custom_l_objectName_end: 0x803FD09C
   custom_DMC: 0x803FD09C
+  custom_l_objectName_end: 0x803FD09C
   init_save_with_tweaks: 0x803FD87C
   init_starting_gear: 0x803FDC28
   num_triforce_shards_to_start_with: 0x803FDC70
@@ -189,3 +189,5 @@ files/rels/d_a_obj_warpt.rel:
   set_env_color_for_warp_pot_particles: 0x32A8
   custom_warp_pot_prm_color: 0x32D0
   custom_warp_pot_env_color: 0x32D4
+files/rels/d_a_npc_ac1.rel:
+  spawn_drc_shortcut_warp: 0x3818
