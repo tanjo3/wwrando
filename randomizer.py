@@ -239,9 +239,22 @@ class WWRandomizer:
     num_progress_locations = self.logic.get_num_progression_locations()
     max_required_bosses_banned_locations = self.logic.get_max_required_bosses_banned_locations()
     self.all_randomized_progress_items = self.logic.unplaced_progress_items.copy()
-    if num_progress_locations - max_required_bosses_banned_locations < len(self.all_randomized_progress_items):
+    num_progress_items = len(self.all_randomized_progress_items)
+    
+    # If sunken treasure locations are progression, we need to take into account locations that are excluded and adjust the progress item count.
+    if options.progression_triforce_charts or options.progression_treasure_charts:
+      num_charts_excluded = self.logic.get_num_charts_excluded()
+      if options.randomize_charts:
+        max_sunken_treasure_locations = 0
+        if options.progression_triforce_charts:
+          max_sunken_treasure_locations += 8
+        if options.progression_treasure_charts:
+          max_sunken_treasure_locations += 41
+        num_progress_items -= max(0, max_sunken_treasure_locations + num_charts_excluded - 49)
+    
+    if num_progress_locations - max_required_bosses_banned_locations < num_progress_items:
       error_message = "Not enough progress locations to place all progress items.\n\n"
-      error_message += "Total progress items: %d\n" % len(self.all_randomized_progress_items)
+      error_message += "Total progress items: %d\n" % num_progress_items
       error_message += "Progress locations with current options: %d\n" % num_progress_locations
       if max_required_bosses_banned_locations > 0:
         error_message += "Maximum Required Bosses Mode banned locations: %d\n" % max_required_bosses_banned_locations
