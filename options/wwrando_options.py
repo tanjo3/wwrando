@@ -342,7 +342,7 @@ class Options(BaseOptions):
     description="Adds new warp pots that act as shortcuts connecting dungeons to each other directly. (DRC, FW, TotG, and separately FF, ET, WT.)<br>"
       "Each pot must be unlocked before it can be used, so you cannot use them to access dungeons you wouldn't already have access to.",
   )
-  split_interdungeon_warps_by_required_3drm: bool = option(
+  split_interdungeon_warps_by_required: bool = option(
     default=True,
     description="In 3 Dungeon Race Mode (Required Bosses with exactly 3 required bosses), split the inter-dungeon warp pots by required vs non-required dungeons.<br>"
       "This creates one warp pot cycle connecting all required dungeons and another connecting all non-required dungeons, preventing accidental warps into non-required areas.<br>"

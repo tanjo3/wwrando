@@ -1179,10 +1179,11 @@ WARP_POT_STAGE_TO_DUNGEON_NAME = {
 }
 
 def add_inter_dungeon_warp_pots(self: WWRandomizer):
-  # Check if we should split warp pots by required/non-required dungeons (3 dungeon race mode + option enabled)
+  # TODO: test 1drm and 2drm to make sure they work correctly
+  # Check if we should split warp pots by required/non-required dungeons
   if (self.options.required_bosses and 
-      self.options.num_required_bosses == 3 and 
-      getattr(self.options, 'split_interdungeon_warps_by_required_3drm', False)):
+      self.options.num_required_bosses < 4 and 
+      self.options.split_interdungeon_warps_by_required):
     # Split into required vs non-required dungeon cycles
     required_dungeons = self.boss_reqs.required_dungeons
     non_required_dungeons = self.boss_reqs.banned_dungeons
@@ -1193,6 +1194,11 @@ def add_inter_dungeon_warp_pots(self: WWRandomizer):
                       if WARP_POT_STAGE_TO_DUNGEON_NAME[data.stage_name] in required_dungeons]
     non_required_cycle = [data for data in all_warp_pot_data 
                           if WARP_POT_STAGE_TO_DUNGEON_NAME[data.stage_name] in non_required_dungeons]
+    
+    # Fill empty slots in the required cycle with non-required dungeons (only for 1/2 DRM)
+    # This is because pots have to be linked in cycles of 3
+    while len(required_cycle) < len(non_required_cycle):
+      required_cycle.append(non_required_cycle.pop())
     
     warp_data_cycles = [required_cycle, non_required_cycle]
   else:
