@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'randomizer_window.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -28,7 +28,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(914, 757)
+        MainWindow.resize(914, 800)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -409,6 +409,11 @@ class Ui_MainWindow(object):
         self.add_shortcut_warps_between_dungeons.setObjectName(u"add_shortcut_warps_between_dungeons")
 
         self.gridLayout_4.addWidget(self.add_shortcut_warps_between_dungeons, 1, 1, 1, 1)
+
+        self.split_interdungeon_warps_by_required_3drm = QCheckBox(self.groupBox_3)
+        self.split_interdungeon_warps_by_required_3drm.setObjectName(u"split_interdungeon_warps_by_required_3drm")
+
+        self.gridLayout_4.addWidget(self.split_interdungeon_warps_by_required_3drm, 2, 1, 1, 1)
 
         self.invert_camera_x_axis = QCheckBox(self.groupBox_3)
         self.invert_camera_x_axis.setObjectName(u"invert_camera_x_axis")
@@ -1082,6 +1087,7 @@ class Ui_MainWindow(object):
         self.switch_targeting_mode.setText(QCoreApplication.translate("MainWindow", u"Use 'Switch' Targeting Mode", None))
         self.invert_sea_compass_x_axis.setText(QCoreApplication.translate("MainWindow", u"Invert Sea Compass X-Axis", None))
         self.add_shortcut_warps_between_dungeons.setText(QCoreApplication.translate("MainWindow", u"Add Inter-Dungeon Shortcuts", None))
+        self.split_interdungeon_warps_by_required_3drm.setText(QCoreApplication.translate("MainWindow", u"Split Warp Pots by Required (3DRM)", None))
         self.invert_camera_x_axis.setText(QCoreApplication.translate("MainWindow", u"Invert Camera X-Axis", None))
         self.instant_text_boxes.setText(QCoreApplication.translate("MainWindow", u"Instant Text Boxes", None))
         self.skip_rematch_bosses.setText(QCoreApplication.translate("MainWindow", u"Skip Boss Rematches", None))

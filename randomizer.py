@@ -470,6 +470,7 @@ class WWRandomizer:
       tweaks.update_battlesquid_item_names(self)
       tweaks.update_item_names_in_letter_advertising_rock_spire_shop(self)
     tweaks.prevent_fire_mountain_lava_softlock(self)
+    tweaks.add_inter_dungeon_warp_pots(self)
   
   @classmethod
   def sanitize_seed(cls, seed):

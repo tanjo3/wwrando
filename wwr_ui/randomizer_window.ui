@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>914</width>
-    <height>757</height>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -555,6 +555,13 @@
                 <widget class="QCheckBox" name="add_shortcut_warps_between_dungeons">
                  <property name="text">
                   <string>Add Inter-Dungeon Shortcuts</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QCheckBox" name="split_interdungeon_warps_by_required_3drm">
+                 <property name="text">
+                  <string>Split Warp Pots by Required (3DRM)</string>
                  </property>
                 </widget>
                </item>
