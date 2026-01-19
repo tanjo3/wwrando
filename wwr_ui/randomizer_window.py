@@ -1,21 +1,25 @@
-from base64 import b64decode
-import zipfile
-from qtpy.QtGui import *
-from qtpy.QtCore import *
-from qtpy.QtWidgets import *
-from wwr_ui.qt_init import load_ui_file
-
-from wwr_ui.update_checker import check_for_updates, LATEST_RELEASE_DOWNLOAD_PAGE_URL
-from wwr_ui.inventory import INVENTORY_ITEMS, DEFAULT_STARTING_ITEMS, DEFAULT_RANDOMIZED_ITEMS
-
+import json
 import os
 import sys
 import traceback
-from enum import StrEnum
+import zipfile
+from base64 import b64decode
 from collections import Counter
 from dataclasses import fields
+from enum import StrEnum
 
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+from qtpy.QtCore import *
+from qtpy.QtGui import *
+from qtpy.QtWidgets import *
 from ruamel.yaml import YAML
+
+from wwr_ui.inventory import INVENTORY_ITEMS, DEFAULT_STARTING_ITEMS, DEFAULT_RANDOMIZED_ITEMS
+from wwr_ui.qt_init import load_ui_file
+from wwr_ui.update_checker import check_for_updates, LATEST_RELEASE_DOWNLOAD_PAGE_URL
+
 yaml = YAML(typ="safe")
 from ruamel.yaml.error import YAMLError
 yaml_dumper = YAML(typ="rt") # Use RoundTripDumper for pretty-formatted dumps.
@@ -35,6 +39,15 @@ if os.environ["QT_API"] == "pyside6":
   from wwr_ui.uic.ui_randomizer_window import Ui_MainWindow
 else:
   Ui_MainWindow = load_ui_file(os.path.join(RANDO_ROOT_PATH, "wwr_ui", "randomizer_window.ui"))
+
+# The APWorld version this build is compatible with.
+# If the APTWW file's version is higher than this, the user needs a newer build.
+EXPECTED_APWORLD_VERSION = (3, 1)
+
+try:
+  from keys.ap_rsa_private_key import AP_RSA_PRIVATE_KEY # type: ignore
+except ImportError:
+  AP_RSA_PRIVATE_KEY = ""
 
 class APTWWFileError(Exception): pass
 
@@ -705,6 +718,27 @@ class WWRandomizerWindow(QMainWindow):
         if self.get_option_value(option.name):
           widget.show()
   
+  def decrypt_payload(self, payload: bytes) -> bytes:
+    encrypted_aes_key = payload[:256]
+    nonce = payload[256:268]
+    ciphertext = payload[268:]
+    
+    if not AP_RSA_PRIVATE_KEY:
+      raise RuntimeError("Private key not available. Unable to decrypt APTWW file.")
+    
+    private_key = serialization.load_pem_private_key(AP_RSA_PRIVATE_KEY.encode("utf-8"), password=None)
+    aes_key = private_key.decrypt(
+        encrypted_aes_key,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None,
+        ),
+    )
+    
+    aesgcm = AESGCM(aes_key)
+    return aesgcm.decrypt(nonce, ciphertext, None)
+  
   def load_and_validate_ap_plando_file(self, plando_file: str) -> dict[str, dict]:
     if not os.access(plando_file, os.R_OK):
       raise APTWWFileError(
@@ -712,19 +746,37 @@ class WWRandomizerWindow(QMainWindow):
         Please ensure that the program has read permissions for the file and try again."""
       )
     
+    plando_dict = None
+    # Try encrypted zip format (v3.1.0 and newer)
     try:
-      with zipfile.ZipFile(plando_file, "r") as z:
-        with z.open("plando") as plando_in_zip:
-          plando_dict = yaml.load(b64decode(plando_in_zip.read()))
-    except:
+      with zipfile.ZipFile(plando_file, "r") as zf:
+        encrypted_data = zf.read("plando")
+      plando_dict = json.loads(self.decrypt_payload(encrypted_data))
+    except Exception:
+      pass
+    
+    if plando_dict is None:
+      # Try base64-encoded YAML in zip (v3.0.0)
+      try:
+        with zipfile.ZipFile(plando_file, "r") as zf:
+          with zf.open("plando") as plando_in_zip:
+            plando_dict = yaml.load(b64decode(plando_in_zip.read()))
+      except Exception:
+        pass
+    
+    if plando_dict is None:
+      # Try plain YAML file (pre-v3.0.0)
       try:
         with open(plando_file, "r") as f:
           plando_dict = yaml.load(f)
-      except:
-        raise APTWWFileError(
-          """There was an error trying to read the APTWW file.<br><br>
-          Please ensure that the file has not been modified or corrupted and try again."""
-        )
+      except Exception:
+        pass
+    
+    if plando_dict is None:
+      raise APTWWFileError(
+        """There was an error trying to read the APTWW file.<br><br>
+        Please ensure that the file has not been modified or corrupted and try again."""
+      )
     
     # Check the APTWW version.
     error_msg = None

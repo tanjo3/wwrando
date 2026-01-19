@@ -6,3 +6,4 @@ appdirs==1.4.4
 certifi==2024.7.4
 tqdm>=4.65.0
 -r ./gclib/requirements.txt
+cryptography>=45.0.7

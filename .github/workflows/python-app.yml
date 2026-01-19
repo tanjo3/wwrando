@@ -2,12 +2,12 @@ name: Build
 
 on:
   push:
-    branches: [ archipelago ]
+    branches: [ ap-encrypt-patch-file ]
     paths-ignore:
       - 'docs/**'
       - '.github/workflows/publish-site.yml'
   pull_request:
-    branches: [ archipelago ]
+    branches: [ ap-encrypt-patch-file ]
     paths-ignore:
       - 'docs/**'
       - '.github/workflows/publish-site.yml'
@@ -66,8 +66,10 @@ jobs:
       - name: Add keys
         run: |
             echo "$SEED_KEY" > keys/seed_key.py
+            echo "AP_RSA_PRIVATE_KEY='''$AP_RSA_PRIVATE_KEY'''" > keys/ap_rsa_private_key.py
         env:
           SEED_KEY: ${{ secrets.SEED_KEY }}
+          AP_RSA_PRIVATE_KEY: ${{ secrets.AP_RSA_PRIVATE_KEY }}
       - name: Set up Python
         id: setup-py
         uses: actions/setup-python@v5
