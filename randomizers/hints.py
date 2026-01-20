@@ -985,6 +985,35 @@ class HintsRandomizer(BaseRandomizer):
     return item_hint, location_name
   
   
+  def check_is_legal_location_hint(self, location_name, progress_locations, previously_hinted_locations):
+    item_name = self.logic.done_item_locations[location_name]
+    assert item_name is not None
+    
+    # Don't hint at item in non-progress locations.
+    if location_name not in progress_locations:
+      return False
+    
+    # Remove locations in required bosses mode banned dungeons.
+    if location_name in self.rando.boss_reqs.banned_locations:
+      return False
+    
+    # Remove locations for items that were previously hinted.
+    if location_name in previously_hinted_locations:
+      return False
+    
+    # Don't hint at dungeon items when their shuffle mode is set to vanilla.
+    if (
+      self.logic.is_dungeon_item(item_name)
+      and self.logic.get_dungeon_item_shuffle_mode(item_name) == DungeonItemShuffleMode.VANILLA
+    ):
+      return False
+    
+    # Don't hint at the existence of traps.
+    if item_name.endswith(" Trap Chest"):
+      return False
+    
+    return True
+  
   def get_legal_location_hints(self, progress_locations, hinted_barren_zones, previously_hinted_locations):
     # Helper function to build a list of locations which may be hinted as location hints in this seed.
     
@@ -1000,16 +1029,10 @@ class HintsRandomizer(BaseRandomizer):
       hintable_locations += remote_hintable_locations
       remote_hintable_locations = []
     
-    # Remove locations in required bosses mode banned dungeons.
-    hintable_locations = [loc for loc in hintable_locations if loc not in self.rando.boss_reqs.banned_locations]
-    
-    # Remove locations for items that were previously hinted.
-    hintable_locations = [loc for loc in hintable_locations if loc not in previously_hinted_locations]
-    
-    # Don't hint at the existence of traps.
+    # Filter out locations which are invalid to be hinted at for location hints.
     hintable_locations = [
-      loc for loc in hintable_locations
-      if not self.logic.done_item_locations[loc].endswith(" Trap Chest")
+      loc for loc in self.logic.done_item_locations
+      if self.check_is_legal_location_hint(loc, progress_locations, previously_hinted_locations)
     ]
     
     standard_hintable_locations = self.filter_out_hinted_barren_locations(hintable_locations, hinted_barren_zones)
