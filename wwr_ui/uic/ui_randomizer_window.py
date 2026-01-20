@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'randomizer_window.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -28,7 +28,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(914, 757)
+        MainWindow.resize(914, 830)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -569,6 +569,141 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_4.addLayout(self.horizontalLayout_7)
 
+        self.groupBox_spoils = QGroupBox(self.tab_starting_items)
+        self.groupBox_spoils.setObjectName(u"groupBox_spoils")
+        self.gridLayout_5 = QGridLayout(self.groupBox_spoils)
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.layout_starting_red_chu_jelly = QHBoxLayout()
+        self.layout_starting_red_chu_jelly.setObjectName(u"layout_starting_red_chu_jelly")
+        self.label_for_starting_red_chu_jelly = QLabel(self.groupBox_spoils)
+        self.label_for_starting_red_chu_jelly.setObjectName(u"label_for_starting_red_chu_jelly")
+        self.label_for_starting_red_chu_jelly.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+
+        self.layout_starting_red_chu_jelly.addWidget(self.label_for_starting_red_chu_jelly)
+
+        self.starting_red_chu_jelly = QSpinBox(self.groupBox_spoils)
+        self.starting_red_chu_jelly.setObjectName(u"starting_red_chu_jelly")
+
+        self.layout_starting_red_chu_jelly.addWidget(self.starting_red_chu_jelly)
+
+
+        self.gridLayout_5.addLayout(self.layout_starting_red_chu_jelly, 1, 2, 1, 1)
+
+        self.layout_starting_joy_pendant = QHBoxLayout()
+        self.layout_starting_joy_pendant.setObjectName(u"layout_starting_joy_pendant")
+        self.label_for_starting_joy_pendant = QLabel(self.groupBox_spoils)
+        self.label_for_starting_joy_pendant.setObjectName(u"label_for_starting_joy_pendant")
+        self.label_for_starting_joy_pendant.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+
+        self.layout_starting_joy_pendant.addWidget(self.label_for_starting_joy_pendant)
+
+        self.starting_joy_pendant = QSpinBox(self.groupBox_spoils)
+        self.starting_joy_pendant.setObjectName(u"starting_joy_pendant")
+
+        self.layout_starting_joy_pendant.addWidget(self.starting_joy_pendant)
+
+
+        self.gridLayout_5.addLayout(self.layout_starting_joy_pendant, 0, 0, 1, 1)
+
+        self.layout_starting_boko_baba_seed = QHBoxLayout()
+        self.layout_starting_boko_baba_seed.setObjectName(u"layout_starting_boko_baba_seed")
+        self.label_for_starting_boko_baba_seed = QLabel(self.groupBox_spoils)
+        self.label_for_starting_boko_baba_seed.setObjectName(u"label_for_starting_boko_baba_seed")
+        self.label_for_starting_boko_baba_seed.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+
+        self.layout_starting_boko_baba_seed.addWidget(self.label_for_starting_boko_baba_seed)
+
+        self.starting_boko_baba_seed = QSpinBox(self.groupBox_spoils)
+        self.starting_boko_baba_seed.setObjectName(u"starting_boko_baba_seed")
+
+        self.layout_starting_boko_baba_seed.addWidget(self.starting_boko_baba_seed)
+
+
+        self.gridLayout_5.addLayout(self.layout_starting_boko_baba_seed, 0, 3, 1, 1)
+
+        self.layout_starting_golden_feather = QHBoxLayout()
+        self.layout_starting_golden_feather.setObjectName(u"layout_starting_golden_feather")
+        self.label_for_starting_golden_feather = QLabel(self.groupBox_spoils)
+        self.label_for_starting_golden_feather.setObjectName(u"label_for_starting_golden_feather")
+        self.label_for_starting_golden_feather.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+
+        self.layout_starting_golden_feather.addWidget(self.label_for_starting_golden_feather)
+
+        self.starting_golden_feather = QSpinBox(self.groupBox_spoils)
+        self.starting_golden_feather.setObjectName(u"starting_golden_feather")
+
+        self.layout_starting_golden_feather.addWidget(self.starting_golden_feather)
+
+
+        self.gridLayout_5.addLayout(self.layout_starting_golden_feather, 0, 4, 1, 1)
+
+        self.layout_starting_knights_crest = QHBoxLayout()
+        self.layout_starting_knights_crest.setObjectName(u"layout_starting_knights_crest")
+        self.label_for_starting_knights_crest = QLabel(self.groupBox_spoils)
+        self.label_for_starting_knights_crest.setObjectName(u"label_for_starting_knights_crest")
+        self.label_for_starting_knights_crest.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+
+        self.layout_starting_knights_crest.addWidget(self.label_for_starting_knights_crest)
+
+        self.starting_knights_crest = QSpinBox(self.groupBox_spoils)
+        self.starting_knights_crest.setObjectName(u"starting_knights_crest")
+
+        self.layout_starting_knights_crest.addWidget(self.starting_knights_crest)
+
+
+        self.gridLayout_5.addLayout(self.layout_starting_knights_crest, 1, 0, 1, 1)
+
+        self.layout_starting_skull_necklace = QHBoxLayout()
+        self.layout_starting_skull_necklace.setObjectName(u"layout_starting_skull_necklace")
+        self.label_for_starting_skull_necklace = QLabel(self.groupBox_spoils)
+        self.label_for_starting_skull_necklace.setObjectName(u"label_for_starting_skull_necklace")
+        self.label_for_starting_skull_necklace.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+
+        self.layout_starting_skull_necklace.addWidget(self.label_for_starting_skull_necklace)
+
+        self.starting_skull_necklace = QSpinBox(self.groupBox_spoils)
+        self.starting_skull_necklace.setObjectName(u"starting_skull_necklace")
+
+        self.layout_starting_skull_necklace.addWidget(self.starting_skull_necklace)
+
+
+        self.gridLayout_5.addLayout(self.layout_starting_skull_necklace, 0, 2, 1, 1)
+
+        self.layout_starting_blue_chu_jelly = QHBoxLayout()
+        self.layout_starting_blue_chu_jelly.setObjectName(u"layout_starting_blue_chu_jelly")
+        self.label_for_starting_blue_chu_jelly = QLabel(self.groupBox_spoils)
+        self.label_for_starting_blue_chu_jelly.setObjectName(u"label_for_starting_blue_chu_jelly")
+        self.label_for_starting_blue_chu_jelly.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+
+        self.layout_starting_blue_chu_jelly.addWidget(self.label_for_starting_blue_chu_jelly)
+
+        self.starting_blue_chu_jelly = QSpinBox(self.groupBox_spoils)
+        self.starting_blue_chu_jelly.setObjectName(u"starting_blue_chu_jelly")
+
+        self.layout_starting_blue_chu_jelly.addWidget(self.starting_blue_chu_jelly)
+
+
+        self.gridLayout_5.addLayout(self.layout_starting_blue_chu_jelly, 1, 4, 1, 1)
+
+        self.layout_starting_green_chu_jelly = QHBoxLayout()
+        self.layout_starting_green_chu_jelly.setObjectName(u"layout_starting_green_chu_jelly")
+        self.label_for_starting_green_chu_jelly = QLabel(self.groupBox_spoils)
+        self.label_for_starting_green_chu_jelly.setObjectName(u"label_for_starting_green_chu_jelly")
+        self.label_for_starting_green_chu_jelly.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+
+        self.layout_starting_green_chu_jelly.addWidget(self.label_for_starting_green_chu_jelly)
+
+        self.starting_green_chu_jelly = QSpinBox(self.groupBox_spoils)
+        self.starting_green_chu_jelly.setObjectName(u"starting_green_chu_jelly")
+
+        self.layout_starting_green_chu_jelly.addWidget(self.starting_green_chu_jelly)
+
+
+        self.gridLayout_5.addLayout(self.layout_starting_green_chu_jelly, 1, 3, 1, 1)
+
+
+        self.verticalLayout_4.addWidget(self.groupBox_spoils)
+
         self.horizontalLayout_random_starting_items = QHBoxLayout()
         self.horizontalLayout_random_starting_items.setObjectName(u"horizontalLayout_random_starting_items")
         self.label_for_num_extra_starting_items = QLabel(self.tab_starting_items)
@@ -994,7 +1129,15 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.remove_gear, self.add_gear)
         QWidget.setTabOrder(self.add_gear, self.starting_hcs)
         QWidget.setTabOrder(self.starting_hcs, self.starting_pohs)
-        QWidget.setTabOrder(self.starting_pohs, self.num_extra_starting_items)
+        QWidget.setTabOrder(self.starting_pohs, self.starting_joy_pendant)
+        QWidget.setTabOrder(self.starting_joy_pendant, self.starting_skull_necklace)
+        QWidget.setTabOrder(self.starting_skull_necklace, self.starting_boko_baba_seed)
+        QWidget.setTabOrder(self.starting_boko_baba_seed, self.starting_golden_feather)
+        QWidget.setTabOrder(self.starting_golden_feather, self.starting_knights_crest)
+        QWidget.setTabOrder(self.starting_knights_crest, self.starting_red_chu_jelly)
+        QWidget.setTabOrder(self.starting_red_chu_jelly, self.starting_green_chu_jelly)
+        QWidget.setTabOrder(self.starting_green_chu_jelly, self.starting_blue_chu_jelly)
+        QWidget.setTabOrder(self.starting_blue_chu_jelly, self.num_extra_starting_items)
         QWidget.setTabOrder(self.num_extra_starting_items, self.required_bosses)
         QWidget.setTabOrder(self.required_bosses, self.num_required_bosses)
         QWidget.setTabOrder(self.num_required_bosses, self.hero_mode)
@@ -1097,6 +1240,15 @@ class Ui_MainWindow(object):
         self.label_for_starting_hcs.setText(QCoreApplication.translate("MainWindow", u"Heart Containers", None))
         self.label_for_starting_pohs.setText(QCoreApplication.translate("MainWindow", u"Heart Pieces", None))
         self.current_health.setText(QCoreApplication.translate("MainWindow", u"Current Starting Health: 3 hearts", None))
+        self.groupBox_spoils.setTitle(QCoreApplication.translate("MainWindow", u"Spoils", None))
+        self.label_for_starting_red_chu_jelly.setText(QCoreApplication.translate("MainWindow", u"Red Chu Jelly", None))
+        self.label_for_starting_joy_pendant.setText(QCoreApplication.translate("MainWindow", u"Joy Pendant", None))
+        self.label_for_starting_boko_baba_seed.setText(QCoreApplication.translate("MainWindow", u"Boko Baba Seed", None))
+        self.label_for_starting_golden_feather.setText(QCoreApplication.translate("MainWindow", u"Golden Feather", None))
+        self.label_for_starting_knights_crest.setText(QCoreApplication.translate("MainWindow", u"Knight's Crest", None))
+        self.label_for_starting_skull_necklace.setText(QCoreApplication.translate("MainWindow", u"Skull Necklace", None))
+        self.label_for_starting_blue_chu_jelly.setText(QCoreApplication.translate("MainWindow", u"Blue Chu Jelly", None))
+        self.label_for_starting_green_chu_jelly.setText(QCoreApplication.translate("MainWindow", u"Green Chu Jelly", None))
         self.label_for_num_extra_starting_items.setText(QCoreApplication.translate("MainWindow", u"Extra Random Starting Items", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_starting_items), QCoreApplication.translate("MainWindow", u"Starting Items", None))
         self.groupBox_4.setTitle(QCoreApplication.translate("MainWindow", u"Required Bosses", None))
