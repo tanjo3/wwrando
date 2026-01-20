@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>914</width>
-    <height>757</height>
+    <height>830</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -821,6 +821,151 @@
              </layout>
             </item>
             <item>
+             <widget class="QGroupBox" name="groupBox_spoils">
+              <property name="title">
+               <string>Spoils</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_5">
+               <item row="1" column="2">
+                <layout class="QHBoxLayout" name="layout_starting_red_chu_jelly">
+                 <item>
+                  <widget class="QLabel" name="label_for_starting_red_chu_jelly">
+                   <property name="text">
+                    <string>Red Chu Jelly</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="starting_red_chu_jelly"/>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="0">
+                <layout class="QHBoxLayout" name="layout_starting_joy_pendant">
+                 <item>
+                  <widget class="QLabel" name="label_for_starting_joy_pendant">
+                   <property name="text">
+                    <string>Joy Pendant</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="starting_joy_pendant"/>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="3">
+                <layout class="QHBoxLayout" name="layout_starting_boko_baba_seed">
+                 <item>
+                  <widget class="QLabel" name="label_for_starting_boko_baba_seed">
+                   <property name="text">
+                    <string>Boko Baba Seed</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="starting_boko_baba_seed"/>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="4">
+                <layout class="QHBoxLayout" name="layout_starting_golden_feather">
+                 <item>
+                  <widget class="QLabel" name="label_for_starting_golden_feather">
+                   <property name="text">
+                    <string>Golden Feather</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="starting_golden_feather"/>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="0">
+                <layout class="QHBoxLayout" name="layout_starting_knights_crest">
+                 <item>
+                  <widget class="QLabel" name="label_for_starting_knights_crest">
+                   <property name="text">
+                    <string>Knight's Crest</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="starting_knights_crest"/>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="2">
+                <layout class="QHBoxLayout" name="layout_starting_skull_necklace">
+                 <item>
+                  <widget class="QLabel" name="label_for_starting_skull_necklace">
+                   <property name="text">
+                    <string>Skull Necklace</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="starting_skull_necklace"/>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="4">
+                <layout class="QHBoxLayout" name="layout_starting_blue_chu_jelly">
+                 <item>
+                  <widget class="QLabel" name="label_for_starting_blue_chu_jelly">
+                   <property name="text">
+                    <string>Blue Chu Jelly</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="starting_blue_chu_jelly"/>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="3">
+                <layout class="QHBoxLayout" name="layout_starting_green_chu_jelly">
+                 <item>
+                  <widget class="QLabel" name="label_for_starting_green_chu_jelly">
+                   <property name="text">
+                    <string>Green Chu Jelly</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="starting_green_chu_jelly"/>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
              <layout class="QHBoxLayout" name="horizontalLayout_random_starting_items">
               <item>
                <widget class="QLabel" name="label_for_num_extra_starting_items">
@@ -1412,6 +1557,14 @@
   <tabstop>add_gear</tabstop>
   <tabstop>starting_hcs</tabstop>
   <tabstop>starting_pohs</tabstop>
+  <tabstop>starting_joy_pendant</tabstop>
+  <tabstop>starting_skull_necklace</tabstop>
+  <tabstop>starting_boko_baba_seed</tabstop>
+  <tabstop>starting_golden_feather</tabstop>
+  <tabstop>starting_knights_crest</tabstop>
+  <tabstop>starting_red_chu_jelly</tabstop>
+  <tabstop>starting_green_chu_jelly</tabstop>
+  <tabstop>starting_blue_chu_jelly</tabstop>
   <tabstop>num_extra_starting_items</tabstop>
   <tabstop>required_bosses</tabstop>
   <tabstop>num_required_bosses</tabstop>
