@@ -89,6 +89,7 @@ def enable_all_options(options: Options):
   options.cryptic_hints = True
   options.prioritize_remote_hints = True
   options.hint_importance = True
+  options.kreeb_hints_bows = True
   
   options.do_not_generate_spoiler_log = False
   

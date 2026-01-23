@@ -173,12 +173,15 @@ class HintsRandomizer(BaseRandomizer):
     self.prioritize_remote_hints = self.options.prioritize_remote_hints
     self.hint_importance = self.options.hint_importance
     
+    self.kreeb_hints_bows = self.options.kreeb_hints_bows
+    
     self.path_locations: set[str] = None
     self.barren_locations: set[str] = None
     
     self.floor_30_hint: Hint = None
     self.floor_50_hint: Hint = None
     self.octo_fairy_hint: Hint = None
+    self.kreeb_bow_hints: list[Hint] = []
     self.hints_per_placement: dict[str, list[Hint]] = {}
     self.island_to_fishman_hint: dict[int, Hint] = {}
     self.hoho_index_to_hints: dict[int, list[Hint]] = {}
@@ -241,6 +244,9 @@ class HintsRandomizer(BaseRandomizer):
       return
     
     self.octo_fairy_hint = self.generate_octo_fairy_hint()
+    
+    if self.kreeb_hints_bows:
+      self.kreeb_bow_hints = self.generate_kreeb_bow_hints()
     
     variable_hint_placement_options = ("fishmen_hints", "hoho_hints", "korl_hints")
     self.hints_per_placement.clear()
@@ -321,6 +327,9 @@ class HintsRandomizer(BaseRandomizer):
         self.update_korl_hints(self.hints_per_placement["korl_hints"])
       else:
         print("Invalid hint placement option: %s" % hint_placement)
+    
+    if self.kreeb_hints_bows:
+      self.update_kreeb_item_hints(self.kreeb_bow_hints)
   
   def write_to_spoiler_log(self) -> str:
     rows = []
@@ -431,6 +440,25 @@ class HintsRandomizer(BaseRandomizer):
     else:
       msg.string = "\\{1A 06 FF 00 00 05}When you find you have need of such an item, you must journey to that place."
     msg.word_wrap_string(self.rando.bfn)
+  
+  def update_kreeb_item_hints(self, hints: list[Hint]):
+    # If there are no bows, then don't change Kreeb's text
+    if len(hints) == 0:
+      return
+    
+    hint_lines = []
+    for i, hint in enumerate(hints):
+      hint_prefix = "They say that " if i == 0 else "and that "
+      hint_suffix = "." if i == len(hints) - 1 else ","
+      hint_lines.append(HintsRandomizer.get_formatted_hint_text(hint, self.cryptic_hints, False, prefix=hint_prefix, suffix=hint_suffix))
+      
+      if self.options.instant_text_boxes and i > 0:
+        # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
+        hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
+    
+    msg_id = 12220
+    msg = self.rando.bmg.messages_by_id[msg_id]
+    msg.construct_string_from_parts(self.rando.bfn, hint_lines)
   
   def update_fishmen_hints(self):
     for fishman_island_number, hint in self.island_to_fishman_hint.items():
@@ -1048,6 +1076,17 @@ class HintsRandomizer(BaseRandomizer):
     item_importance = self.get_importance_for_location(location_name)
     hint = Hint(HintType.FIXED_LOCATION, location_name, item_name, item_importance)
     return hint
+  
+  def generate_kreeb_bow_hints(self):
+    bow_locations = sorted([loc for loc, item in self.logic.done_item_locations.items() if item == "Progressive Bow"])
+    
+    kreeb_bow_hints = []
+    for bow_location in bow_locations:
+      entrance_zone = self.rando.entrances.get_entrance_zone_for_item_location(bow_location)
+      item_importance = self.get_importance_for_location(bow_location)
+      kreeb_bow_hints.append(Hint(HintType.ITEM, entrance_zone, "Progressive Bow", item_importance))
+    
+    return kreeb_bow_hints
   
   def generate_hints(self):
     previously_hinted_locations = []

@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'randomizer_window.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -824,6 +824,11 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addWidget(self.hint_importance, 6, 2, 1, 1)
 
+        self.kreeb_hints_bows = QCheckBox(self.groupBox_5)
+        self.kreeb_hints_bows.setObjectName(u"kreeb_hints_bows")
+
+        self.gridLayout_7.addWidget(self.kreeb_hints_bows, 7, 2, 1, 1)
+
 
         self.verticalLayout_8.addWidget(self.groupBox_5)
 
@@ -1009,7 +1014,9 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.num_barren_hints, self.num_path_hints)
         QWidget.setTabOrder(self.num_path_hints, self.cryptic_hints)
         QWidget.setTabOrder(self.cryptic_hints, self.prioritize_remote_hints)
-        QWidget.setTabOrder(self.prioritize_remote_hints, self.do_not_generate_spoiler_log)
+        QWidget.setTabOrder(self.prioritize_remote_hints, self.hint_importance)
+        QWidget.setTabOrder(self.hint_importance, self.kreeb_hints_bows)
+        QWidget.setTabOrder(self.kreeb_hints_bows, self.do_not_generate_spoiler_log)
         QWidget.setTabOrder(self.do_not_generate_spoiler_log, self.dry_run)
 
         self.retranslateUi(MainWindow)
@@ -1127,6 +1134,7 @@ class Ui_MainWindow(object):
         self.label_for_num_item_hints.setText(QCoreApplication.translate("MainWindow", u"Item Hints", None))
         self.label_for_num_path_hints.setText(QCoreApplication.translate("MainWindow", u"Path Hints", None))
         self.hint_importance.setText(QCoreApplication.translate("MainWindow", u"Hint Importance", None))
+        self.kreeb_hints_bows.setText(QCoreApplication.translate("MainWindow", u"Kreeb Hints Bows", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))
         self.do_not_generate_spoiler_log.setText(QCoreApplication.translate("MainWindow", u"Do Not Generate Spoiler Log", None))
         self.dry_run.setText(QCoreApplication.translate("MainWindow", u"Dry Run", None))
