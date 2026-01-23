@@ -566,7 +566,7 @@ class Logic:
     
     return filtered_locations
   
-  def get_dungeon_item_shuffle_mode(self, item_name):
+  def get_dungeon_item_shuffle_mode(self, item_name: str) -> DungeonItemShuffleMode:
     if item_name in DUNGEON_SMALL_KEYS:
       return self.options.shuffle_small_keys
     elif item_name in DUNGEON_BIG_KEYS:
@@ -576,7 +576,7 @@ class Logic:
     else:
       return DungeonItemShuffleMode.OWN_DUNGEON
   
-  def check_dungeon_item_valid_in_location(self, item_name, location_name):
+  def check_dungeon_item_valid_in_location(self, item_name: str, location_name: str) -> bool:
     types = self.item_locations[location_name]["Types"]
     shuffle_mode = self.get_dungeon_item_shuffle_mode(item_name)
     
