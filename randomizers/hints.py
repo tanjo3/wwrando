@@ -1031,7 +1031,7 @@ class HintsRandomizer(BaseRandomizer):
     
     # Filter out locations which are invalid to be hinted at for location hints.
     hintable_locations = [
-      loc for loc in self.logic.done_item_locations
+      loc for loc in hintable_locations
       if self.check_is_legal_location_hint(loc, progress_locations, previously_hinted_locations)
     ]
     
