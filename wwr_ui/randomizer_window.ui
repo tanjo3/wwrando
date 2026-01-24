@@ -1533,6 +1533,11 @@
   <tabstop>progression_treasure_charts</tabstop>
   <tabstop>sword_mode</tabstop>
   <tabstop>num_starting_triforce_shards</tabstop>
+  <tabstop>shuffle_small_keys</tabstop>
+  <tabstop>shuffle_big_keys</tabstop>
+  <tabstop>shuffle_maps_and_compasses</tabstop>
+  <tabstop>chest_type_matches_contents</tabstop>
+  <tabstop>trap_chests</tabstop>
   <tabstop>randomize_dungeon_entrances</tabstop>
   <tabstop>randomize_boss_entrances</tabstop>
   <tabstop>randomize_miniboss_entrances</tabstop>
