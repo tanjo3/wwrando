@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'randomizer_window.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -827,6 +827,33 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_8.addWidget(self.groupBox_5)
 
+        self.logic_tweaks_groupbox = QGroupBox(self.tab_advanced)
+        self.logic_tweaks_groupbox.setObjectName(u"logic_tweaks_groupbox")
+        self.layout_logic_tweaks = QGridLayout(self.logic_tweaks_groupbox)
+        self.layout_logic_tweaks.setObjectName(u"layout_logic_tweaks")
+        self.always_double_magic = QCheckBox(self.logic_tweaks_groupbox)
+        self.always_double_magic.setObjectName(u"always_double_magic")
+
+        self.layout_logic_tweaks.addWidget(self.always_double_magic, 0, 0, 1, 1)
+
+        self.widget_11 = QWidget(self.logic_tweaks_groupbox)
+        self.widget_11.setObjectName(u"widget_11")
+
+        self.layout_logic_tweaks.addWidget(self.widget_11, 0, 1, 1, 1)
+
+        self.widget_12 = QWidget(self.logic_tweaks_groupbox)
+        self.widget_12.setObjectName(u"widget_12")
+
+        self.layout_logic_tweaks.addWidget(self.widget_12, 0, 2, 1, 1)
+
+        self.widget_13 = QWidget(self.logic_tweaks_groupbox)
+        self.widget_13.setObjectName(u"widget_13")
+
+        self.layout_logic_tweaks.addWidget(self.widget_13, 0, 3, 1, 1)
+
+
+        self.verticalLayout_8.addWidget(self.logic_tweaks_groupbox)
+
         self.groupBox_6 = QGroupBox(self.tab_advanced)
         self.groupBox_6.setObjectName(u"groupBox_6")
         self.gridLayout_8 = QGridLayout(self.groupBox_6)
@@ -836,15 +863,15 @@ class Ui_MainWindow(object):
 
         self.gridLayout_8.addWidget(self.do_not_generate_spoiler_log, 0, 0, 1, 1)
 
-        self.widget_11 = QWidget(self.groupBox_6)
-        self.widget_11.setObjectName(u"widget_11")
+        self.widget_14 = QWidget(self.groupBox_6)
+        self.widget_14.setObjectName(u"widget_14")
 
-        self.gridLayout_8.addWidget(self.widget_11, 0, 2, 1, 1)
+        self.gridLayout_8.addWidget(self.widget_14, 0, 2, 1, 1)
 
-        self.widget_12 = QWidget(self.groupBox_6)
-        self.widget_12.setObjectName(u"widget_12")
+        self.widget_15 = QWidget(self.groupBox_6)
+        self.widget_15.setObjectName(u"widget_15")
 
-        self.gridLayout_8.addWidget(self.widget_12, 0, 3, 1, 1)
+        self.gridLayout_8.addWidget(self.widget_15, 0, 3, 1, 1)
 
         self.dry_run = QCheckBox(self.groupBox_6)
         self.dry_run.setObjectName(u"dry_run")
@@ -1009,7 +1036,8 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.num_barren_hints, self.num_path_hints)
         QWidget.setTabOrder(self.num_path_hints, self.cryptic_hints)
         QWidget.setTabOrder(self.cryptic_hints, self.prioritize_remote_hints)
-        QWidget.setTabOrder(self.prioritize_remote_hints, self.do_not_generate_spoiler_log)
+        QWidget.setTabOrder(self.prioritize_remote_hints, self.always_double_magic)
+        QWidget.setTabOrder(self.always_double_magic, self.do_not_generate_spoiler_log)
         QWidget.setTabOrder(self.do_not_generate_spoiler_log, self.dry_run)
 
         self.retranslateUi(MainWindow)
@@ -1127,6 +1155,8 @@ class Ui_MainWindow(object):
         self.label_for_num_item_hints.setText(QCoreApplication.translate("MainWindow", u"Item Hints", None))
         self.label_for_num_path_hints.setText(QCoreApplication.translate("MainWindow", u"Path Hints", None))
         self.hint_importance.setText(QCoreApplication.translate("MainWindow", u"Hint Importance", None))
+        self.logic_tweaks_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Logic Tweaks", None))
+        self.always_double_magic.setText(QCoreApplication.translate("MainWindow", u"All Magic Meters are Double", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))
         self.do_not_generate_spoiler_log.setText(QCoreApplication.translate("MainWindow", u"Do Not Generate Spoiler Log", None))
         self.dry_run.setText(QCoreApplication.translate("MainWindow", u"Dry Run", None))
