@@ -824,6 +824,11 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addWidget(self.hint_importance, 6, 2, 1, 1)
 
+        self.hoho_hint_shards = QCheckBox(self.groupBox_5)
+        self.hoho_hint_shards.setObjectName(u"hoho_hint_shards")
+
+        self.gridLayout_7.addWidget(self.hoho_hint_shards, 7, 0, 1, 1)
+
         self.korl_hints_swords = QCheckBox(self.groupBox_5)
         self.korl_hints_swords.setObjectName(u"korl_hints_swords")
 
@@ -1020,7 +1025,8 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.num_path_hints, self.cryptic_hints)
         QWidget.setTabOrder(self.cryptic_hints, self.prioritize_remote_hints)
         QWidget.setTabOrder(self.prioritize_remote_hints, self.hint_importance)
-        QWidget.setTabOrder(self.hint_importance, self.korl_hints_swords)
+        QWidget.setTabOrder(self.hint_importance, self.hoho_hint_shards)
+        QWidget.setTabOrder(self.hoho_hint_shards, self.korl_hints_swords)
         QWidget.setTabOrder(self.korl_hints_swords, self.kreeb_hints_bows)
         QWidget.setTabOrder(self.kreeb_hints_bows, self.do_not_generate_spoiler_log)
         QWidget.setTabOrder(self.do_not_generate_spoiler_log, self.dry_run)
@@ -1140,6 +1146,7 @@ class Ui_MainWindow(object):
         self.label_for_num_item_hints.setText(QCoreApplication.translate("MainWindow", u"Item Hints", None))
         self.label_for_num_path_hints.setText(QCoreApplication.translate("MainWindow", u"Path Hints", None))
         self.hint_importance.setText(QCoreApplication.translate("MainWindow", u"Hint Importance", None))
+        self.hoho_hint_shards.setText(QCoreApplication.translate("MainWindow", u"Old Man Ho Ho Hint Shards", None))
         self.korl_hints_swords.setText(QCoreApplication.translate("MainWindow", u"King of Red Lions in Hyrule Hints Swords", None))
         self.kreeb_hints_bows.setText(QCoreApplication.translate("MainWindow", u"Kreeb Hints Bows", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))
