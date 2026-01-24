@@ -86,3 +86,5 @@ Progressive Quiver:
   an upgrade for your quiver
 Magic Armor:
   a protective crystal
+Rainbow Rupee:
+  an extra-valuable Rupee

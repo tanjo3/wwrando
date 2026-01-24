@@ -323,6 +323,14 @@ class Options(BaseOptions):
   )
   #endregion
   
+  #region Miscellaneous Dev Features
+  rainbow_rupee_progress: bool = option(
+    default=False,
+    description="Place the Rainbow Rupee into the progress item pool. This means that it will be found in a progress location. If CTMC is enabled, it will be in a metal chest.<br>"
+      "This setting has no effect on the logic.",
+  )
+  #endregion
+  
   #region Tweaks
   swift_sail: bool = option(
     default=True,

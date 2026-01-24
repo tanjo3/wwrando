@@ -1179,6 +1179,31 @@
              </widget>
             </item>
             <item>
+             <widget class="QGroupBox" name="dev_features_groupbox">
+              <property name="title">
+               <string>Miscellaneous Dev Features</string>
+              </property>
+              <layout class="QGridLayout" name="layout_dev_features">
+               <item row="0" column="0">
+                <widget class="QCheckBox" name="rainbow_rupee_progress">
+                 <property name="text">
+                  <string>Make Rainbow Rupee Progression</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QWidget" name="widget_11" native="true"/>
+               </item>
+               <item row="0" column="2">
+                <widget class="QWidget" name="widget_12" native="true"/>
+               </item>
+               <item row="0" column="3">
+                <widget class="QWidget" name="widget_13" native="true"/>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
              <widget class="QGroupBox" name="groupBox_6">
               <property name="title">
                <string>Additional Advanced Options</string>
@@ -1192,10 +1217,10 @@
                 </widget>
                </item>
                <item row="0" column="2">
-                <widget class="QWidget" name="widget_11" native="true"/>
+                <widget class="QWidget" name="widget_14" native="true"/>
                </item>
                <item row="0" column="3">
-                <widget class="QWidget" name="widget_12" native="true"/>
+                <widget class="QWidget" name="widget_15" native="true"/>
                </item>
                <item row="0" column="1">
                 <widget class="QCheckBox" name="dry_run">
@@ -1427,6 +1452,7 @@
   <tabstop>num_path_hints</tabstop>
   <tabstop>cryptic_hints</tabstop>
   <tabstop>prioritize_remote_hints</tabstop>
+  <tabstop>rainbow_rupee_progress</tabstop>
   <tabstop>do_not_generate_spoiler_log</tabstop>
   <tabstop>dry_run</tabstop>
  </tabstops>
