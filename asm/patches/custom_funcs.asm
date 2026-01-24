@@ -379,6 +379,9 @@ captured_prologue_pigs_bitfield:
 .global option_targeting_mode ; AKA "OptAttentionType"
 option_targeting_mode:
 .byte 0x00 ; By default, use the "Hold" targeting mode
+.global always_double_magic_enabled
+always_double_magic_enabled:
+.byte 0x00 ; By default, disabled
 
 .align 2 ; Align to the next 4 bytes
 
@@ -594,12 +597,18 @@ convert_progressive_magic_meter_id:
 lis r3, 0x803C4C1B@ha
 addi r3, r3, 0x803C4C1B@l
 lbz r4, 0 (r3) ; Max magic meter
+lis r5, always_double_magic_enabled@ha
+addi r5, r5, always_double_magic_enabled@l
+lbz r5, 0 (r5)
+cmpwi r5, 0
+beq convert_progressive_magic_meter_id_normal_mode
 cmpwi r4, 0
-beq convert_progressive_magic_meter_id_to_normal_magic_meter
+beq convert_progressive_magic_meter_id_to_magic_meter_upgrade
+b convert_progressive_magic_meter_id_to_normal_magic_meter
+
+convert_progressive_magic_meter_id_normal_mode:
 cmpwi r4, 16
 beq convert_progressive_magic_meter_id_to_magic_meter_upgrade
-li r3, 0xB1 ; Invalid magic meter state; this shouldn't happen so just return the base magic meter ID
-b convert_progressive_item_id_func_end
 
 convert_progressive_magic_meter_id_to_normal_magic_meter:
 li r3, 0xB1
@@ -869,6 +878,18 @@ stw r0, 0x14 (sp)
 lis r3, 0x803C4C1B@ha
 addi r3, r3, 0x803C4C1B@l
 lbz r4, 0 (r3) ; Max magic meter
+lis r5, always_double_magic_enabled@ha
+addi r5, r5, always_double_magic_enabled@l
+lbz r5, 0 (r5)
+cmpwi r5, 0
+beq progressive_magic_meter_item_func_normal_mode
+cmpwi r4, 0
+beq progressive_magic_meter_item_func_get_magic_meter_upgrade
+cmpwi r4, 32
+beq progressive_magic_meter_item_func_refill_magic
+b progressive_magic_meter_item_func_end
+
+progressive_magic_meter_item_func_normal_mode:
 cmpwi r4, 0
 beq progressive_magic_meter_item_func_get_normal_magic_meter
 cmpwi r4, 16
@@ -881,7 +902,13 @@ b progressive_magic_meter_item_func_end
 
 progressive_magic_meter_item_func_get_magic_meter_upgrade:
 bl item_func_max_mp_up1__Fv
+b progressive_magic_meter_item_func_end
 
+progressive_magic_meter_item_func_refill_magic:
+lis r3, 0x803C4C08@ha
+addi r5, r3, 0x803C4C08@l
+sth r4, 0x5B78 (r5) ;  0x803CA780 (MP to gradually add to the current meter)
+b progressive_magic_meter_item_func_end
 
 progressive_magic_meter_item_func_end:
 ; Function end stuff
