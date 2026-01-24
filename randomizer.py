@@ -73,6 +73,14 @@ RNG_CHANGING_OPTIONS = [
   "cryptic_hints",
   "prioritize_remote_hints",
   "hint_importance",
+  "starting_joy_pendant",
+  "starting_skull_necklace",
+  "starting_boko_baba_seed",
+  "starting_golden_feather",
+  "starting_knights_crest",
+  "starting_red_chu_jelly",
+  "starting_green_chu_jelly",
+  "starting_blue_chu_jelly",
   "do_not_generate_spoiler_log",
 ]
 
