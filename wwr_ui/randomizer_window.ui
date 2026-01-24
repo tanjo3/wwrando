@@ -1532,6 +1532,10 @@
   <tabstop>starting_hcs</tabstop>
   <tabstop>starting_pohs</tabstop>
   <tabstop>num_extra_starting_items</tabstop>
+  <tabstop>progression_locations</tabstop>
+  <tabstop>excluded_locations</tabstop>
+  <tabstop>include_location</tabstop>
+  <tabstop>exclude_location</tabstop>
   <tabstop>required_bosses</tabstop>
   <tabstop>num_required_bosses</tabstop>
   <tabstop>hero_mode</tabstop>
