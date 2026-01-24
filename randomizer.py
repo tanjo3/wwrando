@@ -73,6 +73,7 @@ RNG_CHANGING_OPTIONS = [
   "cryptic_hints",
   "prioritize_remote_hints",
   "hint_importance",
+  "hoho_hint_shards",
   "korl_hints_swords",
   "kreeb_hints_bows",
   "do_not_generate_spoiler_log",
