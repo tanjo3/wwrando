@@ -595,16 +595,16 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab_starting_items, "")
         self.tab_excluded_locations = QWidget()
         self.tab_excluded_locations.setObjectName(u"tab_excluded_locations")
-        self.verticalLayout_12 = QVBoxLayout(self.tab_excluded_locations)
-        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
-        self.horizontalLayout_10 = QHBoxLayout()
-        self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
-        self.verticalLayout_9 = QVBoxLayout()
-        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.verticalLayout_8 = QVBoxLayout(self.tab_excluded_locations)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.layout_locations = QHBoxLayout()
+        self.layout_locations.setObjectName(u"layout_locations")
+        self.layout_progression_locations = QVBoxLayout()
+        self.layout_progression_locations.setObjectName(u"layout_progression_locations")
         self.label_for_progression_locations = QLabel(self.tab_excluded_locations)
         self.label_for_progression_locations.setObjectName(u"label_for_progression_locations")
 
-        self.verticalLayout_9.addWidget(self.label_for_progression_locations)
+        self.layout_progression_locations.addWidget(self.label_for_progression_locations)
 
         self.progression_locations = QListView(self.tab_excluded_locations)
         self.progression_locations.setObjectName(u"progression_locations")
@@ -614,42 +614,42 @@ class Ui_MainWindow(object):
         self.progression_locations.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.progression_locations.setSelectionMode(QAbstractItemView.ExtendedSelection)
 
-        self.verticalLayout_9.addWidget(self.progression_locations)
+        self.layout_progression_locations.addWidget(self.progression_locations)
 
 
-        self.horizontalLayout_10.addLayout(self.verticalLayout_9)
+        self.layout_locations.addLayout(self.layout_progression_locations)
 
-        self.verticalLayout_10 = QVBoxLayout()
-        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
-        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.layout_locations_buttons = QVBoxLayout()
+        self.layout_locations_buttons.setObjectName(u"layout_locations_buttons")
+        self.locations_buttons_spacer_top = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.verticalLayout_10.addItem(self.verticalSpacer_4)
+        self.layout_locations_buttons.addItem(self.locations_buttons_spacer_top)
 
         self.include_location = QPushButton(self.tab_excluded_locations)
         self.include_location.setObjectName(u"include_location")
         self.include_location.setMinimumSize(QSize(0, 80))
 
-        self.verticalLayout_10.addWidget(self.include_location)
+        self.layout_locations_buttons.addWidget(self.include_location)
 
         self.exclude_location = QPushButton(self.tab_excluded_locations)
         self.exclude_location.setObjectName(u"exclude_location")
         self.exclude_location.setMinimumSize(QSize(0, 80))
 
-        self.verticalLayout_10.addWidget(self.exclude_location)
+        self.layout_locations_buttons.addWidget(self.exclude_location)
 
-        self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.locations_buttons_spacer_bottom = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.verticalLayout_10.addItem(self.verticalSpacer_5)
+        self.layout_locations_buttons.addItem(self.locations_buttons_spacer_bottom)
 
 
-        self.horizontalLayout_10.addLayout(self.verticalLayout_10)
+        self.layout_locations.addLayout(self.layout_locations_buttons)
 
-        self.verticalLayout_11 = QVBoxLayout()
-        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
+        self.layout_excluded_locations = QVBoxLayout()
+        self.layout_excluded_locations.setObjectName(u"layout_excluded_locations")
         self.label_for_excluded_locations = QLabel(self.tab_excluded_locations)
         self.label_for_excluded_locations.setObjectName(u"label_for_excluded_locations")
 
-        self.verticalLayout_11.addWidget(self.label_for_excluded_locations)
+        self.layout_excluded_locations.addWidget(self.label_for_excluded_locations)
 
         self.excluded_locations = QListView(self.tab_excluded_locations)
         self.excluded_locations.setObjectName(u"excluded_locations")
@@ -657,19 +657,19 @@ class Ui_MainWindow(object):
         self.excluded_locations.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.excluded_locations.setSelectionMode(QAbstractItemView.ExtendedSelection)
 
-        self.verticalLayout_11.addWidget(self.excluded_locations)
+        self.layout_excluded_locations.addWidget(self.excluded_locations)
 
 
-        self.horizontalLayout_10.addLayout(self.verticalLayout_11)
+        self.layout_locations.addLayout(self.layout_excluded_locations)
 
 
-        self.verticalLayout_12.addLayout(self.horizontalLayout_10)
+        self.verticalLayout_8.addLayout(self.layout_locations)
 
         self.tabWidget.addTab(self.tab_excluded_locations, "")
         self.tab_advanced = QWidget()
         self.tab_advanced.setObjectName(u"tab_advanced")
-        self.verticalLayout_8 = QVBoxLayout(self.tab_advanced)
-        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.verticalLayout_9 = QVBoxLayout(self.tab_advanced)
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
         self.groupBox_4 = QGroupBox(self.tab_advanced)
         self.groupBox_4.setObjectName(u"groupBox_4")
         self.gridLayout_6 = QGridLayout(self.groupBox_4)
@@ -707,7 +707,7 @@ class Ui_MainWindow(object):
         self.gridLayout_6.addWidget(self.widget_5, 0, 3, 1, 1)
 
 
-        self.verticalLayout_8.addWidget(self.groupBox_4)
+        self.verticalLayout_9.addWidget(self.groupBox_4)
 
         self.groupBox_9 = QGroupBox(self.tab_advanced)
         self.groupBox_9.setObjectName(u"groupBox_9")
@@ -762,7 +762,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_22.addWidget(self.widget_10)
 
 
-        self.verticalLayout_8.addWidget(self.groupBox_9)
+        self.verticalLayout_9.addWidget(self.groupBox_9)
 
         self.groupBox_5 = QGroupBox(self.tab_advanced)
         self.groupBox_5.setObjectName(u"groupBox_5")
@@ -898,7 +898,7 @@ class Ui_MainWindow(object):
         self.gridLayout_7.addWidget(self.hint_importance, 6, 2, 1, 1)
 
 
-        self.verticalLayout_8.addWidget(self.groupBox_5)
+        self.verticalLayout_9.addWidget(self.groupBox_5)
 
         self.groupBox_6 = QGroupBox(self.tab_advanced)
         self.groupBox_6.setObjectName(u"groupBox_6")
@@ -925,11 +925,11 @@ class Ui_MainWindow(object):
         self.gridLayout_8.addWidget(self.dry_run, 0, 1, 1, 1)
 
 
-        self.verticalLayout_8.addWidget(self.groupBox_6)
+        self.verticalLayout_9.addWidget(self.groupBox_6)
 
         self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.verticalLayout_8.addItem(self.verticalSpacer_3)
+        self.verticalLayout_9.addItem(self.verticalSpacer_3)
 
         self.tabWidget.addTab(self.tab_advanced, "")
         self.tab_player_customization = CosmeticTab()
