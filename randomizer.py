@@ -58,24 +58,6 @@ from randomizers.extra_starting_items import ExtraStartingItemsRandomizer
 
 from version import VERSION, VERSION_WITHOUT_COMMIT
 
-# The below are options that could be used to cheat in races.
-# They do not naturally change algorithmic item distribution, but do change the availability of information on item distribution.
-# To prevent this possibility, we change the RNG seed itself for each one of these options that is selected.
-# This ensures that item distribution is different between people with the same seed but different hints, for example.
-RNG_CHANGING_OPTIONS = [
-  "fishmen_hints",
-  "hoho_hints",
-  "korl_hints",
-  "num_path_hints",
-  "num_barren_hints",
-  "num_location_hints",
-  "num_item_hints",
-  "cryptic_hints",
-  "prioritize_remote_hints",
-  "hint_importance",
-  "do_not_generate_spoiler_log",
-]
-
 class TooFewProgressionLocationsError(Exception): pass
 class InvalidCleanISOError(Exception): pass
 class PermalinkWrongVersionError(Exception): pass
@@ -124,7 +106,7 @@ class WWRandomizer:
     if cmd_line_args.test:
       self.test_room_args = cmd_line_args.test
     
-    seed_string = self.seed
+    seed_string = self.permalink
     if self.options.do_not_generate_spoiler_log:
       seed_string += SEED_KEY
     
@@ -950,13 +932,6 @@ class WWRandomizer:
   def get_new_rng(self):
     rng = Random()
     rng.seed(self.integer_seed)
-    
-    # Further change the RNG based on which RNG-changing options are enabled
-    for i, option in enumerate(RNG_CHANGING_OPTIONS):
-      value = self.options[option]
-      for j in range(1, 100 + i):
-        rng.getrandbits(value + 20 * i + j)
-    
     return rng
   
   def weighted_choice(self, rng: Random, seq: list[T], weight_conditions: list[tuple[int, Callable[[T], bool]]]) -> T:
