@@ -866,11 +866,11 @@
            <attribute name="title">
             <string>Excluded Locations</string>
            </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_12">
+           <layout class="QVBoxLayout" name="verticalLayout_8">
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <layout class="QHBoxLayout" name="layout_locations">
               <item>
-               <layout class="QVBoxLayout" name="verticalLayout_9">
+               <layout class="QVBoxLayout" name="layout_progression_locations">
                 <item>
                  <widget class="QLabel" name="label_for_progression_locations">
                   <property name="text">
@@ -896,9 +896,9 @@
                </layout>
               </item>
               <item>
-               <layout class="QVBoxLayout" name="verticalLayout_10">
+               <layout class="QVBoxLayout" name="layout_locations_buttons">
                 <item>
-                 <spacer name="verticalSpacer_4">
+                 <spacer name="locations_buttons_spacer_top">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
@@ -937,7 +937,7 @@
                  </widget>
                 </item>
                 <item>
-                 <spacer name="verticalSpacer_5">
+                 <spacer name="locations_buttons_spacer_bottom">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
@@ -952,7 +952,7 @@
                </layout>
               </item>
               <item>
-               <layout class="QVBoxLayout" name="verticalLayout_11">
+               <layout class="QVBoxLayout" name="layout_excluded_locations">
                 <item>
                  <widget class="QLabel" name="label_for_excluded_locations">
                   <property name="text">
@@ -985,7 +985,7 @@
            <attribute name="title">
             <string>Advanced Options</string>
            </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_8">
+           <layout class="QVBoxLayout" name="verticalLayout_9">
             <item>
              <widget class="QGroupBox" name="groupBox_4">
               <property name="title">
