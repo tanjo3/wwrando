@@ -351,6 +351,9 @@ class HintsRandomizer(BaseRandomizer):
       rows.append((savage_hint.place, savage_hint.reward if savage_hint_is_valid else "Nothing"))
     
     all_hints = [self.octo_fairy_hint]
+    all_hints += self.hoho_shard_hints
+    all_hints += self.korl_sword_hints
+    all_hints += self.kreeb_bow_hints
     for hints_for_placement in self.hints_per_placement.values():
       all_hints += hints_for_placement
     
