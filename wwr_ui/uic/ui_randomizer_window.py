@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'randomizer_window.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -859,6 +859,72 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.addItem(self.verticalSpacer_3)
 
         self.tabWidget.addTab(self.tab_advanced, "")
+        self.tab_quality_of_life = QWidget()
+        self.tab_quality_of_life.setObjectName(u"tab_quality_of_life")
+        self.verticalLayout_qol = QVBoxLayout(self.tab_quality_of_life)
+        self.verticalLayout_qol.setObjectName(u"verticalLayout_qol")
+        self.groupBox_qol_experimental = QGroupBox(self.tab_quality_of_life)
+        self.groupBox_qol_experimental.setObjectName(u"groupBox_qol_experimental")
+        self.verticalLayout_qol_experimental = QVBoxLayout(self.groupBox_qol_experimental)
+        self.verticalLayout_qol_experimental.setObjectName(u"verticalLayout_qol_experimental")
+        self.quality_of_life_1 = QCheckBox(self.groupBox_qol_experimental)
+        self.quality_of_life_1.setObjectName(u"quality_of_life_1")
+
+        self.verticalLayout_qol_experimental.addWidget(self.quality_of_life_1)
+
+        self.quality_of_life_2 = QCheckBox(self.groupBox_qol_experimental)
+        self.quality_of_life_2.setObjectName(u"quality_of_life_2")
+
+        self.verticalLayout_qol_experimental.addWidget(self.quality_of_life_2)
+
+        self.quality_of_life_3 = QCheckBox(self.groupBox_qol_experimental)
+        self.quality_of_life_3.setObjectName(u"quality_of_life_3")
+
+        self.verticalLayout_qol_experimental.addWidget(self.quality_of_life_3)
+
+        self.quality_of_life_4 = QCheckBox(self.groupBox_qol_experimental)
+        self.quality_of_life_4.setObjectName(u"quality_of_life_4")
+
+        self.verticalLayout_qol_experimental.addWidget(self.quality_of_life_4)
+
+        self.quality_of_life_5 = QCheckBox(self.groupBox_qol_experimental)
+        self.quality_of_life_5.setObjectName(u"quality_of_life_5")
+
+        self.verticalLayout_qol_experimental.addWidget(self.quality_of_life_5)
+
+        self.quality_of_life_6 = QCheckBox(self.groupBox_qol_experimental)
+        self.quality_of_life_6.setObjectName(u"quality_of_life_6")
+
+        self.verticalLayout_qol_experimental.addWidget(self.quality_of_life_6)
+
+        self.quality_of_life_7 = QCheckBox(self.groupBox_qol_experimental)
+        self.quality_of_life_7.setObjectName(u"quality_of_life_7")
+
+        self.verticalLayout_qol_experimental.addWidget(self.quality_of_life_7)
+
+        self.quality_of_life_8 = QCheckBox(self.groupBox_qol_experimental)
+        self.quality_of_life_8.setObjectName(u"quality_of_life_8")
+
+        self.verticalLayout_qol_experimental.addWidget(self.quality_of_life_8)
+
+        self.quality_of_life_9 = QCheckBox(self.groupBox_qol_experimental)
+        self.quality_of_life_9.setObjectName(u"quality_of_life_9")
+
+        self.verticalLayout_qol_experimental.addWidget(self.quality_of_life_9)
+
+        self.quality_of_life_10 = QCheckBox(self.groupBox_qol_experimental)
+        self.quality_of_life_10.setObjectName(u"quality_of_life_10")
+
+        self.verticalLayout_qol_experimental.addWidget(self.quality_of_life_10)
+
+        self.verticalSpacer_qol = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_qol_experimental.addItem(self.verticalSpacer_qol)
+
+
+        self.verticalLayout_qol.addWidget(self.groupBox_qol_experimental)
+
+        self.tabWidget.addTab(self.tab_quality_of_life, "")
         self.tab_player_customization = CosmeticTab()
         self.tab_player_customization.setObjectName(u"tab_player_customization")
         self.tabWidget.addTab(self.tab_player_customization, "")
@@ -1131,6 +1197,18 @@ class Ui_MainWindow(object):
         self.do_not_generate_spoiler_log.setText(QCoreApplication.translate("MainWindow", u"Do Not Generate Spoiler Log", None))
         self.dry_run.setText(QCoreApplication.translate("MainWindow", u"Dry Run", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_advanced), QCoreApplication.translate("MainWindow", u"Advanced Options", None))
+        self.groupBox_qol_experimental.setTitle(QCoreApplication.translate("MainWindow", u"Experimental Features", None))
+        self.quality_of_life_1.setText(QCoreApplication.translate("MainWindow", u"Placeholder 1", None))
+        self.quality_of_life_2.setText(QCoreApplication.translate("MainWindow", u"Placeholder 2", None))
+        self.quality_of_life_3.setText(QCoreApplication.translate("MainWindow", u"Placeholder 3", None))
+        self.quality_of_life_4.setText(QCoreApplication.translate("MainWindow", u"Placeholder 4", None))
+        self.quality_of_life_5.setText(QCoreApplication.translate("MainWindow", u"Placeholder 5", None))
+        self.quality_of_life_6.setText(QCoreApplication.translate("MainWindow", u"Placeholder 6", None))
+        self.quality_of_life_7.setText(QCoreApplication.translate("MainWindow", u"Placeholder 7", None))
+        self.quality_of_life_8.setText(QCoreApplication.translate("MainWindow", u"Placeholder 8", None))
+        self.quality_of_life_9.setText(QCoreApplication.translate("MainWindow", u"Placeholder 9", None))
+        self.quality_of_life_10.setText(QCoreApplication.translate("MainWindow", u"Placeholder 10", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_quality_of_life), QCoreApplication.translate("MainWindow", u"Quality of Life", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_player_customization), QCoreApplication.translate("MainWindow", u"Player Customization", None))
         self.option_description.setText("")
         self.label_for_permalink.setText(QCoreApplication.translate("MainWindow", u"Permalink (copy paste to share your settings):", None))

@@ -410,6 +410,19 @@ class Options(BaseOptions):
       "Guaranteed to unlock at least one additional location at the start.",
   )
   #endregion
+
+  #region Quality of Life
+  quality_of_life_1: bool = option(default=False, description="Placeholder 1")
+  quality_of_life_2: bool = option(default=False, description="Placeholder 2")
+  quality_of_life_3: bool = option(default=False, description="Placeholder 3")
+  quality_of_life_4: bool = option(default=False, description="Placeholder 4")
+  quality_of_life_5: bool = option(default=False, description="Placeholder 5")
+  quality_of_life_6: bool = option(default=False, description="Placeholder 6")
+  quality_of_life_7: bool = option(default=False, description="Placeholder 7")
+  quality_of_life_8: bool = option(default=False, description="Placeholder 8")
+  quality_of_life_9: bool = option(default=False, description="Placeholder 9")
+  quality_of_life_10: bool = option(default=False, description="Placeholder 10")
+  #endregion
   
   #region Cosmetic
   custom_player_model: str = option(
