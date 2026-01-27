@@ -867,10 +867,25 @@ class Ui_MainWindow(object):
         self.groupBox_qol_experimental.setObjectName(u"groupBox_qol_experimental")
         self.verticalLayout_qol_experimental = QVBoxLayout(self.groupBox_qol_experimental)
         self.verticalLayout_qol_experimental.setObjectName(u"verticalLayout_qol_experimental")
-        self.quality_of_life_1 = QCheckBox(self.groupBox_qol_experimental)
-        self.quality_of_life_1.setObjectName(u"quality_of_life_1")
+        self.horizontalLayout_mila_speedup = QHBoxLayout()
+        self.horizontalLayout_mila_speedup.setObjectName(u"horizontalLayout_mila_speedup")
+        self.label_for_mila_speedup = QLabel(self.groupBox_qol_experimental)
+        self.label_for_mila_speedup.setObjectName(u"label_for_mila_speedup")
 
-        self.verticalLayout_qol_experimental.addWidget(self.quality_of_life_1)
+        self.horizontalLayout_mila_speedup.addWidget(self.label_for_mila_speedup)
+
+        self.mila_speedup = QComboBox(self.groupBox_qol_experimental)
+        self.mila_speedup.addItem("")
+        self.mila_speedup.addItem("")
+        self.mila_speedup.addItem("")
+        self.mila_speedup.setObjectName(u"mila_speedup")
+        sizePolicy1.setHeightForWidth(self.mila_speedup.sizePolicy().hasHeightForWidth())
+        self.mila_speedup.setSizePolicy(sizePolicy1)
+
+        self.horizontalLayout_mila_speedup.addWidget(self.mila_speedup)
+
+
+        self.verticalLayout_qol_experimental.addLayout(self.horizontalLayout_mila_speedup)
 
         self.quality_of_life_2 = QCheckBox(self.groupBox_qol_experimental)
         self.quality_of_life_2.setObjectName(u"quality_of_life_2")
@@ -1198,7 +1213,11 @@ class Ui_MainWindow(object):
         self.dry_run.setText(QCoreApplication.translate("MainWindow", u"Dry Run", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_advanced), QCoreApplication.translate("MainWindow", u"Advanced Options", None))
         self.groupBox_qol_experimental.setTitle(QCoreApplication.translate("MainWindow", u"Experimental Features", None))
-        self.quality_of_life_1.setText(QCoreApplication.translate("MainWindow", u"Placeholder 1", None))
+        self.label_for_mila_speedup.setText(QCoreApplication.translate("MainWindow", u"Mila Speedup", None))
+        self.mila_speedup.setItemText(0, QCoreApplication.translate("MainWindow", u"Basic", None))
+        self.mila_speedup.setItemText(1, QCoreApplication.translate("MainWindow", u"Shortened", None))
+        self.mila_speedup.setItemText(2, QCoreApplication.translate("MainWindow", u"Instant", None))
+
         self.quality_of_life_2.setText(QCoreApplication.translate("MainWindow", u"Placeholder 2", None))
         self.quality_of_life_3.setText(QCoreApplication.translate("MainWindow", u"Placeholder 3", None))
         self.quality_of_life_4.setText(QCoreApplication.translate("MainWindow", u"Placeholder 4", None))
