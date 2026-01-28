@@ -922,10 +922,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_qol_experimental.addWidget(self.shorten_mail_minigame)
 
-        self.quality_of_life_9 = QCheckBox(self.groupBox_qol_experimental)
-        self.quality_of_life_9.setObjectName(u"quality_of_life_9")
+        self.skip_drc_plat_cs = QCheckBox(self.groupBox_qol_experimental)
+        self.skip_drc_plat_cs.setObjectName(u"skip_drc_plat_cs")
 
-        self.verticalLayout_qol_experimental.addWidget(self.quality_of_life_9)
+        self.verticalLayout_qol_experimental.addWidget(self.skip_drc_plat_cs)
 
         self.quality_of_life_10 = QCheckBox(self.groupBox_qol_experimental)
         self.quality_of_life_10.setObjectName(u"quality_of_life_10")
@@ -1225,7 +1225,7 @@ class Ui_MainWindow(object):
         self.speedup_lenzos_assistant.setText(QCoreApplication.translate("MainWindow", u"Speed Up Lenzo's Assistant", None))
         self.kamo_any_moon_phase.setText(QCoreApplication.translate("MainWindow", u"Kamo Accepts Any Moon Phase", None))
         self.shorten_mail_minigame.setText(QCoreApplication.translate("MainWindow", u"Shorten Mail Sorting Minigame", None))
-        self.quality_of_life_9.setText(QCoreApplication.translate("MainWindow", u"Placeholder 9", None))
+        self.skip_drc_plat_cs.setText(QCoreApplication.translate("MainWindow", u"Skip DRC Platform Cutscenes", None))
         self.quality_of_life_10.setText(QCoreApplication.translate("MainWindow", u"Placeholder 10", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_quality_of_life), QCoreApplication.translate("MainWindow", u"Quality of Life", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_player_customization), QCoreApplication.translate("MainWindow", u"Player Customization", None))

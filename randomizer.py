@@ -461,7 +461,7 @@ class WWRandomizer:
     if self.options.remove_ballad_of_gales_warp_in_cutscene:
       tweaks.remove_ballad_of_gales_warp_in_cutscene(self)
     if self.options.always_skip_triforce_cutscene:
-      patcher.appy_patch(self, "always_skip_triforce_cs")
+      patcher.apply_patch(self, "always_skip_triforce_cs")
     if self.options.add_drops(self):
       tweaks.modify_and_add_drops(self)
     if self.options.speedup_lenzos_assistant:
@@ -470,6 +470,8 @@ class WWRandomizer:
       tweaks.force_full_moon_photos(self)
     if self.options.shorten_mail_minigame:
       patcher.apply_patch(self, "shorten_mail_minigame")
+    if self.options.skip_drc_plat_cs: # needs to be after custom_funcs patch, otherwise it would be overwritten
+      patcher.apply_patch(self, "remove_drc_platform_cutscenes")
     
     customizer.replace_link_model(self)
     tweaks.change_starting_clothes(self)

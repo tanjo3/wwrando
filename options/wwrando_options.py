@@ -446,7 +446,7 @@ class Options(BaseOptions):
   speedup_lenzos_assistant: bool = option(default=False, description="Speed up Lenzo's Assistant sidequest by speeding up Garrickson and Aton's movement around Windfall."),
   kamo_any_moon_phase: bool = option(default=False, description="Kamo will accept a picture of any moon phase, rather than just a full moon."),
   shorten_mail_minigame: bool = option(default=False, description="The mail sorting minigame on Dragon Roost Island is shortened to the final round with Baito.")
-  quality_of_life_9: bool = option(default=False, description="Placeholder 9")
+  skip_drc_plat_cs: bool = option(default=False, description="Skip the DRC cutscenes that play when riding the hanging platform and making a magma platform for the first time.")
   quality_of_life_10: bool = option(default=False, description="Placeholder 10")
   #endregion
   
