@@ -20,6 +20,11 @@ class TrickDifficulty(StrEnum):
   HARD = "Hard"
   VERY_HARD = "Very Hard"
 
+class MilaSpeedup(StrEnum):
+  NONE = "None"
+  SHORTENED = "Shortened"
+  INSTANT = "Instant"
+
 @dataclass
 class Options(BaseOptions):
   #region Progress locations
@@ -418,7 +423,13 @@ class Options(BaseOptions):
   #endregion
 
   #region Quality of Life
-  quality_of_life_1: bool = option(default=False, description="Placeholder 1")
+  mila_speedup: MilaSpeedup = option(
+    default=MilaSpeedup.NONE,
+    description="Speeds up Mila - Follow the Thief<br>"
+      "<b>None</b>: Vanilla behavior<br>"
+      "<b>Shortened</b>: Mila will take a different, shorter path without stopping<br>"
+      "<b>Instant</b>: Mila will take a path straight to the safe without stopping",
+  )
   quality_of_life_2: bool = option(default=False, description="Placeholder 2")
   quality_of_life_3: bool = option(default=False, description="Placeholder 3")
   quality_of_life_4: bool = option(default=False, description="Placeholder 4")

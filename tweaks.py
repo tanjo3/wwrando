@@ -25,8 +25,9 @@ import customizer
 from logic.item_types import PROGRESS_ITEMS, NONPROGRESS_ITEMS, CONSUMABLE_ITEMS, DUPLICATABLE_CONSUMABLE_ITEMS
 from data_tables import DataTables
 from wwlib.events import EventList
-from wwlib.dzx import DZx, DZxLayer, ACTR, EVNT, FILI, PLYR, SCLS, SCOB, SHIP, TGDR, TRES, Pale
+from wwlib.dzx import DZx, DZxLayer, ACTR, EVNT, FILI, PLYR, SCLS, SCOB, SHIP, TGDR, TRES, Pale, RPAT, RPPN
 from options.wwrando_options import SwordMode
+from options.wwrando_options import MilaSpeedup
 
 try:
   from keys.seed_key import SEED_KEY # type: ignore
@@ -2751,3 +2752,56 @@ def enable_hero_mode(self: WWRandomizer):
 def set_default_targeting_mode_to_switch(self: WWRandomizer):
   targeting_mode_addr = self.main_custom_symbols["option_targeting_mode"]
   self.dol.write_data(fs.write_u8, targeting_mode_addr, 1)
+
+def apply_mila_speedup(self: WWRandomizer):
+  if self.options.mila_speedup == MilaSpeedup.NONE: return
+
+  dzr = self.get_arc("files/res/Stage/sea/Room11.arc").get_file("room.dzr", DZx)
+  paths = dzr.entries_by_type(RPAT)
+  path = paths[1] # Mila's nighttime theiving ("commit") path
+  all_points = dzr.entries_by_type(RPPN)
+
+  # first_waypoint_offset is a RELATIVE offset within the RPPN data
+  # (not an absolute file offset)
+  # Divide by DATA_SIZE to get the point index
+  first_point_index = path.first_waypoint_offset // RPPN.DATA_SIZE
+
+  # Get the points for her path
+  points = all_points[first_point_index:first_point_index + path.num_points]
+
+  # Change points with action type 3 to 2 so she doesn't stop
+  for point in points:
+    if point.action_type == 3:
+      point.action_type = 2
+    point.save_changes()
+
+  if self.options.mila_speedup == MilaSpeedup.SHORTENED:
+    # Shortened path by about 33%
+    # With the no-stopping change, this is just enough time to turn on the windmill while she runs around
+    # (have to offset to avoid mila doing loops on overlapping waypoints)
+    for i, point in enumerate(points[17:24]):
+      point.x_pos, point.y_pos, point.z_pos = -356 - (4 - i) * 5, 1080, -202417 + (4 - i) * 5
+      point.save_changes()
+    for point in points[24:28]:
+      point.x_pos, point.y_pos, point.z_pos = -118 - (4 - i) * 5, 1010, -203249 + (4 - i) * 5
+      point.save_changes()
+  elif self.options.mila_speedup == MilaSpeedup.INSTANT:
+    # Extend running cutscene so mila doesn't catch link right after it ends due to path modification
+    event_list = self.get_arc("files/res/Stage/sea/Stage.arc").get_file("event_list.dat", EventList)
+    run_start_event = event_list.events_by_name.get("run_start")
+    if run_start_event:
+      for actor in run_start_event.actors:
+        if actor.name == "Kk1":
+          for action in actor.actions:
+            if action.name == "RUN":
+              timer_prop = action.get_prop("Timer")
+              if timer_prop:
+                timer_prop.value = 120  # Increase from 30 to 120 frames (~4 sec)
+                event_list.save_changes()
+                break
+    # Mila goes straight to the safe
+    for point in points[1:28]:
+      point.x_pos = points[28].x_pos
+      point.y_pos = points[28].y_pos
+      point.z_pos = points[28].z_pos
+      point.save_changes()
