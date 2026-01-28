@@ -464,6 +464,8 @@ class WWRandomizer:
       patcher.appy_patch(self, "always_skip_triforce_cs")
     if self.options.add_drops(self):
       tweaks.modify_and_add_drops(self)
+    if self.options.speedup_lenzos_assistant:
+      tweaks.speedup_lenzos_assistant(self)
     
     customizer.replace_link_model(self)
     tweaks.change_starting_clothes(self)

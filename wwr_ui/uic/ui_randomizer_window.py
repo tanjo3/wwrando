@@ -907,10 +907,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_qol_experimental.addWidget(self.add_drops)
 
-        self.quality_of_life_6 = QCheckBox(self.groupBox_qol_experimental)
-        self.quality_of_life_6.setObjectName(u"quality_of_life_6")
+        self.speedup_lenzos_assistant = QCheckBox(self.groupBox_qol_experimental)
+        self.speedup_lenzos_assistant.setObjectName(u"speedup_lenzos_assistant")
 
-        self.verticalLayout_qol_experimental.addWidget(self.quality_of_life_6)
+        self.verticalLayout_qol_experimental.addWidget(self.speedup_lenzos_assistant)
 
         self.quality_of_life_7 = QCheckBox(self.groupBox_qol_experimental)
         self.quality_of_life_7.setObjectName(u"quality_of_life_7")
@@ -1222,7 +1222,7 @@ class Ui_MainWindow(object):
         self.remove_ballad_of_gales_warp_in_cutscene.setText(QCoreApplication.translate("MainWindow", u"Remove Ballad of Gales Landing Cutscene", None))
         self.always_skip_triforce_cutscene.setText(QCoreApplication.translate("MainWindow", u"Always Skip Triforce Cutscene", None))
         self.add_drops.setText(QCoreApplication.translate("MainWindow", u"Add Static Drops", None))
-        self.quality_of_life_6.setText(QCoreApplication.translate("MainWindow", u"Placeholder 6", None))
+        self.speedup_lenzos_assistant.setText(QCoreApplication.translate("MainWindow", u"Speed Up Lenzo's Assistant", None))
         self.quality_of_life_7.setText(QCoreApplication.translate("MainWindow", u"Placeholder 7", None))
         self.quality_of_life_8.setText(QCoreApplication.translate("MainWindow", u"Placeholder 8", None))
         self.quality_of_life_9.setText(QCoreApplication.translate("MainWindow", u"Placeholder 9", None))

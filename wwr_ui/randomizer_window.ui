@@ -1298,9 +1298,9 @@
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="quality_of_life_6">
+                <widget class="QCheckBox" name="speedup_lenzos_assistant">
                  <property name="text">
-                  <string>Placeholder 6</string>
+                  <string>Speed Up Lenzo's Assistant</string>
                  </property>
                 </widget>
                </item>
