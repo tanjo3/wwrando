@@ -466,6 +466,8 @@ class WWRandomizer:
       tweaks.modify_and_add_drops(self)
     if self.options.speedup_lenzos_assistant:
       tweaks.speedup_lenzos_assistant(self)
+    if self.options.kamo_any_moon_phase:
+      tweaks.force_full_moon_photos(self)
     
     customizer.replace_link_model(self)
     tweaks.change_starting_clothes(self)

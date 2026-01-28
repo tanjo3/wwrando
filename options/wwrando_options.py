@@ -444,7 +444,7 @@ class Options(BaseOptions):
                            "- Needle Rock: Lock barrels to arrow and bomb drops.<br>"
                            "- Forest Haven: Add bomb, arrow, and magic drop pots.<br>"),
   speedup_lenzos_assistant: bool = option(default=False, description="Speed up Lenzo's Assistant sidequest by speeding up Garrickson and Aton's movement around Windfall."),
-  quality_of_life_7: bool = option(default=False, description="Placeholder 7")
+  kamo_any_moon_phase: bool = option(default=False, description="Kamo will accept a picture of any moon phase, rather than just a full moon."),
   quality_of_life_8: bool = option(default=False, description="Placeholder 8")
   quality_of_life_9: bool = option(default=False, description="Placeholder 9")
   quality_of_life_10: bool = option(default=False, description="Placeholder 10")

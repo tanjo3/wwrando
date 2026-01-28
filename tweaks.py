@@ -2961,3 +2961,10 @@ def increase_anton_speed(self: WWRandomizer):
   # Setting to 0 would cause a bug where he gets stuck in wait mode forever.
   rel.write_data(fs.write_u16, 0xB4A8, 1)  # field_0x50: min wait timer
   rel.write_data(fs.write_u16, 0xB4AA, 1)  # field_0x52: max wait timer
+
+def force_full_moon_photos(self: WWRandomizer):
+  # In snap_sunmoon_proc, change moon phase subject ID from 8 to 7.
+  # Every picture of the moon will now be tagged as a full moon, regardless of phase.
+  # This makes Kamo accept any photo of the moon for his sidequest.
+  self.dol.write_data(fs.write_u32, 0x80094248, 0x38800007)
+
