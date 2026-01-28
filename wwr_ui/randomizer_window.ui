@@ -1291,9 +1291,9 @@
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="quality_of_life_5">
+                <widget class="QCheckBox" name="add_drops">
                  <property name="text">
-                  <string>Placeholder 5</string>
+                  <string>Add Static Drops</string>
                  </property>
                 </widget>
                </item>

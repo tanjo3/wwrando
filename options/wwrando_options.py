@@ -433,7 +433,16 @@ class Options(BaseOptions):
   )
   remove_ballad_of_gales_warp_in_cutscene: bool = option(default=False, description="Removes the Ballad of Gales warp landing cutscene.")
   always_skip_triforce_cutscene: bool = option(default=False, description="Always skip the cutscene that plays when you first board KoRL after collecting all 8 Triforce Shards.")
-  quality_of_life_5: bool = option(default=False, description="Placeholder 5")
+  add_drops: bool = option(default=False, description="Modifies and adds drops on the following islands:<br>"
+                           "- Outset: Add bomb drop pot on Grandma's porch, lock other two pots there to arrow and magic drops.<br>"
+                           "- Southern Fairy: Add bomb, arrow, and magic drop pots.<br>"
+                           "- Western Fairy: Add bomb, arrow, and magic drop pots.<br>"
+                           "- Tingle: Add bomb, arrow, and magic drop pots.<br>"
+                           "- Pawprint: Add bomb, arrow, and magic drop pots.<br>"
+                           "- Stone Watcher: Add bomb, arrow, and magic drop pots.<br>"
+                           "- Dragon Roost: Add bomb, arrow, and magic drop pots.<br>"
+                           "- Needle Rock: Lock barrels to arrow and bomb drops.<br>"
+                           "- Forest Haven: Add bomb, arrow, and magic drop pots.<br>"),
   quality_of_life_6: bool = option(default=False, description="Placeholder 6")
   quality_of_life_7: bool = option(default=False, description="Placeholder 7")
   quality_of_life_8: bool = option(default=False, description="Placeholder 8")

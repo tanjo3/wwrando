@@ -455,13 +455,15 @@ class WWRandomizer:
     tweaks.prevent_fairy_island_softlocks(self)
     tweaks.give_fairy_fountains_distinct_colors(self)
 
-    tweaks.apply_mila_speedup(self)
+    tweaks.apply_mila_speedup(self) # handles options in function since some logic is shared
     if self.options.add_shortcut_warps_between_dungeons:
       tweaks.add_inter_dungeon_warp_pots(self)
     if self.options.remove_ballad_of_gales_warp_in_cutscene:
       tweaks.remove_ballad_of_gales_warp_in_cutscene(self)
     if self.options.always_skip_triforce_cutscene:
       patcher.appy_patch(self, "always_skip_triforce_cs")
+    if self.options.add_drops(self):
+      tweaks.modify_and_add_drops(self)
     
     customizer.replace_link_model(self)
     tweaks.change_starting_clothes(self)
