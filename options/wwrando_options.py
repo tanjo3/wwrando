@@ -431,7 +431,7 @@ class Options(BaseOptions):
       "If 1 or 2 DRM, then non-required dungeons will fill the required cycle empty spaces<br>"
       "Only takes effect when both Required Bosses Mode and Inter-Dungeon Shortcuts are enabled with exactly 1, 2, or 3 required bosses.",
   )
-  quality_of_life_3: bool = option(default=False, description="Placeholder 3")
+  remove_ballad_of_gales_warp_in_cutscene: bool = option(default=False, description="Removes the Ballad of Gales warp landing cutscene")
   quality_of_life_4: bool = option(default=False, description="Placeholder 4")
   quality_of_life_5: bool = option(default=False, description="Placeholder 5")
   quality_of_life_6: bool = option(default=False, description="Placeholder 6")

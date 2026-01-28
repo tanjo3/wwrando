@@ -1277,9 +1277,9 @@
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="quality_of_life_3">
+                <widget class="QCheckBox" name="remove_ballad_of_gales_warp_in_cutscene">
                  <property name="text">
-                  <string>Placeholder 3</string>
+                  <string>Remove Ballad of Gales Landing Cutscene</string>
                  </property>
                 </widget>
                </item>

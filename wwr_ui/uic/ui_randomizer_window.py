@@ -892,10 +892,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_qol_experimental.addWidget(self.split_interdungeon_warps_by_required)
 
-        self.quality_of_life_3 = QCheckBox(self.groupBox_qol_experimental)
-        self.quality_of_life_3.setObjectName(u"quality_of_life_3")
+        self.remove_ballad_of_gales_warp_in_cutscene = QCheckBox(self.groupBox_qol_experimental)
+        self.remove_ballad_of_gales_warp_in_cutscene.setObjectName(u"remove_ballad_of_gales_warp_in_cutscene")
 
-        self.verticalLayout_qol_experimental.addWidget(self.quality_of_life_3)
+        self.verticalLayout_qol_experimental.addWidget(self.remove_ballad_of_gales_warp_in_cutscene)
 
         self.quality_of_life_4 = QCheckBox(self.groupBox_qol_experimental)
         self.quality_of_life_4.setObjectName(u"quality_of_life_4")
@@ -1219,7 +1219,7 @@ class Ui_MainWindow(object):
         self.mila_speedup.setItemText(2, QCoreApplication.translate("MainWindow", u"Instant", None))
 
         self.split_interdungeon_warps_by_required.setText(QCoreApplication.translate("MainWindow", u"Split Warp Pots by Required (3DRM)", None))
-        self.quality_of_life_3.setText(QCoreApplication.translate("MainWindow", u"Placeholder 3", None))
+        self.remove_ballad_of_gales_warp_in_cutscene.setText(QCoreApplication.translate("MainWindow", u"Remove Ballad of Gales Landing Cutscene", None))
         self.quality_of_life_4.setText(QCoreApplication.translate("MainWindow", u"Placeholder 4", None))
         self.quality_of_life_5.setText(QCoreApplication.translate("MainWindow", u"Placeholder 5", None))
         self.quality_of_life_6.setText(QCoreApplication.translate("MainWindow", u"Placeholder 6", None))
