@@ -347,12 +347,6 @@ class Options(BaseOptions):
     description="Adds new warp pots that act as shortcuts connecting dungeons to each other directly. (DRC, FW, TotG, and separately FF, ET, WT.)<br>"
       "Each pot must be unlocked before it can be used, so you cannot use them to access dungeons you wouldn't already have access to.",
   )
-  split_interdungeon_warps_by_required: bool = option(
-    default=True,
-    description="In 3 Dungeon Race Mode (Required Bosses with exactly 3 required bosses), split the inter-dungeon warp pots by required vs non-required dungeons.<br>"
-      "This creates one warp pot cycle connecting all required dungeons and another connecting all non-required dungeons, preventing accidental warps into non-required areas.<br>"
-      "Only takes effect when both Required Bosses Mode and Inter-Dungeon Shortcuts are enabled with exactly 3 required bosses.",
-  )
   skip_rematch_bosses: bool = option(
     default=True,
     description="Removes the door in Ganon's Tower that only unlocks when you defeat the rematch versions of Gohma, Kalle Demos, Jalhalla, and Molgera.",
@@ -430,7 +424,13 @@ class Options(BaseOptions):
       "<b>Shortened</b>: Mila will take a different, shorter path without stopping<br>"
       "<b>Instant</b>: Mila will take a path straight to the safe without stopping",
   )
-  quality_of_life_2: bool = option(default=False, description="Placeholder 2")
+  split_interdungeon_warps_by_required: bool = option(
+    default=True,
+    description="In 1, 2, and 3 Dungeon Race Mode (1, 2, or 3 required bosses), split the inter-dungeon warp pots by required vs non-required dungeons.<br>"
+      "This creates one warp pot cycle connecting all required dungeons and another connecting all non-required dungeons.<br>"
+      "If 1 or 2 DRM, then non-required dungeons will fill the required cycle empty spaces<br>"
+      "Only takes effect when both Required Bosses Mode and Inter-Dungeon Shortcuts are enabled with exactly 1, 2, or 3 required bosses.",
+  )
   quality_of_life_3: bool = option(default=False, description="Placeholder 3")
   quality_of_life_4: bool = option(default=False, description="Placeholder 4")
   quality_of_life_5: bool = option(default=False, description="Placeholder 5")
