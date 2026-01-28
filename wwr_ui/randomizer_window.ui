@@ -1284,9 +1284,9 @@
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="quality_of_life_4">
+                <widget class="QCheckBox" name="always_skip_triforce_cutscene">
                  <property name="text">
-                  <string>Placeholder 4</string>
+                  <string>Always Skip Triforce Cutscene</string>
                  </property>
                 </widget>
                </item>

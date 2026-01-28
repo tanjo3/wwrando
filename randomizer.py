@@ -460,6 +460,8 @@ class WWRandomizer:
       tweaks.add_inter_dungeon_warp_pots(self)
     if self.options.remove_ballad_of_gales_warp_in_cutscene:
       tweaks.remove_ballad_of_gales_warp_in_cutscene(self)
+    if self.options.always_skip_triforce_cutscene:
+      patcher.appy_patch(self, "always_skip_triforce_cs")
     
     customizer.replace_link_model(self)
     tweaks.change_starting_clothes(self)

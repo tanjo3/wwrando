@@ -286,12 +286,6 @@ li r0, 1
 slw r4, r0, r5
 subi r4, r4, 1
 stb r4, 0 (r3) ; Store the bitfield of shards back
-; If the number of starting shards is 8, also set the event flag for seeing the Triforce refuse together.
-cmpwi r5, 8
-blt after_starting_triforce_shards
-lis r3, 0x803C522C@ha
-addi r3, r3, 0x803C522C@l
-li r4, 0x3D04 ; Saw the Triforce refuse
 bl onEventBit__11dSv_event_cFUs
 after_starting_triforce_shards:
 

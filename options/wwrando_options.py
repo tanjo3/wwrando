@@ -428,11 +428,11 @@ class Options(BaseOptions):
     default=True,
     description="In 1, 2, and 3 Dungeon Race Mode (1, 2, or 3 required bosses), split the inter-dungeon warp pots by required vs non-required dungeons.<br>"
       "This creates one warp pot cycle connecting all required dungeons and another connecting all non-required dungeons.<br>"
-      "If 1 or 2 DRM, then non-required dungeons will fill the required cycle empty spaces<br>"
+      "If 1 or 2 DRM, then non-required dungeons will fill the required cycle empty spaces.<br>"
       "Only takes effect when both Required Bosses Mode and Inter-Dungeon Shortcuts are enabled with exactly 1, 2, or 3 required bosses.",
   )
-  remove_ballad_of_gales_warp_in_cutscene: bool = option(default=False, description="Removes the Ballad of Gales warp landing cutscene")
-  quality_of_life_4: bool = option(default=False, description="Placeholder 4")
+  remove_ballad_of_gales_warp_in_cutscene: bool = option(default=False, description="Removes the Ballad of Gales warp landing cutscene.")
+  always_skip_triforce_cutscene: bool = option(default=False, description="Always skip the cutscene that plays when you first board KoRL after collecting all 8 Triforce Shards.")
   quality_of_life_5: bool = option(default=False, description="Placeholder 5")
   quality_of_life_6: bool = option(default=False, description="Placeholder 6")
   quality_of_life_7: bool = option(default=False, description="Placeholder 7")
