@@ -448,6 +448,8 @@ class Options(BaseOptions):
   shorten_mail_minigame: bool = option(default=True, description="The mail sorting minigame on Dragon Roost Island is shortened to the final round with Baito.")
   skip_drc_plat_cs: bool = option(default=True, description="Skip the DRC cutscenes that play when riding the hanging platform and making a magma platform for the first time.")
   wallet_fill_behavior: bool = option(default=True, description="Fill each progressive wallet fully when received. Will only be visible once a load occurs after receiving the wallet.")
+  speedup_tingle_jail: bool = option(default=True, description="Speed up the cutscene that plays when Tingle give Link two items after being freed.<br>"
+                                     "Slightly speed up the cutscene that plays when Link approaches jailed Tingle's bars.")
   #endregion
   
   #region Cosmetic

@@ -1246,7 +1246,7 @@
                   <widget class="QComboBox" name="mila_speedup">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                     <horstretch>1</horstretch>
+                     <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
                    </property>
@@ -1329,6 +1329,13 @@
                 <widget class="QCheckBox" name="wallet_fill_behavior">
                  <property name="text">
                   <string>Fill Wallets When Received</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="speedup_tingle_jail">
+                 <property name="text">
+                  <string>Speed Up Tingle Jail Cutscenes</string>
                  </property>
                 </widget>
                </item>

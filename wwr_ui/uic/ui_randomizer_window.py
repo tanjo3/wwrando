@@ -879,8 +879,11 @@ class Ui_MainWindow(object):
         self.mila_speedup.addItem("")
         self.mila_speedup.addItem("")
         self.mila_speedup.setObjectName(u"mila_speedup")
-        sizePolicy1.setHeightForWidth(self.mila_speedup.sizePolicy().hasHeightForWidth())
-        self.mila_speedup.setSizePolicy(sizePolicy1)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.mila_speedup.sizePolicy().hasHeightForWidth())
+        self.mila_speedup.setSizePolicy(sizePolicy2)
 
         self.horizontalLayout_mila_speedup.addWidget(self.mila_speedup)
 
@@ -931,6 +934,11 @@ class Ui_MainWindow(object):
         self.wallet_fill_behavior.setObjectName(u"wallet_fill_behavior")
 
         self.verticalLayout_qol_experimental.addWidget(self.wallet_fill_behavior)
+
+        self.speedup_tingle_jail = QCheckBox(self.groupBox_qol_experimental)
+        self.speedup_tingle_jail.setObjectName(u"speedup_tingle_jail")
+
+        self.verticalLayout_qol_experimental.addWidget(self.speedup_tingle_jail)
 
         self.verticalSpacer_qol = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -1227,6 +1235,7 @@ class Ui_MainWindow(object):
         self.shorten_mail_minigame.setText(QCoreApplication.translate("MainWindow", u"Shorten Mail Sorting Minigame", None))
         self.skip_drc_plat_cs.setText(QCoreApplication.translate("MainWindow", u"Skip DRC Platform Cutscenes", None))
         self.wallet_fill_behavior.setText(QCoreApplication.translate("MainWindow", u"Fill Wallets When Received", None))
+        self.speedup_tingle_jail.setText(QCoreApplication.translate("MainWindow", u"Speed Up Tingle Jail Cutscenes", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_quality_of_life), QCoreApplication.translate("MainWindow", u"Quality of Life", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_player_customization), QCoreApplication.translate("MainWindow", u"Player Customization", None))
         self.option_description.setText("")

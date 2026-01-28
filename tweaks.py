@@ -2972,3 +2972,110 @@ def force_full_moon_photos(self: WWRandomizer):
 def set_wallet_fill_behavior(self: WWRandomizer):
   fill_wallet_value = int(self.options.wallet_fill_behavior)
   self.dol.write_data(fs.write_u8, self.main_custom_symbols["should_fill_wallet_on_receive"], fill_wallet_value)
+
+def speed_up_tingle_jail_cutscene(self: WWRandomizer):
+  # Speed up Tingle's jail rescue cutscene by modifying the event system.
+  event_list: EventList = self.get_arc("files/res/Stage/Pnezumi/Stage.arc").get_file("event_list.dat", EventList)
+
+  # Speed up TC_JUMP_DEMO event (initial jump when Tingle sees Link)
+  tc_jump_demo = event_list.events_by_name["TC_JUMP_DEMO"]
+  tc = next(actor for actor in tc_jump_demo.actors if actor.name == "Tc")
+  camera = next(actor for actor in tc_jump_demo.actors if actor.name == "CAMERA")
+
+  # Speed up movement and reduce timers in TC_JUMP_DEMO
+  for action in tc.actions:
+    if action.name == "WAIT":
+      timer_prop = action.get_prop("Timer")
+      if timer_prop:
+        timer_prop.value = 1
+    elif action.name in ["MOVE_TO_ACTOR", "MOVE_TO_POS"]:
+      speed_prop = action.get_prop("Speed")
+      if speed_prop and speed_prop.value > 0:
+        speed_prop.value = 20.0
+
+  for action in camera.actions:
+    timer_prop = action.get_prop("Timer")
+    if timer_prop:
+      timer_prop.value = 1
+
+  # Speed up TC_RESCUE event (main rescue cutscene)
+  tc_rescue = event_list.events_by_name["TC_RESCUE"]
+  tc = next(actor for actor in tc_rescue.actors if actor.name == "Tc")
+  camera = next(actor for actor in tc_rescue.actors if actor.name == "CAMERA")
+  link = next(actor for actor in tc_rescue.actors if actor.name == "Link")
+
+  # Remove non-essential TALK_MSG and WAIT actions from Tingle
+  # Keep: movement (all speeds), turning, PRESENT (item give), SET_ANM, EFFECT, DOOR actions
+  # Remove: TALK_MSG, WAIT (they cause stops between actions)
+  actions_to_keep = []
+  for action in tc.actions:
+    if action.name == "TALK_MSG":
+      # Remove all text boxes - they require player input
+      continue
+    elif action.name == "WAIT":
+      # Remove WAIT actions - they cause stops between movements
+      continue
+    else:
+      # Keep all other actions (movement, PRESENT, etc.)
+      if action.name in ["MOVE_TO_ACTOR", "MOVE_TO_POS"]:
+        speed_prop = action.get_prop("Speed")
+        if speed_prop and speed_prop.value > 0:
+          speed_prop.value = 25.0  # Very fast (keep Speed=0 as-is for positioning)
+      elif action.name in ["TURN_TO_ACTOR", "TURN_TO_POS"]:
+        turn_speed_prop = action.get_prop("TurnSpeed")
+        if turn_speed_prop:
+          turn_speed_prop.value = 30000  # Very fast
+      actions_to_keep.append(action)
+
+  tc.actions = actions_to_keep
+
+  # Update any starting_flags that pointed to removed actions to -1
+  # Since TALK_MSG actions had flags like 1751, 1772, 1789, 1806, 1816
+  # We need to clear dependencies on them
+  removed_flags = [1751, 1772, 1789, 1806, 1816]  # TALK_MSG flag_id_to_set values
+
+  for action in tc.actions:
+    for i, flag in enumerate(action.starting_flags):
+      if flag in removed_flags:
+        action.starting_flags[i] = -1
+
+  for action in camera.actions:
+    for i, flag in enumerate(action.starting_flags):
+      if flag in removed_flags:
+        action.starting_flags[i] = -1
+
+  for action in link.actions:
+    for i, flag in enumerate(action.starting_flags):
+      if flag in removed_flags:
+        action.starting_flags[i] = -1
+
+  # Link's 006n_talk actions should also be removed/sped up since they wait for TALK_MSG
+  # But they're needed for the event flow, so just make sure they don't block
+
+  # Speed up camera timers
+  for action in camera.actions:
+    if action.name in ["PAUSE", "UNITRANS", "FIXEDFRM"]:
+      timer_prop = action.get_prop("Timer")
+      if timer_prop:
+        timer_prop.value = 1
+
+  # Update event ending_flags to point to last remaining action
+  if tc.actions:
+    tc_rescue.ending_flags[0] = tc.actions[-1].flag_id_to_set
+
+  # Speed up and remove text from TC_TALK_NEAR_JAIL events
+  for event_name in ["TC_TALK_NEAR_JAIL", "TC_TALK_NEAR_JAIL_S", "TC_TALK_NEAR_JAIL2"]:
+    if event_name in event_list.events_by_name:
+      event = event_list.events_by_name[event_name]
+      for actor in event.actors:
+        if actor.name == "Tc":
+          # Remove TALK_MSG text boxes from these events too
+          actor.actions = [a for a in actor.actions if a.name != "TALK_MSG"]
+          # Update ending flag if needed
+          if actor.actions:
+            event.ending_flags[0] = actor.actions[-1].flag_id_to_set
+        elif actor.name == "CAMERA":
+          for action in actor.actions:
+            timer_prop = action.get_prop("Timer")
+            if timer_prop:
+              timer_prop.value = 1
