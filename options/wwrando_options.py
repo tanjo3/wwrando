@@ -445,7 +445,7 @@ class Options(BaseOptions):
                            "- Forest Haven: Add bomb, arrow, and magic drop pots.<br>"),
   speedup_lenzos_assistant: bool = option(default=False, description="Speed up Lenzo's Assistant sidequest by speeding up Garrickson and Aton's movement around Windfall."),
   kamo_any_moon_phase: bool = option(default=False, description="Kamo will accept a picture of any moon phase, rather than just a full moon."),
-  quality_of_life_8: bool = option(default=False, description="Placeholder 8")
+  shorten_mail_minigame: bool = option(default=False, description="The mail sorting minigame on Dragon Roost Island is shortened to the final round with Baito.")
   quality_of_life_9: bool = option(default=False, description="Placeholder 9")
   quality_of_life_10: bool = option(default=False, description="Placeholder 10")
   #endregion

@@ -468,6 +468,8 @@ class WWRandomizer:
       tweaks.speedup_lenzos_assistant(self)
     if self.options.kamo_any_moon_phase:
       tweaks.force_full_moon_photos(self)
+    if self.options.shorten_mail_minigame:
+      patcher.apply_patch(self, "shorten_mail_minigame")
     
     customizer.replace_link_model(self)
     tweaks.change_starting_clothes(self)

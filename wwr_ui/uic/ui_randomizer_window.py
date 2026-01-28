@@ -917,10 +917,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_qol_experimental.addWidget(self.kamo_any_moon_phase)
 
-        self.quality_of_life_8 = QCheckBox(self.groupBox_qol_experimental)
-        self.quality_of_life_8.setObjectName(u"quality_of_life_8")
+        self.shorten_mail_minigame = QCheckBox(self.groupBox_qol_experimental)
+        self.shorten_mail_minigame.setObjectName(u"shorten_mail_minigame")
 
-        self.verticalLayout_qol_experimental.addWidget(self.quality_of_life_8)
+        self.verticalLayout_qol_experimental.addWidget(self.shorten_mail_minigame)
 
         self.quality_of_life_9 = QCheckBox(self.groupBox_qol_experimental)
         self.quality_of_life_9.setObjectName(u"quality_of_life_9")
@@ -1224,7 +1224,7 @@ class Ui_MainWindow(object):
         self.add_drops.setText(QCoreApplication.translate("MainWindow", u"Add Static Drops", None))
         self.speedup_lenzos_assistant.setText(QCoreApplication.translate("MainWindow", u"Speed Up Lenzo's Assistant", None))
         self.kamo_any_moon_phase.setText(QCoreApplication.translate("MainWindow", u"Kamo Accepts Any Moon Phase", None))
-        self.quality_of_life_8.setText(QCoreApplication.translate("MainWindow", u"Placeholder 8", None))
+        self.shorten_mail_minigame.setText(QCoreApplication.translate("MainWindow", u"Shorten Mail Sorting Minigame", None))
         self.quality_of_life_9.setText(QCoreApplication.translate("MainWindow", u"Placeholder 9", None))
         self.quality_of_life_10.setText(QCoreApplication.translate("MainWindow", u"Placeholder 10", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_quality_of_life), QCoreApplication.translate("MainWindow", u"Quality of Life", None))
