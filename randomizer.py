@@ -475,6 +475,8 @@ class WWRandomizer:
     tweaks.set_wallet_fill_behavior(self)
     if self.options.speedup_tingle_jail:
       tweaks.speed_up_tingle_jail_cutscene(self)
+    if self.options.fix_auction:
+      tweaks.fix_auction(self)
 
     customizer.replace_link_model(self)
     tweaks.change_starting_clothes(self)

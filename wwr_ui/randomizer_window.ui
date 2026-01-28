@@ -1340,6 +1340,13 @@
                 </widget>
                </item>
                <item>
+                <widget class="QCheckBox" name="fix_auction">
+                 <property name="text">
+                  <string>Fix Auction</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
                 <spacer name="verticalSpacer_qol">
                  <property name="orientation">
                   <enum>Qt::Orientation::Vertical</enum>

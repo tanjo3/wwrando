@@ -450,6 +450,8 @@ class Options(BaseOptions):
   wallet_fill_behavior: bool = option(default=True, description="Fill each progressive wallet fully when received. Will only be visible once a load occurs after receiving the wallet.")
   speedup_tingle_jail: bool = option(default=True, description="Speed up the cutscene that plays when Tingle give Link two items after being freed.<br>"
                                      "Slightly speed up the cutscene that plays when Link approaches jailed Tingle's bars.")
+  fix_auction: bool = option(default=True, description="Remove RNG from the auction by fixing the cycle to increasing price order.<br>"
+                             "The prizes for each auction will be displayed on the auction flyer inside the House of Wealth.")
   #endregion
   
   #region Cosmetic

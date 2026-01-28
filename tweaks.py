@@ -3079,3 +3079,18 @@ def speed_up_tingle_jail_cutscene(self: WWRandomizer):
             timer_prop = action.get_prop("Timer")
             if timer_prop:
               timer_prop.value = 1
+
+def fix_auction(self: WWRandomizer):
+  # Display the auction prizes by price on the auction flyer inside the House of Wealth.
+  item_name_5 = self.logic.done_item_locations["Windfall Island - 5 Rupee Auction"]
+  item_name_40 = self.logic.done_item_locations["Windfall Island - 40 Rupee Auction"]
+  item_name_60 = self.logic.done_item_locations["Windfall Island - 60 Rupee Auction"]
+  item_name_80 = self.logic.done_item_locations["Windfall Island - 80 Rupee Auction"]
+  msg = self.bmg.messages_by_id[804]
+  msg.string = "\\{1A 06 FF 00 00 01}Notice: Windfall Auction Tonight!\\{1A 06 FF 00 00 00}\nBidding starts at dusk.\nAll comers welcome!\nParticipate for the chance to win\n"
+  msg.string += "%s \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} (SB: 5 rupees),\n%s \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} (SB: 40 rupees),\n" % (get_indefinite_article(item_name_5), item_name_5, get_indefinite_article(item_name_40), item_name_40)
+  msg.string += "%s \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} (SB: 60 rupees),\nand %s \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} (SB: 80 rupees)!" % (get_indefinite_article(item_name_60), item_name_60, get_indefinite_article(item_name_80), item_name_80)
+  msg.word_wrap_string(self.bfn)
+
+  # Apply patch that fixes auction cycle to increasing price order
+  patcher.apply_patch(self, "fix_auction_cycle")
