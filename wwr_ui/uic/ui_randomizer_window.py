@@ -1214,7 +1214,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_advanced), QCoreApplication.translate("MainWindow", u"Advanced Options", None))
         self.groupBox_qol_experimental.setTitle(QCoreApplication.translate("MainWindow", u"Experimental Features", None))
         self.label_for_mila_speedup.setText(QCoreApplication.translate("MainWindow", u"Mila Speedup", None))
-        self.mila_speedup.setItemText(0, QCoreApplication.translate("MainWindow", u"Basic", None))
+        self.mila_speedup.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
         self.mila_speedup.setItemText(1, QCoreApplication.translate("MainWindow", u"Shortened", None))
         self.mila_speedup.setItemText(2, QCoreApplication.translate("MainWindow", u"Instant", None))
 

@@ -21,7 +21,7 @@ class TrickDifficulty(StrEnum):
   VERY_HARD = "Very Hard"
 
 class MilaSpeedup(StrEnum):
-  BASIC = "Basic"
+  NONE = "None"
   SHORTENED = "Shortened"
   INSTANT = "Instant"
 
@@ -418,11 +418,11 @@ class Options(BaseOptions):
 
   #region Quality of Life
   mila_speedup: MilaSpeedup = option(
-    default=MilaSpeedup.BASIC,
-    description="Speeds up Mila's thieving path on Windfall Island<br>"
-      "<b>Basic</b>: Mila will not stop along her path (applies to all options)<br>"
-      "<b>Shortened</b>: Mila will take a different, shorter route around Windfall<br>"
-      "<b>Instant</b>: Mila will take a path straight to the safe",
+    default=MilaSpeedup.NONE,
+    description="Speeds up Mila - Follow the Thief<br>"
+      "<b>None</b>: Vanilla behavior<br>"
+      "<b>Shortened</b>: Mila will take a different, shorter path without stopping<br>"
+      "<b>Instant</b>: Mila will take a path straight to the safe without stopping",
   )
   quality_of_life_2: bool = option(default=False, description="Placeholder 2")
   quality_of_life_3: bool = option(default=False, description="Placeholder 3")

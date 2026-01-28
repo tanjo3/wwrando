@@ -2711,6 +2711,8 @@ def set_default_targeting_mode_to_switch(self: WWRandomizer):
   self.dol.write_data(fs.write_u8, targeting_mode_addr, 1)
 
 def apply_mila_speedup(self: WWRandomizer):
+  if self.options.mila_speedup == MilaSpeedup.NONE: return
+
   dzr = self.get_arc("files/res/Stage/sea/Room11.arc").get_file("room.dzr", DZx)
   paths = dzr.entries_by_type(RPAT)
   path = paths[1] # Mila's nighttime theiving ("commit") path
@@ -2729,8 +2731,6 @@ def apply_mila_speedup(self: WWRandomizer):
     if point.action_type == 3:
       point.action_type = 2
     point.save_changes()
-  
-  if self.options.mila_speedup == MilaSpeedup.BASIC: return
 
   if self.options.mila_speedup == MilaSpeedup.SHORTENED:
     # Shortened path by about 33%
