@@ -309,8 +309,6 @@ class WWRandomizer:
         tweaks.make_sail_behave_like_swift_sail(self)
       if self.options.reveal_full_sea_chart:
         patcher.apply_patch(self, "reveal_sea_chart")
-      if self.options.add_shortcut_warps_between_dungeons:
-        tweaks.add_inter_dungeon_warp_pots(self)
       if self.options.invert_camera_x_axis:
         patcher.apply_patch(self, "invert_camera_x_axis")
       if self.options.invert_sea_compass_x_axis:
@@ -411,7 +409,6 @@ class WWRandomizer:
     tweaks.modify_title_screen_logo(self)
     tweaks.update_game_name_icon_and_banners(self)
     tweaks.allow_dungeon_items_to_appear_anywhere(self)
-    #tweaks.remove_ballad_of_gales_warp_in_cutscene(self)
     tweaks.fix_shop_item_y_offsets(self)
     tweaks.shorten_zephos_event(self)
     tweaks.update_korl_dialogue(self)
@@ -457,7 +454,30 @@ class WWRandomizer:
     tweaks.make_dungeon_joy_pendant_locations_flexible(self)
     tweaks.prevent_fairy_island_softlocks(self)
     tweaks.give_fairy_fountains_distinct_colors(self)
-    
+
+    tweaks.apply_mila_speedup(self) # handles options in function since some logic is shared
+    if self.options.add_shortcut_warps_between_dungeons:
+      tweaks.add_inter_dungeon_warp_pots(self)
+    if self.options.remove_ballad_of_gales_warp_in_cutscene:
+      tweaks.remove_ballad_of_gales_warp_in_cutscene(self)
+    if self.options.always_skip_triforce_cutscene:
+      patcher.apply_patch(self, "always_skip_triforce_cs")
+    if self.options.add_drops(self):
+      tweaks.modify_and_add_drops(self)
+    if self.options.speedup_lenzos_assistant:
+      tweaks.speedup_lenzos_assistant(self)
+    if self.options.kamo_any_moon_phase:
+      tweaks.force_full_moon_photos(self)
+    if self.options.shorten_mail_minigame:
+      patcher.apply_patch(self, "shorten_mail_minigame")
+    if self.options.skip_drc_plat_cs: # needs to be after custom_funcs patch, otherwise it would be overwritten
+      patcher.apply_patch(self, "remove_drc_platform_cutscenes")
+    tweaks.set_wallet_fill_behavior(self)
+    if self.options.speedup_tingle_jail:
+      tweaks.speed_up_tingle_jail_cutscene(self)
+    if self.options.fix_auction:
+      tweaks.fix_auction(self)
+
     customizer.replace_link_model(self)
     tweaks.change_starting_clothes(self)
     tweaks.check_hide_ship_sail(self)
