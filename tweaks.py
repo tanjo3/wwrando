@@ -2732,88 +2732,33 @@ def apply_mila_speedup(self: WWRandomizer):
   
   if self.options.mila_speedup == MilaSpeedup.BASIC: return
 
-  # Speed up Mila's walk speed for non-basic modes
-  speed_up_mila_walk(self)
-
-  # Extend running cutscene so mila doesn't catch link right after it ends due to path modification
-  event_list = self.get_arc("files/res/Stage/sea/Stage.arc").get_file("event_list.dat", EventList)
-  run_start_event = event_list.events_by_name.get("run_start")
-  if run_start_event:
-    for actor in run_start_event.actors:
-      if actor.name == "Kk1":
-        for action in actor.actions:
-          if action.name == "RUN":
-            timer_prop = action.get_prop("Timer")
-            if timer_prop:
-              timer_prop.value = 120  # Increase from 30 to 120 frames (~4 sec)
-              event_list.save_changes()
-              break
-
-  if self.options.mila_speedup == MilaSpeedup.SHORTENED:    
-    points[1].x_pos, points[1].y_pos, points[1].z_pos = points[28].x_pos, points[28].y_pos, points[28].z_pos
-    points[1].save_changes()
-    points[2].x_pos, points[2].y_pos, points[2].z_pos = 1075, 1063, -200941
-    points[2].save_changes()
-    points[3].x_pos, points[3].y_pos, points[3].z_pos = 636, 1063, -200452
-    points[3].save_changes()
-    points[4].x_pos, points[4].y_pos, points[4].z_pos = 841, 1014, -199730
-    points[4].save_changes()
-    points[5].x_pos, points[5].y_pos, points[5].z_pos = 1147, 818, -199292
-    points[5].save_changes()
-    points[6].x_pos, points[6].y_pos, points[6].z_pos = 2542, 445, -201473
-    points[6].save_changes()
-    for point in points[7:30]:
-      point.x_pos, point.y_pos, point.z_pos = points[30].x_pos, points[30].y_pos, points[30].z_pos
+  if self.options.mila_speedup == MilaSpeedup.SHORTENED:
+    # Shortened path by about 33%
+    # With the no-stopping change, this is just enough time to turn on the windmill while she runs around
+    # (have to offset to avoid mila doing loops on overlapping waypoints)
+    for i, point in enumerate(points[17:24]):
+      point.x_pos, point.y_pos, point.z_pos = -356 - (4 - i) * 5, 1080, -202417 + (4 - i) * 5
+      point.save_changes()
+    for point in points[24:28]:
+      point.x_pos, point.y_pos, point.z_pos = -118 - (4 - i) * 5, 1010, -203249 + (4 - i) * 5
       point.save_changes()
   elif self.options.mila_speedup == MilaSpeedup.INSTANT:
+    # Extend running cutscene so mila doesn't catch link right after it ends due to path modification
+    event_list = self.get_arc("files/res/Stage/sea/Stage.arc").get_file("event_list.dat", EventList)
+    run_start_event = event_list.events_by_name.get("run_start")
+    if run_start_event:
+      for actor in run_start_event.actors:
+        if actor.name == "Kk1":
+          for action in actor.actions:
+            if action.name == "RUN":
+              timer_prop = action.get_prop("Timer")
+              if timer_prop:
+                timer_prop.value = 120  # Increase from 30 to 120 frames (~4 sec)
+                event_list.save_changes()
+                break
     # Mila goes straight to the safe
     for point in points[1:28]:
       point.x_pos = points[28].x_pos
       point.y_pos = points[28].y_pos
       point.z_pos = points[28].z_pos
       point.save_changes()
-
-def speed_up_mila_walk(self: WWRandomizer):
-  """
-  Patches Mila's walk speed and acceleration in d_a_npc_kk1.rel.
-  Changes field_0x38 (walk speed) from 3.0 to 6.0
-  Changes field_0x3C (walk acceleration) from 0.2 to 6.0
-
-  The values are in the static a_prm_tbl array in the HIO constructor.
-  Array layout (each element is 4 bytes):
-    Index 11 (offset +0x2C): walk speed (3.0 -> 6.0)
-    Index 12 (offset +0x30): walk acceleration (0.2 -> 6.0)
-  """
-  import struct
-
-  rel = self.get_rel("files/rels/d_a_npc_kk1.rel")
-
-  # Search for the signature pattern in the REL data
-  # The a_prm_tbl starts with: 0x2000251C, 0xE002DAE4, 0x00002AF8, ...
-  # We'll search for a unique part of the table: 40.0f, 3.0f, 0.2f (indices 10, 11, 12)
-  # 40.0f = 0x42200000, 3.0f = 0x40400000, 0.2f = 0x3E4CCCCD
-  search_pattern = struct.pack(">fff", 40.0, 3.0, 0.2)  # Big-endian floats
-
-  # Search through all REL sections for the pattern
-  found_offset = None
-  for section in rel.sections:
-    if section.data is None:
-      continue
-    section.data.seek(0)
-    section_data = section.data.read()
-    pattern_pos = section_data.find(search_pattern)
-    if pattern_pos != -1:
-      # Found it! The walk speed (3.0) is at pattern_pos + 4
-      found_offset = section.offset + pattern_pos + 4  # +4 to skip the 40.0f
-      break
-
-  if found_offset is None:
-    raise Exception("Could not find Mila's walk speed data in d_a_npc_kk1.rel")
-
-  print(f"Found Mila's walk speed data at offset 0x{found_offset:X}")
-  # Write new values:
-  # Walk speed: 6.0f at found_offset
-  # Walk acceleration: 6.0f at found_offset + 4
-  rel.write_data(fs.write_float, found_offset, 6.0)      # walk speed
-  rel.write_data(fs.write_float, found_offset + 4, 6.0)  # walk acceleration
-
