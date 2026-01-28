@@ -1167,8 +1167,50 @@ INTER_DUNGEON_WARP_DATA = [
   ],
 ]
 
+# Mapping from stage names to dungeon names (as used by RequiredBossesRandomizer).
+# Used to filter INTER_DUNGEON_WARP_DATA by required/non-required dungeon lists.
+WARP_POT_STAGE_TO_DUNGEON_NAME = {
+  "M_NewD2": "Dragon Roost Cavern",
+  "kindan": "Forbidden Woods",
+  "Siren": "Tower of the Gods",
+  "ma2room": "Forsaken Fortress",
+  "M_Dai": "Earth Temple",
+  "kaze": "Wind Temple",
+}
+
 def add_inter_dungeon_warp_pots(self: WWRandomizer):
-  for warp_pot_datas_in_this_cycle in INTER_DUNGEON_WARP_DATA:
+  # TODO: test 1drm and 2drm to make sure they work correctly
+  # Check if we should split warp pots by required/non-required dungeons
+  if (self.options.required_bosses and 
+      self.options.num_required_bosses < 4 and 
+      self.options.split_interdungeon_warps_by_required):
+    # Split into required vs non-required dungeon cycles
+    required_dungeons = self.boss_reqs.required_dungeons
+    non_required_dungeons = self.boss_reqs.banned_dungeons
+    
+    all_warp_pot_data = INTER_DUNGEON_WARP_DATA[0] + INTER_DUNGEON_WARP_DATA[1]
+    
+    required_cycle = [data for data in all_warp_pot_data 
+                      if WARP_POT_STAGE_TO_DUNGEON_NAME[data.stage_name] in required_dungeons]
+    non_required_cycle = [data for data in all_warp_pot_data 
+                          if WARP_POT_STAGE_TO_DUNGEON_NAME[data.stage_name] in non_required_dungeons]
+    
+    # Fill empty slots in the required cycle with non-required dungeons (only for 1/2 DRM)
+    # This is because pots have to be linked in cycles of 3
+    while len(required_cycle) < len(non_required_cycle):
+      required_cycle.append(non_required_cycle.pop())
+    
+    warp_data_cycles = [required_cycle, non_required_cycle]
+  else:
+    # Use the default fixed cycles
+    warp_data_cycles = INTER_DUNGEON_WARP_DATA
+  
+  # Event register indices for each cycle (must be consistent within a cycle)
+  cycle_event_reg_indices = [2, 5]  # Same as original data
+  
+  for cycle_index, warp_pot_datas_in_this_cycle in enumerate(warp_data_cycles):
+    cycle_event_reg_index = cycle_event_reg_indices[cycle_index]
+    
     for warp_pot_index, warp_pot_data in enumerate(warp_pot_datas_in_this_cycle):
       room_arc_path = "files/res/Stage/%s/Room%d.arc" % (warp_pot_data.stage_name, warp_pot_data.room_num)
       stage_arc_path = "files/res/Stage/%s/Stage.arc" % warp_pot_data.stage_name
@@ -1209,7 +1251,8 @@ def add_inter_dungeon_warp_pots(self: WWRandomizer):
       warp_pot = room_dzx.add_entity(ACTR)
       warp_pot.name = "Warpts%d" % (warp_pot_index+1) # Warpts1 Warpts2 or Warpts3
       warp_pot.type = warp_pot_index + 2 # 2 3 or 4
-      warp_pot.cyclic_event_reg_index = warp_pot_data.event_reg_index
+      # Use consistent event_reg_index for all pots in this cycle (not from original data)
+      warp_pot.cyclic_event_reg_index = cycle_event_reg_index
       warp_pot.cyclic_dest_1_exit = pot_index_to_exit_index[0]
       warp_pot.cyclic_dest_2_exit = pot_index_to_exit_index[1]
       warp_pot.cyclic_dest_3_exit = pot_index_to_exit_index[2]
