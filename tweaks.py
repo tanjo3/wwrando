@@ -1252,7 +1252,7 @@ def add_inter_dungeon_warp_pots(self: WWRandomizer):
       warp_pot = room_dzx.add_entity(ACTR)
       warp_pot.name = "Warpts%d" % (warp_pot_index+1) # Warpts1 Warpts2 or Warpts3
       warp_pot.type = warp_pot_index + 2 # 2 3 or 4
-      # Use consistent event_reg_index for all pots in this cycle (not from original data)
+      # Use consistent event_reg_index for all pots in this cycle
       warp_pot.cyclic_event_reg_index = cycle_event_reg_index
       warp_pot.cyclic_dest_1_exit = pot_index_to_exit_index[0]
       warp_pot.cyclic_dest_2_exit = pot_index_to_exit_index[1]
