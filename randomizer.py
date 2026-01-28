@@ -472,7 +472,8 @@ class WWRandomizer:
       patcher.apply_patch(self, "shorten_mail_minigame")
     if self.options.skip_drc_plat_cs: # needs to be after custom_funcs patch, otherwise it would be overwritten
       patcher.apply_patch(self, "remove_drc_platform_cutscenes")
-    
+    tweaks.set_wallet_fill_behavior(self)
+
     customizer.replace_link_model(self)
     tweaks.change_starting_clothes(self)
     tweaks.check_hide_ship_sail(self)

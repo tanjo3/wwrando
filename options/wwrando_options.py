@@ -418,7 +418,7 @@ class Options(BaseOptions):
 
   #region Quality of Life
   mila_speedup: MilaSpeedup = option(
-    default=MilaSpeedup.NONE,
+    default=MilaSpeedup.INSTANT,
     description="Speeds up Mila - Follow the Thief<br>"
       "<b>None</b>: Vanilla behavior<br>"
       "<b>Shortened</b>: Mila will take a different, shorter path without stopping<br>"
@@ -431,9 +431,9 @@ class Options(BaseOptions):
       "If 1 or 2 DRM, then non-required dungeons will fill the required cycle empty spaces.<br>"
       "Only takes effect when both Required Bosses Mode and Inter-Dungeon Shortcuts are enabled with exactly 1, 2, or 3 required bosses.",
   )
-  remove_ballad_of_gales_warp_in_cutscene: bool = option(default=False, description="Removes the Ballad of Gales warp landing cutscene.")
-  always_skip_triforce_cutscene: bool = option(default=False, description="Always skip the cutscene that plays when you first board KoRL after collecting all 8 Triforce Shards.")
-  add_drops: bool = option(default=False, description="Modifies and adds drops on the following islands:<br>"
+  remove_ballad_of_gales_warp_in_cutscene: bool = option(default=True, description="Removes the Ballad of Gales warp landing cutscene.")
+  always_skip_triforce_cutscene: bool = option(default=True, description="Always skip the cutscene that plays when you first board KoRL after collecting all 8 Triforce Shards.")
+  add_drops: bool = option(default=True, description="Modifies and adds drops on the following islands:<br>"
                            "- Outset: Add bomb drop pot on Grandma's porch, lock other two pots there to arrow and magic drops.<br>"
                            "- Southern Fairy: Add bomb, arrow, and magic drop pots.<br>"
                            "- Western Fairy: Add bomb, arrow, and magic drop pots.<br>"
@@ -443,11 +443,11 @@ class Options(BaseOptions):
                            "- Dragon Roost: Add bomb, arrow, and magic drop pots.<br>"
                            "- Needle Rock: Lock barrels to arrow and bomb drops.<br>"
                            "- Forest Haven: Add bomb, arrow, and magic drop pots.<br>"),
-  speedup_lenzos_assistant: bool = option(default=False, description="Speed up Lenzo's Assistant sidequest by speeding up Garrickson and Aton's movement around Windfall."),
-  kamo_any_moon_phase: bool = option(default=False, description="Kamo will accept a picture of any moon phase, rather than just a full moon."),
-  shorten_mail_minigame: bool = option(default=False, description="The mail sorting minigame on Dragon Roost Island is shortened to the final round with Baito.")
-  skip_drc_plat_cs: bool = option(default=False, description="Skip the DRC cutscenes that play when riding the hanging platform and making a magma platform for the first time.")
-  quality_of_life_10: bool = option(default=False, description="Placeholder 10")
+  speedup_lenzos_assistant: bool = option(default=True, description="Speed up Lenzo's Assistant sidequest by speeding up Garrickson and Aton's movement around Windfall."),
+  kamo_any_moon_phase: bool = option(default=True, description="Kamo will accept a picture of any moon phase, rather than just a full moon."),
+  shorten_mail_minigame: bool = option(default=True, description="The mail sorting minigame on Dragon Roost Island is shortened to the final round with Baito.")
+  skip_drc_plat_cs: bool = option(default=True, description="Skip the DRC cutscenes that play when riding the hanging platform and making a magma platform for the first time.")
+  wallet_fill_behavior: bool = option(default=True, description="Fill each progressive wallet fully when received. Will only be visible once a load occurs after receiving the wallet.")
   #endregion
   
   #region Cosmetic

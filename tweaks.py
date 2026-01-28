@@ -2969,3 +2969,6 @@ def force_full_moon_photos(self: WWRandomizer):
   # This makes Kamo accept any photo of the moon for his sidequest.
   self.dol.write_data(fs.write_u32, 0x80094248, 0x38800007)
 
+def set_wallet_fill_behavior(self: WWRandomizer):
+  fill_wallet_value = int(self.options.wallet_fill_behavior)
+  self.dol.write_data(fs.write_u8, self.main_custom_symbols["should_fill_wallet_on_receive"], fill_wallet_value)

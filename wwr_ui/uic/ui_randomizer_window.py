@@ -927,10 +927,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_qol_experimental.addWidget(self.skip_drc_plat_cs)
 
-        self.quality_of_life_10 = QCheckBox(self.groupBox_qol_experimental)
-        self.quality_of_life_10.setObjectName(u"quality_of_life_10")
+        self.wallet_fill_behavior = QCheckBox(self.groupBox_qol_experimental)
+        self.wallet_fill_behavior.setObjectName(u"wallet_fill_behavior")
 
-        self.verticalLayout_qol_experimental.addWidget(self.quality_of_life_10)
+        self.verticalLayout_qol_experimental.addWidget(self.wallet_fill_behavior)
 
         self.verticalSpacer_qol = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -1226,7 +1226,7 @@ class Ui_MainWindow(object):
         self.kamo_any_moon_phase.setText(QCoreApplication.translate("MainWindow", u"Kamo Accepts Any Moon Phase", None))
         self.shorten_mail_minigame.setText(QCoreApplication.translate("MainWindow", u"Shorten Mail Sorting Minigame", None))
         self.skip_drc_plat_cs.setText(QCoreApplication.translate("MainWindow", u"Skip DRC Platform Cutscenes", None))
-        self.quality_of_life_10.setText(QCoreApplication.translate("MainWindow", u"Placeholder 10", None))
+        self.wallet_fill_behavior.setText(QCoreApplication.translate("MainWindow", u"Fill Wallets When Received", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_quality_of_life), QCoreApplication.translate("MainWindow", u"Quality of Life", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_player_customization), QCoreApplication.translate("MainWindow", u"Player Customization", None))
         self.option_description.setText("")

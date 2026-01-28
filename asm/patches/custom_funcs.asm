@@ -355,6 +355,9 @@ sword_mode:
 .global skip_rematch_bosses
 skip_rematch_bosses:
 .byte 1 ; By default skip them
+.global should_fill_wallet_on_receive
+should_fill_wallet_on_receive:
+.byte 0 ; By default do not fill
 
 .global starting_gear
 starting_gear:
@@ -747,11 +750,34 @@ b wallet_func_end
 get_1000_rupee_wallet:
 li r4, 1
 stb r4, 0 (r3) ; Which wallet you have
+
+lis r5, should_fill_wallet_on_receive@ha
+addi r5, r5, should_fill_wallet_on_receive@l
+lbz r5, 0 (r5)
+cmpwi r5, 0
+beq wallet_func_end
+
+lis r5, 0x803C4C08@ha
+addi r5, r5, 0x803C4C08@l
+li r0, 1000
+sth r0, 4 (r5) ; Set saved rupees to 1000
+
 b wallet_func_end
 
 get_5000_rupee_wallet:
 li r4, 2
 stb r4, 0 (r3) ; Which wallet you have
+
+lis r5, should_fill_wallet_on_receive@ha
+addi r5, r5, should_fill_wallet_on_receive@l
+lbz r5, 0 (r5)
+cmpwi r5, 0
+beq wallet_func_end
+
+lis r5, 0x803C4C08@ha
+addi r5, r5, 0x803C4C08@l
+li r0, 5000
+sth r0, 4 (r5) ; Set saved rupees to 5000
 
 wallet_func_end:
 blr
