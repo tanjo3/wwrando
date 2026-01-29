@@ -462,7 +462,7 @@ class WWRandomizer:
       tweaks.remove_ballad_of_gales_warp_in_cutscene(self)
     if self.options.always_skip_triforce_cutscene:
       patcher.apply_patch(self, "always_skip_triforce_cs")
-    if self.options.add_drops(self):
+    if self.options.add_drops:
       tweaks.modify_and_add_drops(self)
     if self.options.speedup_lenzos_assistant:
       tweaks.speedup_lenzos_assistant(self)
@@ -475,8 +475,6 @@ class WWRandomizer:
     tweaks.set_wallet_fill_behavior(self)
     if self.options.speedup_tingle_jail:
       tweaks.speed_up_tingle_jail_cutscene(self)
-    if self.options.fix_auction:
-      tweaks.fix_auction(self)
 
     customizer.replace_link_model(self)
     tweaks.change_starting_clothes(self)
@@ -487,6 +485,8 @@ class WWRandomizer:
     if self.randomize_items:
       tweaks.update_shop_item_descriptions(self)
       tweaks.update_auction_item_names(self)
+      if self.options.fix_auction:
+        tweaks.fix_auction(self)
       tweaks.update_battlesquid_item_names(self)
       tweaks.update_item_names_in_letter_advertising_rock_spire_shop(self)
     tweaks.prevent_fire_mountain_lava_softlock(self)

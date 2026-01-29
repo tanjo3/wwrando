@@ -879,11 +879,8 @@ class Ui_MainWindow(object):
         self.mila_speedup.addItem("")
         self.mila_speedup.addItem("")
         self.mila_speedup.setObjectName(u"mila_speedup")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.mila_speedup.sizePolicy().hasHeightForWidth())
-        self.mila_speedup.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.mila_speedup.sizePolicy().hasHeightForWidth())
+        self.mila_speedup.setSizePolicy(sizePolicy1)
 
         self.horizontalLayout_mila_speedup.addWidget(self.mila_speedup)
 
@@ -1231,7 +1228,7 @@ class Ui_MainWindow(object):
         self.mila_speedup.setItemText(1, QCoreApplication.translate("MainWindow", u"Shortened", None))
         self.mila_speedup.setItemText(2, QCoreApplication.translate("MainWindow", u"Instant", None))
 
-        self.split_interdungeon_warps_by_required.setText(QCoreApplication.translate("MainWindow", u"Split Warp Pots by Required (3DRM)", None))
+        self.split_interdungeon_warps_by_required.setText(QCoreApplication.translate("MainWindow", u"Split Warp Pots by Required (1, 2, 3 DRM)", None))
         self.remove_ballad_of_gales_warp_in_cutscene.setText(QCoreApplication.translate("MainWindow", u"Remove Ballad of Gales Landing Cutscene", None))
         self.always_skip_triforce_cutscene.setText(QCoreApplication.translate("MainWindow", u"Always Skip Triforce Cutscene", None))
         self.add_drops.setText(QCoreApplication.translate("MainWindow", u"Add Static Drops", None))
