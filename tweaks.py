@@ -3104,3 +3104,8 @@ def set_should_skip_drc_platform_cutscenes(self: WWRandomizer):
   skip_address = self.main_custom_symbols["should_skip_drc_platform_cutscenes"]
   if self.options.skip_drc_plat_cs:
     self.dol.write_data(fs.write_u8, skip_address, 1)
+
+def set_should_shorten_mail_minigame(self: WWRandomizer):
+  shorten_address = self.main_custom_symbols["should_shorten_mail_minigame"]
+  if self.options.shorten_mail_minigame:
+    self.dol.write_data(fs.write_u8, shorten_address, 1)

@@ -316,6 +316,7 @@ class WWRandomizer:
       tweaks.update_skip_rematch_bosses_game_variable(self)
       tweaks.set_should_skip_drc_platform_cutscenes(self)
       tweaks.set_should_skip_triforce_cutscene(self)
+      tweaks.set_should_shorten_mail_minigame(self)
       tweaks.update_sword_mode_game_variable(self)
       if self.options.sword_mode == SwordMode.SWORDLESS:
         patcher.apply_patch(self, "swordless")
@@ -468,8 +469,6 @@ class WWRandomizer:
       tweaks.speedup_lenzos_assistant(self)
     if self.options.kamo_any_moon_phase:
       tweaks.force_full_moon_photos(self)
-    if self.options.shorten_mail_minigame:
-      patcher.apply_patch(self, "shorten_mail_minigame")
     if self.options.skip_drc_plat_cs:
       patcher.apply_patch(self, "remove_drc_magma_cutscene")
     tweaks.set_wallet_fill_behavior(self)

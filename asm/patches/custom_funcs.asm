@@ -329,6 +329,21 @@ li r4, 0x3A80 ; Recollection Molgera defeated
 bl onEventBit__11dSv_event_cFUs
 after_skipping_rematch_bosses:
 
+
+lis r5, should_shorten_mail_minigame@ha
+addi r5, r5, should_shorten_mail_minigame@l
+lbz r5, 0 (r5)
+cmpwi r5, 0
+beq after_shorten_mail_minigame
+
+; Set event register 0xC203 to 3 to indicate Koboli's rounds are finished (triggers Baito to take over).
+li r4, 0
+ori r4, r4, 0xC203 ; Register tracking mail sorting rounds with Koboli
+li r5, 3 ; Set to 3 to indicate Koboli's rounds are finished
+bl setEventReg__11dSv_event_cFUsUc
+
+after_shorten_mail_minigame:
+
 ; Function end stuff
 lwz r0, 0x14 (sp)
 mtlr r0
@@ -386,6 +401,9 @@ should_skip_triforce_cutscene:
 .global should_skip_drc_platform_cutscenes
 should_skip_drc_platform_cutscenes:
 .byte 0 ; By default don't skip
+.global should_shorten_mail_minigame
+should_shorten_mail_minigame:
+.byte 0 ; By default don't shorten
 
 .global starting_gear
 starting_gear:
