@@ -3094,3 +3094,8 @@ def fix_auction(self: WWRandomizer):
 
   # Apply patch that fixes auction cycle to increasing price order
   patcher.apply_patch(self, "fix_auction_cycle")
+
+def set_should_skip_triforce_cutscene(self: WWRandomizer):
+  skip_triforce_cutscene_address = self.main_custom_symbols["should_skip_triforce_cutscene"]
+  if self.options.always_skip_triforce_cutscene or self.options.num_starting_triforce_shards == 8:
+    self.dol.write_data(fs.write_u8, skip_triforce_cutscene_address, 1)

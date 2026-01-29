@@ -314,6 +314,7 @@ class WWRandomizer:
       if self.options.invert_sea_compass_x_axis:
         patcher.apply_patch(self, "invert_sea_compass_x_axis")
       tweaks.update_skip_rematch_bosses_game_variable(self)
+      tweaks.set_should_skip_triforce_cutscene(self)
       tweaks.update_sword_mode_game_variable(self)
       if self.options.sword_mode == SwordMode.SWORDLESS:
         patcher.apply_patch(self, "swordless")
@@ -460,8 +461,6 @@ class WWRandomizer:
       tweaks.add_inter_dungeon_warp_pots(self)
     if self.options.remove_ballad_of_gales_warp_in_cutscene:
       tweaks.remove_ballad_of_gales_warp_in_cutscene(self)
-    if self.options.always_skip_triforce_cutscene:
-      patcher.apply_patch(self, "always_skip_triforce_cs")
     if self.options.add_drops:
       tweaks.modify_and_add_drops(self)
     if self.options.speedup_lenzos_assistant:

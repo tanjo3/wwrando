@@ -286,8 +286,21 @@ li r0, 1
 slw r4, r0, r5
 subi r4, r4, 1
 stb r4, 0 (r3) ; Store the bitfield of shards back
-bl onEventBit__11dSv_event_cFUs
 after_starting_triforce_shards:
+
+lis r5, should_skip_triforce_cutscene@ha
+addi r5, r5, should_skip_triforce_cutscene@l
+lbz r5, 0 (r5)
+cmpwi r5, 0
+beq after_skip_triforce_cutscene
+
+; Set the event flag for seeing the Triforce refuse together.
+lis r3, 0x803C522C@ha
+addi r3, r3, 0x803C522C@l
+li r4, 0x3D04 ; Saw the Triforce refuse
+bl onEventBit__11dSv_event_cFUs
+
+after_skip_triforce_cutscene:
 
 
 lis r5, skip_rematch_bosses@ha
@@ -358,6 +371,9 @@ skip_rematch_bosses:
 .global should_fill_wallet_on_receive
 should_fill_wallet_on_receive:
 .byte 0 ; By default do not fill
+.global should_skip_triforce_cutscene
+should_skip_triforce_cutscene:
+.byte 0 ; By default don't skip
 
 .global starting_gear
 starting_gear:
