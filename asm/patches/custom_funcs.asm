@@ -197,11 +197,20 @@ addi r4, r4, 0x0080
 stw r4, 0xC (r3)
 
 ; Set a switch (21) for having seen the gossip stone event in DRC where KoRL tells you about giving bait to rats.
+; If enabled, also set a switch (14) for having seen the cutscene that plays when you ride the hanging platform for the first time.
 ; Also set a switch (09) for having seen the event where the camera pans up to Valoo when you go outside.
 ; Also set a switch (46) for having seen the event where the camera pans around when you first enter DRC.
 lis r3, 0x803C4FF4@ha ; Dragon Roost Cavern stage info.
 addi r3, r3, 0x803C4FF4@l
-li r4, 0x0200
+li r4, 0x0200 ; Switch 0x09 (Camera pans to Valoo)
+; Optionally also set a switch (14) for having seen the event where the hanging platform is lowered.
+lis r5, should_skip_drc_platform_cutscenes@ha
+addi r5, r5, should_skip_drc_platform_cutscenes@l
+lbz r5, 0 (r5)
+cmpwi r5, 0
+beq after_skip_drc_platform_cutscenes
+oris r4, r4, 0x0010 ; Switch 0x14 (Hanging platform cutscene)
+after_skip_drc_platform_cutscenes:
 stw r4, 4 (r3)
 li r4, 0x0002
 stw r4, 8 (r3)
@@ -373,6 +382,9 @@ should_fill_wallet_on_receive:
 .byte 0 ; By default do not fill
 .global should_skip_triforce_cutscene
 should_skip_triforce_cutscene:
+.byte 0 ; By default don't skip
+.global should_skip_drc_platform_cutscenes
+should_skip_drc_platform_cutscenes:
 .byte 0 ; By default don't skip
 
 .global starting_gear

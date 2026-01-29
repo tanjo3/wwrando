@@ -314,6 +314,7 @@ class WWRandomizer:
       if self.options.invert_sea_compass_x_axis:
         patcher.apply_patch(self, "invert_sea_compass_x_axis")
       tweaks.update_skip_rematch_bosses_game_variable(self)
+      tweaks.set_should_skip_drc_platform_cutscenes(self)
       tweaks.set_should_skip_triforce_cutscene(self)
       tweaks.update_sword_mode_game_variable(self)
       if self.options.sword_mode == SwordMode.SWORDLESS:
@@ -469,8 +470,8 @@ class WWRandomizer:
       tweaks.force_full_moon_photos(self)
     if self.options.shorten_mail_minigame:
       patcher.apply_patch(self, "shorten_mail_minigame")
-    if self.options.skip_drc_plat_cs: # needs to be after custom_funcs patch, otherwise it would be overwritten
-      patcher.apply_patch(self, "remove_drc_platform_cutscenes")
+    if self.options.skip_drc_plat_cs:
+      patcher.apply_patch(self, "remove_drc_magma_cutscene")
     tweaks.set_wallet_fill_behavior(self)
     if self.options.speedup_tingle_jail:
       tweaks.speed_up_tingle_jail_cutscene(self)

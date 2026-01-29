@@ -3099,3 +3099,8 @@ def set_should_skip_triforce_cutscene(self: WWRandomizer):
   skip_triforce_cutscene_address = self.main_custom_symbols["should_skip_triforce_cutscene"]
   if self.options.always_skip_triforce_cutscene or self.options.num_starting_triforce_shards == 8:
     self.dol.write_data(fs.write_u8, skip_triforce_cutscene_address, 1)
+
+def set_should_skip_drc_platform_cutscenes(self: WWRandomizer):
+  skip_address = self.main_custom_symbols["should_skip_drc_platform_cutscenes"]
+  if self.options.skip_drc_plat_cs:
+    self.dol.write_data(fs.write_u8, skip_address, 1)
