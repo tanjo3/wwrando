@@ -1180,7 +1180,6 @@ WARP_POT_STAGE_TO_DUNGEON_NAME = {
 }
 
 def add_inter_dungeon_warp_pots(self: WWRandomizer):
-  # TODO: test 1drm and 2drm to make sure they work correctly
   # Check if we should split warp pots by required/non-required dungeons
   if (self.options.required_bosses and 
       self.options.num_required_bosses < 4 and 

@@ -459,8 +459,6 @@ class WWRandomizer:
     tweaks.give_fairy_fountains_distinct_colors(self)
 
     tweaks.apply_mila_speedup(self) # handles options in function since some logic is shared
-    if self.options.add_shortcut_warps_between_dungeons:
-      tweaks.add_inter_dungeon_warp_pots(self)
     if self.options.remove_ballad_of_gales_warp_in_cutscene:
       tweaks.remove_ballad_of_gales_warp_in_cutscene(self)
     if self.options.add_drops:
@@ -481,6 +479,8 @@ class WWRandomizer:
     customizer.change_player_custom_colors(self)
   
   def apply_necessary_post_randomization_tweaks(self):
+    if self.options.add_shortcut_warps_between_dungeons:
+      tweaks.add_inter_dungeon_warp_pots(self)
     if self.randomize_items:
       tweaks.update_shop_item_descriptions(self)
       tweaks.update_auction_item_names(self)
