@@ -392,6 +392,7 @@ class WWRandomizer:
     patcher.apply_patch(self, "custom_data")
     patcher.apply_patch(self, "custom_funcs")
     patcher.apply_patch(self, "make_game_nonlinear")
+    patcher.apply_patch(self, "medli_ship_companion")
     patcher.apply_patch(self, "remove_cutscenes")
     patcher.apply_patch(self, "flexible_item_locations")
     patcher.apply_patch(self, "fix_vanilla_bugs")
