@@ -25,8 +25,8 @@ import customizer
 from logic.item_types import PROGRESS_ITEMS, NONPROGRESS_ITEMS, CONSUMABLE_ITEMS, DUPLICATABLE_CONSUMABLE_ITEMS
 from data_tables import DataTables
 from wwlib.events import EventList
-from wwlib.dzx import DZx, DZxLayer, ACTR, EVNT, FILI, PLYR, SCLS, SCOB, SHIP, TGDR, TRES, Pale
-from options.wwrando_options import SwordMode
+from wwlib.dzx import DZx, DZxLayer, ACTR, EVNT, FILI, PLYR, SCLS, SCOB, SHIP, TGDR, TRES, Pale, RPAT, RPPN
+from options.wwrando_options import SwordMode, MilaSpeedup
 from randomizers.entrances import DUNGEON_ENTRANCES
 
 try:
@@ -1175,8 +1175,49 @@ INTER_DUNGEON_WARP_DATA = [
   ],
 ]
 
+# Mapping from stage names to dungeon names (as used by RequiredBossesRandomizer).
+# Used to filter INTER_DUNGEON_WARP_DATA by required/non-required dungeon lists.
+WARP_POT_STAGE_TO_DUNGEON_NAME = {
+  "M_NewD2": "Dragon Roost Cavern",
+  "kindan": "Forbidden Woods",
+  "Siren": "Tower of the Gods",
+  "ma2room": "Forsaken Fortress",
+  "M_Dai": "Earth Temple",
+  "kaze": "Wind Temple",
+}
+
 def add_inter_dungeon_warp_pots(self: WWRandomizer):
-  for warp_pot_datas_in_this_cycle in INTER_DUNGEON_WARP_DATA:
+  # Check if we should split warp pots by required/non-required dungeons
+  if (self.options.required_bosses and 
+      self.options.num_required_bosses < 4 and 
+      self.options.split_interdungeon_warps_by_required):
+    # Split into required vs non-required dungeon cycles
+    required_dungeons = self.boss_reqs.required_dungeons
+    non_required_dungeons = self.boss_reqs.banned_dungeons
+    
+    all_warp_pot_data = INTER_DUNGEON_WARP_DATA[0] + INTER_DUNGEON_WARP_DATA[1]
+    
+    required_cycle = [data for data in all_warp_pot_data 
+                      if WARP_POT_STAGE_TO_DUNGEON_NAME[data.stage_name] in required_dungeons]
+    non_required_cycle = [data for data in all_warp_pot_data 
+                          if WARP_POT_STAGE_TO_DUNGEON_NAME[data.stage_name] in non_required_dungeons]
+    
+    # Fill empty slots in the required cycle with non-required dungeons (only for 1/2 DRM)
+    # This is because pots have to be linked in cycles of 3
+    while len(required_cycle) < len(non_required_cycle):
+      required_cycle.append(non_required_cycle.pop())
+    
+    warp_data_cycles = [required_cycle, non_required_cycle]
+  else:
+    # Use the default fixed cycles
+    warp_data_cycles = INTER_DUNGEON_WARP_DATA
+  
+  # Event register indices for each cycle (must be consistent within a cycle)
+  cycle_event_reg_indices = [2, 5]  # Same as original data
+  
+  for cycle_index, warp_pot_datas_in_this_cycle in enumerate(warp_data_cycles):
+    cycle_event_reg_index = cycle_event_reg_indices[cycle_index]
+    
     for warp_pot_index, warp_pot_data in enumerate(warp_pot_datas_in_this_cycle):
       room_arc_path = "files/res/Stage/%s/Room%d.arc" % (warp_pot_data.stage_name, warp_pot_data.room_num)
       stage_arc_path = "files/res/Stage/%s/Stage.arc" % warp_pot_data.stage_name
@@ -1217,7 +1258,8 @@ def add_inter_dungeon_warp_pots(self: WWRandomizer):
       warp_pot = room_dzx.add_entity(ACTR)
       warp_pot.name = "Warpts%d" % (warp_pot_index+1) # Warpts1 Warpts2 or Warpts3
       warp_pot.type = warp_pot_index + 2 # 2 3 or 4
-      warp_pot.cyclic_event_reg_index = warp_pot_data.event_reg_index
+      # Use consistent event_reg_index for all pots in this cycle
+      warp_pot.cyclic_event_reg_index = cycle_event_reg_index
       warp_pot.cyclic_dest_1_exit = pot_index_to_exit_index[0]
       warp_pot.cyclic_dest_2_exit = pot_index_to_exit_index[1]
       warp_pot.cyclic_dest_3_exit = pot_index_to_exit_index[2]
@@ -2814,9 +2856,366 @@ def replace_drc_entrance_boulder_with_normal_boulder(self: WWRandomizer):
   room.save_changes()
 
   patcher.apply_patch(self, "speedup_drc_water_raise")
-  
+
 def open_drc(self: WWRandomizer):
   patcher.apply_patch(self, "disable_dins_pearl_lava")
   
   open_drc_address = self.main_custom_symbols["open_drc"]
   self.dol.write_data(fs.write_u8, open_drc_address, 1)
+
+def apply_mila_speedup(self: WWRandomizer):
+  if self.options.mila_speedup == MilaSpeedup.NONE: return
+
+  dzr = self.get_arc("files/res/Stage/sea/Room11.arc").get_file("room.dzr", DZx)
+  paths = dzr.entries_by_type(RPAT)
+  path = paths[1] # Mila's nighttime theiving ("commit") path
+  all_points = dzr.entries_by_type(RPPN)
+
+  # first_waypoint_offset is a RELATIVE offset within the RPPN data
+  # (not an absolute file offset)
+  # Divide by DATA_SIZE to get the point index
+  first_point_index = path.first_waypoint_offset // RPPN.DATA_SIZE
+
+  # Get the points for her path
+  points = all_points[first_point_index:first_point_index + path.num_points]
+
+  # Change points with action type 3 to 2 so she doesn't stop
+  for point in points:
+    if point.action_type == 3:
+      point.action_type = 2
+    point.save_changes()
+
+  if self.options.mila_speedup == MilaSpeedup.SHORTENED:
+    # Shortened path by about 33%
+    # With the no-stopping change, this is just enough time to turn on the windmill while she runs around
+    # (have to offset to avoid mila doing loops on overlapping waypoints)
+    for i, point in enumerate(points[17:24]):
+      point.x_pos, point.y_pos, point.z_pos = -356 - (4 - i) * 5, 1080, -202417 + (4 - i) * 5
+      point.save_changes()
+    for point in points[24:28]:
+      point.x_pos, point.y_pos, point.z_pos = -118 - (4 - i) * 5, 1010, -203249 + (4 - i) * 5
+      point.save_changes()
+  elif self.options.mila_speedup == MilaSpeedup.INSTANT:
+    # Extend running cutscene so mila doesn't catch link right after it ends due to path modification
+    event_list = self.get_arc("files/res/Stage/sea/Stage.arc").get_file("event_list.dat", EventList)
+    run_start_event = event_list.events_by_name.get("run_start")
+    if run_start_event:
+      for actor in run_start_event.actors:
+        if actor.name == "Kk1":
+          for action in actor.actions:
+            if action.name == "RUN":
+              timer_prop = action.get_prop("Timer")
+              if timer_prop:
+                timer_prop.value = 120  # Increase from 30 to 120 frames (~4 sec)
+                event_list.save_changes()
+                break
+    # Mila goes straight to the safe
+    for point in points[1:28]:
+      point.x_pos = points[28].x_pos
+      point.y_pos = points[28].y_pos
+      point.z_pos = points[28].z_pos
+      point.save_changes()
+
+def modify_and_add_drops(self: WWRandomizer):
+  modify_outset_drops(self)
+  add_southern_fairy_drops(self)
+  add_western_fairy_drops(self)
+  add_tingle_island_drops(self)
+  add_pawprint_drops(self)
+  add_stone_watcher_drops(self)
+  add_dri_drops(self)
+  modify_needle_rock_drops(self)
+  add_forest_haven_drops(self)
+  
+def modify_outset_drops(self: WWRandomizer):
+  dzr = self.get_arc("files/res/Stage/sea/Room44.arc").get_file("room.dzr", DZx)
+  actors = dzr.entries_by_type(ACTR)
+  pots = [actor for actor in actors if actor.name == "kotubo"]
+  pots[2].dropped_item_id = self.item_name_to_id["30 Arrows (Pickup)"]
+  pots[2].save_changes()
+  pots[3].dropped_item_id = self.item_name_to_id["Large Magic Jar (Pickup)"]
+  pots[3].save_changes()
+
+  # Add a new pot next to pots[2] that drops 30 bombs - shallow copy of pots[2]
+  add_pot_drop(dzr, self.item_name_to_id["30 Bombs (Pickup)"],
+               pots[2].x_pos + 80,
+               pots[2].y_pos,
+               pots[2].z_pos - 40,
+               pots[2].y_rot,
+               pots[2].z_rot,
+               pots[2].params)
+  dzr.save_changes()
+
+def modify_needle_rock_drops(self: WWRandomizer):
+  dzr = self.get_arc("files/res/Stage/sea/Room29.arc").get_file("room.dzr", DZx)
+  actors = dzr.entries_by_type(ACTR)
+  barrels = [actor for actor in actors if actor.name == "Ktaru"]
+  barrels[0].dropped_item_id = self.item_name_to_id["30 Arrows (Pickup)"]
+  barrels[0].save_changes()
+  barrels[1].dropped_item_id = self.item_name_to_id["30 Bombs (Pickup)"]
+  barrels[1].save_changes()
+
+def add_pot_drop(dzr: DZx, item_id: int, x: float, y: float, z: float, y_rot: int = 0, z_rot: int = 0, params: int = 1887436581):
+  """Helper to add a pot with a specific drop at given coordinates."""
+  pot = dzr.add_entity(ACTR)
+  pot.name = "kotubo" # Small pot actor
+  pot.params = params # Params that will load the pot, will be partially overridden by dropped_item_id
+  pot.x_pos = x
+  pot.y_pos = y
+  pot.z_pos = z
+  pot.x_rot = 0
+  pot.y_rot = y_rot
+  pot.z_rot = z_rot
+  pot.enemy_number = 0xFFFF
+  pot.dropped_item_id = item_id
+
+def add_western_fairy_drops(self: WWRandomizer):
+  dzr = self.get_arc("files/res/Stage/sea/Room15.arc").get_file("room.dzr", DZx)
+
+  add_pot_drop(dzr, self.item_name_to_id["30 Bombs (Pickup)"], -320040, 638.0046, -100280.7)
+  add_pot_drop(dzr, self.item_name_to_id["30 Arrows (Pickup)"], -320140, 638.0046, -100280.7)
+  add_pot_drop(dzr, self.item_name_to_id["Large Magic Jar (Pickup)"], -320240, 638.0046, -100280.7)
+
+  dzr.save_changes()
+
+def add_southern_fairy_drops(self: WWRandomizer):
+  dzr = self.get_arc("files/res/Stage/sea/Room39.arc").get_file("room.dzr", DZx)
+
+  add_pot_drop(dzr, self.item_name_to_id["30 Bombs (Pickup)"], -20285.06, 637.1605, 180000)
+  add_pot_drop(dzr, self.item_name_to_id["30 Arrows (Pickup)"], -20285.06, 637.1605, 180100)
+  add_pot_drop(dzr, self.item_name_to_id["Large Magic Jar (Pickup)"], -20285.06, 637.1605, 180200)
+
+  dzr.save_changes()
+
+def add_tingle_island_drops(self: WWRandomizer):
+  dzr = self.get_arc("files/res/Stage/sea/Room17.arc").get_file("room.dzr", DZx)
+
+  add_pot_drop(dzr, self.item_name_to_id["30 Bombs (Pickup)"], -100390, 324.9868, -80000)
+  add_pot_drop(dzr, self.item_name_to_id["30 Arrows (Pickup)"], -100390, 324.9868, -80100)
+  add_pot_drop(dzr, self.item_name_to_id["Large Magic Jar (Pickup)"], -100390, 324.9868, -79900)
+
+  dzr.save_changes()
+
+def add_pawprint_drops(self: WWRandomizer):
+  dzr = self.get_arc("files/res/Stage/sea/Room12.arc").get_file("room.dzr", DZx)
+
+  add_pot_drop(dzr, self.item_name_to_id["30 Bombs (Pickup)"], 79562.02, 300, -179397.5)
+  add_pot_drop(dzr, self.item_name_to_id["30 Arrows (Pickup)"], 79621.74, 300, -179319.2)
+  add_pot_drop(dzr, self.item_name_to_id["Large Magic Jar (Pickup)"], 79680.52, 300, -179239.9)
+
+  dzr.save_changes()
+
+def add_stone_watcher_drops(self: WWRandomizer):
+  dzr = self.get_arc("files/res/Stage/sea/Room31.arc").get_file("room.dzr", DZx)
+
+  add_pot_drop(dzr, self.item_name_to_id["30 Bombs (Pickup)"], -121809.1, 550, 100066.1)
+  add_pot_drop(dzr, self.item_name_to_id["30 Arrows (Pickup)"], -121821, 550, 100203.9)
+  add_pot_drop(dzr, self.item_name_to_id["Large Magic Jar (Pickup)"], -121832.6, 550, 100335.8)
+
+  dzr.save_changes()
+
+def add_dri_drops(self: WWRandomizer):
+  dzr = self.get_arc("files/res/Stage/sea/Room13.arc").get_file("room.dzr", DZx)
+
+  add_pot_drop(dzr, self.item_name_to_id["30 Bombs (Pickup)"], 197557, 136, -200046)
+  add_pot_drop(dzr, self.item_name_to_id["30 Arrows (Pickup)"], 197657, 136, -200046)
+  add_pot_drop(dzr, self.item_name_to_id["Large Magic Jar (Pickup)"], 197757, 136, -200046)
+
+  dzr.save_changes()
+
+def add_forest_haven_drops(self: WWRandomizer):
+  dzr = self.get_arc("files/res/Stage/sea/Room41.arc").get_file("room.dzr", DZx)
+
+  add_pot_drop(dzr, self.item_name_to_id["30 Bombs (Pickup)"], 217476.3, 34.99976, 195610.5)
+  add_pot_drop(dzr, self.item_name_to_id["30 Arrows (Pickup)"], 217462.3, 34.99976, 195700.2)
+  add_pot_drop(dzr, self.item_name_to_id["Large Magic Jar (Pickup)"], 217448.3, 34.99976, 195786.8)
+
+  dzr.save_changes()
+
+def speedup_lenzos_assistant(self: WWRandomizer):
+  increase_garrickson_speed(self)
+  increase_anton_speed(self)
+
+  # Overwrites the hardcoded 0.1f acceleration constant in d_a_npc_people.rel
+  # with 15.0f, making acceleration instant if speed is <= 15.0f. This applies to all NPCs,
+  # but doesn't affect non-speed-increased NPCs noticeably.
+  rel = self.get_rel("files/rels/d_a_npc_people.rel")
+  rel.write_data(fs.write_float, 0xA500, 15.0)
+
+def increase_garrickson_speed(self: WWRandomizer):
+  # Increases Garrickson's (Uo3) speed 5x by modifying
+  # his data table in d_a_npc_people.rel (offset 0xB158).
+  rel = self.get_rel("files/rels/d_a_npc_people.rel")
+  rel.write_data(fs.write_u16, 0xB168, 10000)  # field_0x10: max turn step
+  rel.write_data(fs.write_u16, 0xB190, 9000)  # field_0x38: rotation step
+  rel.write_data(fs.write_u16, 0xB192, 2000)  # field_0x3A: walk rotation step
+  rel.write_data(fs.write_float, 0xB19C, 0.12)  # field_0x44: animation speed (scaled down to look normal)
+  rel.write_data(fs.write_float, 0xB1A0, 10.0)  # field_0x48: translation speed
+
+  # Set wait timers to 1 frame so Garrickson walks almost continuously.
+  # Setting to 0 would cause a bug where he gets stuck in wait mode forever.
+  rel.write_data(fs.write_u16, 0xB1A8, 1)  # field_0x50: min wait timer
+  rel.write_data(fs.write_u16, 0xB1AA, 1)  # field_0x52: max wait timer
+
+def increase_anton_speed(self: WWRandomizer):
+  # Increases Anton's (Um2) speed 5x by modifying
+  # his data table in d_a_npc_people.rel (offset 0xB458).
+  rel = self.get_rel("files/rels/d_a_npc_people.rel")
+  rel.write_data(fs.write_u16, 0xB468, 5000)  # field_0x10: max turn step
+  rel.write_data(fs.write_u16, 0xB490, 6000)  # field_0x38: turning acceleration
+  rel.write_data(fs.write_u16, 0xB492, 2000)  # field_0x3A: turning step increase
+  rel.write_data(fs.write_float, 0xB49C, 0.12)   # field_0x44: animation speed (scaled down to look normal)
+  rel.write_data(fs.write_float, 0xB4A0, 12.0)  # field_0x48: translation speed
+
+  # Set wait timers to 1 frame so Anton walks almost continuously.
+  # Setting to 0 would cause a bug where he gets stuck in wait mode forever.
+  rel.write_data(fs.write_u16, 0xB4A8, 1)  # field_0x50: min wait timer
+  rel.write_data(fs.write_u16, 0xB4AA, 1)  # field_0x52: max wait timer
+
+def force_full_moon_photos(self: WWRandomizer):
+  # In snap_sunmoon_proc, change moon phase subject ID from 8 to 7.
+  # (li r4, 8 -> li r4, 7)
+  # Every picture of the moon will now be tagged as a full moon, regardless of phase.
+  # This makes Kamo accept any photo of the moon for his sidequest.
+  self.dol.write_data(fs.write_u32, 0x80094248, 0x38800007)
+
+def set_wallet_fill_behavior(self: WWRandomizer):
+  fill_wallet_value = int(self.options.wallet_fill_behavior)
+  self.dol.write_data(fs.write_u8, self.main_custom_symbols["should_fill_wallet_on_receive"], fill_wallet_value)
+
+def speed_up_tingle_jail_cutscene(self: WWRandomizer):
+  # Speed up Tingle's jail rescue cutscene by modifying the event system.
+  event_list: EventList = self.get_arc("files/res/Stage/Pnezumi/Stage.arc").get_file("event_list.dat", EventList)
+
+  # Speed up TC_JUMP_DEMO event (initial jump when Tingle sees Link)
+  tc_jump_demo = event_list.events_by_name["TC_JUMP_DEMO"]
+  tc = next(actor for actor in tc_jump_demo.actors if actor.name == "Tc")
+  camera = next(actor for actor in tc_jump_demo.actors if actor.name == "CAMERA")
+
+  # Speed up movement and reduce timers in TC_JUMP_DEMO
+  for action in tc.actions:
+    if action.name == "WAIT":
+      timer_prop = action.get_prop("Timer")
+      if timer_prop:
+        timer_prop.value = 1
+    elif action.name in ["MOVE_TO_ACTOR", "MOVE_TO_POS"]:
+      speed_prop = action.get_prop("Speed")
+      if speed_prop and speed_prop.value > 0:
+        speed_prop.value = 20.0
+
+  for action in camera.actions:
+    timer_prop = action.get_prop("Timer")
+    if timer_prop:
+      timer_prop.value = 1
+
+  # Speed up TC_RESCUE event (main rescue cutscene)
+  tc_rescue = event_list.events_by_name["TC_RESCUE"]
+  tc = next(actor for actor in tc_rescue.actors if actor.name == "Tc")
+  camera = next(actor for actor in tc_rescue.actors if actor.name == "CAMERA")
+  link = next(actor for actor in tc_rescue.actors if actor.name == "Link")
+
+  # Remove non-essential TALK_MSG and WAIT actions from Tingle
+  # Keep: movement (all speeds), turning, PRESENT (item give), SET_ANM, EFFECT, DOOR actions
+  # Remove: TALK_MSG, WAIT (they cause stops between actions)
+  actions_to_keep = []
+  for action in tc.actions:
+    if action.name == "TALK_MSG":
+      # Remove all text boxes - they require player input
+      continue
+    elif action.name == "WAIT":
+      # Remove WAIT actions - they cause stops between movements
+      continue
+    else:
+      # Keep all other actions (movement, PRESENT, etc.)
+      if action.name in ["MOVE_TO_ACTOR", "MOVE_TO_POS"]:
+        speed_prop = action.get_prop("Speed")
+        if speed_prop and speed_prop.value > 0:
+          speed_prop.value = 25.0  # Very fast (keep Speed=0 as-is for positioning)
+      elif action.name in ["TURN_TO_ACTOR", "TURN_TO_POS"]:
+        turn_speed_prop = action.get_prop("TurnSpeed")
+        if turn_speed_prop:
+          turn_speed_prop.value = 30000  # Very fast
+      actions_to_keep.append(action)
+
+  tc.actions = actions_to_keep
+
+  # Update any starting_flags that pointed to removed actions to -1
+  # Since TALK_MSG actions had flags like 1751, 1772, 1789, 1806, 1816
+  # We need to clear dependencies on them
+  removed_flags = [1751, 1772, 1789, 1806, 1816]  # TALK_MSG flag_id_to_set values
+
+  for action in tc.actions:
+    for i, flag in enumerate(action.starting_flags):
+      if flag in removed_flags:
+        action.starting_flags[i] = -1
+
+  for action in camera.actions:
+    for i, flag in enumerate(action.starting_flags):
+      if flag in removed_flags:
+        action.starting_flags[i] = -1
+
+  for action in link.actions:
+    for i, flag in enumerate(action.starting_flags):
+      if flag in removed_flags:
+        action.starting_flags[i] = -1
+
+  # Link's 006n_talk actions should also be removed/sped up since they wait for TALK_MSG
+  # But they're needed for the event flow, so just make sure they don't block
+
+  # Speed up camera timers
+  for action in camera.actions:
+    if action.name in ["PAUSE", "UNITRANS", "FIXEDFRM"]:
+      timer_prop = action.get_prop("Timer")
+      if timer_prop:
+        timer_prop.value = 1
+
+  # Update event ending_flags to point to last remaining action
+  if tc.actions:
+    tc_rescue.ending_flags[0] = tc.actions[-1].flag_id_to_set
+
+  # Speed up and remove text from TC_TALK_NEAR_JAIL events
+  for event_name in ["TC_TALK_NEAR_JAIL", "TC_TALK_NEAR_JAIL_S", "TC_TALK_NEAR_JAIL2"]:
+    if event_name in event_list.events_by_name:
+      event = event_list.events_by_name[event_name]
+      for actor in event.actors:
+        if actor.name == "Tc":
+          # Remove TALK_MSG text boxes from these events too
+          actor.actions = [a for a in actor.actions if a.name != "TALK_MSG"]
+          # Update ending flag if needed
+          if actor.actions:
+            event.ending_flags[0] = actor.actions[-1].flag_id_to_set
+        elif actor.name == "CAMERA":
+          for action in actor.actions:
+            timer_prop = action.get_prop("Timer")
+            if timer_prop:
+              timer_prop.value = 1
+
+def fix_auction(self: WWRandomizer):
+  # Display the auction prizes by price on the auction flyer inside the House of Wealth.
+  item_name_5 = self.logic.done_item_locations["Windfall Island - 5 Rupee Auction"]
+  item_name_40 = self.logic.done_item_locations["Windfall Island - 40 Rupee Auction"]
+  item_name_60 = self.logic.done_item_locations["Windfall Island - 60 Rupee Auction"]
+  item_name_80 = self.logic.done_item_locations["Windfall Island - 80 Rupee Auction"]
+  msg = self.bmg.messages_by_id[804]
+  msg.string = "\\{1A 06 FF 00 00 01}Notice: Windfall Auction Tonight!\\{1A 06 FF 00 00 00}\nBidding starts at dusk.\nAll comers welcome!\nParticipate for the chance to win\n"
+  msg.string += "%s \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} (SB: 5 rupees),\n%s \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} (SB: 40 rupees),\n" % (get_indefinite_article(item_name_5), item_name_5, get_indefinite_article(item_name_40), item_name_40)
+  msg.string += "%s \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} (SB: 60 rupees),\nand %s \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} (SB: 80 rupees)!" % (get_indefinite_article(item_name_60), item_name_60, get_indefinite_article(item_name_80), item_name_80)
+  msg.word_wrap_string(self.bfn)
+
+  # Apply patch that fixes auction cycle to increasing price order
+  patcher.apply_patch(self, "fix_auction_cycle")
+
+def set_should_skip_triforce_cutscene(self: WWRandomizer):
+  skip_triforce_cutscene_address = self.main_custom_symbols["should_skip_triforce_cutscene"]
+  if self.options.always_skip_triforce_cutscene or self.options.num_starting_triforce_shards == 8:
+    self.dol.write_data(fs.write_u8, skip_triforce_cutscene_address, 1)
+
+def set_should_skip_drc_platform_cutscenes(self: WWRandomizer):
+  skip_address = self.main_custom_symbols["should_skip_drc_platform_cutscenes"]
+  if self.options.skip_drc_plat_cs:
+    self.dol.write_data(fs.write_u8, skip_address, 1)
+
+def set_should_shorten_mail_minigame(self: WWRandomizer):
+  shorten_address = self.main_custom_symbols["should_shorten_mail_minigame"]
+  if self.options.shorten_mail_minigame:
+    self.dol.write_data(fs.write_u8, shorten_address, 1)
