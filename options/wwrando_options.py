@@ -418,39 +418,47 @@ class Options(BaseOptions):
 
   #region Quality of Life
   mila_speedup: MilaSpeedup = option(
-    default=MilaSpeedup.INSTANT,
+    default=MilaSpeedup.NONE,
     description="Speeds up Mila - Follow the Thief<br>"
       "<b>None</b>: Vanilla behavior<br>"
       "<b>Shortened</b>: Mila will take a different, shorter path without stopping<br>"
       "<b>Instant</b>: Mila will take a path straight to the safe without stopping",
+    choice_descriptions={
+      MilaSpeedup.NONE:
+        "None: Vanilla behavior.",
+      MilaSpeedup.SHORTENED:
+        "Shortened: Mila will take a different, shorter path without stopping.",
+      MilaSpeedup.INSTANT:
+        "Instant: Mila will take a path straight to the safe without stopping."
+    },
   )
   split_interdungeon_warps_by_required: bool = option(
-    default=True,
+    default=False,
     description="In 1, 2, and 3 Dungeon Race Mode (1, 2, or 3 required bosses), split the inter-dungeon warp pots by required vs non-required dungeons.<br>"
       "This creates one warp pot cycle connecting all required dungeons and another connecting all non-required dungeons.<br>"
       "If 1 or 2 DRM, then non-required dungeons will fill the required cycle empty spaces.<br>"
       "Only takes effect when both Required Bosses Mode and Inter-Dungeon Shortcuts are enabled with exactly 1, 2, or 3 required bosses.",
   )
-  remove_ballad_of_gales_warp_in_cutscene: bool = option(default=True, description="Removes the Ballad of Gales warp landing cutscene.")
-  always_skip_triforce_cutscene: bool = option(default=True, description="Always skip the cutscene that plays when you first board KoRL after collecting all 8 Triforce Shards.")
-  add_drops: bool = option(default=True, description="Modifies and adds drops on the following islands:<br>"
-                           "- Outset: Add bomb drop pot on Grandma's porch, lock other two pots there to arrow and magic drops.<br>"
-                           "- Southern Fairy: Add bomb, arrow, and magic drop pots.<br>"
-                           "- Western Fairy: Add bomb, arrow, and magic drop pots.<br>"
-                           "- Tingle: Add bomb, arrow, and magic drop pots.<br>"
-                           "- Pawprint: Add bomb, arrow, and magic drop pots.<br>"
-                           "- Stone Watcher: Add bomb, arrow, and magic drop pots.<br>"
-                           "- Dragon Roost: Add bomb, arrow, and magic drop pots.<br>"
-                           "- Needle Rock: Lock barrels to arrow and bomb drops.<br>"
-                           "- Forest Haven: Add bomb, arrow, and magic drop pots.")
-  speedup_lenzos_assistant: bool = option(default=True, description="Speed up Lenzo's Assistant sidequest by speeding up Garrickson and Aton's movement around Windfall.")
-  kamo_any_moon_phase: bool = option(default=True, description="Kamo will accept a picture of any moon phase, rather than just a full moon.")
-  shorten_mail_minigame: bool = option(default=True, description="The mail sorting minigame on Dragon Roost Island is shortened to the final round with Baito.")
-  skip_drc_plat_cs: bool = option(default=True, description="Skip the DRC cutscenes that play when riding the hanging platform and making a magma platform for the first time.")
-  wallet_fill_behavior: bool = option(default=True, description="Fill each progressive wallet when received.")
-  speedup_tingle_jail: bool = option(default=True, description="Speed up the cutscene that plays when Tingle is freed from jail.<br>"
+  remove_ballad_of_gales_warp_in_cutscene: bool = option(default=False, description="Removes the Ballad of Gales warp landing cutscene.")
+  always_skip_triforce_cutscene: bool = option(default=False, description="Always skip the cutscene that plays when you first board KoRL after collecting all 8 Triforce Shards.")
+  add_drops: bool = option(default=False, description="Modifies and adds drops on the following islands:<br>"
+                           "- <b>Outset</b>: Add bomb drop pot on Grandma's porch, lock other two pots there to arrow and magic drops.<br>"
+                           "- <b>Southern Fairy</b>: Add bomb, arrow, and magic drop pots.<br>"
+                           "- <b>Western Fairy</b>: Add bomb, arrow, and magic drop pots.<br>"
+                           "- <b>Tingle</b>: Add bomb, arrow, and magic drop pots.<br>"
+                           "- <b>Pawprint</b>: Add bomb, arrow, and magic drop pots.<br>"
+                           "- <b>Stone Watcher</b>: Add bomb, arrow, and magic drop pots.<br>"
+                           "- <b>Dragon Roost</b>: Add bomb, arrow, and magic drop pots.<br>"
+                           "- <b>Needle Rock</b>: Lock barrels to arrow and bomb drops.<br>"
+                           "- <b>Forest Haven</b>: Add bomb, arrow, and magic drop pots.")
+  speedup_lenzos_assistant: bool = option(default=False, description="Speed up Lenzo's Assistant sidequest by speeding up Garrickson and Aton's movement around Windfall.")
+  kamo_any_moon_phase: bool = option(default=False, description="Kamo will accept a picture of any moon phase, rather than just a full moon.")
+  shorten_mail_minigame: bool = option(default=False, description="The mail sorting minigame on Dragon Roost Island is shortened to the final round with Baito.")
+  skip_drc_plat_cs: bool = option(default=False, description="Skip the DRC cutscenes that play when riding the hanging platform and making a magma platform for the first time.")
+  wallet_fill_behavior: bool = option(default=False, description="Fill each progressive wallet when received.")
+  speedup_tingle_jail: bool = option(default=False, description="Speed up the cutscene that plays when Tingle is freed from jail.<br>"
                                      "Slightly speed up the cutscene that plays when Link approaches jailed Tingle's bars.")
-  fix_auction: bool = option(default=True, description="Remove RNG from the auction by fixing the cycle to increasing price order.<br>"
+  fix_auction: bool = option(default=False, description="Remove RNG from the auction by fixing the cycle to increasing price order.<br>"
                              "The prizes for each auction will be displayed on the auction flyer inside the House of Wealth.")
   #endregion
   
