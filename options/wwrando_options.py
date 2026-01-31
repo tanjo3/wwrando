@@ -345,7 +345,8 @@ class Options(BaseOptions):
   #region Hints
   hoho_hints: bool = option(
     default=True,
-    description="Places hints on Old Man Ho Ho. Old Man Ho Ho appears at 10 different islands in the game. Talk to Old Man Ho Ho to get hints.",
+    description="Places hints on Old Man Ho Ho. Old Man Ho Ho appears at 10 different islands in the game. Talk to Old Man Ho Ho to get hints.<br>"
+      "This setting is mutually exclusive with having Old Man Ho Ho hint Triforce Shards.",
   )
   fishmen_hints: bool = option(
     default=True,
@@ -395,6 +396,19 @@ class Options(BaseOptions):
     default=False,
     description="When this option is selected, item and location hints will also indicate if the hinted item is required, possibly required, or not required.<br>"
       "Only progress items will have these additions; non-progress items are trivially not required."
+  )
+  hoho_hint_shards: bool = option(
+    default=False,
+    description="When this option is selected, each Old Man Ho Ho will give an item hint for a random Triforce Shard. Hints are not repeated until each Shard is hinted once.<br>"
+      "This setting is mutually exclusive with the Old Man Ho Ho hint placement option.",
+  )
+  korl_hints_swords: bool = option(
+    default=False,
+    description="When this option is selected, the King of Red Lions will give an item hint for each Progressive Sword if spoken to in Hyrule.",
+  )
+  kreeb_hints_bows: bool = option(
+    default=False,
+    description="When this option is selected, Kreeb will give an item hint for each Progressive Bow after Link reactivates the Windfall lighthouse.",
   )
   #endregion
   
