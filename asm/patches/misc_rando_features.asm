@@ -860,3 +860,34 @@ gameover_continue_reset_life:
   sth r0, 2 (r3) ; set current life to the reset value
   b 0x8018E9B0 ; Return to where the original code jumps right after
 .close
+
+
+
+
+; Check whether the shortcut light beam warp on DRI should spawn
+; This is inserted into Komali's actor code
+.open "files/rels/d_a_npc_ac1.rel" ; Komali
+.org 0x718
+  b spawn_drc_shortcut_warp
+
+.org @NextFreeSpace
+.global spawn_drc_shortcut_warp
+spawn_drc_shortcut_warp:
+  lis r3, 0x803C5114@ha ; Adanmae stage info
+  addi r3, r3, 0x803C5114@l
+  lbz r4, 0x10 (r3)
+  
+  andi. r4, r4, 0x80
+  beq spawn_drc_shortcut_warp_return
+  
+  lis r3, 0x803C5380@ha ; Currently loaded stage info
+  addi r3, r3, 0x803C5380@l
+  lbz r4, 0x10 (r3)
+  ori r4, r4, 0x40
+  stb r4, 0x10 (r3)
+
+spawn_drc_shortcut_warp_return:
+  mr r3, r30 ; Replace the line we overwrote to jump here
+  b 0x71C ; Return
+
+.close

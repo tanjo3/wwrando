@@ -446,7 +446,6 @@ class WWRandomizer:
     tweaks.fix_stone_head_bugs(self)
     tweaks.show_number_of_tingle_statues_on_quest_status_screen(self)
     patcher.apply_patch(self, "flexible_enemies")
-    tweaks.add_shortcut_warps_into_dungeons(self)
     tweaks.fix_needle_rock_island_salvage_flags(self)
     tweaks.allow_nonlinear_servants_of_the_towers(self)
     tweaks.fix_helmaroc_king_table_softlock(self)
@@ -465,6 +464,7 @@ class WWRandomizer:
       tweaks.update_auction_item_names(self)
       tweaks.update_battlesquid_item_names(self)
       tweaks.update_item_names_in_letter_advertising_rock_spire_shop(self)
+    tweaks.add_shortcut_warps_into_dungeons(self)
     tweaks.prevent_fire_mountain_lava_softlock(self)
   
   @classmethod
