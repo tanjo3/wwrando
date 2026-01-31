@@ -112,7 +112,8 @@ sys/main.dol:
   test_room_override_layer_num: 0x800531EB
 files/rels/d_a_auction.rel:
   custom_getItemNo: 0x49F8
-  auction_price_order: 0x4A20
+  auction_event_bits: 0x4AB8
+  auction_price_order: 0x4AC0
 files/rels/d_a_npc_bs1.rel:
   set_shop_item_in_bait_bag_slot_sold_out: 0x61F0
   check_shop_item_in_bait_bag_slot_sold_out: 0x6220
