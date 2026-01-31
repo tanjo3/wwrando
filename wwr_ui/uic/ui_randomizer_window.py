@@ -1102,6 +1102,18 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.cryptic_hints, self.prioritize_remote_hints)
         QWidget.setTabOrder(self.prioritize_remote_hints, self.do_not_generate_spoiler_log)
         QWidget.setTabOrder(self.do_not_generate_spoiler_log, self.dry_run)
+        QWidget.setTabOrder(self.dry_run, self.mila_speedup)
+        QWidget.setTabOrder(self.mila_speedup, self.split_interdungeon_warps_by_required)
+        QWidget.setTabOrder(self.split_interdungeon_warps_by_required, self.remove_ballad_of_gales_warp_in_cutscene)
+        QWidget.setTabOrder(self.remove_ballad_of_gales_warp_in_cutscene, self.always_skip_triforce_cutscene)
+        QWidget.setTabOrder(self.always_skip_triforce_cutscene, self.add_drops)
+        QWidget.setTabOrder(self.add_drops, self.speedup_lenzos_assistant)
+        QWidget.setTabOrder(self.speedup_lenzos_assistant, self.kamo_any_moon_phase)
+        QWidget.setTabOrder(self.kamo_any_moon_phase, self.shorten_mail_minigame)
+        QWidget.setTabOrder(self.shorten_mail_minigame, self.skip_drc_plat_cs)
+        QWidget.setTabOrder(self.skip_drc_plat_cs, self.wallet_fill_behavior)
+        QWidget.setTabOrder(self.wallet_fill_behavior, self.speedup_tingle_jail)
+        QWidget.setTabOrder(self.speedup_tingle_jail, self.fix_auction)
 
         self.retranslateUi(MainWindow)
 

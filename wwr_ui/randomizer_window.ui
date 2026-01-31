@@ -1571,6 +1571,18 @@
   <tabstop>prioritize_remote_hints</tabstop>
   <tabstop>do_not_generate_spoiler_log</tabstop>
   <tabstop>dry_run</tabstop>
+  <tabstop>mila_speedup</tabstop>
+  <tabstop>split_interdungeon_warps_by_required</tabstop>
+  <tabstop>remove_ballad_of_gales_warp_in_cutscene</tabstop>
+  <tabstop>always_skip_triforce_cutscene</tabstop>
+  <tabstop>add_drops</tabstop>
+  <tabstop>speedup_lenzos_assistant</tabstop>
+  <tabstop>kamo_any_moon_phase</tabstop>
+  <tabstop>shorten_mail_minigame</tabstop>
+  <tabstop>skip_drc_plat_cs</tabstop>
+  <tabstop>wallet_fill_behavior</tabstop>
+  <tabstop>speedup_tingle_jail</tabstop>
+  <tabstop>fix_auction</tabstop>
  </tabstops>
  <resources/>
  <connections/>
