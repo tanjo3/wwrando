@@ -442,12 +442,12 @@ class Options(BaseOptions):
                            "- Stone Watcher: Add bomb, arrow, and magic drop pots.<br>"
                            "- Dragon Roost: Add bomb, arrow, and magic drop pots.<br>"
                            "- Needle Rock: Lock barrels to arrow and bomb drops.<br>"
-                           "- Forest Haven: Add bomb, arrow, and magic drop pots.<br>")
+                           "- Forest Haven: Add bomb, arrow, and magic drop pots.")
   speedup_lenzos_assistant: bool = option(default=True, description="Speed up Lenzo's Assistant sidequest by speeding up Garrickson and Aton's movement around Windfall.")
   kamo_any_moon_phase: bool = option(default=True, description="Kamo will accept a picture of any moon phase, rather than just a full moon.")
   shorten_mail_minigame: bool = option(default=True, description="The mail sorting minigame on Dragon Roost Island is shortened to the final round with Baito.")
   skip_drc_plat_cs: bool = option(default=True, description="Skip the DRC cutscenes that play when riding the hanging platform and making a magma platform for the first time.")
-  wallet_fill_behavior: bool = option(default=True, description="Fill each progressive wallet when received. Will only be visible once a load occurs after receiving the wallet.")
+  wallet_fill_behavior: bool = option(default=True, description="Fill each progressive wallet when received.")
   speedup_tingle_jail: bool = option(default=True, description="Speed up the cutscene that plays when Tingle is freed from jail.<br>"
                                      "Slightly speed up the cutscene that plays when Link approaches jailed Tingle's bars.")
   fix_auction: bool = option(default=True, description="Remove RNG from the auction by fixing the cycle to increasing price order.<br>"

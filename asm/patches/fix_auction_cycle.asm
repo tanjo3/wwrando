@@ -2,6 +2,9 @@
 ; deterministic cycling selection. Each auction increments the index,
 ; cycling through items in ascending starting bid price order.
 
+; The auction cycle will only reset to 0 when a save file is loaded.
+; If map select is used from the title screen, then the auction won't reset to the first item
+; and will continue cycling from the last item index used until a save file is loaded.
 .open "files/rels/d_a_auction.rel" ; Auction controller
 
 ; Replace getItemNo with a branch to our custom function
