@@ -26,8 +26,7 @@ from logic.item_types import PROGRESS_ITEMS, NONPROGRESS_ITEMS, CONSUMABLE_ITEMS
 from data_tables import DataTables
 from wwlib.events import EventList
 from wwlib.dzx import DZx, DZxLayer, ACTR, EVNT, FILI, PLYR, SCLS, SCOB, SHIP, TGDR, TRES, Pale, RPAT, RPPN
-from options.wwrando_options import SwordMode
-from options.wwrando_options import MilaSpeedup
+from options.wwrando_options import SwordMode, MilaSpeedup
 
 try:
   from keys.seed_key import SEED_KEY # type: ignore
