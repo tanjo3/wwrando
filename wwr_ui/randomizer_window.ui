@@ -1632,20 +1632,24 @@
               </property>
               <layout class="QGridLayout" name="layout_logic_tweaks">
                <item row="0" column="0">
+                <widget class="QCheckBox" name="open_drc">
+                 <property name="text">
+                  <string>Open DRC</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
                 <widget class="QCheckBox" name="always_double_magic">
                  <property name="text">
                   <string>All Magic Meters are Double</string>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1">
-                <widget class="QWidget" name="widget_11" native="true"/>
-               </item>
-               <item row="0" column="2">
-                <widget class="QWidget" name="widget_12" native="true"/>
+                <item row="0" column="2">
+                <widget class="QWidget" name="widget_9" native="true"/>
                </item>
                <item row="0" column="3">
-                <widget class="QWidget" name="widget_13" native="true"/>
+                <widget class="QWidget" name="widget_10" native="true"/>
                </item>
               </layout>
              </widget>
@@ -1664,13 +1668,13 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QWidget" name="widget_14" native="true"/>
+                <widget class="QWidget" name="widget_11" native="true"/>
                </item>
                <item row="0" column="2">
-                <widget class="QWidget" name="widget_15" native="true"/>
+                <widget class="QWidget" name="widget_12" native="true"/>
                </item>
                <item row="0" column="3">
-                <widget class="QWidget" name="widget_16" native="true"/>
+                <widget class="QWidget" name="widget_13" native="true"/>
                </item>
               </layout>
              </widget>
@@ -1943,6 +1947,7 @@
   <tabstop>hoho_hint_shards</tabstop>
   <tabstop>korl_hints_swords</tabstop>
   <tabstop>kreeb_hints_bows</tabstop>
+  <tabstop>open_drc</tabstop>
   <tabstop>always_double_magic</tabstop>
   <tabstop>rainbow_rupee_progress</tabstop>
   <tabstop>do_not_generate_spoiler_log</tabstop>
