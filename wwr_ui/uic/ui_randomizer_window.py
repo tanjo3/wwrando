@@ -1096,6 +1096,21 @@ class Ui_MainWindow(object):
 
         self.layout_hint_options.addWidget(self.hint_importance, 6, 2, 1, 1)
 
+        self.hoho_hint_shards = QCheckBox(self.hint_options_groupbox)
+        self.hoho_hint_shards.setObjectName(u"hoho_hint_shards")
+
+        self.layout_hint_options.addWidget(self.hoho_hint_shards, 7, 0, 1, 1)
+
+        self.korl_hints_swords = QCheckBox(self.hint_options_groupbox)
+        self.korl_hints_swords.setObjectName(u"korl_hints_swords")
+
+        self.layout_hint_options.addWidget(self.korl_hints_swords, 7, 1, 1, 1)
+
+        self.kreeb_hints_bows = QCheckBox(self.hint_options_groupbox)
+        self.kreeb_hints_bows.setObjectName(u"kreeb_hints_bows")
+
+        self.layout_hint_options.addWidget(self.kreeb_hints_bows, 7, 2, 1, 1)
+
 
         self.verticalLayout_9.addWidget(self.hint_options_groupbox)
 
@@ -1296,7 +1311,10 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.num_path_hints, self.cryptic_hints)
         QWidget.setTabOrder(self.cryptic_hints, self.prioritize_remote_hints)
         QWidget.setTabOrder(self.prioritize_remote_hints, self.hint_importance)
-        QWidget.setTabOrder(self.hint_importance, self.do_not_generate_spoiler_log)
+        QWidget.setTabOrder(self.hint_importance, self.hoho_hint_shards)
+        QWidget.setTabOrder(self.hoho_hint_shards, self.korl_hints_swords)
+        QWidget.setTabOrder(self.korl_hints_swords, self.kreeb_hints_bows)
+        QWidget.setTabOrder(self.kreeb_hints_bows, self.do_not_generate_spoiler_log)
         QWidget.setTabOrder(self.do_not_generate_spoiler_log, self.dry_run)
 
         self.retranslateUi(MainWindow)
@@ -1454,6 +1472,9 @@ class Ui_MainWindow(object):
         self.label_for_num_item_hints.setText(QCoreApplication.translate("MainWindow", u"Item Hints", None))
         self.label_for_num_path_hints.setText(QCoreApplication.translate("MainWindow", u"Path Hints", None))
         self.hint_importance.setText(QCoreApplication.translate("MainWindow", u"Hint Importance", None))
+        self.hoho_hint_shards.setText(QCoreApplication.translate("MainWindow", u"Old Man Ho Ho Hint Shards", None))
+        self.korl_hints_swords.setText(QCoreApplication.translate("MainWindow", u"King of Red Lions in Hyrule Hints Swords", None))
+        self.kreeb_hints_bows.setText(QCoreApplication.translate("MainWindow", u"Kreeb Hints Bows", None))
         self.additional_advanced_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))
         self.do_not_generate_spoiler_log.setText(QCoreApplication.translate("MainWindow", u"Do Not Generate Spoiler Log", None))
         self.dry_run.setText(QCoreApplication.translate("MainWindow", u"Dry Run", None))

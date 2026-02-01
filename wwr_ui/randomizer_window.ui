@@ -1594,6 +1594,27 @@
                  </property>
                 </widget>
                </item>
+               <item row="7" column="0">
+                <widget class="QCheckBox" name="hoho_hint_shards">
+                 <property name="text">
+                  <string>Old Man Ho Ho Hint Shards</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QCheckBox" name="korl_hints_swords">
+                 <property name="text">
+                  <string>King of Red Lions in Hyrule Hints Swords</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="2">
+                <widget class="QCheckBox" name="kreeb_hints_bows">
+                 <property name="text">
+                  <string>Kreeb Hints Bows</string>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </widget>
             </item>
@@ -1861,6 +1882,9 @@
   <tabstop>cryptic_hints</tabstop>
   <tabstop>prioritize_remote_hints</tabstop>
   <tabstop>hint_importance</tabstop>
+  <tabstop>hoho_hint_shards</tabstop>
+  <tabstop>korl_hints_swords</tabstop>
+  <tabstop>kreeb_hints_bows</tabstop>
   <tabstop>do_not_generate_spoiler_log</tabstop>
   <tabstop>dry_run</tabstop>
  </tabstops>

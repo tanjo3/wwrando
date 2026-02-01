@@ -93,6 +93,9 @@ def enable_all_options(options: Options):
   options.cryptic_hints = True
   options.prioritize_remote_hints = True
   options.hint_importance = True
+  options.hoho_hint_shards = False  # mutually exclusive with hoho_hints
+  options.korl_hints_swords = True
+  options.kreeb_hints_bows = True
   
   options.do_not_generate_spoiler_log = False
   

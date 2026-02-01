@@ -174,12 +174,19 @@ class HintsRandomizer(BaseRandomizer):
     self.prioritize_remote_hints = self.options.prioritize_remote_hints
     self.hint_importance = self.options.hint_importance
     
+    self.hoho_hint_shards = self.options.hoho_hint_shards
+    self.korl_hints_swords = self.options.korl_hints_swords
+    self.kreeb_hints_bows = self.options.kreeb_hints_bows
+    
     self.path_locations: set[str] = None
     self.barren_locations: set[str] = None
     
     self.floor_30_hint: Hint = None
     self.floor_50_hint: Hint = None
     self.octo_fairy_hint: Hint = None
+    self.hoho_shard_hints: list[Hint] = []
+    self.korl_sword_hints: list[Hint] = []
+    self.kreeb_bow_hints: list[Hint] = []
     self.hints_per_placement: dict[str, list[Hint]] = {}
     self.island_to_fishman_hint: dict[int, Hint] = {}
     self.hoho_index_to_hints: dict[int, list[Hint]] = {}
@@ -242,6 +249,13 @@ class HintsRandomizer(BaseRandomizer):
       return
     
     self.octo_fairy_hint = self.generate_octo_fairy_hint()
+    
+    if self.hoho_hint_shards:
+      self.hoho_shard_hints = self.generate_hoho_shard_hints()
+    if self.korl_hints_swords:
+      self.korl_sword_hints = self.generate_korl_sword_hints()
+    if self.kreeb_hints_bows:
+      self.kreeb_bow_hints = self.generate_kreeb_bow_hints()
     
     variable_hint_placement_options = ("fishmen_hints", "hoho_hints", "korl_hints")
     self.hints_per_placement.clear()
@@ -322,6 +336,13 @@ class HintsRandomizer(BaseRandomizer):
         self.update_korl_hints(self.hints_per_placement["korl_hints"])
       else:
         print("Invalid hint placement option: %s" % hint_placement)
+    
+    if self.hoho_hint_shards:
+      self.update_hoho_item_hints(self.hoho_shard_hints)
+    if self.korl_hints_swords:
+      self.update_korl_item_hints(self.korl_sword_hints)
+    if self.kreeb_hints_bows:
+      self.update_kreeb_item_hints(self.kreeb_bow_hints)
   
   def write_to_spoiler_log(self) -> str:
     rows = []
@@ -331,6 +352,9 @@ class HintsRandomizer(BaseRandomizer):
       rows.append((savage_hint.place, savage_hint.reward if savage_hint_is_valid else "Nothing"))
     
     all_hints = [self.octo_fairy_hint]
+    all_hints += self.hoho_shard_hints
+    all_hints += self.korl_sword_hints
+    all_hints += self.kreeb_bow_hints
     for hints_for_placement in self.hints_per_placement.values():
       all_hints += hints_for_placement
     
@@ -433,6 +457,61 @@ class HintsRandomizer(BaseRandomizer):
       msg.string = "\\{1A 06 FF 00 00 05}When you find you have need of such an item, you must journey to that place."
     msg.word_wrap_string(self.rando.bfn)
   
+  def update_hoho_item_hints(self, hints: list[Hint]):
+    # If there are no shards, then don't change the Old Man Ho Hos' text
+    if len(hints) == 0:
+      return
+    
+    for hoho_index in range(10):
+      hint = hints[hoho_index % len(hints)]
+      hint_prefix = "\\{1A 05 01 01 03}Ho ho! To think that "
+      hint_suffix = "..."
+      
+      msg_id = 14001 + hoho_index
+      msg = self.rando.bmg.messages_by_id[msg_id]
+      msg.string = HintsRandomizer.get_formatted_hint_text(hint, self.cryptic_hints, False, prefix=hint_prefix, suffix=hint_suffix)
+      msg.word_wrap_string(self.rando.bfn)
+      
+      self.rotate_hoho_to_face_hint(hoho_index, [hint])
+  
+  def update_korl_item_hints(self, hints: list[Hint]):
+    # If there are no swords, then don't change KoRL's text
+    if len(hints) == 0:
+      return
+    
+    hint_lines = []
+    for i, hint in enumerate(hints):
+      hint_prefix = "They say that " if i == 0 else "and that "
+      hint_suffix = "." if i == len(hints) - 1 else ","
+      hint_lines.append(HintsRandomizer.get_formatted_hint_text(hint, self.cryptic_hints, False, prefix=hint_prefix, suffix=hint_suffix))
+
+      if self.options.instant_text_boxes and i > 0:
+        # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
+        hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
+    
+    for msg_id in (3444, 3445, 3446):
+      msg = self.rando.bmg.messages_by_id[msg_id]
+      msg.construct_string_from_parts(self.rando.bfn, hint_lines)
+  
+  def update_kreeb_item_hints(self, hints: list[Hint]):
+    # If there are no bows, then don't change Kreeb's text
+    if len(hints) == 0:
+      return
+    
+    hint_lines = []
+    for i, hint in enumerate(hints):
+      hint_prefix = "They say that " if i == 0 else "and that "
+      hint_suffix = "." if i == len(hints) - 1 else ","
+      hint_lines.append(HintsRandomizer.get_formatted_hint_text(hint, self.cryptic_hints, False, prefix=hint_prefix, suffix=hint_suffix))
+      
+      if self.options.instant_text_boxes and i > 0:
+        # If instant text mode is on, we need to reset the text speed to instant after the wait command messed it up.
+        hint_lines[-1] = "\\{1A 05 00 00 01}" + hint_lines[-1]
+    
+    msg_id = 12220
+    msg = self.rando.bmg.messages_by_id[msg_id]
+    msg.construct_string_from_parts(self.rando.bfn, hint_lines)
+  
   def update_fishmen_hints(self):
     for fishman_island_number, hint in self.island_to_fishman_hint.items():
       hint_lines = []
@@ -448,7 +527,7 @@ class HintsRandomizer(BaseRandomizer):
       msg_id = 13026 + fishman_island_number
       msg = self.rando.bmg.messages_by_id[msg_id]
       msg.construct_string_from_parts(self.rando.bfn, hint_lines)
-
+  
   def update_hoho_hints(self):
     for hoho_index, hints_for_hoho in self.hoho_index_to_hints.items():
       hint_lines = []
@@ -468,7 +547,7 @@ class HintsRandomizer(BaseRandomizer):
       msg.construct_string_from_parts(self.rando.bfn, hint_lines)
       
       self.rotate_hoho_to_face_hint(hoho_index, hints_for_hoho)
-    
+  
   def rotate_hoho_to_face_hint(self, hoho_index: int, hints_for_hoho: list[Hint]):
     """Attempt to rotate the Hoho of a particular index to look towards the island he is hinting at.
     Will make him face the first hint in his list that corresponds to an island."""
@@ -1079,6 +1158,39 @@ class HintsRandomizer(BaseRandomizer):
     item_importance = self.get_importance_for_location(location_name)
     hint = Hint(HintType.FIXED_LOCATION, location_name, item_name, item_importance)
     return hint
+  
+  def generate_hoho_shard_hints(self):
+    shard_locations = sorted([loc for loc, item in self.logic.done_item_locations.items() if item.startswith("Triforce Shard ")])
+    
+    hoho_shard_hints = []
+    for shard_location in shard_locations:
+      entrance_zone = self.rando.entrances.get_entrance_zone_for_item_location(shard_location)
+      item_importance = self.get_importance_for_location(shard_location)
+      hoho_shard_hints.append(Hint(HintType.ITEM, entrance_zone, self.logic.done_item_locations[shard_location], item_importance))
+    
+    return hoho_shard_hints
+  
+  def generate_korl_sword_hints(self):
+    sword_locations = sorted([loc for loc, item in self.logic.done_item_locations.items() if item == "Progressive Sword"])
+    
+    korl_sword_hints = []
+    for sword_location in sword_locations:
+      entrance_zone = self.rando.entrances.get_entrance_zone_for_item_location(sword_location)
+      item_importance = self.get_importance_for_location(sword_location)
+      korl_sword_hints.append(Hint(HintType.ITEM, entrance_zone, "Progressive Sword", item_importance))
+    
+    return korl_sword_hints
+  
+  def generate_kreeb_bow_hints(self):
+    bow_locations = sorted([loc for loc, item in self.logic.done_item_locations.items() if item == "Progressive Bow"])
+    
+    kreeb_bow_hints = []
+    for bow_location in bow_locations:
+      entrance_zone = self.rando.entrances.get_entrance_zone_for_item_location(bow_location)
+      item_importance = self.get_importance_for_location(bow_location)
+      kreeb_bow_hints.append(Hint(HintType.ITEM, entrance_zone, "Progressive Bow", item_importance))
+    
+    return kreeb_bow_hints
   
   def generate_hints(self):
     previously_hinted_locations = []
