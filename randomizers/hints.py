@@ -880,6 +880,73 @@ class HintsRandomizer(BaseRandomizer):
     shuffle_mode = self.logic.get_dungeon_item_shuffle_mode(item_name)
     return shuffle_mode in (DungeonItemShuffleMode.ANY_DUNGEON, DungeonItemShuffleMode.OVERWORLD, DungeonItemShuffleMode.ANYWHERE)
   
+  def check_if_item_location_is_useful(self, item_name: str, location_name: str) -> bool:
+    # Determine if an item at a location is useful for the player.
+    # An item is useful if either the location is reachable without already having the item, or the item provides
+    # marginal utility given the prerequisites to reach it. Marginal utility means the item reduces the total number of
+    # items still needed to reach the goal of reaching and defeating Ganondorf.
+    
+    # If the item doesn't exist in the current settings (e.g., Progressive Sword in swordless mode), return False.
+    if item_name not in self.path_logic.all_cleaned_item_names:
+      return False
+    
+    # First, obtain the prerequisites required to access this location. Temporarily give the player a copy of the item
+    # so the logic can determine if alternative paths exist that do not require the item.
+    self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
+    self.path_logic.add_owned_item(item_name)
+    self.path_logic.clear_req_caches()
+    requirement_name = "Can Access Item Location \"%s\"" % location_name
+    items_needed = self.path_logic.get_items_needed_by_req_name(requirement_name)
+    
+    # Now, reset and add the actual logical prerequisites.
+    self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
+    for prereq_item_name, num_required in items_needed.items():
+      if prereq_item_name not in self.path_logic.all_cleaned_item_names:
+        continue
+      for _ in range(num_required):
+        self.path_logic.add_owned_item(prereq_item_name)
+    self.path_logic.clear_req_caches()
+    
+    # Check if the location is reachable with these prerequisites (which exclude the item we're checking).
+    accessible_locations = set(self.path_logic.get_accessible_remaining_locations(for_progression=True))
+    if location_name in accessible_locations:
+      return True
+    
+    # If the location is not reachable without already having the item, then the item is either locked behind itself
+    # with no alternative path, or the item is a progressive item behind earlier copies that are also needed. In the
+    # latter case, the item is useful, whereas in the former, it is not.
+    #
+    # To distinguish these cases, we check whether acquiring the item reduces the total number of items needed to reach
+    # and defeat Ganondorf.
+    self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
+    requirement_name = "Can Access Item Location \"%s\"" % location_name
+    items_needed_with_self = self.path_logic.get_items_needed_by_req_name(requirement_name)
+    
+    # Give the player all prerequisites to reach this location (which may include earlier copies of this item).
+    for prereq_item_name, num_required in items_needed_with_self.items():
+      if prereq_item_name not in self.path_logic.all_cleaned_item_names:
+        continue
+      for _ in range(num_required):
+        self.path_logic.add_owned_item(prereq_item_name)
+    self.path_logic.clear_req_caches()
+    
+    # Count how many items are still needed to reach and defeat Ganondorf before adding the item.
+    items_needed_before = self.path_logic.get_items_needed_by_req_name("Can Reach and Defeat Ganondorf")
+    total_before = sum(items_needed_before.values())
+    
+    # If the player can already reach and defeat Ganondorf, the item is not useful.
+    if total_before == 0:
+      return False
+    
+    # Add the item to the player's inventory, then count the remaining items needed to reach and defeat Ganondorf.
+    self.path_logic.add_owned_item(item_name)
+    self.path_logic.clear_req_caches()
+    items_needed_after = self.path_logic.get_items_needed_by_req_name("Can Reach and Defeat Ganondorf")
+    total_after = sum(items_needed_after.values())
+    
+    # If the item reduces the number of items needed to reach and defeat Ganondorf, it is useful.
+    return total_after < total_before
+  
   def get_barren_zones(self, progress_locations, hinted_remote_locations):
     # Helper function to build a list of barren zones in this seed.
     # The list includes only zones which are allowed to be hinted at as barren.
@@ -906,21 +973,20 @@ class HintsRandomizer(BaseRandomizer):
     # check item requirements to get those items, and so on.
     self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
     items_needed = deque(self.path_logic.get_item_names_by_req_name("Can Reach and Defeat Ganondorf"))
-    items_checked = []
-    useful_locations = set()
+    potentially_useful_items = set()
     while len(items_needed) > 0:
       # Dequeue one item from the queue.
       item_name = items_needed.popleft()
       
       # Don't consider the same item more than once or items which are not in the list of randomized progress items.
-      if item_name in items_checked or item_name not in progress_items:
+      if item_name in potentially_useful_items or item_name not in progress_items:
         continue
       
       # Don't consider dungeon items unless they can appear outside of their original dungeons.
       if not self.should_hint_dungeon_item(item_name):
         continue
       
-      items_checked.append(item_name)
+      potentially_useful_items.add(item_name)
       
       # Consider all instances of this item, even if those extra copies might not be required.
       item_locations = progress_items[item_name]
@@ -928,9 +994,19 @@ class HintsRandomizer(BaseRandomizer):
         requirement_name = "Can Access Item Location \"%s\"" % location_name
         other_items_needed = self.path_logic.get_item_names_by_req_name(requirement_name)
         items_needed.extend(other_items_needed)
-      
-      # The set of "useful locations" is the set of all locations which contain these "useful" items.
-      useful_locations |= set(item_locations)
+    
+    # Now, for each potentially useful item at each location, check if the item is indeed useful.
+    useful_locations = set()
+    for item_name in potentially_useful_items:
+      if item_name not in progress_items:
+        continue
+      for location_name in progress_items[item_name]:
+        if self.check_if_item_location_is_useful(item_name, location_name):
+          useful_locations.add(location_name)
+    
+    # Path locations are trivially useful, so always include them.
+    if self.path_locations:
+      useful_locations |= self.path_locations
     
     # Subtracting the set of useful locations from the set of progress locations gives us our set of barren locations.
     self.barren_locations = set(progress_locations) - useful_locations
