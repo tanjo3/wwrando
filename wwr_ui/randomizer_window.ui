@@ -1723,6 +1723,148 @@
             </item>
            </layout>
           </widget>
+          <widget class="QWidget" name="tab_quality_of_life">
+           <attribute name="title">
+            <string>Quality of Life</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_qol">
+            <item>
+             <widget class="QGroupBox" name="groupBox_qol_experimental">
+              <property name="title">
+               <string>Experimental Features</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_qol_experimental">
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_mila_speedup">
+                 <item>
+                  <widget class="QLabel" name="label_for_mila_speedup">
+                   <property name="text">
+                    <string>Mila Speedup</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="mila_speedup">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>1</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <item>
+                    <property name="text">
+                     <string>None</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Shortened</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Instant</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="split_interdungeon_warps_by_required">
+                 <property name="text">
+                  <string>Split Warp Pots by Required (1, 2, 3 DRM)</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="remove_ballad_of_gales_warp_in_cutscene">
+                 <property name="text">
+                  <string>Remove Ballad of Gales Landing Cutscene</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="always_skip_triforce_cutscene">
+                 <property name="text">
+                  <string>Always Skip Triforce Cutscene</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="add_drops">
+                 <property name="text">
+                  <string>Add Static Drops</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="speedup_lenzos_assistant">
+                 <property name="text">
+                  <string>Speed Up Lenzo's Assistant</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="kamo_any_moon_phase">
+                 <property name="text">
+                  <string>Kamo Accepts Any Moon Phase</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="shorten_mail_minigame">
+                 <property name="text">
+                  <string>Shorten Mail Sorting Minigame</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="skip_drc_plat_cs">
+                 <property name="text">
+                  <string>Skip DRC Platform Cutscenes</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="wallet_fill_behavior">
+                 <property name="text">
+                  <string>Fill Wallets When Received</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="speedup_tingle_jail">
+                 <property name="text">
+                  <string>Speed Up Tingle Jail Cutscenes</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="fix_auction">
+                 <property name="text">
+                  <string>Fix Auction</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="verticalSpacer_qol">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
           <widget class="CosmeticTab" name="tab_player_customization">
            <attribute name="title">
             <string>Player Customization</string>
@@ -1952,6 +2094,18 @@
   <tabstop>rainbow_rupee_progress</tabstop>
   <tabstop>do_not_generate_spoiler_log</tabstop>
   <tabstop>dry_run</tabstop>
+  <tabstop>mila_speedup</tabstop>
+  <tabstop>split_interdungeon_warps_by_required</tabstop>
+  <tabstop>remove_ballad_of_gales_warp_in_cutscene</tabstop>
+  <tabstop>always_skip_triforce_cutscene</tabstop>
+  <tabstop>add_drops</tabstop>
+  <tabstop>speedup_lenzos_assistant</tabstop>
+  <tabstop>kamo_any_moon_phase</tabstop>
+  <tabstop>shorten_mail_minigame</tabstop>
+  <tabstop>skip_drc_plat_cs</tabstop>
+  <tabstop>wallet_fill_behavior</tabstop>
+  <tabstop>speedup_tingle_jail</tabstop>
+  <tabstop>fix_auction</tabstop>
  </tabstops>
  <resources/>
  <connections/>

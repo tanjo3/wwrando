@@ -203,11 +203,20 @@ addi r4, r4, 0x0080
 stw r4, 0xC (r3)
 
 ; Set a switch (21) for having seen the gossip stone event in DRC where KoRL tells you about giving bait to rats.
+; If enabled, also set a switch (14) for having seen the cutscene that plays when you ride the hanging platform for the first time.
 ; Also set a switch (09) for having seen the event where the camera pans up to Valoo when you go outside.
 ; Also set a switch (46) for having seen the event where the camera pans around when you first enter DRC.
 lis r3, 0x803C4FF4@ha ; Dragon Roost Cavern stage info.
 addi r3, r3, 0x803C4FF4@l
-li r4, 0x0200
+li r4, 0x0200 ; Switch 0x09 (Camera pans to Valoo)
+; Optionally also set a switch (14) for having seen the event where the hanging platform is lowered.
+lis r5, should_skip_drc_platform_cutscenes@ha
+addi r5, r5, should_skip_drc_platform_cutscenes@l
+lbz r5, 0 (r5)
+cmpwi r5, 0
+beq after_skip_drc_platform_cutscenes
+oris r4, r4, 0x0010 ; Switch 0x14 (Hanging platform cutscene)
+after_skip_drc_platform_cutscenes:
 stw r4, 4 (r3)
 li r4, 0x0002
 stw r4, 8 (r3)
@@ -292,14 +301,21 @@ li r0, 1
 slw r4, r0, r5
 subi r4, r4, 1
 stb r4, 0 (r3) ; Store the bitfield of shards back
-; If the number of starting shards is 8, also set the event flag for seeing the Triforce refuse together.
-cmpwi r5, 8
-blt after_starting_triforce_shards
+after_starting_triforce_shards:
+
+lis r5, should_skip_triforce_cutscene@ha
+addi r5, r5, should_skip_triforce_cutscene@l
+lbz r5, 0 (r5)
+cmpwi r5, 0
+beq after_skip_triforce_cutscene
+
+; Set the event flag for seeing the Triforce refuse together.
 lis r3, 0x803C522C@ha
 addi r3, r3, 0x803C522C@l
 li r4, 0x3D04 ; Saw the Triforce refuse
 bl onEventBit__11dSv_event_cFUs
-after_starting_triforce_shards:
+
+after_skip_triforce_cutscene:
 
 
 lis r5, skip_rematch_bosses@ha
@@ -318,6 +334,21 @@ bl onEventBit__11dSv_event_cFUs
 li r4, 0x3A80 ; Recollection Molgera defeated
 bl onEventBit__11dSv_event_cFUs
 after_skipping_rematch_bosses:
+
+
+lis r5, should_shorten_mail_minigame@ha
+addi r5, r5, should_shorten_mail_minigame@l
+lbz r5, 0 (r5)
+cmpwi r5, 0
+beq after_shorten_mail_minigame
+
+; Set event register 0xC203 to 3 to indicate Koboli's rounds are finished (triggers Baito to take over).
+li r4, 0
+ori r4, r4, 0xC203 ; Register tracking mail sorting rounds with Koboli
+li r5, 3 ; Set to 3 to indicate Koboli's rounds are finished
+bl setEventReg__11dSv_event_cFUsUc
+
+after_shorten_mail_minigame:
 
 ; Function end stuff
 lwz r0, 0x14 (sp)
@@ -367,6 +398,18 @@ sword_mode:
 .global skip_rematch_bosses
 skip_rematch_bosses:
 .byte 1 ; By default skip them
+.global should_fill_wallet_on_receive
+should_fill_wallet_on_receive:
+.byte 0 ; By default do not fill
+.global should_skip_triforce_cutscene
+should_skip_triforce_cutscene:
+.byte 0 ; By default don't skip
+.global should_skip_drc_platform_cutscenes
+should_skip_drc_platform_cutscenes:
+.byte 0 ; By default don't skip
+.global should_shorten_mail_minigame
+should_shorten_mail_minigame:
+.byte 0 ; By default don't shorten
 
 .global starting_gear
 starting_gear:
@@ -771,11 +814,34 @@ b wallet_func_end
 get_1000_rupee_wallet:
 li r4, 1
 stb r4, 0 (r3) ; Which wallet you have
+
+lis r5, should_fill_wallet_on_receive@ha
+addi r5, r5, should_fill_wallet_on_receive@l
+lbz r5, 0 (r5)
+cmpwi r5, 0
+beq wallet_func_end
+
+lis r5, 0x803CA768@ha
+addi r5, r5, 0x803CA768@l
+li r0, 1000
+stw r0, 0 (r5) ; Set saved rupees to 1000
+
 b wallet_func_end
 
 get_5000_rupee_wallet:
 li r4, 2
 stb r4, 0 (r3) ; Which wallet you have
+
+lis r5, should_fill_wallet_on_receive@ha
+addi r5, r5, should_fill_wallet_on_receive@l
+lbz r5, 0 (r5)
+cmpwi r5, 0
+beq wallet_func_end
+
+lis r5, 0x803CA768@ha
+addi r5, r5, 0x803CA768@l
+li r0, 5000
+stw r0, 0 (r5) ; Set saved rupees to 1000
 
 wallet_func_end:
 blr

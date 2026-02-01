@@ -1205,6 +1205,97 @@ class Ui_MainWindow(object):
         self.verticalLayout_9.addItem(self.advanced_spacer)
 
         self.tabWidget.addTab(self.tab_advanced, "")
+        self.tab_quality_of_life = QWidget()
+        self.tab_quality_of_life.setObjectName(u"tab_quality_of_life")
+        self.verticalLayout_qol = QVBoxLayout(self.tab_quality_of_life)
+        self.verticalLayout_qol.setObjectName(u"verticalLayout_qol")
+        self.groupBox_qol_experimental = QGroupBox(self.tab_quality_of_life)
+        self.groupBox_qol_experimental.setObjectName(u"groupBox_qol_experimental")
+        self.verticalLayout_qol_experimental = QVBoxLayout(self.groupBox_qol_experimental)
+        self.verticalLayout_qol_experimental.setObjectName(u"verticalLayout_qol_experimental")
+        self.horizontalLayout_mila_speedup = QHBoxLayout()
+        self.horizontalLayout_mila_speedup.setObjectName(u"horizontalLayout_mila_speedup")
+        self.label_for_mila_speedup = QLabel(self.groupBox_qol_experimental)
+        self.label_for_mila_speedup.setObjectName(u"label_for_mila_speedup")
+
+        self.horizontalLayout_mila_speedup.addWidget(self.label_for_mila_speedup)
+
+        self.mila_speedup = QComboBox(self.groupBox_qol_experimental)
+        self.mila_speedup.addItem("")
+        self.mila_speedup.addItem("")
+        self.mila_speedup.addItem("")
+        self.mila_speedup.setObjectName(u"mila_speedup")
+        sizePolicy1.setHeightForWidth(self.mila_speedup.sizePolicy().hasHeightForWidth())
+        self.mila_speedup.setSizePolicy(sizePolicy1)
+
+        self.horizontalLayout_mila_speedup.addWidget(self.mila_speedup)
+
+
+        self.verticalLayout_qol_experimental.addLayout(self.horizontalLayout_mila_speedup)
+
+        self.split_interdungeon_warps_by_required = QCheckBox(self.groupBox_qol_experimental)
+        self.split_interdungeon_warps_by_required.setObjectName(u"split_interdungeon_warps_by_required")
+
+        self.verticalLayout_qol_experimental.addWidget(self.split_interdungeon_warps_by_required)
+
+        self.remove_ballad_of_gales_warp_in_cutscene = QCheckBox(self.groupBox_qol_experimental)
+        self.remove_ballad_of_gales_warp_in_cutscene.setObjectName(u"remove_ballad_of_gales_warp_in_cutscene")
+
+        self.verticalLayout_qol_experimental.addWidget(self.remove_ballad_of_gales_warp_in_cutscene)
+
+        self.always_skip_triforce_cutscene = QCheckBox(self.groupBox_qol_experimental)
+        self.always_skip_triforce_cutscene.setObjectName(u"always_skip_triforce_cutscene")
+
+        self.verticalLayout_qol_experimental.addWidget(self.always_skip_triforce_cutscene)
+
+        self.add_drops = QCheckBox(self.groupBox_qol_experimental)
+        self.add_drops.setObjectName(u"add_drops")
+
+        self.verticalLayout_qol_experimental.addWidget(self.add_drops)
+
+        self.speedup_lenzos_assistant = QCheckBox(self.groupBox_qol_experimental)
+        self.speedup_lenzos_assistant.setObjectName(u"speedup_lenzos_assistant")
+
+        self.verticalLayout_qol_experimental.addWidget(self.speedup_lenzos_assistant)
+
+        self.kamo_any_moon_phase = QCheckBox(self.groupBox_qol_experimental)
+        self.kamo_any_moon_phase.setObjectName(u"kamo_any_moon_phase")
+
+        self.verticalLayout_qol_experimental.addWidget(self.kamo_any_moon_phase)
+
+        self.shorten_mail_minigame = QCheckBox(self.groupBox_qol_experimental)
+        self.shorten_mail_minigame.setObjectName(u"shorten_mail_minigame")
+
+        self.verticalLayout_qol_experimental.addWidget(self.shorten_mail_minigame)
+
+        self.skip_drc_plat_cs = QCheckBox(self.groupBox_qol_experimental)
+        self.skip_drc_plat_cs.setObjectName(u"skip_drc_plat_cs")
+
+        self.verticalLayout_qol_experimental.addWidget(self.skip_drc_plat_cs)
+
+        self.wallet_fill_behavior = QCheckBox(self.groupBox_qol_experimental)
+        self.wallet_fill_behavior.setObjectName(u"wallet_fill_behavior")
+
+        self.verticalLayout_qol_experimental.addWidget(self.wallet_fill_behavior)
+
+        self.speedup_tingle_jail = QCheckBox(self.groupBox_qol_experimental)
+        self.speedup_tingle_jail.setObjectName(u"speedup_tingle_jail")
+
+        self.verticalLayout_qol_experimental.addWidget(self.speedup_tingle_jail)
+
+        self.fix_auction = QCheckBox(self.groupBox_qol_experimental)
+        self.fix_auction.setObjectName(u"fix_auction")
+
+        self.verticalLayout_qol_experimental.addWidget(self.fix_auction)
+
+        self.verticalSpacer_qol = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_qol_experimental.addItem(self.verticalSpacer_qol)
+
+
+        self.verticalLayout_qol.addWidget(self.groupBox_qol_experimental)
+
+        self.tabWidget.addTab(self.tab_quality_of_life, "")
         self.tab_player_customization = CosmeticTab()
         self.tab_player_customization.setObjectName(u"tab_player_customization")
         self.tabWidget.addTab(self.tab_player_customization, "")
@@ -1379,6 +1470,18 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.always_double_magic, self.rainbow_rupee_progress)
         QWidget.setTabOrder(self.rainbow_rupee_progress, self.do_not_generate_spoiler_log)
         QWidget.setTabOrder(self.do_not_generate_spoiler_log, self.dry_run)
+        QWidget.setTabOrder(self.dry_run, self.mila_speedup)
+        QWidget.setTabOrder(self.mila_speedup, self.split_interdungeon_warps_by_required)
+        QWidget.setTabOrder(self.split_interdungeon_warps_by_required, self.remove_ballad_of_gales_warp_in_cutscene)
+        QWidget.setTabOrder(self.remove_ballad_of_gales_warp_in_cutscene, self.always_skip_triforce_cutscene)
+        QWidget.setTabOrder(self.always_skip_triforce_cutscene, self.add_drops)
+        QWidget.setTabOrder(self.add_drops, self.speedup_lenzos_assistant)
+        QWidget.setTabOrder(self.speedup_lenzos_assistant, self.kamo_any_moon_phase)
+        QWidget.setTabOrder(self.kamo_any_moon_phase, self.shorten_mail_minigame)
+        QWidget.setTabOrder(self.shorten_mail_minigame, self.skip_drc_plat_cs)
+        QWidget.setTabOrder(self.skip_drc_plat_cs, self.wallet_fill_behavior)
+        QWidget.setTabOrder(self.wallet_fill_behavior, self.speedup_tingle_jail)
+        QWidget.setTabOrder(self.speedup_tingle_jail, self.fix_auction)
 
         self.retranslateUi(MainWindow)
 
@@ -1548,6 +1651,24 @@ class Ui_MainWindow(object):
         self.do_not_generate_spoiler_log.setText(QCoreApplication.translate("MainWindow", u"Do Not Generate Spoiler Log", None))
         self.dry_run.setText(QCoreApplication.translate("MainWindow", u"Dry Run", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_advanced), QCoreApplication.translate("MainWindow", u"Advanced Options", None))
+        self.groupBox_qol_experimental.setTitle(QCoreApplication.translate("MainWindow", u"Experimental Features", None))
+        self.label_for_mila_speedup.setText(QCoreApplication.translate("MainWindow", u"Mila Speedup", None))
+        self.mila_speedup.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
+        self.mila_speedup.setItemText(1, QCoreApplication.translate("MainWindow", u"Shortened", None))
+        self.mila_speedup.setItemText(2, QCoreApplication.translate("MainWindow", u"Instant", None))
+
+        self.split_interdungeon_warps_by_required.setText(QCoreApplication.translate("MainWindow", u"Split Warp Pots by Required (1, 2, 3 DRM)", None))
+        self.remove_ballad_of_gales_warp_in_cutscene.setText(QCoreApplication.translate("MainWindow", u"Remove Ballad of Gales Landing Cutscene", None))
+        self.always_skip_triforce_cutscene.setText(QCoreApplication.translate("MainWindow", u"Always Skip Triforce Cutscene", None))
+        self.add_drops.setText(QCoreApplication.translate("MainWindow", u"Add Static Drops", None))
+        self.speedup_lenzos_assistant.setText(QCoreApplication.translate("MainWindow", u"Speed Up Lenzo's Assistant", None))
+        self.kamo_any_moon_phase.setText(QCoreApplication.translate("MainWindow", u"Kamo Accepts Any Moon Phase", None))
+        self.shorten_mail_minigame.setText(QCoreApplication.translate("MainWindow", u"Shorten Mail Sorting Minigame", None))
+        self.skip_drc_plat_cs.setText(QCoreApplication.translate("MainWindow", u"Skip DRC Platform Cutscenes", None))
+        self.wallet_fill_behavior.setText(QCoreApplication.translate("MainWindow", u"Fill Wallets When Received", None))
+        self.speedup_tingle_jail.setText(QCoreApplication.translate("MainWindow", u"Speed Up Tingle Jail Cutscenes", None))
+        self.fix_auction.setText(QCoreApplication.translate("MainWindow", u"Fix Auction", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_quality_of_life), QCoreApplication.translate("MainWindow", u"Quality of Life", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_player_customization), QCoreApplication.translate("MainWindow", u"Player Customization", None))
         self.option_description.setText("")
         self.label_for_permalink.setText(QCoreApplication.translate("MainWindow", u"Permalink (copy paste to share your settings):", None))

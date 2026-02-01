@@ -89,15 +89,27 @@ get_max_health_for_file_select_screen:
   b 0x80182548
 .close
 
-
-
-
-; Refill the player's magic meter to full when they load a save, and cap health when starting with fewer than 3 hearts.
+; On save load: reset auction cycle index, refill magic meter, and cap health when starting with fewer than 3 hearts.
 .open "sys/main.dol"
-.org 0x80231B08 ; In FileSelectMainNormal__10dScnName_cFv right after calling card_to_memory__10dSv_info_cFPci
-  b fully_refill_magic_meter_and_cap_health_on_load_save
-; Refills the player's magic meter when loading a save.
+
+; Resets the auction cycle index to its starting value on save load.
+; This is chained into the magic refill function to avoid hooking the same location twice.
+; Even though this is an optional feature, defining it here won't impact anything if the fix_auction.asm patch is not applied.
 .org @NextFreeSpace
+.global reset_auction_cycle
+reset_auction_cycle:
+  lis r4, auction_cycle_index@ha
+  addi r4, r4, auction_cycle_index@l
+  
+  .global auction_reset_value_instr
+  auction_reset_value_instr:
+  li r5, 0 ; This immediate value (0) will be patched by tweaks.py to the correct starting index
+  
+  stb r5, 0 (r4)
+  
+  b fully_refill_magic_meter_and_cap_health_on_load_save
+
+; Refills the player's magic meter when loading a save.
 .global fully_refill_magic_meter_and_cap_health_on_load_save
 fully_refill_magic_meter_and_cap_health_on_load_save:
   lis r3, g_dComIfG_gameInfo@ha
@@ -116,6 +128,9 @@ fully_refill_magic_meter_and_cap_health_on_load_save:
   fully_refill_magic_meter_and_cap_health_on_load_save__already_lower:
   lwz r3, 0x428 (r22) ; Replace the line we overwrote to branch here
   b 0x80231B0C ; Return
+
+.org 0x80231B08 ; In FileSelectMainNormal__10dScnName_cFv right after calling card_to_memory__10dSv_info_cFPci
+  b reset_auction_cycle
 .close
 
 
