@@ -1123,25 +1123,25 @@ class Ui_MainWindow(object):
         self.logic_tweaks_groupbox.setObjectName(u"logic_tweaks_groupbox")
         self.layout_logic_tweaks = QGridLayout(self.logic_tweaks_groupbox)
         self.layout_logic_tweaks.setObjectName(u"layout_logic_tweaks")
+        self.open_drc = QCheckBox(self.logic_tweaks_groupbox)
+        self.open_drc.setObjectName(u"open_drc")
+
+        self.layout_logic_tweaks.addWidget(self.open_drc, 0, 0, 1, 1)
+
         self.always_double_magic = QCheckBox(self.logic_tweaks_groupbox)
         self.always_double_magic.setObjectName(u"always_double_magic")
 
-        self.layout_logic_tweaks.addWidget(self.always_double_magic, 0, 0, 1, 1)
+        self.layout_logic_tweaks.addWidget(self.always_double_magic, 0, 1, 1, 1)
 
-        self.widget_11 = QWidget(self.logic_tweaks_groupbox)
-        self.widget_11.setObjectName(u"widget_11")
+        self.widget_9 = QWidget(self.logic_tweaks_groupbox)
+        self.widget_9.setObjectName(u"widget_9")
 
-        self.layout_logic_tweaks.addWidget(self.widget_11, 0, 1, 1, 1)
+        self.layout_logic_tweaks.addWidget(self.widget_9, 0, 2, 1, 1)
 
-        self.widget_12 = QWidget(self.logic_tweaks_groupbox)
-        self.widget_12.setObjectName(u"widget_12")
+        self.widget_10 = QWidget(self.logic_tweaks_groupbox)
+        self.widget_10.setObjectName(u"widget_10")
 
-        self.layout_logic_tweaks.addWidget(self.widget_12, 0, 2, 1, 1)
-
-        self.widget_13 = QWidget(self.logic_tweaks_groupbox)
-        self.widget_13.setObjectName(u"widget_13")
-
-        self.layout_logic_tweaks.addWidget(self.widget_13, 0, 3, 1, 1)
+        self.layout_logic_tweaks.addWidget(self.widget_10, 0, 3, 1, 1)
 
 
         self.verticalLayout_9.addWidget(self.logic_tweaks_groupbox)
@@ -1155,20 +1155,20 @@ class Ui_MainWindow(object):
 
         self.layout_dev_features.addWidget(self.rainbow_rupee_progress, 0, 0, 1, 1)
 
-        self.widget_14 = QWidget(self.dev_features_groupbox)
-        self.widget_14.setObjectName(u"widget_14")
+        self.widget_11 = QWidget(self.dev_features_groupbox)
+        self.widget_11.setObjectName(u"widget_11")
 
-        self.layout_dev_features.addWidget(self.widget_14, 0, 1, 1, 1)
+        self.layout_dev_features.addWidget(self.widget_11, 0, 1, 1, 1)
 
-        self.widget_15 = QWidget(self.dev_features_groupbox)
-        self.widget_15.setObjectName(u"widget_15")
+        self.widget_12 = QWidget(self.dev_features_groupbox)
+        self.widget_12.setObjectName(u"widget_12")
 
-        self.layout_dev_features.addWidget(self.widget_15, 0, 2, 1, 1)
+        self.layout_dev_features.addWidget(self.widget_12, 0, 2, 1, 1)
 
-        self.widget_16 = QWidget(self.dev_features_groupbox)
-        self.widget_16.setObjectName(u"widget_16")
+        self.widget_13 = QWidget(self.dev_features_groupbox)
+        self.widget_13.setObjectName(u"widget_13")
 
-        self.layout_dev_features.addWidget(self.widget_16, 0, 3, 1, 1)
+        self.layout_dev_features.addWidget(self.widget_13, 0, 3, 1, 1)
 
 
         self.verticalLayout_9.addWidget(self.dev_features_groupbox)
@@ -1374,7 +1374,8 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.hint_importance, self.hoho_hint_shards)
         QWidget.setTabOrder(self.hoho_hint_shards, self.korl_hints_swords)
         QWidget.setTabOrder(self.korl_hints_swords, self.kreeb_hints_bows)
-        QWidget.setTabOrder(self.kreeb_hints_bows, self.always_double_magic)
+        QWidget.setTabOrder(self.kreeb_hints_bows, self.open_drc)
+        QWidget.setTabOrder(self.open_drc, self.always_double_magic)
         QWidget.setTabOrder(self.always_double_magic, self.rainbow_rupee_progress)
         QWidget.setTabOrder(self.rainbow_rupee_progress, self.do_not_generate_spoiler_log)
         QWidget.setTabOrder(self.do_not_generate_spoiler_log, self.dry_run)
@@ -1539,6 +1540,7 @@ class Ui_MainWindow(object):
         self.korl_hints_swords.setText(QCoreApplication.translate("MainWindow", u"King of Red Lions in Hyrule Hints Swords", None))
         self.kreeb_hints_bows.setText(QCoreApplication.translate("MainWindow", u"Kreeb Hints Bows", None))
         self.logic_tweaks_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Logic Tweaks", None))
+        self.open_drc.setText(QCoreApplication.translate("MainWindow", u"Open DRC", None))
         self.always_double_magic.setText(QCoreApplication.translate("MainWindow", u"All Magic Meters are Double", None))
         self.dev_features_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Miscellaneous Dev Features", None))
         self.rainbow_rupee_progress.setText(QCoreApplication.translate("MainWindow", u"Make Rainbow Rupee Progression", None))
