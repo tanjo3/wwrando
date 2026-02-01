@@ -525,7 +525,7 @@ class WWRandomizer:
         unique_progressive_items = list(set(PROGRESSIVE_ITEMS))
         unique_progressive_items.sort()
         for item_name in unique_progressive_items:
-          bitswriter.write(value.count(item_name), 2)
+          bitswriter.write(value.count(item_name), 3)
       elif option.name == "randomized_gear":
         # Handled above.
         continue
@@ -605,7 +605,7 @@ class WWRandomizer:
         unique_progressive_items = list(set(PROGRESSIVE_ITEMS))
         unique_progressive_items.sort()
         for item_name in unique_progressive_items:
-          amount = bitsreader.read(2)
+          amount = bitsreader.read(3)
           randamount = PROGRESSIVE_ITEMS.count(item_name) - amount
           for i in range(amount):
             starting_list.append(item_name)
