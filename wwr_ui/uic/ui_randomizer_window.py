@@ -28,7 +28,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(914, 830)
+        MainWindow.resize(1000, 775)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -42,7 +42,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 879, 673))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 965, 618))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -657,10 +657,83 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.addLayout(self.layout_random_starting_items)
 
         self.tabWidget.addTab(self.tab_starting_items, "")
+        self.tab_excluded_locations = QWidget()
+        self.tab_excluded_locations.setObjectName(u"tab_excluded_locations")
+        self.verticalLayout_8 = QVBoxLayout(self.tab_excluded_locations)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.layout_locations = QHBoxLayout()
+        self.layout_locations.setObjectName(u"layout_locations")
+        self.layout_progression_locations = QVBoxLayout()
+        self.layout_progression_locations.setObjectName(u"layout_progression_locations")
+        self.label_for_progression_locations = QLabel(self.tab_excluded_locations)
+        self.label_for_progression_locations.setObjectName(u"label_for_progression_locations")
+
+        self.layout_progression_locations.addWidget(self.label_for_progression_locations)
+
+        self.progression_locations = QListView(self.tab_excluded_locations)
+        self.progression_locations.setObjectName(u"progression_locations")
+        font = QFont()
+        font.setPointSize(8)
+        self.progression_locations.setFont(font)
+        self.progression_locations.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.progression_locations.setSelectionMode(QAbstractItemView.ExtendedSelection)
+
+        self.layout_progression_locations.addWidget(self.progression_locations)
+
+
+        self.layout_locations.addLayout(self.layout_progression_locations)
+
+        self.layout_locations_buttons = QVBoxLayout()
+        self.layout_locations_buttons.setObjectName(u"layout_locations_buttons")
+        self.locations_buttons_spacer_top = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.layout_locations_buttons.addItem(self.locations_buttons_spacer_top)
+
+        self.include_location = QPushButton(self.tab_excluded_locations)
+        self.include_location.setObjectName(u"include_location")
+        self.include_location.setMinimumSize(QSize(0, 80))
+
+        self.layout_locations_buttons.addWidget(self.include_location)
+
+        self.exclude_location = QPushButton(self.tab_excluded_locations)
+        self.exclude_location.setObjectName(u"exclude_location")
+        self.exclude_location.setMinimumSize(QSize(0, 80))
+
+        self.layout_locations_buttons.addWidget(self.exclude_location)
+
+        self.locations_buttons_spacer_bottom = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.layout_locations_buttons.addItem(self.locations_buttons_spacer_bottom)
+
+
+        self.layout_locations.addLayout(self.layout_locations_buttons)
+
+        self.layout_excluded_locations = QVBoxLayout()
+        self.layout_excluded_locations.setObjectName(u"layout_excluded_locations")
+        self.label_for_excluded_locations = QLabel(self.tab_excluded_locations)
+        self.label_for_excluded_locations.setObjectName(u"label_for_excluded_locations")
+
+        self.layout_excluded_locations.addWidget(self.label_for_excluded_locations)
+
+        self.excluded_locations = QListView(self.tab_excluded_locations)
+        self.excluded_locations.setObjectName(u"excluded_locations")
+        self.excluded_locations.setFont(font)
+        self.excluded_locations.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.excluded_locations.setSelectionMode(QAbstractItemView.ExtendedSelection)
+
+        self.layout_excluded_locations.addWidget(self.excluded_locations)
+
+
+        self.layout_locations.addLayout(self.layout_excluded_locations)
+
+
+        self.verticalLayout_8.addLayout(self.layout_locations)
+
+        self.tabWidget.addTab(self.tab_excluded_locations, "")
         self.tab_advanced = QWidget()
         self.tab_advanced.setObjectName(u"tab_advanced")
-        self.verticalLayout_8 = QVBoxLayout(self.tab_advanced)
-        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.verticalLayout_9 = QVBoxLayout(self.tab_advanced)
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
         self.required_bosses_groupbox = QGroupBox(self.tab_advanced)
         self.required_bosses_groupbox.setObjectName(u"required_bosses_groupbox")
         self.gridLayout_6 = QGridLayout(self.required_bosses_groupbox)
@@ -698,7 +771,7 @@ class Ui_MainWindow(object):
         self.gridLayout_6.addWidget(self.widget_3, 0, 3, 1, 1)
 
 
-        self.verticalLayout_8.addWidget(self.required_bosses_groupbox)
+        self.verticalLayout_9.addWidget(self.required_bosses_groupbox)
 
         self.difficulty_options_groupbox = QGroupBox(self.tab_advanced)
         self.difficulty_options_groupbox.setObjectName(u"difficulty_options_groupbox")
@@ -753,7 +826,7 @@ class Ui_MainWindow(object):
         self.gridLayout_5.addWidget(self.widget_4, 0, 3, 1, 1)
 
 
-        self.verticalLayout_8.addWidget(self.difficulty_options_groupbox)
+        self.verticalLayout_9.addWidget(self.difficulty_options_groupbox)
 
         self.hint_options_groupbox = QGroupBox(self.tab_advanced)
         self.hint_options_groupbox.setObjectName(u"hint_options_groupbox")
@@ -889,7 +962,7 @@ class Ui_MainWindow(object):
         self.gridLayout_7.addWidget(self.hint_importance, 6, 2, 1, 1)
 
 
-        self.verticalLayout_8.addWidget(self.hint_options_groupbox)
+        self.verticalLayout_9.addWidget(self.hint_options_groupbox)
 
         self.additional_advanced_groupbox = QGroupBox(self.tab_advanced)
         self.additional_advanced_groupbox.setObjectName(u"additional_advanced_groupbox")
@@ -916,11 +989,11 @@ class Ui_MainWindow(object):
         self.gridLayout_8.addWidget(self.dry_run, 0, 1, 1, 1)
 
 
-        self.verticalLayout_8.addWidget(self.additional_advanced_groupbox)
+        self.verticalLayout_9.addWidget(self.additional_advanced_groupbox)
 
         self.advanced_spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.verticalLayout_8.addItem(self.advanced_spacer)
+        self.verticalLayout_9.addItem(self.advanced_spacer)
 
         self.tabWidget.addTab(self.tab_advanced, "")
         self.tab_player_customization = CosmeticTab()
@@ -1061,7 +1134,11 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.add_gear, self.starting_hcs)
         QWidget.setTabOrder(self.starting_hcs, self.starting_pohs)
         QWidget.setTabOrder(self.starting_pohs, self.num_extra_starting_items)
-        QWidget.setTabOrder(self.num_extra_starting_items, self.required_bosses)
+        QWidget.setTabOrder(self.num_extra_starting_items, self.progression_locations)
+        QWidget.setTabOrder(self.progression_locations, self.excluded_locations)
+        QWidget.setTabOrder(self.excluded_locations, self.include_location)
+        QWidget.setTabOrder(self.include_location, self.exclude_location)
+        QWidget.setTabOrder(self.exclude_location, self.required_bosses)
         QWidget.setTabOrder(self.required_bosses, self.num_required_bosses)
         QWidget.setTabOrder(self.num_required_bosses, self.hero_mode)
         QWidget.setTabOrder(self.hero_mode, self.logic_obscurity)
@@ -1192,6 +1269,11 @@ class Ui_MainWindow(object):
         self.current_health.setText(QCoreApplication.translate("MainWindow", u"Current Starting Health: 3 hearts", None))
         self.label_for_num_extra_starting_items.setText(QCoreApplication.translate("MainWindow", u"Extra Random Starting Items", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_starting_items), QCoreApplication.translate("MainWindow", u"Starting Items", None))
+        self.label_for_progression_locations.setText(QCoreApplication.translate("MainWindow", u"Progression Locations", None))
+        self.include_location.setText(QCoreApplication.translate("MainWindow", u"<-", None))
+        self.exclude_location.setText(QCoreApplication.translate("MainWindow", u"->", None))
+        self.label_for_excluded_locations.setText(QCoreApplication.translate("MainWindow", u"Excluded Locations", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_excluded_locations), QCoreApplication.translate("MainWindow", u"Excluded Locations", None))
         self.required_bosses_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Required Bosses", None))
         self.label_for_num_required_bosses.setText(QCoreApplication.translate("MainWindow", u"Number of Required Bosses", None))
         self.required_bosses.setText(QCoreApplication.translate("MainWindow", u"Required Bosses Mode", None))

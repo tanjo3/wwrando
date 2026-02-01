@@ -215,6 +215,30 @@ class Logic:
     assert location_name in self.item_locations
     self.prerandomization_item_locations[location_name] = item_name
   
+  def get_num_charts_excluded(self):
+    return Logic.get_num_charts_excluded_static(self.item_locations, self.options)
+  
+  @staticmethod
+  def get_num_charts_excluded_static(item_locations: dict[str, dict], options: Options):
+    num_charts_excluded = 0
+    
+    if options.randomize_charts:
+      num_charts_excluded = sum(location_name.endswith(" - Sunken Treasure") for location_name in options.excluded_locations)
+    else:
+      # Only count excluded sunken treasures that would actually be a progress location.
+      num_charts_excluded = 0
+      for location_name in options.excluded_locations:
+        if location_name not in item_locations or not location_name.endswith(" - Sunken Treasure"):
+          continue
+        original_item = item_locations[location_name]["Original item"]
+        is_triforce_shard = original_item.startswith("Triforce Shard ")
+        if is_triforce_shard and options.progression_triforce_charts:
+          num_charts_excluded += 1
+        elif not is_triforce_shard and options.progression_treasure_charts:
+          num_charts_excluded += 1
+    
+    return num_charts_excluded
+  
   def get_num_progression_locations(self):
     return Logic.get_num_progression_locations_static(self.item_locations, self.options)
   
@@ -227,10 +251,18 @@ class Logic:
       filter_sunken_treasure=True
     )
     num_progress_locations = len(progress_locations)
+    
+    max_sunken_treasure_locations = 0
     if options.progression_triforce_charts:
-      num_progress_locations += 8
+      max_sunken_treasure_locations += 8
     if options.progression_treasure_charts:
-      num_progress_locations += 41
+      max_sunken_treasure_locations += 41
+    
+    num_charts_excluded = Logic.get_num_charts_excluded_static(item_locations, options)
+    if options.randomize_charts:
+      num_progress_locations += min(max_sunken_treasure_locations, 49 - num_charts_excluded)
+    else:
+      num_progress_locations += max_sunken_treasure_locations - num_charts_excluded
     
     return num_progress_locations
   
@@ -495,19 +527,27 @@ class Logic:
     self.cached_items_are_useful[item_name] = False
     return False
   
-  def filter_locations_for_progression(self, locations_to_filter: list[str], filter_sunken_treasure=False):
+  def filter_locations_for_progression(self, locations_to_filter: list[str], filter_sunken_treasure=False, filter_excluded_locations=True, filter_excluded_sunken_treasure=True):
     return Logic.filter_locations_for_progression_static(
       locations_to_filter,
       self.item_locations,
       self.options,
-      filter_sunken_treasure=filter_sunken_treasure
+      filter_sunken_treasure=filter_sunken_treasure,
+      filter_excluded_locations=filter_excluded_locations,
+      filter_excluded_sunken_treasure=filter_excluded_sunken_treasure,
     )
   
   @staticmethod
-  def filter_locations_for_progression_static(locations_to_filter: list[str], item_locations: dict[str, dict], options: Options, filter_sunken_treasure=False):
+  def filter_locations_for_progression_static(locations_to_filter: list[str], item_locations: dict[str, dict], options: Options, filter_sunken_treasure=False, filter_excluded_locations=True, filter_excluded_sunken_treasure=True):
     filtered_locations = []
     for location_name in locations_to_filter:
       types = item_locations[location_name]["Types"]
+      
+      # If the location is excluded, filter it out of progression locations.
+      # However, have special handling for sunken treasure locations as they may not yet be finalized as being progression.
+      if filter_excluded_locations and location_name in options.excluded_locations and ("Sunken Treasure" not in types or filter_excluded_sunken_treasure):
+        continue
+      
       if "No progression" in types:
         continue
       if "Consumables only" in types:
@@ -814,11 +854,15 @@ class Logic:
     filter_sunken_treasure = True
     if self.options.progression_triforce_charts or self.options.progression_treasure_charts:
       filter_sunken_treasure = False
+    filter_excluded_sunken_treasure = True
+    if self.rando.charts.is_enabled() and not self.rando.fully_initialized:
+      filter_excluded_sunken_treasure = False
     progress_locations = Logic.filter_locations_for_progression_static(
       list(self.item_locations.keys()),
       self.item_locations,
       self.options,
-      filter_sunken_treasure=filter_sunken_treasure
+      filter_sunken_treasure=filter_sunken_treasure,
+      filter_excluded_sunken_treasure=filter_excluded_sunken_treasure,
     )
     
     items_needed = {}
