@@ -1626,6 +1626,31 @@
              </widget>
             </item>
             <item>
+             <widget class="QGroupBox" name="logic_tweaks_groupbox">
+              <property name="title">
+               <string>Logic Tweaks</string>
+              </property>
+              <layout class="QGridLayout" name="layout_logic_tweaks">
+               <item row="0" column="0">
+                <widget class="QCheckBox" name="always_double_magic">
+                 <property name="text">
+                  <string>All Magic Meters are Double</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QWidget" name="widget_11" native="true"/>
+               </item>
+               <item row="0" column="2">
+                <widget class="QWidget" name="widget_12" native="true"/>
+               </item>
+               <item row="0" column="3">
+                <widget class="QWidget" name="widget_13" native="true"/>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
              <widget class="QGroupBox" name="additional_advanced_groupbox">
               <property name="title">
                <string>Additional Advanced Options</string>
@@ -1639,10 +1664,10 @@
                 </widget>
                </item>
                <item row="0" column="2">
-                <widget class="QWidget" name="widget_9" native="true"/>
+                <widget class="QWidget" name="widget_14" native="true"/>
                </item>
                <item row="0" column="3">
-                <widget class="QWidget" name="widget_10" native="true"/>
+                <widget class="QWidget" name="widget_15" native="true"/>
                </item>
                <item row="0" column="1">
                 <widget class="QCheckBox" name="dry_run">
@@ -1893,6 +1918,7 @@
   <tabstop>hoho_hint_shards</tabstop>
   <tabstop>korl_hints_swords</tabstop>
   <tabstop>kreeb_hints_bows</tabstop>
+  <tabstop>always_double_magic</tabstop>
   <tabstop>do_not_generate_spoiler_log</tabstop>
   <tabstop>dry_run</tabstop>
  </tabstops>

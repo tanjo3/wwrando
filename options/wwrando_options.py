@@ -416,6 +416,14 @@ class Options(BaseOptions):
   )
   #endregion
   
+  #region Logic Tweaks
+  always_double_magic: bool = option(
+    default=False,
+    description="The first Progressive Magic Meter grants double magic instead of single magic. The second Progressive Magic Meter refills your magic instead of upgrading capacity.<br>"
+      "Logic considers one Progressive Magic Meter as having the Magic Meter Upgrade.",
+  )
+  #endregion
+
   #region Tweaks
   swift_sail: bool = option(
     default=True,

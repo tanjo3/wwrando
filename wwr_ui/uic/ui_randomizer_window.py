@@ -1119,6 +1119,33 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_9.addWidget(self.hint_options_groupbox)
 
+        self.logic_tweaks_groupbox = QGroupBox(self.tab_advanced)
+        self.logic_tweaks_groupbox.setObjectName(u"logic_tweaks_groupbox")
+        self.layout_logic_tweaks = QGridLayout(self.logic_tweaks_groupbox)
+        self.layout_logic_tweaks.setObjectName(u"layout_logic_tweaks")
+        self.always_double_magic = QCheckBox(self.logic_tweaks_groupbox)
+        self.always_double_magic.setObjectName(u"always_double_magic")
+
+        self.layout_logic_tweaks.addWidget(self.always_double_magic, 0, 0, 1, 1)
+
+        self.widget_11 = QWidget(self.logic_tweaks_groupbox)
+        self.widget_11.setObjectName(u"widget_11")
+
+        self.layout_logic_tweaks.addWidget(self.widget_11, 0, 1, 1, 1)
+
+        self.widget_12 = QWidget(self.logic_tweaks_groupbox)
+        self.widget_12.setObjectName(u"widget_12")
+
+        self.layout_logic_tweaks.addWidget(self.widget_12, 0, 2, 1, 1)
+
+        self.widget_13 = QWidget(self.logic_tweaks_groupbox)
+        self.widget_13.setObjectName(u"widget_13")
+
+        self.layout_logic_tweaks.addWidget(self.widget_13, 0, 3, 1, 1)
+
+
+        self.verticalLayout_9.addWidget(self.logic_tweaks_groupbox)
+
         self.additional_advanced_groupbox = QGroupBox(self.tab_advanced)
         self.additional_advanced_groupbox.setObjectName(u"additional_advanced_groupbox")
         self.layout_additional_advanced = QGridLayout(self.additional_advanced_groupbox)
@@ -1128,15 +1155,15 @@ class Ui_MainWindow(object):
 
         self.layout_additional_advanced.addWidget(self.do_not_generate_spoiler_log, 0, 0, 1, 1)
 
-        self.widget_9 = QWidget(self.additional_advanced_groupbox)
-        self.widget_9.setObjectName(u"widget_9")
+        self.widget_14 = QWidget(self.additional_advanced_groupbox)
+        self.widget_14.setObjectName(u"widget_14")
 
-        self.layout_additional_advanced.addWidget(self.widget_9, 0, 2, 1, 1)
+        self.layout_additional_advanced.addWidget(self.widget_14, 0, 2, 1, 1)
 
-        self.widget_10 = QWidget(self.additional_advanced_groupbox)
-        self.widget_10.setObjectName(u"widget_10")
+        self.widget_15 = QWidget(self.additional_advanced_groupbox)
+        self.widget_15.setObjectName(u"widget_15")
 
-        self.layout_additional_advanced.addWidget(self.widget_10, 0, 3, 1, 1)
+        self.layout_additional_advanced.addWidget(self.widget_15, 0, 3, 1, 1)
 
         self.dry_run = QCheckBox(self.additional_advanced_groupbox)
         self.dry_run.setObjectName(u"dry_run")
@@ -1320,7 +1347,8 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.hint_importance, self.hoho_hint_shards)
         QWidget.setTabOrder(self.hoho_hint_shards, self.korl_hints_swords)
         QWidget.setTabOrder(self.korl_hints_swords, self.kreeb_hints_bows)
-        QWidget.setTabOrder(self.kreeb_hints_bows, self.do_not_generate_spoiler_log)
+        QWidget.setTabOrder(self.kreeb_hints_bows, self.always_double_magic)
+        QWidget.setTabOrder(self.always_double_magic, self.do_not_generate_spoiler_log)
         QWidget.setTabOrder(self.do_not_generate_spoiler_log, self.dry_run)
 
         self.retranslateUi(MainWindow)
@@ -1482,6 +1510,8 @@ class Ui_MainWindow(object):
         self.hoho_hint_shards.setText(QCoreApplication.translate("MainWindow", u"Old Man Ho Ho Hint Shards", None))
         self.korl_hints_swords.setText(QCoreApplication.translate("MainWindow", u"King of Red Lions in Hyrule Hints Swords", None))
         self.kreeb_hints_bows.setText(QCoreApplication.translate("MainWindow", u"Kreeb Hints Bows", None))
+        self.logic_tweaks_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Logic Tweaks", None))
+        self.always_double_magic.setText(QCoreApplication.translate("MainWindow", u"All Magic Meters are Double", None))
         self.additional_advanced_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))
         self.do_not_generate_spoiler_log.setText(QCoreApplication.translate("MainWindow", u"Do Not Generate Spoiler Log", None))
         self.dry_run.setText(QCoreApplication.translate("MainWindow", u"Dry Run", None))

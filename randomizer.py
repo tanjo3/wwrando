@@ -327,6 +327,8 @@ class WWRandomizer:
         tweaks.enable_hero_mode(self)
       if self.options.switch_targeting_mode:
         tweaks.set_default_targeting_mode_to_switch(self)
+      if self.options.always_double_magic:
+        tweaks.set_always_double_magic(self)
       
       if self.map_select:
         patcher.apply_patch(self, "map_select")

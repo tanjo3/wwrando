@@ -328,6 +328,13 @@ def make_items_progressive(self: WWRandomizer):
   msg.text_box_type = TextBoxType.ITEM_GET
   msg.initial_draw_type = 2 # Slow initial message speed
   msg.display_item_id = magic_meter_item_id
+  
+  if self.options.always_double_magic:
+    # Use the message for the first magic meter upgrade for both magic meter upgrades.
+    magic_meter_upgrade_item_id = 0xB2
+    msg = self.bmg.messages_by_id[101 + magic_meter_upgrade_item_id]
+    msg.string = description
+    msg.display_item_id = magic_meter_item_id
 
 def make_sail_behave_like_swift_sail(self: WWRandomizer):
   # Causes the wind direction to always change to face the direction KoRL is facing as long as the sail is out.
@@ -1411,7 +1418,12 @@ def update_starting_gear(self: WWRandomizer, starting_gear: list[str]):
   starting_gear = starting_gear.copy()
   
   # Changing starting magic doesn't work when done via our normal starting items initialization code, so we need to handle it specially.
-  set_starting_magic(self, 16*starting_gear.count("Progressive Magic Meter"))
+  starting_magic_count = starting_gear.count("Progressive Magic Meter")
+  if self.options.always_double_magic:
+    set_starting_magic(self, 32 if starting_magic_count >= 1 else 0)
+  else:
+    set_starting_magic(self, 16 * starting_magic_count)
+  
   while "Progressive Magic Meter" in starting_gear:
     starting_gear.remove("Progressive Magic Meter")
   
@@ -2769,3 +2781,7 @@ def enable_hero_mode(self: WWRandomizer):
 def set_default_targeting_mode_to_switch(self: WWRandomizer):
   targeting_mode_addr = self.main_custom_symbols["option_targeting_mode"]
   self.dol.write_data(fs.write_u8, targeting_mode_addr, 1)
+
+def set_always_double_magic(self: WWRandomizer):
+  addr = self.main_custom_symbols["always_double_magic_enabled"]
+  self.dol.write_data(fs.write_u8, addr, 1)
