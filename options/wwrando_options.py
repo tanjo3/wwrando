@@ -460,6 +460,7 @@ class Options(BaseOptions):
                                      "Slightly speed up the cutscene that plays when Link approaches jailed Tingle's bars.")
   fix_auction: bool = option(default=False, description="Remove RNG from the auction by fixing the cycle to increasing price order.<br>"
                              "The prizes for each auction will be displayed on the auction flyer inside the House of Wealth.")
+  quick_gohma: bool = option(default=False, description="Significantly shorten the Gohma fight, requiring only 1 grapple instead of 3 to transition to phase 2.")
   #endregion
   
   #region Cosmetic

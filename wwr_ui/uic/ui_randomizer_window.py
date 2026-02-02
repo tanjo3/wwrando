@@ -942,6 +942,11 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_qol_experimental.addWidget(self.fix_auction)
 
+        self.quick_gohma = QCheckBox(self.groupBox_qol_experimental)
+        self.quick_gohma.setObjectName(u"quick_gohma")
+
+        self.verticalLayout_qol_experimental.addWidget(self.quick_gohma)
+
         self.verticalSpacer_qol = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_qol_experimental.addItem(self.verticalSpacer_qol)
@@ -1114,6 +1119,7 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.skip_drc_plat_cs, self.wallet_fill_behavior)
         QWidget.setTabOrder(self.wallet_fill_behavior, self.speedup_tingle_jail)
         QWidget.setTabOrder(self.speedup_tingle_jail, self.fix_auction)
+        QWidget.setTabOrder(self.fix_auction, self.quick_gohma)
 
         self.retranslateUi(MainWindow)
 
@@ -1251,6 +1257,7 @@ class Ui_MainWindow(object):
         self.wallet_fill_behavior.setText(QCoreApplication.translate("MainWindow", u"Fill Wallets When Received", None))
         self.speedup_tingle_jail.setText(QCoreApplication.translate("MainWindow", u"Speed Up Tingle Jail Cutscenes", None))
         self.fix_auction.setText(QCoreApplication.translate("MainWindow", u"Fix Auction", None))
+        self.quick_gohma.setText(QCoreApplication.translate("MainWindow", u"Quick Gohma", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_quality_of_life), QCoreApplication.translate("MainWindow", u"Quality of Life", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_player_customization), QCoreApplication.translate("MainWindow", u"Player Customization", None))
         self.option_description.setText("")

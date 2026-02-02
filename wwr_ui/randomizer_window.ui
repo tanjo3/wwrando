@@ -1347,6 +1347,13 @@
                 </widget>
                </item>
                <item>
+                <widget class="QCheckBox" name="quick_gohma">
+                 <property name="text">
+                  <string>Quick Gohma</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
                 <spacer name="verticalSpacer_qol">
                  <property name="orientation">
                   <enum>Qt::Orientation::Vertical</enum>
@@ -1583,6 +1590,7 @@
   <tabstop>wallet_fill_behavior</tabstop>
   <tabstop>speedup_tingle_jail</tabstop>
   <tabstop>fix_auction</tabstop>
+  <tabstop>quick_gohma</tabstop>
  </tabstops>
  <resources/>
  <connections/>
