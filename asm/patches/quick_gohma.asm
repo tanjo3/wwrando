@@ -6,6 +6,7 @@
 ;
 ; The patch works by changing the comparison that checks how many times the ceiling
 ; has been dropped on Gohma (stored in m6190) from >= 3 to >= 1.
+; This has the side effect of skipping all mid-fight cutscenes
 
 .open "files/rels/d_a_btd.rel" ; Gohma
 
