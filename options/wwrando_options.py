@@ -460,6 +460,11 @@ class Options(BaseOptions):
                                      "Slightly speed up the cutscene that plays when Link approaches jailed Tingle's bars.")
   fix_auction: bool = option(default=False, description="Remove RNG from the auction by fixing the cycle to increasing price order.<br>"
                              "The prizes for each auction will be displayed on the auction flyer inside the House of Wealth.")
+  totg_tablet_from_start: bool = option(
+    default=False,
+    description="Makes the Command Melody tablet in Tower of the Gods visible from the start, "
+      "without needing to return a servant first.",
+  )
   #endregion
   
   #region Cosmetic

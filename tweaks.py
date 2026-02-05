@@ -2475,67 +2475,67 @@ def allow_nonlinear_servants_of_the_towers(self: WWRandomizer):
   hsh.add_action("WAIT")
   hsehi1_tact.ending_flags[0] = hsh.actions[-1].flag_id_to_set
   
-  # Create the custom event that causes the Command Melody tablet to appear.
-  appear_event = event_list.add_event("hsehi1_appear")
-  
-  camera = appear_event.add_actor("CAMERA")
-  camera.staff_type = 2
-  
-  tablet_actor = appear_event.add_actor("Hsh")
-  tablet_actor.staff_type = 0
-  tablet_wait_action = tablet_actor.add_action("WAIT")
-  
-  # Make sure Link still animates during the event instead of freezing.
-  link = appear_event.add_actor("Link")
-  link.staff_type = 0
-  link.add_action("001n_wait")
-  
-  timekeeper = appear_event.add_actor("TIMEKEEPER")
-  timekeeper.staff_type = 4
-  timekeeper.add_action("WAIT")
-  
-  camera_fixedfrm_action = camera.add_action("FIXEDFRM", properties=camera_tablet_fixedfrm_props)
-  
-  camera.add_action("PAUSE")
-  
-  tablet_appear_action = tablet_actor.add_action("Appear")
-  tablet_appear_action.starting_flags[0] = camera_fixedfrm_action.flag_id_to_set
-  
-  timekeeper_countdown_90_action = timekeeper.add_action("COUNTDOWN", properties=[
-    ("Timer", 90)
-  ])
-  timekeeper_countdown_90_action.duplicate_id = 1
-  timekeeper_countdown_90_action.starting_flags[0] = tablet_appear_action.flag_id_to_set
-  
-  tablet_wait_action = tablet_actor.add_action("WAIT")
-  tablet_wait_action.duplicate_id = 1
-  tablet_wait_action.starting_flags[0] = timekeeper_countdown_90_action.flag_id_to_set
-  
-  appear_event.ending_flags[0] = tablet_wait_action.flag_id_to_set
-  
-  tablet_appear_evnt = totg.add_entity(EVNT)
-  tablet_appear_evnt.name = appear_event.name
-  tablet_appear_evnt_index = totg.entries_by_type(EVNT).index(tablet_appear_evnt)
-  
-  
-  # Detect when any servant has been returned and start the tablet event.
-  servants_returned_switches = [
-    east_servant_returned_switch,
-    west_servant_returned_switch,
-    north_servant_returned_switch,
-  ]
-  assert switches_are_contiguous(servants_returned_switches)
-  sw_op = hub_room_dzr.add_entity(ACTR)
-  sw_op.name = "SwOp"
-  sw_op.operation = 2 # OR
-  sw_op.is_continuous = 0
-  sw_op.num_switches_to_check = len(servants_returned_switches)
-  sw_op.first_switch_to_check = min(servants_returned_switches)
-  sw_op.switch_to_set = any_servant_returned_switch
-  sw_op.evnt_index = tablet_appear_evnt_index
-  sw_op.x_pos = -800
-  sw_op.y_pos = 1000
-  sw_op.z_pos = -9000
+  tablet_appear_evnt_index = None
+  if not self.options.totg_tablet_from_start:
+    # Create the custom event that causes the Command Melody tablet to appear.
+    appear_event = event_list.add_event("hsehi1_appear")
+    
+    tablet_actor = appear_event.add_actor("Hsh")
+    tablet_actor.staff_type = 0
+    
+    # Make sure Link still animates during the event instead of freezing.
+    link = appear_event.add_actor("Link")
+    link.staff_type = 0
+    link.add_action("001n_wait")
+    
+    camera = appear_event.add_actor("CAMERA")
+    camera.staff_type = 2
+    
+    timekeeper = appear_event.add_actor("TIMEKEEPER")
+    timekeeper.staff_type = 4
+    timekeeper.add_action("WAIT")
+    
+    camera_fixedfrm_action = camera.add_action("FIXEDFRM", properties=camera_tablet_fixedfrm_props)
+    
+    camera.add_action("PAUSE")
+    
+    tablet_appear_action = tablet_actor.add_action("Appear")
+    tablet_appear_action.starting_flags[0] = camera_fixedfrm_action.flag_id_to_set
+    
+    timekeeper_countdown_90_action = timekeeper.add_action("COUNTDOWN", properties=[
+      ("Timer", 90)
+    ])
+    timekeeper_countdown_90_action.duplicate_id = 1
+    timekeeper_countdown_90_action.starting_flags[0] = tablet_appear_action.flag_id_to_set
+    
+    tablet_wait_action = tablet_actor.add_action("WAIT")
+    tablet_wait_action.duplicate_id = 1
+    tablet_wait_action.starting_flags[0] = timekeeper_countdown_90_action.flag_id_to_set
+    
+    appear_event.ending_flags[0] = tablet_wait_action.flag_id_to_set
+    
+    tablet_appear_evnt = totg.add_entity(EVNT)
+    tablet_appear_evnt.name = appear_event.name
+    tablet_appear_evnt_index = totg.entries_by_type(EVNT).index(tablet_appear_evnt)
+    
+    # Default: tablet appears when any servant is returned.
+    servants_returned_switches = [
+      east_servant_returned_switch,
+      west_servant_returned_switch,
+      north_servant_returned_switch,
+    ]
+    assert switches_are_contiguous(servants_returned_switches)
+    sw_op = hub_room_dzr.add_entity(ACTR)
+    sw_op.name = "SwOp"
+    sw_op.operation = 2 # OR
+    sw_op.is_continuous = 0
+    sw_op.num_switches_to_check = len(servants_returned_switches)
+    sw_op.first_switch_to_check = min(servants_returned_switches)
+    sw_op.switch_to_set = any_servant_returned_switch
+    sw_op.evnt_index = tablet_appear_evnt_index
+    sw_op.x_pos = -800
+    sw_op.y_pos = 1000
+    sw_op.z_pos = -9000
   
   # Detect when all servants have been returned and the tablet item is also obtained,
   # and make the warp appear.
@@ -3107,3 +3107,8 @@ def set_should_shorten_mail_minigame(self: WWRandomizer):
   shorten_address = self.main_custom_symbols["should_shorten_mail_minigame"]
   if self.options.shorten_mail_minigame:
     self.dol.write_data(fs.write_u8, shorten_address, 1)
+
+def set_should_set_totg_servants_done(self: WWRandomizer):
+  if self.options.totg_tablet_from_start:
+    address = self.main_custom_symbols["should_set_totg_servants_done"]
+    self.dol.write_data(fs.write_u8, address, 1)

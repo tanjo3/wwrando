@@ -232,6 +232,38 @@ stw r4, 8 (r3)
 li r4, 0x0008
 stw r4, 0x10 (r3)
 
+; Optionally set TotG servant-related event bits and stage switches.
+lis r5, should_set_totg_servants_done@ha
+addi r5, r5, should_set_totg_servants_done@l
+lbz r5, 0 (r5)
+cmpwi r5, 0
+beq after_set_totg_servants_done
+
+lis r3, 0x803C522C@ha
+addi r3, r3, 0x803C522C@l
+li r4, 0x1780 ; East awakened
+bl onEventBit__11dSv_event_cFUs
+li r4, 0x1740 ; West awakened
+bl onEventBit__11dSv_event_cFUs
+li r4, 0x1720 ; North awakened
+bl onEventBit__11dSv_event_cFUs
+li r4, 0x1710 ; East finished
+bl onEventBit__11dSv_event_cFUs
+li r4, 0x1704 ; West finished
+bl onEventBit__11dSv_event_cFUs
+li r4, 0x1B01 ; North finished
+bl onEventBit__11dSv_event_cFUs
+li r4, 0x2B10 ; Command Melody tablet has appeared
+bl onEventBit__11dSv_event_cFUs
+
+lis r3, 0x803C503C@ha ; Tower of the Gods stage info.
+addi r3, r3, 0x803C503C@l
+lwz r4, 8 (r3)
+ori r4, r4, 0x0700 ; Switches 0x28-0x2A
+stw r4, 8 (r3)
+
+after_set_totg_servants_done:
+
 ; Set a switch (2A) for having seen the gossip stone event where KoRL tells you Medli shows up on the compass.
 lis r3, 0x803C5060@ha ; Earth Temple stage info.
 addi r3, r3, 0x803C5060@l
@@ -422,6 +454,9 @@ captured_prologue_pigs_bitfield:
 .global option_targeting_mode ; AKA "OptAttentionType"
 option_targeting_mode:
 .byte 0x00 ; By default, use the "Hold" targeting mode
+.global should_set_totg_servants_done
+should_set_totg_servants_done:
+.byte 0x00 ; By default, do not set TotG servant flags/switches
 
 .align 2 ; Align to the next 4 bytes
 

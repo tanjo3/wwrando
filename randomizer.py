@@ -317,6 +317,7 @@ class WWRandomizer:
       tweaks.set_should_skip_drc_platform_cutscenes(self)
       tweaks.set_should_skip_triforce_cutscene(self)
       tweaks.set_should_shorten_mail_minigame(self)
+      tweaks.set_should_set_totg_servants_done(self)
       tweaks.update_sword_mode_game_variable(self)
       if self.options.sword_mode == SwordMode.SWORDLESS:
         patcher.apply_patch(self, "swordless")

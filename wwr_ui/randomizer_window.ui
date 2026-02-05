@@ -1347,6 +1347,13 @@
                 </widget>
                </item>
                <item>
+                <widget class="QCheckBox" name="totg_tablet_from_start">
+                 <property name="text">
+                  <string>Skip TotG Statues</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
                 <spacer name="verticalSpacer_qol">
                  <property name="orientation">
                   <enum>Qt::Orientation::Vertical</enum>
