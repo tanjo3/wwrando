@@ -25,6 +25,13 @@ class MilaSpeedup(StrEnum):
   SHORTENED = "Shortened"
   INSTANT = "Instant"
 
+class SeaCompanion(StrEnum):
+  NONE = "None"
+  MEDLI = "Medli"
+  MAKAR = "Makar"
+  BOTH = "Both"
+  RANDOM = "Random"
+
 @dataclass
 class Options(BaseOptions):
   #region Progress locations
@@ -452,6 +459,18 @@ class Options(BaseOptions):
                                      "Slightly speed up the cutscene that plays when Link approaches jailed Tingle's bars.")
   fix_auction: bool = option(default=True, description="Remove RNG from the auction by fixing the cycle to increasing price order.<br>"
                              "The prizes for each auction will be displayed on the auction flyer inside the House of Wealth.")
+  sea_companion: SeaCompanion = option(
+    default=SeaCompanion.BOTH,
+    description="Controls which sage rides the King of Red Lions as a companion on the Great Sea.<br>"
+      "(Experimental)",
+    choice_descriptions={
+      SeaCompanion.NONE: "No companion will ride the ship.",
+      SeaCompanion.MEDLI: "Medli will ride the ship.",
+      SeaCompanion.MAKAR: "Makar will ride the ship.",
+      SeaCompanion.BOTH: "Both Medli and Makar will ride the ship.",
+      SeaCompanion.RANDOM: "Randomly selects between Medli, Makar, or Both per seed.",
+    },
+  )
   #endregion
   
   #region Cosmetic
