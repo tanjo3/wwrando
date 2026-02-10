@@ -65,51 +65,72 @@ sys/main.dol:
   wind_tingle_statue_item_get_func: 0x803FE7DC
   check_tingle_statue_owned: 0x803FE808
   custom_isTbox_for_unloaded_stage_save_info: 0x803FE890
-  hookshot_sight_failsafe_check: 0x803FE8C0
-  deluxe_picto_box_item_func_fix_equipped_picto_box: 0x803FE8D8
-  stop_sub_bgm_when_unloading_stage: 0x803FE90C
-  zero_out_arrow_on_hit_callback: 0x803FE924
-  check_can_defend: 0x803FE934
-  check_ganondorf_in_phase_3: 0x803FE964
-  check_play_special_item_get_music: 0x803FE980
-  multiply_damage_amount: 0x803FE9E8
-  damage_multiplier: 0x803FEA0C
-  invert_camera_horizontal_axis: 0x803FEA10
-  convert_progressive_item_id_for_createDemoItem: 0x803FEA1C
-  convert_progressive_item_id_for_daItem_create: 0x803FEA48
-  convert_progressive_item_id_for_dProcGetItem_init_1: 0x803FEA74
-  convert_progressive_item_id_for_dProcGetItem_init_2: 0x803FEA9C
-  check_open_map_select: 0x803FEAC4
-  set_starting_health: 0x803FEB24
-  get_current_health_for_file_select_screen: 0x803FEB40
-  get_max_health_for_file_select_screen: 0x803FEB68
-  reset_auction_cycle: 0x803FEB8C
-  auction_reset_value_instr: 0x803FEB94
-  fully_refill_magic_meter_and_cap_health_on_load_save: 0x803FEBA0
-  turn_while_swinging: 0x803FEBD0
-  check_animate_rainbow_rupee_color: 0x803FEC30
-  rainbow_rupee_keyframe: 0x803FEC70
-  check_run_new_text_commands: 0x803FEC80
-  exec_curr_num_keys_text_command: 0x803FECC0
-  set_warp_confirm_dialog_message_id_for_custom_warps: 0x803FEDA0
-  check_player_in_casual_clothes: 0x803FEDB8
-  read_custom_DynamicNameTable_loop: 0x803FEDF4
-  read_custom_l_objectName_loop_for_dStage_searchName: 0x803FEE20
-  read_custom_l_objectName_loop_for_dStage_getName: 0x803FEE48
-  get_num_owned_tingle_statues: 0x803FEE74
-  ladder_up_check_unequip_held_item: 0x803FEEE8
-  ladder_down_check_unequip_held_item: 0x803FEF00
-  gameover_continue_reset_life: 0x803FEF18
-  give_pearl_and_raise_totg_if_necessary: 0x803FEF34
-  remove_low_health_anim_at_full_health: 0x803FEFC8
-  give_temporary_sword_during_ganondorf_fight_in_swordless: 0x803FEFEC
-  give_temporary_sword_in_orcas_house_in_swordless: 0x803FF008
-  remove_temporary_sword_when_loading_stage_in_swordless: 0x803FF050
+  gohma_soul_item_func: 0x803FE8C0
+  kalle_demos_soul_item_func: 0x803FE8EC
+  gohdan_soul_item_func: 0x803FE918
+  helmaroc_king_soul_item_func: 0x803FE944
+  jalhalla_soul_item_func: 0x803FE970
+  molgera_soul_item_func: 0x803FE99C
+  boss_souls_enabled: 0x803FE9C8
+  hookshot_sight_failsafe_check: 0x803FE9CC
+  deluxe_picto_box_item_func_fix_equipped_picto_box: 0x803FE9E4
+  stop_sub_bgm_when_unloading_stage: 0x803FEA18
+  zero_out_arrow_on_hit_callback: 0x803FEA30
+  check_can_defend: 0x803FEA40
+  check_ganondorf_in_phase_3: 0x803FEA70
+  check_play_special_item_get_music: 0x803FEA8C
+  multiply_damage_amount: 0x803FEAF4
+  damage_multiplier: 0x803FEB18
+  invert_camera_horizontal_axis: 0x803FEB1C
+  convert_progressive_item_id_for_createDemoItem: 0x803FEB28
+  convert_progressive_item_id_for_daItem_create: 0x803FEB54
+  convert_progressive_item_id_for_dProcGetItem_init_1: 0x803FEB80
+  convert_progressive_item_id_for_dProcGetItem_init_2: 0x803FEBA8
+  check_open_map_select: 0x803FEBD0
+  set_starting_health: 0x803FEC30
+  get_current_health_for_file_select_screen: 0x803FEC4C
+  get_max_health_for_file_select_screen: 0x803FEC74
+  reset_auction_cycle: 0x803FEC98
+  auction_reset_value_instr: 0x803FECA0
+  fully_refill_magic_meter_and_cap_health_on_load_save: 0x803FECAC
+  turn_while_swinging: 0x803FECDC
+  check_animate_rainbow_rupee_color: 0x803FED3C
+  rainbow_rupee_keyframe: 0x803FED7C
+  check_run_new_text_commands: 0x803FED8C
+  exec_curr_num_keys_text_command: 0x803FEDCC
+  set_warp_confirm_dialog_message_id_for_custom_warps: 0x803FEEAC
+  check_player_in_casual_clothes: 0x803FEEC4
+  read_custom_DynamicNameTable_loop: 0x803FEF00
+  read_custom_l_objectName_loop_for_dStage_searchName: 0x803FEF2C
+  read_custom_l_objectName_loop_for_dStage_getName: 0x803FEF54
+  get_num_owned_tingle_statues: 0x803FEF80
+  ladder_up_check_unequip_held_item: 0x803FEFF4
+  ladder_down_check_unequip_held_item: 0x803FF00C
+  gameover_continue_reset_life: 0x803FF024
+  give_pearl_and_raise_totg_if_necessary: 0x803FF040
+  remove_low_health_anim_at_full_health: 0x803FF0D4
+  give_temporary_sword_during_ganondorf_fight_in_swordless: 0x803FF0F8
+  give_temporary_sword_in_orcas_house_in_swordless: 0x803FF114
+  remove_temporary_sword_when_loading_stage_in_swordless: 0x803FF15C
   test_room_stage_name: 0x8022D034
   test_room_starting_items_list: 0x8022D03C
   test_room_spawn_id: 0x800531E3
   test_room_room_index: 0x800531E7
   test_room_override_layer_num: 0x800531EB
+files/rels/d_a_bst.rel:
+  check_gohma_soul: 0xCF64
+files/rels/d_a_bwd.rel:
+  check_kalle_demos_soul: 0xB0F8
+files/rels/d_a_btd.rel:
+  check_gohdan_soul: 0xA928
+files/rels/d_a_bdk.rel:
+  check_helmaroc_king_soul: 0xEA88
+  initialize_helmaroc_king_landing_timer: 0xEAE4
+  check_helmaroc_king_landing_timeout: 0xEAF4
+files/rels/d_a_bgn.rel:
+  check_jalhalla_soul: 0xF5B8
+files/rels/d_a_bpw.rel:
+  check_molgera_soul: 0xEFE0
 files/rels/d_a_auction.rel:
   custom_getItemNo: 0x49F8
   auction_event_bits: 0x4AB8
@@ -130,9 +151,6 @@ files/rels/d_a_mt.rel:
 files/rels/d_a_fganon.rel:
   phantom_ganon_check_link_within_y_diff: 0xB020
   check_ganons_tower_chest_opened: 0xB03C
-files/rels/d_a_bdk.rel:
-  initialize_helmaroc_king_landing_timer: 0xEA88
-  check_helmaroc_king_landing_timeout: 0xEA98
 files/rels/d_a_boko.rel:
   check_phantom_ganons_sword_should_disappear: 0x4B88
   phantom_ganon_maze_stage_name: 0x4BC4
@@ -175,6 +193,14 @@ files/rels/d_a_tsubo.rel:
   create_pot_item: 0x9964
 files/rels/d_a_obj_homen.rel:
   create_stone_head_item: 0x36DC
+files/rels/d_a_npc_bj1.rel:
+  hollo_custom_getMsg: 0x8904
+  hollo_custom_nextMsgStatus: 0x893C
+  hollo_talk_msg_check: 0x8958
+files/rels/d_a_npc_ym1.rel:
+  abe_custom_getMsg: 0x5118
+  abe_custom_nextMsgStatus: 0x5178
+  abe_talk_msg_check: 0x51E4
 files/rels/d_a_ship.rel:
   set_wind_dir_to_ship_dir: 0xE3A8
   slow_down_ship_when_stopping: 0xE3F0

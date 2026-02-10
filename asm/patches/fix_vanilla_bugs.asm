@@ -590,3 +590,17 @@ check_helmaroc_king_landing_timeout:
 .org 0x26A8 ; In daBoko_c::procCarry
   nop
 .close
+
+
+
+; Fix a vanilla bug where Gohdan's HARAI (sweep) attack could wake up a sleeping (stunned) hand.
+; In main_cont, the HARAI attack's guard condition checks mActionType < ACTION_DOWN_ATTACK_e (10),
+; while all other attacks check mActionType < ACTION_DAMAGE_e (5).
+; Since ACTION_SLEEP_e is 6, sleeping hands pass the HARAI guard and can be forcibly assigned
+; a sweep attack, prematurely ending their stun. This fix tightens the guard to match other attacks.
+.open "files/rels/d_a_bst.rel" ; Gohdan (boss)
+.org 0x6A58 ; In main_cont, hand[0] HARAI guard: cmpwi r0, 0x0A (ACTION_DOWN_ATTACK_e)
+  cmpwi r0, 0x05 ; ACTION_DAMAGE_e — block DAMAGE, SLEEP, HEAD_DAMAGE, HEAD_HUKKI states
+.org 0x6A8C ; In main_cont, hand[1] HARAI guard: cmpwi r0, 0x0A (ACTION_DOWN_ATTACK_e)
+  cmpwi r0, 0x05 ; ACTION_DAMAGE_e — block DAMAGE, SLEEP, HEAD_DAMAGE, HEAD_HUKKI states
+.close
