@@ -106,7 +106,7 @@ deluxe_picto_box_item_func_fix_equipped_picto_box:
 ; Fix stone head targets (d_a_obj_homen, including homen2) sometimes falling endlessly without breaking in Wind Temple.
 ; Depending on the angle the head is pulled from, it can fail to detect ground and fall forever.
 ; This adds a timeout: if the homen has been falling for more than
-; 150 frames (~5 seconds), force mGroundY above the current position to trigger the
+; 90 frames (3 seconds), force mGroundY above the current position to trigger the
 ; existing break logic.
 .open "files/rels/d_a_obj_homen.rel" ; Stone head
 .org 0x1D54 ; In process_falldown_init, just before return (li r3, 1)
@@ -127,7 +127,7 @@ check_homen_falldown_timeout:
   lha r12, 0x07DA(r31)   ; Load frame counter (use r12 to avoid r0 rA pitfall)
   addi r12, r12, 1
   sth r12, 0x07DA(r31)   ; Increment counter
-  cmpwi r12, 150          ; 150 frames = ~5 seconds at 30fps
+  cmpwi r12, 90          ; 90 frames = 3 seconds at 30fps
   ble homen_falldown_timeout_done
   ; Timeout exceeded: set mGroundY above current position to force break on next frame
   lfs f0, 0x01FC(r31)    ; current.pos.y
