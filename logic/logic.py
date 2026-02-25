@@ -300,6 +300,9 @@ class Logic:
       
       types = self.item_locations[location_name]["Types"]
       if "Sunken Treasure" in types:
+        if location_name in self.options.excluded_locations:
+          nonprogress_locations.append(location_name)
+          continue
         chart_name = self.chart_name_for_location(location_name)
         if "Triforce Chart" in chart_name:
           if self.options.progression_triforce_charts:
