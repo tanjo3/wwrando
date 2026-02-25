@@ -209,6 +209,10 @@ def test_exclude_sunken_treasure_locations():
   rando.randomize_all()
   progress_locations = rando.logic.filter_locations_for_progression(rando.logic.item_locations.keys())
   assert all(location not in progress_locations for location in locations_to_exclude)
+  
+  progress_locations, non_progress_locations = rando.logic.get_progress_and_non_progress_locations()
+  assert all(location not in progress_locations for location in locations_to_exclude)
+  assert all(location in non_progress_locations for location in locations_to_exclude)
 
 def test_exclude_sunken_treasure_locations_with_randomized_charts():
   locations_to_exclude = [
@@ -230,6 +234,10 @@ def test_exclude_sunken_treasure_locations_with_randomized_charts():
   rando.randomize_all()
   progress_locations = rando.logic.filter_locations_for_progression(rando.logic.item_locations.keys())
   assert all(location not in progress_locations for location in locations_to_exclude)
+  
+  progress_locations, non_progress_locations = rando.logic.get_progress_and_non_progress_locations()
+  assert all(location not in progress_locations for location in locations_to_exclude)
+  assert all(location in non_progress_locations for location in locations_to_exclude)
 
 def test_exclude_all_locations():
   options = Options()
