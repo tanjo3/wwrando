@@ -175,6 +175,12 @@ files/rels/d_a_tsubo.rel:
   create_pot_item: 0x9964
 files/rels/d_a_obj_homen.rel:
   create_stone_head_item: 0x36DC
+files/rels/d_a_obj_swlight.rel:
+  swlight_chk_arrow_hit: 0x20CC
+  swlight_keep_charged_moon: 0x20FC
+  swlight_keep_charged_sun: 0x2114
+  swlight_init_keep_charged: 0x212C
+  swlight_sun_lit_check: 0x2140
 files/rels/d_a_ship.rel:
   set_wind_dir_to_ship_dir: 0xE3A8
   slow_down_ship_when_stopping: 0xE3F0
