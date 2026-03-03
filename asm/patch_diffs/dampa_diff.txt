@@ -1,0 +1,21 @@
+files/rels/d_a_npc_people.rel:
+
+  # MG1: Block replay if flag 0x2A04 is set, instead of checking if flag 2680 is set.
+  0x71C8:
+    Data: [0x38,0x80,0x2A,0x04]
+
+  # MG1: Skip >80 rupee block
+  0x71F4:
+    Data: [0x48,0x00,0x00,0x10]
+
+  # Remove the first dialogue and the setting of flag 2440 by jumping straight to the minigame start logic.
+  0x7128:
+    Data: [0x48,0x00,0x00,0x1C]
+
+  # MG2 Completion: Jump to the first dialogue section where flag 2440 is set.
+  0x70FC:
+    Data: [0x48,0x00,0x00,0x38]
+
+  # MG2: Block replay when flag 2440 is set, instead of checking flag 2440 to start Minigame 2.
+  0x8AB0:
+    Data: [0x40,0x82,0x00,0x28]
