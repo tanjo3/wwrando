@@ -97,6 +97,22 @@ custom_DMC:
 .align 2 ; Align to the next 4 bytes
 
 
+; Bitmask indicating which rupeesanity items should have the hold-above-head demo suppressed.
+; Populated by tweaks.py at patch time.
+.global rupeesanity_silent_pickup_bitmask
+rupeesanity_silent_pickup_bitmask:
+  .space 21
+.align 2 ; Align to the next 4 bytes
+
+; Table of vanilla spawn switch values indexed by custom flag index (0-164).
+; Since enable_spawn_switch is repurposed to store the flag index, the vanilla spawn switch value is lost at runtime.
+; This table preserves it so the ASM can restore the correct mSpawnSwitchNo during CreateInit.
+; 0xFF means "no spawn switch" (always spawn). Non-0xFF values gate spawning on a room switch.
+; Populated by tweaks.py at patch time.
+.global rupeesanity_spawn_switch_table
+rupeesanity_spawn_switch_table:
+  .space 165
+.align 2 ; Align to the next 4 bytes
 
 
 .close

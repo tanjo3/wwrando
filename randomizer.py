@@ -455,6 +455,8 @@ class WWRandomizer:
     tweaks.allow_nonlinear_servants_of_the_towers(self)
     tweaks.fix_helmaroc_king_table_softlock(self)
     tweaks.make_dungeon_joy_pendant_locations_flexible(self)
+    patcher.apply_patch(self, "rupeesanity")
+    tweaks.make_rupeesanity_rupees_flexible(self)
     tweaks.prevent_fairy_island_softlocks(self)
     tweaks.give_fairy_fountains_distinct_colors(self)
     
@@ -720,6 +722,9 @@ class WWRandomizer:
     self.main_custom_symbols = self.custom_symbols["sys/main.dol"]
     with open(os.path.join(ASM_PATH, "free_space_start_offsets.txt"), "r") as f:
       self.free_space_start_offsets = yaml.load(f)
+    
+    with open(os.path.join(DATA_PATH, "rupeesanity_flags.txt"), "r") as f:
+      self.rupeesanity_flags = yaml.load(f)
   
   def register_renamed_item(self, item_id, item_name):
     self.item_name_to_id[item_name] = item_id
