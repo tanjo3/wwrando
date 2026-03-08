@@ -1,0 +1,193 @@
+A_mori/Room0.arc:
+  Actor060: 0
+Cave03/Room0.arc:
+  Actor02B: 1
+  Actor02D: 2
+  Actor02F: 3
+  Actor031: 4
+  Actor033: 5
+  Actor035: 6
+  Actor036: 7
+Kaisen/Room0.arc:
+  Actor004: 8
+  Actor005: 9
+  Actor006: 10
+M_Dai/Room2.arc:
+  Actor00F: 11
+M_Dai/Room7.arc:
+  Actor010: 12
+  Actor011: 13
+  Actor012: 14
+  Actor013: 15
+  Actor014: 16
+  Actor015: 17
+  Actor016: 18
+  Actor017: 19
+  Actor01C: 20
+  Actor01F: 21
+M_Dai/Room8.arc:
+  Actor007: 22
+M_Dai/Room13.arc:
+  Actor020: 23
+M_Dai/Room14.arc:
+  Actor00F: 24
+  Actor01A: 25
+M_NewD2/Room14.arc:
+  Actor00F: 26
+  Actor010: 27
+  Actor011: 28
+  Actor012: 29
+  Actor013: 30
+  Actor014: 31
+  Actor015: 32
+  Actor016: 33
+  Actor017: 34
+MiniHyo/Room0.arc:
+  Actor011: 35
+  Actor012: 36
+Omasao/Room0.arc:
+  Actor004: 37
+Pdrgsh/Room0.arc:
+  Actor01F: 38
+  Actor025: 39
+Pnezumi/Room0.arc:
+  Actor002: 40
+  Actor003: 41
+  Actor004: 42
+  Actor024: 43
+kaze/Room5.arc:
+  Actor015: 44
+  Actor016: 45
+  Actor017: 46
+kinMB/Room10.arc:
+  Actor027: 47
+  Actor028: 48
+  Actor029: 49
+  Actor02A: 50
+  Actor02B: 51
+  Actor02C: 52
+  Actor02D: 53
+  Actor02E: 54
+kindan/Room1.arc:
+  Actor05A: 55
+  Actor05B: 56
+  Actor05C: 57
+  Actor05D: 58
+  Actor05E: 59
+  Actor05F: 60
+  Actor060: 61
+  Actor061: 62
+kindan/Room3.arc:
+  Actor005: 63
+  Actor016: 64
+  Actor017: 65
+  Actor018: 66
+  Actor019: 67
+kindan/Room5.arc:
+  Actor06A: 68
+  Actor06B: 69
+  Actor06C: 70
+  Actor06D: 71
+  Actor06E: 72
+sea/Room4.arc:
+  Actor06E: 73
+  Actor06F: 74
+  Actor070: 75
+  Actor071: 76
+  Actor072: 77
+  Actor073: 78
+  Actor074: 79
+  Actor075: 80
+  Actor076: 81
+  Actor077: 82
+  Actor078: 83
+  Actor07F: 84
+  Actor080: 85
+  Actor081: 86
+sea/Room12.arc:
+  Actor004: 87
+  Actor005: 88
+  Actor006: 89
+  Actor01E: 90
+  Actor01F: 91
+  Actor020: 92
+sea/Room13.arc:
+  Actor009: 93
+  Actor057: 94
+  Actor058: 95
+  Actor05A: 96
+  Actor05B: 97
+  Actor05C: 98
+  Actor063: 99
+sea/Room17.arc:
+  Actor026: 100
+sea/Room23.arc:
+  Actor009: 101
+  Actor01E: 102
+  Actor01F: 103
+  Actor020: 104
+sea/Room33.arc:
+  Actor04A: 105
+  Actor04B: 106
+  Actor04C: 107
+  Actor04D: 108
+  Actor04E: 109
+  Actor04F: 110
+  Actor050: 111
+  Actor051: 112
+  Actor0A8: 113
+  Actor0A9: 114
+  Actor0AA: 115
+  Actor0AB: 116
+  Actor0AC: 117
+  Actor0AD: 118
+  Actor0AE: 119
+  Actor0AF: 120
+  Actor0B0: 121
+  Actor0B1: 122
+  Actor0B2: 123
+  Actor0B3: 124
+  Actor0B4: 125
+  Actor0B5: 126
+  Actor0B7: 127
+sea/Room38.arc:
+  Actor003: 128
+  Actor019: 129
+  Actor01A: 130
+  Actor038: 131
+  Actor039: 132
+  Actor03A: 133
+  Actor03B: 134
+  Actor03C: 135
+  Actor03D: 136
+  Actor03E: 137
+  Actor03F: 138
+sea/Room40.arc:
+  Actor003: 139
+  Actor00B: 140
+sea/Room44.arc:
+  Actor05E: 141
+  Actor05F: 142
+  Actor060: 143
+  Actor096: 144
+  Actor097: 145
+  Actor098: 146
+  Actor099: 147
+  Actor0A5: 148
+  Actor0A6: 149
+  Actor0A8: 150
+  Actor0AB: 151
+sea/Room45.arc:
+  Actor014: 152
+  Actor015: 153
+  Actor01A: 154
+  Actor01B: 155
+  Actor01C: 156
+  Actor01D: 157
+  Actor01E: 158
+  Actor01F: 159
+  Actor020: 160
+  Actor021: 161
+  Actor025: 162
+  Actor026: 163
+  Actor027: 164
