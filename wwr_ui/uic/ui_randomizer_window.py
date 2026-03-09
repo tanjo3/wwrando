@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'randomizer_window.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -28,7 +28,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(914, 757)
+        MainWindow.resize(1000, 830)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -229,6 +229,16 @@ class Ui_MainWindow(object):
         self.progression_platforms_rafts.setObjectName(u"progression_platforms_rafts")
 
         self.gridLayout_2.addWidget(self.progression_platforms_rafts, 1, 4, 1, 1)
+
+        self.progression_rupee_dungeon = QCheckBox(self.progression_locations_groupbox)
+        self.progression_rupee_dungeon.setObjectName(u"progression_rupee_dungeon")
+
+        self.gridLayout_2.addWidget(self.progression_rupee_dungeon, 7, 0, 1, 1)
+
+        self.progression_rupee_overworld = QCheckBox(self.progression_locations_groupbox)
+        self.progression_rupee_overworld.setObjectName(u"progression_rupee_overworld")
+
+        self.gridLayout_2.addWidget(self.progression_rupee_overworld, 7, 1, 1, 1)
 
 
         self.verticalLayout_3.addWidget(self.progression_locations_groupbox)
@@ -958,7 +968,9 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.progression_mail, self.progression_expensive_purchases)
         QWidget.setTabOrder(self.progression_expensive_purchases, self.progression_triforce_charts)
         QWidget.setTabOrder(self.progression_triforce_charts, self.progression_treasure_charts)
-        QWidget.setTabOrder(self.progression_treasure_charts, self.sword_mode)
+        QWidget.setTabOrder(self.progression_treasure_charts, self.progression_rupee_dungeon)
+        QWidget.setTabOrder(self.progression_rupee_dungeon, self.progression_rupee_overworld)
+        QWidget.setTabOrder(self.progression_rupee_overworld, self.sword_mode)
         QWidget.setTabOrder(self.sword_mode, self.num_starting_triforce_shards)
         QWidget.setTabOrder(self.num_starting_triforce_shards, self.keylunacy)
         QWidget.setTabOrder(self.keylunacy, self.chest_type_matches_contents)
@@ -1052,6 +1064,8 @@ class Ui_MainWindow(object):
         self.progression_long_sidequests.setText(QCoreApplication.translate("MainWindow", u"Long Sidequests", None))
         self.progression_misc.setText(QCoreApplication.translate("MainWindow", u"Miscellaneous", None))
         self.progression_platforms_rafts.setText(QCoreApplication.translate("MainWindow", u"Lookout Platforms and Rafts", None))
+        self.progression_rupee_dungeon.setText(QCoreApplication.translate("MainWindow", u"Dungeon Rupees", None))
+        self.progression_rupee_overworld.setText(QCoreApplication.translate("MainWindow", u"Overworld Rupees", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"Item Randomizer Modes", None))
         self.trap_chests.setText(QCoreApplication.translate("MainWindow", u"Enable Trap Chests", None))
         self.keylunacy.setText(QCoreApplication.translate("MainWindow", u"Key-Lunacy", None))
