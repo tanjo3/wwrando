@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>914</width>
-    <height>757</height>
+    <width>1000</width>
+    <height>830</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -313,6 +313,20 @@
                 <widget class="QCheckBox" name="progression_platforms_rafts">
                  <property name="text">
                   <string>Lookout Platforms and Rafts</string>
+                 </property>
+                </widget>
+               </item>
+              <item row="7" column="0">
+                <widget class="QCheckBox" name="progression_rupee_dungeon">
+                 <property name="text">
+                  <string>Dungeon Rupees</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QCheckBox" name="progression_rupee_overworld">
+                 <property name="text">
+                  <string>Overworld Rupees</string>
                  </property>
                 </widget>
                </item>
@@ -1376,6 +1390,8 @@
   <tabstop>progression_expensive_purchases</tabstop>
   <tabstop>progression_triforce_charts</tabstop>
   <tabstop>progression_treasure_charts</tabstop>
+  <tabstop>progression_rupee_dungeon</tabstop>
+  <tabstop>progression_rupee_overworld</tabstop>
   <tabstop>sword_mode</tabstop>
   <tabstop>num_starting_triforce_shards</tabstop>
   <tabstop>keylunacy</tabstop>
