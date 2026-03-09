@@ -540,6 +540,11 @@ class Logic:
         continue
       if "Dungeon Secret" in types and not options.progression_dungeon_secrets:
         continue
+      if "Rupee" in types:
+        if "Dungeon" in types and not options.progression_rupee_dungeon:
+          continue
+        if "Dungeon" not in types and not options.progression_rupee_overworld:
+          continue
       
       # Note: The Triforce/Treasure Chart sunken treasures are handled differently from other types.
       # During randomization they are handled by not considering the charts themselves to be progress items.

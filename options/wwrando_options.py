@@ -138,6 +138,16 @@ class Options(BaseOptions):
     description="Miscellaneous locations that don't fit into any of the above categories (outdoors chests, wind shrine, Cyclos, etc).<br>"
       "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
   )
+  progression_rupee_dungeon: bool = option(
+    default=False,
+    description="This controls whether rupees inside dungeons can contain progress items.<br>"
+      "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
+  )
+  progression_rupee_overworld: bool = option(
+    default=False,
+    description="This controls whether rupees in the overworld can contain progress items.<br>"
+      "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
+  )
   #endregion
   
   #region Modes
