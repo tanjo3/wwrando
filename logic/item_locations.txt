@@ -14,12 +14,85 @@ Outset Island - Underneath Link's House:
   Types: Other Chest
   Paths:
     - LinkUG/Stage.arc/Chest000
+Outset Island - Rupee Behind Trees Near Link's House:
+  Need: Can Cut Down Outset Trees
+    | Boomerang
+    | Hookshot
+  Original item: Yellow Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room44.arc/Actor05F
+Outset Island - Rupee Above Water Pool Near Link's House:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | Can Fly With Deku Leaf Outdoors
+    | Boomerang
+    | Hookshot
+    | ((Hero's Sword | Skull Hammer) & Obscure 1)
+  # Obscure: You can get onto the roof from on top of the wooden board using a jump slash.
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room44.arc/Actor0A5
+Outset Island - Rupee on Link's House:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | Can Fly With Deku Leaf Outdoors
+    | Boomerang
+    | Hookshot
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room44.arc/Actor0A6
+Outset Island - Rupee on Jumping Rocks 1:
+  Need: Nothing
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room44.arc/Actor05E
+Outset Island - Rupee on Jumping Rocks 2:
+  Need: Nothing
+  Original item: Yellow Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room44.arc/Actor060
+Outset Island - Rupee Underneath Mesa's Door:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room44.arc/Actor097
+Outset Island - Rupee Behind Mesa's Bed:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - Omasao/Room0.arc/Actor004
 Outset Island - Mesa the Grasscutter's House:
   Need: Nothing
   Original item: Red Rupee
   Types: Other Chest
   Paths:
     - Omasao/Stage.arc/Chest000
+Outset Island - Rupee on Mesa's House Upper:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | (Can Reach Outset Island Upper Level & Can Fly With Deku Leaf Outdoors)
+    | Boomerang
+    | Hookshot
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room44.arc/Actor098
+Outset Island - Rupee on Mesa's House Lower:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room44.arc/Actor099
+Outset Island - Rupee Above Aryll's Lookout:
+  Need: Bait Bag & Can Buy Hyoi Pears
+  Original item: Red Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room44.arc/Actor0A8
 #Outset Island - Orca - Tutorial:
 #  Need: 
 #  Original item: Hero's Sword
@@ -62,6 +135,29 @@ Outset Island - Orca - Hit 500 Times:
 #  Original item: Silver Rupee
 #  Paths:
 #    - rels/d_a_npc_ji1.rel@42EF
+Outset Island - Rupee Above Path to Forest of Fairies:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | (Can Reach Outset Island Upper Level & Can Fly With Deku Leaf Outdoors)
+    | Boomerang
+    | Hookshot
+  Original item: Yellow Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room44.arc/Actor096
+Outset Island - Rupee on Pillar Below Bridge to Forest of Fairies:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | Can Fly With Deku Leaf Outdoors
+    | Can Reach Outset Island Upper Level
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room44.arc/Actor0AB
+Outset Island - Rupee in Log in Forest of Fairies:
+  Need: Can Access Forest of Fairies
+  Original item: Red Rupee
+  Types: Rupee
+  Paths:
+    - A_mori/Room0.arc/Actor060
 Outset Island - Great Fairy:
   Need: Can Access Outset Fairy Fountain
   Original item: 5000 Rupee Wallet
@@ -159,6 +255,30 @@ Windfall Island - Jail - Tingle - Second Gift:
   Types: Free Gift
   Paths:
     - rels/d_a_npc_tc.rel@611F
+Windfall Island - Jail - Rupee Underneath Bed:
+  Need: Nothing
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - Pnezumi/Room0.arc/Actor024
+Windfall Island - Jail - Rupee in Maze 1:
+  Need: Nothing
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - Pnezumi/Room0.arc/Actor002
+Windfall Island - Jail - Rupee in Maze 2:
+  Need: Nothing
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - Pnezumi/Room0.arc/Actor003
+Windfall Island - Jail - Rupee in Maze 3:
+  Need: Nothing
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - Pnezumi/Room0.arc/Actor004
 Windfall Island - Jail - Maze Chest:
   Need: Nothing
   Original item: Picto Box
@@ -180,6 +300,18 @@ Windfall Island - Jail - Maze Chest:
 #  Original item: Blue Potion
 #  Paths:
 #    - rels/d_a_npc_ds1.rel@28DF
+Windfall Island - Chu Jelly Juice Shop - Rupee on Right Shelf:
+  Need: Nothing
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - Pdrgsh/Room0.arc/Actor01F
+Windfall Island - Chu Jelly Juice Shop -  Rupee on Left Shelf:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - Pdrgsh/Room0.arc/Actor025
 Windfall Island - Chu Jelly Juice Shop - Give 15 Green Chu Jelly:
   Need: Can Farm Green Chu Jelly
   Original item: Green Potion
@@ -443,6 +575,24 @@ Windfall Island - Mila - Follow the Thief:
   Types: Short Sidequest
   Paths:
     - sea/Stage.arc/Event084:get_empty_btl/Actor002/Action001
+Windfall Island - Rupee Behind Battlesquid Minigame 1:
+  Need: Nothing
+  Original item: Yellow Rupee
+  Types: Rupee
+  Paths:
+    - Kaisen/Room0.arc/Actor004
+Windfall Island - Rupee Behind Battlesquid Minigame 2:
+  Need: Nothing
+  Original item: Yellow Rupee
+  Types: Rupee
+  Paths:
+    - Kaisen/Room0.arc/Actor005
+Windfall Island - Rupee Behind Battlesquid Minigame 3:
+  Need: Nothing
+  Original item: Yellow Rupee
+  Types: Rupee
+  Paths:
+    - Kaisen/Room0.arc/Actor006
 Windfall Island - Battlesquid - First Prize:
   Need: Nothing
   Original item: Piece of Heart
@@ -521,6 +671,36 @@ Windfall Island - Linda and Anton:
 #  Original item: Wind Waker
 #  Paths:
 #    - sea/Stage.arc/Event025:TACT_TEARCH3/Actor000/Action002
+Dragon Roost Island - Rupee in Shallow Pool 1:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room13.arc/Actor05A
+Dragon Roost Island - Rupee in Shallow Pool 2:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room13.arc/Actor057
+Dragon Roost Island - Rupee in Shallow Pool 3:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room13.arc/Actor05B
+Dragon Roost Island - Rupee in Shallow Pool 4:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room13.arc/Actor05C
+Dragon Roost Island - Rupee in Shallow Pool 5:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room13.arc/Actor058
 Dragon Roost Island - Wind Shrine:
   Need: Wind Waker
   Original item: Wind's Requiem
@@ -528,6 +708,21 @@ Dragon Roost Island - Wind Shrine:
   Paths:
     - sea/Stage.arc/Event0D8:TACT_HT/Actor001/Action005
     #- rels/d_a_npc_hr.rel@1167 # Duplicate Wind's Requiem given by Zephos, we remove this from his code so the player doesn't get this item twice.
+Dragon Roost Island - Rupee Above Bomb Flower:
+  Need: Nothing
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room13.arc/Actor009
+Dragon Roost Island - Rupee Above Grapple Post:
+  Need:
+    Grappling Hook
+    | (Bait Bag & Can Buy Hyoi Pears)
+    | Boomerang
+  Original item: Red Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room13.arc/Actor063
 #Dragon Roost Island - Quill:
 #  Need: 
 #  Original item: Delivery Bag
@@ -640,6 +835,78 @@ Dragon Roost Cavern - Chest Across Lava Pit:
   Types: Dungeon
   Paths:
     - M_NewD2/Stage.arc/Chest00A
+Dragon Roost Cavern - Rupee in Rat Room Lower Crawlspace 1:
+  Need:
+    Can Access Dragon Roost Cavern
+    & DRC Small Key x2
+  Original item: Yellow Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_NewD2/Room14.arc/Actor00F
+Dragon Roost Cavern - Rupee in Rat Room Lower Crawlspace 2:
+  Need:
+    Can Access Dragon Roost Cavern
+    & DRC Small Key x2
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_NewD2/Room14.arc/Actor013
+Dragon Roost Cavern - Rupee in Rat Room Lower Crawlspace 3:
+  Need:
+    Can Access Dragon Roost Cavern
+    & DRC Small Key x2
+  Original item: Yellow Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_NewD2/Room14.arc/Actor011
+Dragon Roost Cavern - Rupee in Rat Room Lower Crawlspace 4:
+  Need:
+    Can Access Dragon Roost Cavern
+    & DRC Small Key x2
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_NewD2/Room14.arc/Actor014
+Dragon Roost Cavern - Rupee in Rat Room Lower Crawlspace 5:
+  Need:
+    Can Access Dragon Roost Cavern
+    & DRC Small Key x2
+  Original item: Yellow Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_NewD2/Room14.arc/Actor010
+Dragon Roost Cavern - Rupee in Rat Room Upper Crawlspace 1:
+  Need:
+    Can Access Dragon Roost Cavern
+    & DRC Small Key x2
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_NewD2/Room14.arc/Actor017
+Dragon Roost Cavern - Rupee in Rat Room Upper Crawlspace 2:
+  Need:
+    Can Access Dragon Roost Cavern
+    & DRC Small Key x2
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_NewD2/Room14.arc/Actor015
+Dragon Roost Cavern - Rupee in Rat Room Upper Crawlspace 3:
+  Need:
+    Can Access Dragon Roost Cavern
+    & DRC Small Key x2
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_NewD2/Room14.arc/Actor016
+Dragon Roost Cavern - Rupee in Rat Room Upper Crawlspace 4:
+  Need:
+    Can Access Dragon Roost Cavern
+    & DRC Small Key x2
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_NewD2/Room14.arc/Actor012
 Dragon Roost Cavern - Rat Room:
   Need:
     Can Access Dragon Roost Cavern
@@ -854,6 +1121,70 @@ Forbidden Woods - Pot High Above Hollow Tree:
   Types: Dungeon, Dungeon Secret
   Paths:
     - kindan/Room1.arc/Actor06B
+Forbidden Woods - Rupee on Lower Tree Branch 1:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room1.arc/Actor060
+Forbidden Woods - Rupee on Lower Tree Branch 2:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room1.arc/Actor05E
+Forbidden Woods - Rupee on Lower Tree Branch 3:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room1.arc/Actor05F
+Forbidden Woods - Rupee on Lower Tree Branch 4:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room1.arc/Actor061
+Forbidden Woods - Rupee on Upper Tree Branch 1:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room1.arc/Actor05B
+Forbidden Woods - Rupee on Upper Tree Branch 2:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room1.arc/Actor05C
+Forbidden Woods - Rupee on Upper Tree Branch 3:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room1.arc/Actor05A
+Forbidden Woods - Rupee on Upper Tree Branch 4:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room1.arc/Actor05D
 Forbidden Woods - Hole in Tree:
   Need:
     Can Access Forbidden Woods
@@ -863,6 +1194,96 @@ Forbidden Woods - Hole in Tree:
   Types: Dungeon
   Paths:
     - kindan/Stage.arc/Chest004
+Forbidden Woods - Rupee Near Boko Baba 1:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room3.arc/Actor019
+Forbidden Woods - Rupee Near Boko Baba 2:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room3.arc/Actor016
+Forbidden Woods - Rupee Near Boko Baba 3:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room3.arc/Actor005
+Forbidden Woods - Rupee Near Boko Baba 4:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room3.arc/Actor018
+Forbidden Woods - Rupee Near Boko Baba 5:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room3.arc/Actor017
+Forbidden Woods - Rupee in Tree in Hub Room 1:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+    & Can Defeat Boko Babas
+    & Grappling Hook
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room5.arc/Actor06B
+Forbidden Woods - Rupee in Tree in Hub Room 2:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+    & Can Defeat Boko Babas
+    & Grappling Hook
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room5.arc/Actor06C
+Forbidden Woods - Rupee in Tree in Hub Room 3:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+    & Can Defeat Boko Babas
+    & Grappling Hook
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room5.arc/Actor06A
+Forbidden Woods - Rupee in Tree in Hub Room 4:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+    & Can Defeat Boko Babas
+    & Grappling Hook
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room5.arc/Actor06E
+Forbidden Woods - Rupee in Tree in Hub Room 5:
+  Need:
+    Can Access Forbidden Woods
+    & Can Fly With Deku Leaf Indoors
+    & Can Defeat Boko Babas
+    & Grappling Hook
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kindan/Room5.arc/Actor06D
 Forbidden Woods - Morth Pit:
   Need:
     Can Access Forbidden Woods
@@ -928,6 +1349,70 @@ Forbidden Woods - Mothula Miniboss Room:
   Types: Dungeon, Randomizable Miniboss Room
   Paths:
     - kinMB/Stage.arc/Chest000
+Forbidden Woods - Rupee Around Miniboss Chest 1:
+  Need:
+    Can Access Forbidden Woods Miniboss Arena
+    & Can Defeat Winged Mothulas
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kinMB/Room10.arc/Actor027
+Forbidden Woods - Rupee Around Miniboss Chest 2:
+  Need:
+    Can Access Forbidden Woods Miniboss Arena
+    & Can Defeat Winged Mothulas
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kinMB/Room10.arc/Actor02B
+Forbidden Woods - Rupee Around Miniboss Chest 3:
+  Need:
+    Can Access Forbidden Woods Miniboss Arena
+    & Can Defeat Winged Mothulas
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kinMB/Room10.arc/Actor02A
+Forbidden Woods - Rupee Around Miniboss Chest 4:
+  Need:
+    Can Access Forbidden Woods Miniboss Arena
+    & Can Defeat Winged Mothulas
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kinMB/Room10.arc/Actor02D
+Forbidden Woods - Rupee Around Miniboss Chest 5:
+  Need:
+    Can Access Forbidden Woods Miniboss Arena
+    & Can Defeat Winged Mothulas
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kinMB/Room10.arc/Actor028
+Forbidden Woods - Rupee Around Miniboss Chest 6:
+  Need:
+    Can Access Forbidden Woods Miniboss Arena
+    & Can Defeat Winged Mothulas
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kinMB/Room10.arc/Actor02C
+Forbidden Woods - Rupee Around Miniboss Chest 7:
+  Need:
+    Can Access Forbidden Woods Miniboss Arena
+    & Can Defeat Winged Mothulas
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kinMB/Room10.arc/Actor029
+Forbidden Woods - Rupee Around Miniboss Chest 8:
+  Need:
+    Can Access Forbidden Woods Miniboss Arena
+    & Can Defeat Winged Mothulas
+  Original item: Green Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kinMB/Room10.arc/Actor02E
 Forbidden Woods - Past Seeds Hanging by Vines:
   Need:
     Can Access Forbidden Woods
@@ -1022,6 +1507,41 @@ Greatfish Isle - Hidden Chest:
   Types: Island Puzzle
   Paths:
     - sea/Room23.arc/Chest000
+Greatfish Isle - Rupee on Small Island 1:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | Can Fly With Deku Leaf Outdoors
+    | Boomerang
+    | Hookshot
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room23.arc/Actor020
+Greatfish Isle - Rupee on Small Island 2:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | Can Fly With Deku Leaf Outdoors
+    | Boomerang
+    | Hookshot
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room23.arc/Actor01E
+Greatfish Isle - Rupee on Small Island 3:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | Can Fly With Deku Leaf Outdoors
+    | Boomerang
+    | Hookshot
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room23.arc/Actor009
+Greatfish Isle - Rupee on Small Island 4:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | Can Fly With Deku Leaf Outdoors
+    | Boomerang
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room23.arc/Actor01F
 
 
 Tower of the Gods - Chest Behind Bombable Walls:
@@ -1291,6 +1811,32 @@ Ice Ring Isle - Frozen Chest:
   Types: Island Puzzle
   Paths:
     - sea/Room40.arc/Chest000
+Ice Ring Isle - Rupee Frozen in Ice:
+  Need: Fire Arrows
+  Original item: Yellow Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room40.arc/Actor00B
+Ice Ring Isle - Rupee on Iceberg:
+  Need: Fire Arrows
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room40.arc/Actor003
+Ice Ring Isle - Rupee on Ice Slide in Cave 1:
+  Need: Can Access Ice Ring Isle Secret Cave
+  # Need to escape: Iron Boots
+  Original item: Green Rupee
+  Types: Puzzle Secret Cave, Rupee
+  Paths:
+    - MiniHyo/Room0.arc/Actor011
+Ice Ring Isle - Rupee on Ice Slide in Cave 2:
+  Need: Can Access Ice Ring Isle Secret Cave
+  # Need to escape: Iron Boots
+  Original item: Green Rupee
+  Types: Puzzle Secret Cave, Rupee
+  Paths:
+    - MiniHyo/Room0.arc/Actor012
 Ice Ring Isle - Cave - Chest:
   Need: Can Access Ice Ring Isle Secret Cave
   # Need to escape: Iron Boots
@@ -1315,6 +1861,113 @@ Headstone Island - Top of the Island:
   Types: Island Puzzle
   Paths:
     - sea/Room45.arc/Actor013
+Headstone Island - Rupee on Top of Headstone:
+  Need: Bait Bag & Can Buy Hyoi Pears
+  Original item: Yellow Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room45.arc/Actor014
+Headstone Island - Rupee on Lone Spire:
+  Need:
+    (Bait Bag & Can Buy Hyoi Pears)
+    | Boomerang
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room45.arc/Actor015
+Headstone Island - Rupee Behind Headstone 1:
+  Need: Nothing
+  # You can climb up onto this part of the island on the west side.
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room45.arc/Actor01B
+Headstone Island - Rupee Behind Headstone 2:
+  Need: Nothing
+  # You can climb up onto this part of the island on the west side.
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room45.arc/Actor01C
+Headstone Island - Rupee Behind Headstone 3:
+  Need: Nothing
+  # You can climb up onto this part of the island on the west side.
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room45.arc/Actor01D
+Headstone Island - Rupee Behind Headstone 4:
+  Need: Nothing
+  # You can climb up onto this part of the island on the west side.
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room45.arc/Actor01E
+Headstone Island - Rupee Behind Headstone 5:
+  Need: Nothing
+  # You can climb up onto this part of the island on the west side.
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room45.arc/Actor01F
+Headstone Island - Rupee Behind Headstone 6:
+  Need: Nothing
+  # You can climb up onto this part of the island on the west side.
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room45.arc/Actor020
+Headstone Island - Rupee Behind Headstone 7:
+  Need: Nothing
+  # You can climb up onto this part of the island on the west side.
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room45.arc/Actor021
+Headstone Island - Rupee East of Headstone 1:
+  Need:
+    (Bait Bag & Can Buy Hyoi Pears)
+    | Boomerang
+    | Hookshot
+    | Can Fly With Deku Leaf Outdoors
+    # It is possible to use to fly to this island from the main part of the island.
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room45.arc/Actor027
+Headstone Island - Rupee East of Headstone 2:
+  Need:
+    (Bait Bag & Can Buy Hyoi Pears)
+    | Boomerang
+    | Hookshot
+    | Can Fly With Deku Leaf Outdoors
+    # It is possible to use to fly to this island from the main part of the island.
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room45.arc/Actor025
+Headstone Island - Rupee East of Headstone 3:
+  Need:
+    (Bait Bag & Can Buy Hyoi Pears)
+    | Boomerang
+    | Hookshot
+    | Can Fly With Deku Leaf Outdoors
+    # It is possible to use to fly to this island from the main part of the island.
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room45.arc/Actor01A
+Headstone Island - Rupee East of Headstone 4:
+  Need:
+    (Bait Bag & Can Buy Hyoi Pears)
+    | Boomerang
+    | Hookshot
+    | Can Fly With Deku Leaf Outdoors
+    # It is possible to use to fly to this island from the main part of the island.
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room45.arc/Actor026
 Headstone Island - Submarine:
   Need: Can Defeat Bombchus
   Original item: Treasure Chart 14
@@ -1346,6 +1999,16 @@ Earth Temple - Behind Curtain In Warp Pot Room:
   Types: Dungeon, Dungeon Secret
   Paths:
     - M_Dai/Room2.arc/Actor010
+Earth Temple - Rupee Behind Curtain In Warp Pot Room:
+  Need:
+    Can Access Earth Temple
+    & Can Play Command Melody
+    & Fire Arrows
+    & (Boomerang | Hookshot)
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_Dai/Room2.arc/Actor00F
 Earth Temple - Transparent Chest in First Crypt:
   Need:
     Can Reach Earth Temple Right Path
@@ -1397,6 +2060,96 @@ Earth Temple - Chest Behind Statues:
   Types: Dungeon
   Paths:
     - M_Dai/Stage.arc/Chest003
+Earth Temple - Rupee Behind Destructible Wall in Shortcut 1:
+  Need:
+    Can Reach Earth Temple Moblins and Poes Room
+    & Can Play Command Melody
+    & Can Aim Mirror Shield
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_Dai/Room7.arc/Actor012
+Earth Temple - Rupee Behind Destructible Wall in Shortcut 2:
+  Need:
+    Can Reach Earth Temple Moblins and Poes Room
+    & Can Play Command Melody
+    & Can Aim Mirror Shield
+  Original item: Yellow Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_Dai/Room7.arc/Actor014
+Earth Temple - Rupee Behind Destructible Wall in Shortcut 3:
+  Need:
+    Can Reach Earth Temple Moblins and Poes Room
+    & Can Play Command Melody
+    & Can Aim Mirror Shield
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_Dai/Room7.arc/Actor017
+Earth Temple - Rupee Behind Destructible Wall in Shortcut 4:
+  Need:
+    Can Reach Earth Temple Moblins and Poes Room
+    & Can Play Command Melody
+    & Can Aim Mirror Shield
+  Original item: Yellow Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_Dai/Room7.arc/Actor011
+Earth Temple - Rupee Behind Destructible Wall in Shortcut 5:
+  Need:
+    Can Reach Earth Temple Moblins and Poes Room
+    & Can Play Command Melody
+    & Can Aim Mirror Shield
+  Original item: Red Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_Dai/Room7.arc/Actor01C
+Earth Temple - Rupee Behind Destructible Wall in Shortcut 6:
+  Need:
+    Can Reach Earth Temple Moblins and Poes Room
+    & Can Play Command Melody
+    & Can Aim Mirror Shield
+  Original item: Yellow Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_Dai/Room7.arc/Actor016
+Earth Temple - Rupee Behind Destructible Wall in Shortcut 7:
+  Need:
+    Can Reach Earth Temple Moblins and Poes Room
+    & Can Play Command Melody
+    & Can Aim Mirror Shield
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_Dai/Room7.arc/Actor010
+Earth Temple - Rupee Behind Destructible Wall in Shortcut 8:
+  Need:
+    Can Reach Earth Temple Moblins and Poes Room
+    & Can Play Command Melody
+    & Can Aim Mirror Shield
+  Original item: Yellow Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_Dai/Room7.arc/Actor013
+Earth Temple - Rupee Behind Destructible Wall in Shortcut 9:
+  Need:
+    Can Reach Earth Temple Moblins and Poes Room
+    & Can Play Command Melody
+    & Can Aim Mirror Shield
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_Dai/Room7.arc/Actor015
+Earth Temple - Rupee Under Destructible Statue in Shortcut:
+  Need:
+    Can Reach Earth Temple Moblins and Poes Room
+    & Can Play Command Melody
+    & Can Aim Mirror Shield
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_Dai/Room7.arc/Actor01F
 Earth Temple - Casket in Second Crypt:
   Need:
     Can Reach Earth Temple Moblins and Poes Room
@@ -1406,6 +2159,15 @@ Earth Temple - Casket in Second Crypt:
   Types: Dungeon
   Paths:
     - M_Dai/Room8.arc/Actor008
+Earth Temple - Rupee in Second Crypt:
+  Need:
+    Can Reach Earth Temple Moblins and Poes Room
+    # The ReDeads don't need to be killed to get the item in their room, but you do need to kill them to escape without save warping.
+  # Need to escape: Can Defeat ReDeads
+  Original item: Yellow Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_Dai/Room8.arc/Actor007
 Earth Temple - Stalfos Miniboss Room:
   Need:
     Can Access Earth Temple Miniboss Arena
@@ -1460,12 +2222,42 @@ Earth Temple - Behind Curtain Next to Hammer Button:
   Types: Dungeon, Dungeon Secret
   Paths:
     - M_Dai/Room13.arc/Actor01A
+Earth Temple - Rupee Behind Destructible Statue Before Third Crypt:
+  Need:
+    Can Reach Earth Temple ReDead Hub Room
+    & (
+      Can Play Command Melody
+      | Can Aim Mirror Shield
+    )
+    & Power Bracelets
+    & Skull Hammer
+    & ET Small Key x3
+    & (
+      Can Defeat Red Bubbles
+      | Precise 2
+    )
+  Original item: Yellow Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_Dai/Room13.arc/Actor020
 Earth Temple - Chest in Third Crypt:
   Need: Can Reach Earth Temple Third Crypt
   Original item: Red Rupee
   Types: Dungeon
   Paths:
     - M_Dai/Stage.arc/Chest005
+Earth Temple - Rupee in Third Crypt 1:
+  Need: Can Reach Earth Temple Third Crypt
+  Original item: Yellow Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_Dai/Room14.arc/Actor00F
+Earth Temple - Rupee in Third Crypt 2:
+  Need: Can Reach Earth Temple Third Crypt
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - M_Dai/Room14.arc/Actor01A
 Earth Temple - Many Mirrors Room Right Chest:
   Need:
     Can Reach Earth Temple Many Mirrors Room
@@ -1537,6 +2329,97 @@ Earth Temple - Jalhalla Heart Container:
 #    - main.dol@8035BD35
 
 
+Gale Isle - Rupee on West Side of Summit 1:
+  Need: Bait Bag & Can Buy Hyoi Pears
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room4.arc/Actor076
+Gale Isle - Rupee on West Side of Summit 2:
+  Need: Bait Bag & Can Buy Hyoi Pears
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room4.arc/Actor077
+Gale Isle - Rupee on West Side of Summit 3:
+  Need: Bait Bag & Can Buy Hyoi Pears
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room4.arc/Actor078
+Gale Isle - Rupee on Summit 1:
+  Need: Bait Bag & Can Buy Hyoi Pears
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room4.arc/Actor06F
+Gale Isle - Rupee on Summit 2:
+  Need: Bait Bag & Can Buy Hyoi Pears
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room4.arc/Actor071
+Gale Isle - Rupee on Summit 3:
+  Need: Bait Bag & Can Buy Hyoi Pears
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room4.arc/Actor06E
+Gale Isle - Rupee on Summit 4:
+  Need: Bait Bag & Can Buy Hyoi Pears
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room4.arc/Actor070
+Gale Isle - Rupee on East Side of Summit 1:
+  Need: Bait Bag & Can Buy Hyoi Pears
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room4.arc/Actor072
+Gale Isle - Rupee on East Side of Summit 2:
+  Need: Bait Bag & Can Buy Hyoi Pears
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room4.arc/Actor073
+Gale Isle - Rupee on East Side of Summit 3:
+  Need: Bait Bag & Can Buy Hyoi Pears
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room4.arc/Actor074
+Gale Isle - Rupee on East Side of Summit 4:
+  Need: Bait Bag & Can Buy Hyoi Pears
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room4.arc/Actor075
+Gale Isle - Rupee on East Pillars 1:
+  Need:
+    (Bait Bag & Can Buy Hyoi Pears)
+    | Boomerang
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room4.arc/Actor080
+Gale Isle - Rupee on East Pillars 2:
+  Need:
+    (Bait Bag & Can Buy Hyoi Pears)
+    | Boomerang
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room4.arc/Actor081
+Gale Isle - Rupee on East Pillars 3:
+  Need:
+    (Bait Bag & Can Buy Hyoi Pears)
+    | Boomerang
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room4.arc/Actor07F
+
 #Wind Temple - Entrance:
 #  Need: 
 #  Original item: Wind God's Aria
@@ -1587,6 +2470,30 @@ Wind Temple - Chest in Left Alcove:
   Types: Dungeon
   Paths:
     - kaze/Stage.arc/Chest004
+Wind Temple - Rupee Hidden Under Cracked Floor 1:
+  Need:
+    Can Reach Wind Temple Kidnapping Room
+    & Iron Boots
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kaze/Room5.arc/Actor015
+Wind Temple - Rupee Hidden Under Cracked Floor 2:
+  Need:
+    Can Reach Wind Temple Kidnapping Room
+    & Iron Boots
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kaze/Room5.arc/Actor016
+Wind Temple - Rupee Hidden Under Cracked Floor 3:
+  Need:
+    Can Reach Wind Temple Kidnapping Room
+    & Iron Boots
+  Original item: Blue Rupee
+  Types: Dungeon, Rupee
+  Paths:
+    - kaze/Room5.arc/Actor017
 Wind Temple - Big Key Chest:
   Need:
     Can Reach Wind Temple Kidnapping Room
@@ -1922,12 +2829,150 @@ The Great Sea - Ghost Ship:
 #  Paths:
 #    - rels/d_a_npc_mt.rel@18CF
 
+Private Oasis - Rupee Underneath Cabana 1:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor04D
+Private Oasis - Rupee Underneath Cabana 2:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor04C
+Private Oasis - Rupee Underneath Cabana 3:
+  Need: Nothing
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor04B
+Private Oasis - Rupee Underneath Cabana 4:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor0B7
+Private Oasis - Rupee Underneath Cabana 5:
+  Need: Nothing
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor04A
+Private Oasis - Rupee Underneath Cabana 6:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor051
+Private Oasis - Rupee Underneath Cabana 7:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor050
+Private Oasis - Rupee Underneath Cabana 8:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor04F
+Private Oasis - Rupee Underneath Cabana 9:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor04E
 Private Oasis - Chest at Top of Waterfall:
   Need: Hookshot | Can Fly With Deku Leaf Outdoors
   Original item: Treasure Chart 27
   Types: Island Puzzle
   Paths:
     - sea/Room33.arc/Chest000
+Private Oasis - Rupee at the Top of Waterfall:
+  Need: Hookshot | Can Fly With Deku Leaf Outdoors
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor0B0
+Private Oasis - Rupee in Waterfall 1:
+  Need: Hookshot | Can Fly With Deku Leaf Outdoors
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor0B3
+Private Oasis - Rupee in Waterfall 2:
+  Need: Hookshot | Can Fly With Deku Leaf Outdoors
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor0B2
+Private Oasis - Rupee in Waterfall 3:
+  Need: Hookshot | Can Fly With Deku Leaf Outdoors
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor0B4
+Private Oasis - Rupee in Waterfall 4:
+  Need: Hookshot | Can Fly With Deku Leaf Outdoors
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor0B1
+Private Oasis - Rupee in Waterfall 5:
+  Need: Hookshot | Can Fly With Deku Leaf Outdoors
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor0B5
+Private Oasis - Rupee at the Bottom of Waterfall:
+  Need: Nothing
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor0AF
+Private Oasis - Rupee in Pool 1:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor0AE
+Private Oasis - Rupee in Pool 2:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor0AC
+Private Oasis - Rupee in Pool 3:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor0AB
+Private Oasis - Rupee in Pool 4:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor0AD
+Private Oasis - Rupee in Pool 5:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor0AA
+Private Oasis - Rupee in Pool 6:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor0A8
+Private Oasis - Rupee in Pool 7:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room33.arc/Actor0A9
 Private Oasis - Cabana Labyrinth - Lower Floor Chest:
   Need:
     Can Access Cabana Labyrinth
@@ -2104,6 +3149,53 @@ Bird's Peak Rock - Cave:
   Paths:
     - TF_03/Stage.arc/Chest000
 
+Pawprint Isle - Rupee Hidden On Small ChuChu Statue 1:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room12.arc/Actor01F
+Pawprint Isle - Rupee Hidden On Small ChuChu Statue 2:
+  Need: Nothing
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room12.arc/Actor020
+Pawprint Isle - Rupee Around Tree 1:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | Hookshot
+    | Boomerang
+    # You can easily Boomerang this rupee from the main part of the island.
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room12.arc/Actor004
+Pawprint Isle - Rupee Around Tree 2:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | Hookshot
+    | (Boomerang & Precise 1)
+    # Precise: Grabbing this rupee with the Boomerang from the boat requires some precision with where you throw from.
+  Original item: Blue Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room12.arc/Actor005
+Pawprint Isle - Rupee Around Tree 3:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | Hookshot
+    # I'm not sure it's possible to grab this rupee with the Boomerang from the boat. If it is, it seems too precise to expect logically.
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room12.arc/Actor006
+Pawprint Isle - Rupee Around Tree 4:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | Hookshot
+    | (Boomerang & Precise 1)
+    # Precise: Grabbing this rupee with the Boomerang from the boat requires some precision with where you throw from.
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room12.arc/Actor01E
 Pawprint Isle - Chuchu Cave - Chest:
   Need: Can Access Pawprint Isle Chuchu Cave
   Original item: Piece of Heart
@@ -2318,6 +3410,13 @@ Tingle Island - Ankle - Reward for All Tingle Statues:
 #  Original item: Triforce Chart 8 got deciphered
 #  Paths:
 #    - rels/d_a_npc_tc.rel@620F
+Tingle Island - Rupee On Top of Tingle Tower:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | Boomerang
+  Original item: Yellow Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room17.arc/Actor026
 Tingle Island - Big Octo:
   Need: Can Defeat 12 Eye Big Octos & Grappling Hook
   Original item: Piece of Heart
@@ -2431,6 +3530,111 @@ Rock Spire Isle - Southeast Gunboat:
   Paths:
     - sea/Room16.arc/ScalableObject000
 
+Shark Island - Rupee in Trees 1:
+  Need:
+    Hero's Sword
+    | Boomerang
+    | Skull Hammer
+    | Hookshot
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room38.arc/Actor039
+Shark Island - Rupee in Trees 2:
+  Need:
+    Hero's Sword
+    | Boomerang
+    | Skull Hammer
+    | Hookshot
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room38.arc/Actor038
+Shark Island - Rupee in Trees 3:
+  Need:
+    Hero's Sword
+    | Boomerang
+    | Skull Hammer
+    | Hookshot
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room38.arc/Actor03B
+Shark Island - Rupee in Trees 4:
+  Need:
+    Hero's Sword
+    | Boomerang
+    | Skull Hammer
+    | Hookshot
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room38.arc/Actor03A
+Shark Island - Rupee in Trees 5:
+  Need:
+    Hero's Sword
+    | Boomerang
+    | Skull Hammer
+    | Hookshot
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room38.arc/Actor03D
+Shark Island - Rupee in Trees 6:
+  Need:
+    Hero's Sword
+    | Boomerang
+    | Skull Hammer
+    | Hookshot
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room38.arc/Actor03C
+Shark Island - Rupee in Trees 7:
+  Need:
+    Hero's Sword
+    | Boomerang
+    | Skull Hammer
+    | Hookshot
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room38.arc/Actor03F
+Shark Island - Rupee in Trees 8:
+  Need:
+    Hero's Sword
+    | Boomerang
+    | Skull Hammer
+    | Hookshot
+  Original item: Green Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room38.arc/Actor03E
+Shark Island - Rupee on Upper Ledge 1:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | (Can Access Secret Cave Entrance on Shark Island & Can Fly With Deku Leaf Outdoors)
+    | Boomerang
+  Original item: Yellow Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room38.arc/Actor01A
+Shark Island - Rupee on Upper Ledge 2:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | (Can Access Secret Cave Entrance on Shark Island & Can Fly With Deku Leaf Outdoors)
+    | Boomerang
+  Original item: Yellow Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room38.arc/Actor019
+Shark Island - Rupee on Upper Ledge 3:
+  Need: (Bait Bag & Can Buy Hyoi Pears)
+    | (Can Access Secret Cave Entrance on Shark Island & Can Fly With Deku Leaf Outdoors)
+    | (Boomerang & Precise 2)
+    # Precise: Getting this rupee with the Boomerang from the boat requires more precision than the others, but it is possible.
+  Original item: Yellow Rupee
+  Types: Rupee
+  Paths:
+    - sea/Room38.arc/Actor003
 Shark Island - Cave:
   Need:
     Can Access Shark Island Secret Cave
@@ -2454,6 +3658,55 @@ Cliff Plateau Isles - Cave:
   Types: Puzzle Secret Cave
   Paths:
     - Cave03/Stage.arc/Chest000
+Cliff Plateau Isles - Rupee on Platform in Lower Pool 1:
+  Need:
+    Can Access Cliff Plateau Isles Inner Cave
+  Original item: Green Rupee
+  Types: Puzzle Secret Cave, Rupee
+  Paths:
+    - Cave03/Room0.arc/Actor036
+Cliff Plateau Isles - Rupee on Platform in Lower Pool 2:
+  Need:
+    Can Access Cliff Plateau Isles Inner Cave
+  Original item: Green Rupee
+  Types: Puzzle Secret Cave, Rupee
+  Paths:
+    - Cave03/Room0.arc/Actor033
+Cliff Plateau Isles - Rupee on Platform in Lower Pool 3:
+  Need:
+    Can Access Cliff Plateau Isles Inner Cave
+  Original item: Green Rupee
+  Types: Puzzle Secret Cave, Rupee
+  Paths:
+    - Cave03/Room0.arc/Actor02D
+Cliff Plateau Isles - Rupee on Platform in Lower Pool 4:
+  Need:
+    Can Access Cliff Plateau Isles Inner Cave
+  Original item: Green Rupee
+  Types: Puzzle Secret Cave, Rupee
+  Paths:
+    - Cave03/Room0.arc/Actor02B
+Cliff Plateau Isles - Rupee on Platform in Middle Pool 1:
+  Need:
+    Can Access Cliff Plateau Isles Inner Cave
+  Original item: Blue Rupee
+  Types: Puzzle Secret Cave, Rupee
+  Paths:
+    - Cave03/Room0.arc/Actor02F
+Cliff Plateau Isles - Rupee on Platform in Middle Pool 2:
+  Need:
+    Can Access Cliff Plateau Isles Inner Cave
+  Original item: Blue Rupee
+  Types: Puzzle Secret Cave, Rupee
+  Paths:
+    - Cave03/Room0.arc/Actor031
+Cliff Plateau Isles - Rupee on Platform in Upper Pool:
+  Need:
+    Can Access Cliff Plateau Isles Inner Cave
+  Original item: Yellow Rupee
+  Types: Puzzle Secret Cave, Rupee
+  Paths:
+    - Cave03/Room0.arc/Actor035
 Cliff Plateau Isles - Highest Isle:
   Need:
     Can Access Cliff Plateau Isles Inner Cave
