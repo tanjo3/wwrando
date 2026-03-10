@@ -1008,27 +1008,33 @@ Can Defeat Gunboats:
   Bombs
 
 Can Defeat Gohma:
-  Grappling Hook
+  Has Soul of Gohma
+  & Grappling Hook
   # Gohma can be killed with just the Grappling Hook since it damages her eye in the second phase.
 Can Defeat Kalle Demos:
-  Boomerang
+  Has Soul of Kalle Demos
+  & Boomerang
   # No sword needed - Kalle Demos can be damaged with just boomerang.
 Can Defeat Gohdan:
-  (
+  Has Soul of Gohdan
+  & (
     Hero's Bow
     | (Hookshot & Obscure 1 & Precise 2)
   ) & Bombs
   # Obscure&Precise: You can use hookshot to shoot all of Gohdan's eyes instead of the bow.
 Can Defeat Helmaroc King:
-  Skull Hammer
+  Has Soul of Helmaroc King
+  & Skull Hammer
   # Doesn't require a sword or anything - just the hammer both breaks his mask and damages him.
 Can Defeat Jalhalla:
-  (Can Aim Mirror Shield | Light Arrows)
+  Has Soul of Jalhalla
+  & (Can Aim Mirror Shield | Light Arrows)
   & Power Bracelets
   & Can Defeat Jalhalla Poes
   # Light Arrows also work to materialize Jalhalla.
 Can Defeat Molgera:
-  Hookshot
+  Has Soul of Molgera
+  & Hookshot
   & (
     Hero's Sword
     | Hero's Bow
@@ -1159,6 +1165,22 @@ Precise 2:
   | Option "logic_precision" Is "Very Hard"
 Precise 3:
   Option "logic_precision" Is "Very Hard"
+
+# Macros for boss soul shuffle.
+Boss Soul Shuffle Disabled:
+  Option "boss_soul_shuffle" Disabled
+Has Soul of Gohma:
+  Soul of Gohma | Boss Soul Shuffle Disabled
+Has Soul of Kalle Demos:
+  Soul of Kalle Demos | Boss Soul Shuffle Disabled
+Has Soul of Gohdan:
+  Soul of Gohdan | Boss Soul Shuffle Disabled
+Has Soul of Helmaroc King:
+  Soul of Helmaroc King | Boss Soul Shuffle Disabled
+Has Soul of Jalhalla:
+  Soul of Jalhalla | Boss Soul Shuffle Disabled
+Has Soul of Molgera:
+  Soul of Molgera | Boss Soul Shuffle Disabled
 
 TODO:
   Impossible
