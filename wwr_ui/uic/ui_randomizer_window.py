@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'randomizer_window.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -28,7 +28,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(914, 757)
+        MainWindow.resize(1000, 830)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -294,6 +294,11 @@ class Ui_MainWindow(object):
 
 
         self.gridLayout_3.addLayout(self.horizontalLayout_3, 6, 0, 1, 1)
+
+        self.boss_soul_shuffle = QCheckBox(self.groupBox_2)
+        self.boss_soul_shuffle.setObjectName(u"boss_soul_shuffle")
+
+        self.gridLayout_3.addWidget(self.boss_soul_shuffle, 7, 0, 1, 1)
 
 
         self.verticalLayout_3.addWidget(self.groupBox_2)
@@ -1062,6 +1067,7 @@ class Ui_MainWindow(object):
         self.sword_mode.setItemText(1, QCoreApplication.translate("MainWindow", u"No Starting Sword", None))
         self.sword_mode.setItemText(2, QCoreApplication.translate("MainWindow", u"Swordless", None))
 
+        self.boss_soul_shuffle.setText(QCoreApplication.translate("MainWindow", u"Boss Soul Shuffle", None))
         self.groupBox_7.setTitle(QCoreApplication.translate("MainWindow", u"Entrance Randomizer Options", None))
         self.randomize_miniboss_entrances.setText(QCoreApplication.translate("MainWindow", u"Nested Minibosses", None))
         self.randomize_dungeon_entrances.setText(QCoreApplication.translate("MainWindow", u"Dungeons", None))
