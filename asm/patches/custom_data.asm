@@ -7,6 +7,16 @@ hurricane_spin_item_resource_arc_name:
 .string "Vscroll"
 .align 2 ; Align to the next 4 bytes
 
+.global soul_item_arc_name_figure6b
+soul_item_arc_name_figure6b:
+.string "Figure6b"
+.align 2 ; Align to the next 4 bytes
+
+.global soul_item_arc_name_figure6c
+soul_item_arc_name_figure6c:
+.string "Figure6c"
+.align 2 ; Align to the next 4 bytes
+
 
 
 

@@ -2708,3 +2708,106 @@ def enable_hero_mode(self: WWRandomizer):
 def set_default_targeting_mode_to_switch(self: WWRandomizer):
   targeting_mode_addr = self.main_custom_symbols["option_targeting_mode"]
   self.dol.write_data(fs.write_u8, targeting_mode_addr, 1)
+
+def setup_soul_items(self: WWRandomizer):
+  item_get_funcs_list = 0x803888C8
+  item_resources_list_start = 0x803842B0
+  field_item_resources_list_start = 0x803866B0
+  item_info_list_start = 0x803882B0
+  
+  # Each soul uses its boss's Nintendo Gallery figurine model.
+  # The arc name and file index come from l_figure_dat_tbl in d_a_obj_figure.cpp.
+  # The file index is the RARC file index (FILE_ID + 3, since the first 3 entries are directory metadata).
+  soul_items = [
+    ("Soul of Gohma",         0x86, "soul_item_arc_name_figure6b", 5),
+    ("Soul of Kalle Demos",   0x87, "soul_item_arc_name_figure6b", 6),
+    ("Soul of Gohdan",        0x88, "soul_item_arc_name_figure6b", 7),
+    ("Soul of Helmaroc King", 0x89, "soul_item_arc_name_figure6c", 3),
+    ("Soul of Jalhalla",      0x8A, "soul_item_arc_name_figure6c", 4),
+    ("Soul of Molgera",       0x8B, "soul_item_arc_name_figure6c", 5),
+  ]
+  
+  # Use the Heart Container's icon and message number as a base.
+  heart_container_item_id = 0x08
+  item_icon_filename_pointer = self.icon_name_pointer[heart_container_item_id]
+  heart_container_resources_addr = item_resources_list_start + heart_container_item_id*0x24
+  item_mesg_num = self.dol.read_data(fs.read_s16, heart_container_resources_addr + 0x16)
+  
+  for item_name, item_id, arc_symbol, bmd_idx in soul_items:
+    # Register the proper item ID for this item with the randomizer.
+    self.register_renamed_item(item_id, item_name)
+    
+    # Update the item get funcs for the soul items to point to our custom item get funcs instead.
+    custom_symbol_name = item_name.lower().replace("'", "").replace(" ", "_") + "_item_get_func"
+    item_get_func_addr = item_get_funcs_list + item_id*4
+    self.dol.write_data(fs.write_u32, item_get_func_addr, self.main_custom_symbols[custom_symbol_name])
+    
+    # Add item get messages for the items.
+    description = "\\{1A 05 00 00 01}You got the \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}!" % item_name
+    msg = self.bmg.add_new_message(101 + item_id)
+    msg.text_box_type = TextBoxType.ITEM_GET
+    msg.initial_draw_type = 2 # Slow initial message speed
+    msg.display_item_id = item_id
+    msg.string = description
+    msg.word_wrap_string(self.bfn)
+    
+    arc_name_pointer = self.main_custom_symbols[arc_symbol]
+    
+    # Update item resources so the figurine model and icon show correctly.
+    # Since these are completely new items with no vanilla base, we write each field individually.
+    # All animation indices are set to -1 since figurine models have no animations.
+    item_resources_addr = item_resources_list_start + item_id*0x24
+    self.dol.write_data(fs.write_u32, item_resources_addr, arc_name_pointer)
+    self.dol.write_data(fs.write_u32, item_resources_addr+0x04, item_icon_filename_pointer)
+    self.dol.write_data(fs.write_s16, item_resources_addr+0x08, bmd_idx)
+    self.dol.write_data(fs.write_s16, item_resources_addr+0x0A, -1)
+    self.dol.write_data(fs.write_s16, item_resources_addr+0x0C, -1)
+    self.dol.write_data(fs.write_s16, item_resources_addr+0x0E, -1)
+    self.dol.write_data(fs.write_s16, item_resources_addr+0x10, -1)
+    self.dol.write_data(fs.write_s16, item_resources_addr+0x12, -1)
+    self.dol.write_data(fs.write_s8,  item_resources_addr+0x14, -1)
+    self.dol.write_data(fs.write_s16, item_resources_addr+0x16, item_mesg_num)
+    self.dol.write_data(fs.write_u16, item_resources_addr+0x20, 0xFFFF)
+    
+    field_item_resources_addr = field_item_resources_list_start + item_id*0x1C
+    self.dol.write_data(fs.write_u32, field_item_resources_addr, arc_name_pointer)
+    self.dol.write_data(fs.write_s16, field_item_resources_addr+0x04, bmd_idx)
+    self.dol.write_data(fs.write_s16, field_item_resources_addr+0x06, -1)
+    self.dol.write_data(fs.write_s16, field_item_resources_addr+0x08, -1)
+    self.dol.write_data(fs.write_s16, field_item_resources_addr+0x0A, -1)
+    self.dol.write_data(fs.write_s16, field_item_resources_addr+0x0C, -1)
+    self.dol.write_data(fs.write_s16, field_item_resources_addr+0x0E, -1)
+    self.dol.write_data(fs.write_s8,  field_item_resources_addr+0x10, -1)
+    self.dol.write_data(fs.write_u16, field_item_resources_addr+0x18, 0xFFFF)
+    
+    # Set the item info for all soul items to match Heart Container.
+    # Reference: d_item_data.cpp:8235
+    item_info_entry_addr = item_info_list_start+4*item_id
+    self.dol.write_data(fs.write_u32, item_info_entry_addr, 0x32503201)
+  
+  # Shrink and re-center the figurine models so they look good as item pickups.
+  # Figurine models are designed for gallery display, so they're too large and their origin is at the base.
+  figurine_file_ids_by_arc: dict[str, list[int]] = {}
+  for item_name, item_id, arc_symbol, bmd_idx in soul_items:
+    arc_name = arc_symbol.replace("soul_item_arc_name_", "")
+    arc_name = arc_name[0].upper() + arc_name[1:]
+    arc_path = "files/res/Object/%s.arc" % arc_name
+    file_id = bmd_idx - 3
+    if arc_path not in figurine_file_ids_by_arc:
+      figurine_file_ids_by_arc[arc_path] = []
+    figurine_file_ids_by_arc[arc_path].append(file_id)
+  
+  for arc_path, file_ids in figurine_file_ids_by_arc.items():
+    arc = self.get_arc(arc_path)
+    for file_entry in arc.file_entries:
+      if file_entry.is_dir:
+        continue
+      if file_entry.id not in file_ids:
+        continue
+      bdl_model = arc.get_file(file_entry.name, BDL)
+      root_joint = bdl_model.jnt1.joints[0]
+      root_joint.scale.x = 0.45
+      root_joint.scale.y = 0.45
+      root_joint.scale.z = 0.45
+      root_joint.translation.y -= 25.0
+      bdl_model.save()

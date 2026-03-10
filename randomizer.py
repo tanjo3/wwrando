@@ -433,6 +433,7 @@ class WWRandomizer:
     tweaks.add_hint_signs(self)
     tweaks.prevent_door_boulder_softlocks(self)
     tweaks.update_tingle_statue_item_get_funcs(self)
+    tweaks.setup_soul_items(self)
     patcher.apply_patch(self, "tingle_chests_without_tuner")
     tweaks.make_tingle_statue_reward_rupee_rainbow_colored(self)
     if self.seed_hash is not None:
@@ -454,6 +455,7 @@ class WWRandomizer:
     tweaks.fix_stone_head_bugs(self)
     tweaks.show_number_of_tingle_statues_on_quest_status_screen(self)
     patcher.apply_patch(self, "flexible_enemies")
+    patcher.apply_patch(self, "boss_soul_shuffle")
     tweaks.add_shortcut_warps_into_dungeons(self)
     tweaks.fix_needle_rock_island_salvage_flags(self)
     tweaks.allow_nonlinear_servants_of_the_towers(self)

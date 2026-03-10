@@ -1606,4 +1606,57 @@ blr
 
 
 
+; Boss soul item_get_funcs.
+; Each sets a unique unused event bit to track that the player has obtained the soul.
+.global soul_of_gohma_item_get_func
+soul_of_gohma_item_get_func:
+li r4, 0x6A80 ; Unused event bit
+b soul_item_get_handler
+
+.global soul_of_kalle_demos_item_get_func
+soul_of_kalle_demos_item_get_func:
+li r4, 0x6B01 ; Unused event bit
+b soul_item_get_handler
+
+.global soul_of_gohdan_item_get_func
+soul_of_gohdan_item_get_func:
+li r4, 0x6B02 ; Unused event bit
+b soul_item_get_handler
+
+.global soul_of_helmaroc_king_item_get_func
+soul_of_helmaroc_king_item_get_func:
+li r4, 0x6B04 ; Unused event bit
+b soul_item_get_handler
+
+.global soul_of_jalhalla_item_get_func
+soul_of_jalhalla_item_get_func:
+li r4, 0x6B08 ; Unused event bit
+b soul_item_get_handler
+
+.global soul_of_molgera_item_get_func
+soul_of_molgera_item_get_func:
+li r4, 0x6B10 ; Unused event bit
+b soul_item_get_handler
+
+
+; Shared handler for all boss soul item_get_funcs.
+; r4 - The event bit for the soul being obtained
+.global soul_item_get_handler
+soul_item_get_handler:
+stwu sp, -0x10 (sp)
+mflr r0
+stw r0, 0x14 (sp)
+
+lis r3, 0x803C522C@ha
+addi r3, r3, 0x803C522C@l
+bl onEventBit__11dSv_event_cFUs
+
+lwz r0, 0x14 (sp)
+mtlr r0
+addi sp, sp, 0x10
+blr
+
+
+
+
 .close
