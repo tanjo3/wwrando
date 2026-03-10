@@ -993,17 +993,21 @@ class WWRandomizer:
     return rng.sample(seq, 1, counts=element_weights)[0]
   
   def get_seed_hash(self):
+    return self.compute_seed_hash(self.permalink, self.options.do_not_generate_spoiler_log)
+
+  @staticmethod
+  def compute_seed_hash(permalink, do_not_generate_spoiler_log):
     # Generate some text that will be shown on the name entry screen which has two random character names that vary based on the permalink (so the seed and settings both change it).
     # This is so two players intending to play the same seed can verify if they really are on the same seed or not.
 
-    if not self.permalink:
+    if not permalink:
       return None
 
-    if not self.options.do_not_generate_spoiler_log:
-      integer_seed = self.convert_string_to_integer_md5(self.permalink)
+    if not do_not_generate_spoiler_log:
+      integer_seed = int(hashlib.md5(permalink.encode('utf-8')).hexdigest(), 16)
     else:
       # When no spoiler log is generated, the seed key also affects randomization, not just the data in the permalink.
-      integer_seed = self.convert_string_to_integer_md5(self.permalink + SEED_KEY)
+      integer_seed = int(hashlib.md5((permalink + SEED_KEY).encode('utf-8')).hexdigest(), 16)
     temp_rng = Random()
     temp_rng.seed(integer_seed)
 
