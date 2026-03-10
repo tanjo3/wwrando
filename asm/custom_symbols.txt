@@ -4,8 +4,8 @@ sys/main.dol:
   ballad_of_gales_warp_float_bank: 0x803FCFF8
   custom_DynamicNameTable: 0x803FD050
   custom_l_objectName: 0x803FD084
-  custom_l_objectName_end: 0x803FD09C
   custom_DMC: 0x803FD09C
+  custom_l_objectName_end: 0x803FD09C
   init_save_with_tweaks: 0x803FD87C
   init_starting_gear: 0x803FDC28
   num_triforce_shards_to_start_with: 0x803FDC70
@@ -103,6 +103,8 @@ sys/main.dol:
   test_room_spawn_id: 0x800531E3
   test_room_room_index: 0x800531E7
   test_room_override_layer_num: 0x800531EB
+files/rels/d_a_npc_people.rel:
+  create_item_and_set_event_bit_for_townsperson: 0xCF18
 files/rels/d_a_npc_bs1.rel:
   set_shop_item_in_bait_bag_slot_sold_out: 0x61F0
   check_shop_item_in_bait_bag_slot_sold_out: 0x6220
@@ -143,8 +145,6 @@ files/rels/d_a_obj_ftree.rel:
   create_item_for_withered_trees_without_setting_speeds: 0x535C
   withered_tree_item_try_give_momentum: 0x5384
   withered_tree_item_speeds: 0x53F8
-files/rels/d_a_npc_people.rel:
-  create_item_and_set_event_bit_for_townsperson: 0xCF18
 files/rels/d_a_npc_photo.rel:
   lenzo_set_deluxe_picto_box_event_bit: 0x5EC8
 files/rels/d_a_npc_rsh1.rel:
