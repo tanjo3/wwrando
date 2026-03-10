@@ -54,6 +54,13 @@ PROGRESS_ITEMS = [
   
   "Ghost Ship Chart",
   "Magic Armor",
+  
+  "Soul of Gohma",
+  "Soul of Kalle Demos",
+  "Soul of Gohdan",
+  "Soul of Helmaroc King",
+  "Soul of Jalhalla",
+  "Soul of Molgera",
 ] + \
   ["Progressive Sword"]*4 + \
   ["Progressive Shield"]*2 + \

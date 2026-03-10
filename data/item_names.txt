@@ -132,12 +132,12 @@
 83 - Hyoi Pear
 84 - 
 85 - 
-86 - 
-87 - 
-88 - 
-89 - 
-8A - 
-8B - 
+86 - Soul of Gohma
+87 - Soul of Kalle Demos
+88 - Soul of Gohdan
+89 - Soul of Helmaroc King
+8A - Soul of Jalhalla
+8B - Soul of Molgera
 8C - Town Flower
 8D - Sea Flower
 8E - Exotic Flower
