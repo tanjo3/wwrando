@@ -45,6 +45,12 @@ REGULAR_ITEMS = [
   "Great Fairy Chart",
   "Octo Chart",
   "Tingle's Chart",
+  "Soul of Gohma",
+  "Soul of Kalle Demos",
+  "Soul of Gohdan",
+  "Soul of Helmaroc King",
+  "Soul of Jalhalla",
+  "Soul of Molgera",
 ]
 
 DUNGEON_NONPROGRESS_ITEMS = \
