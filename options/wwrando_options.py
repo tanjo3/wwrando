@@ -192,6 +192,10 @@ class Options(BaseOptions):
     default=False,
     description="In Hero Mode, you take four times more damage than normal and heart refills will not drop.",
   )
+  orca_1_life: bool = option(
+    default=False,
+    description="This option makes Orca's minigame end immediately upon taking a hit.",
+  )
   logic_obscurity: TrickDifficulty = option(
     default=TrickDifficulty.NONE,
     description="Obscure tricks are ways of obtaining items that are not obvious and may involve thinking outside the box.<br>"

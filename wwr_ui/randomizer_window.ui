@@ -929,6 +929,13 @@
                  </property>
                 </widget>
                </item>
+                <item>
+                <widget class="QCheckBox" name="orca_1_life">
+                 <property name="text">
+                  <string>Orca 1 life</string>
+                 </property>
+                </widget>
+               </item>
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_20">
                  <item>

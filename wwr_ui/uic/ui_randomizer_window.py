@@ -650,6 +650,11 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_22.addWidget(self.hero_mode)
 
+        self.orca_1_life = QCheckBox(self.groupBox_9)
+        self.orca_1_life.setObjectName(u"orca_1_life")
+
+        self.horizontalLayout_22.addWidget(self.orca_1_life)
+
         self.horizontalLayout_20 = QHBoxLayout()
         self.horizontalLayout_20.setObjectName(u"horizontalLayout_20")
         self.label_for_logic_obscurity = QLabel(self.groupBox_9)
@@ -1110,6 +1115,7 @@ class Ui_MainWindow(object):
         self.label_for_num_required_bosses.setText(QCoreApplication.translate("MainWindow", u"Number of Required Bosses", None))
         self.groupBox_9.setTitle(QCoreApplication.translate("MainWindow", u"Difficulty Options", None))
         self.hero_mode.setText(QCoreApplication.translate("MainWindow", u"Hero Mode", None))
+        self.orca_1_life.setText(QCoreApplication.translate("MainWindow", u"Orca 1 life", None))
         self.label_for_logic_obscurity.setText(QCoreApplication.translate("MainWindow", u"Obscure Tricks Required", None))
         self.logic_obscurity.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
         self.logic_obscurity.setItemText(1, QCoreApplication.translate("MainWindow", u"Normal", None))
