@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>914</width>
-    <height>757</height>
+    <width>1000</width>
+    <height>830</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -313,6 +313,13 @@
                 <widget class="QCheckBox" name="progression_platforms_rafts">
                  <property name="text">
                   <string>Lookout Platforms and Rafts</string>
+                 </property>
+                </widget>
+               </item>
+			   <item row="0" column="5">
+                <widget class="QCheckBox" name="progression_orca_minigame">
+                 <property name="text">
+                  <string>Orca Minigame</string>
                  </property>
                 </widget>
                </item>

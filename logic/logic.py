@@ -540,7 +540,8 @@ class Logic:
         continue
       if "Dungeon Secret" in types and not options.progression_dungeon_secrets:
         continue
-      
+      if "Orca Minigame" in types and not options.progression_orca_minigame:
+        continue          
       # Note: The Triforce/Treasure Chart sunken treasures are handled differently from other types.
       # During randomization they are handled by not considering the charts themselves to be progress items.
       # That results in the item randomizer considering these locations inaccessible until after all progress items are placed.

@@ -138,6 +138,11 @@ class Options(BaseOptions):
     description="Miscellaneous locations that don't fit into any of the above categories (outdoors chests, wind shrine, Cyclos, etc).<br>"
       "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
   )
+  progression_orca_minigame: bool = option(
+    default=False,
+    description="This controls whether the Orca mini-game can contain progression items.<br>"
+      "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
+  )
   #endregion
   
   #region Modes
