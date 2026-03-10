@@ -197,6 +197,10 @@ class WWRandomizer:
     for i in range(self.options.starting_hcs):
       self.starting_items.append("Heart Container")
     
+    if not self.options.boss_soul_shuffle:
+      for soul_name in ["Soul of Gohma", "Soul of Kalle Demos", "Soul of Gohdan", "Soul of Helmaroc King", "Soul of Jalhalla", "Soul of Molgera"]:
+        self.starting_items.append(soul_name)
+    
     
     self.custom_model_name = self.options.custom_player_model
     self.using_custom_sail_texture = False
