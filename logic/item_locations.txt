@@ -388,11 +388,13 @@ Windfall Island - 80 Rupee Auction:
   Types: Expensive Purchase, Minigame
   Paths:
     - rels/d_a_auction.rel@44A1
-#Windfall Island - Zunari - Sail:
-#  Need: 
-#  Original item: Boat's Sail
-#  Paths:
-#    - rels/d_a_npc_rsh1.rel@30FB
+Windfall Island - Zunari - Sail:
+  Need: Nothing
+  Original item: Boat's Sail
+  Types: Expensive Purchase
+  Paths:
+    - rels/d_a_npc_rsh1.rel@30FB
+    - CustomSymbol:zunari_sail_slot_item_id
 #Windfall Island - Zunari - Goron Trading Starter: # Doesn't randomize correctly, he just keeps giving you this item repeatedly. And there's no point in randomizing this since he would still sell infinite Town Flowers in the shop anyway.
 #  Need: Rescued Aryll & Delivery Bag
 #  Original item: Town Flower

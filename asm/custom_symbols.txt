@@ -4,8 +4,8 @@ sys/main.dol:
   ballad_of_gales_warp_float_bank: 0x803FCFF8
   custom_DynamicNameTable: 0x803FD050
   custom_l_objectName: 0x803FD084
-  custom_l_objectName_end: 0x803FD09C
   custom_DMC: 0x803FD09C
+  custom_l_objectName_end: 0x803FD09C
   init_save_with_tweaks: 0x803FD87C
   init_starting_gear: 0x803FDC28
   num_triforce_shards_to_start_with: 0x803FDC70
@@ -148,8 +148,10 @@ files/rels/d_a_npc_people.rel:
 files/rels/d_a_npc_photo.rel:
   lenzo_set_deluxe_picto_box_event_bit: 0x5EC8
 files/rels/d_a_npc_rsh1.rel:
-  zunari_give_item_and_set_magic_armor_event_bit: 0x5D18
-  zunari_magic_armor_slot_item_id: 0x5D70
+  zunari_check_items_and_set_event_bits: 0x5D18
+  zunari_magic_armor_slot_item_id: 0x5DB8
+  zunari_sail_slot_item_id: 0x5DBC
+  zunari_dialogue_switcher: 0x5DC0
 files/rels/d_a_npc_sv.rel:
   salvage_corp_give_item_and_set_event_bit: 0x3580
 files/rels/d_a_npc_kp1.rel:
