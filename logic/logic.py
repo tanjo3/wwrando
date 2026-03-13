@@ -59,6 +59,22 @@ class Logic:
     for location_name in self.item_locations:
       self.done_item_locations[location_name] = None
     
+    # Remove non-progress rupee locations from the pool entirely.
+    # They keep their original item/behavior and won't appear in the spoiler log.
+    locations_to_remove = []
+    for location_name in self.remaining_item_locations:
+      types = self.item_locations[location_name]["Types"]
+      if "Rupee" in types:
+        if "Dungeon" in types and not self.options.progression_rupee_dungeon:
+          locations_to_remove.append(location_name)
+        elif "Puzzle Secret Cave" in types and not (self.options.progression_rupee_dungeon and self.options.progression_rupee_overworld):
+          locations_to_remove.append(location_name)
+        elif "Dungeon" not in types and "Puzzle Secret Cave" not in types and not self.options.progression_rupee_overworld:
+          locations_to_remove.append(location_name)
+    for location_name in locations_to_remove:
+      self.remaining_item_locations.remove(location_name)
+      del self.done_item_locations[location_name]
+    
     self.rock_spire_shop_ship_locations = []
     for location_name in self.item_locations:
       if location_name.startswith("Rock Spire Isle - Beedle's Special Shop Ship - "):
@@ -543,7 +559,9 @@ class Logic:
       if "Rupee" in types:
         if "Dungeon" in types and not options.progression_rupee_dungeon:
           continue
-        if "Dungeon" not in types and not options.progression_rupee_overworld:
+        if "Puzzle Secret Cave" in types and not (options.progression_rupee_dungeon and options.progression_rupee_overworld):
+          continue
+        if "Dungeon" not in types and "Puzzle Secret Cave" not in types and not options.progression_rupee_overworld:
           continue
       
       # Note: The Triforce/Treasure Chart sunken treasures are handled differently from other types.

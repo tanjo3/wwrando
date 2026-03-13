@@ -2673,6 +2673,18 @@ def make_rupeesanity_rupees_flexible(self: WWRandomizer):
     },
   }
   
+  # Build set of actors that correspond to rupee locations still in the randomization pool.
+  # Only these actors get patched; excluded locations keep vanilla behavior.
+  included_actors: set[tuple[str, str]] = set()
+  for loc_name, loc in self.logic.item_locations.items():
+    if "Rupee" not in loc["Types"]:
+      continue
+    if loc_name not in self.logic.done_item_locations:
+      continue
+    for path in loc.get("Paths", []):
+      arc_path_short, actor_key = path.rsplit("/", 1)
+      included_actors.add((arc_path_short, actor_key))
+  
   # Table of original spawn switch values, indexed by custom flag index.
   # The ASM patch reads from this table to restore the correct mSpawnSwitchNo at runtime,
   # since enable_spawn_switch is repurposed for the flag index.
@@ -2683,6 +2695,9 @@ def make_rupeesanity_rupees_flexible(self: WWRandomizer):
     dzx = self.get_arc(arc_path).get_file("room.dzr", DZx)
     
     for actor_key, flag_index in actors.items():
+      if (arc_path_short, actor_key) not in included_actors:
+        continue
+      
       actor_index = int(actor_key[5:], 16)
       
       actr = dzx.entries_by_type_and_layer(ACTR, layer=DZxLayer.Default)[actor_index]

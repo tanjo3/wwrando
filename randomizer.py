@@ -455,8 +455,9 @@ class WWRandomizer:
     tweaks.allow_nonlinear_servants_of_the_towers(self)
     tweaks.fix_helmaroc_king_table_softlock(self)
     tweaks.make_dungeon_joy_pendant_locations_flexible(self)
-    patcher.apply_patch(self, "rupeesanity")
-    tweaks.make_rupeesanity_rupees_flexible(self)
+    if self.options.progression_rupee_dungeon or self.options.progression_rupee_overworld:
+      patcher.apply_patch(self, "rupeesanity")
+      tweaks.make_rupeesanity_rupees_flexible(self)
     tweaks.prevent_fairy_island_softlocks(self)
     tweaks.give_fairy_fountains_distinct_colors(self)
     
