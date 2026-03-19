@@ -291,6 +291,7 @@ class Logic:
   def get_progress_and_non_progress_locations(self):
     all_locations = list(self.item_locations.keys())
     progress_locations = self.filter_locations_for_progression(all_locations, filter_sunken_treasure=True)
+    excluded_locations_set = set(self.options.excluded_locations)
     nonprogress_locations = []
     for location_name in all_locations:
       if location_name in progress_locations:
@@ -298,7 +299,7 @@ class Logic:
       
       types = self.item_locations[location_name]["Types"]
       if "Sunken Treasure" in types:
-        if location_name in self.options.excluded_locations:
+        if location_name in excluded_locations_set:
           nonprogress_locations.append(location_name)
           continue
         chart_name = self.chart_name_for_location(location_name)
@@ -526,13 +527,14 @@ class Logic:
   
   @staticmethod
   def filter_locations_for_progression_static(locations_to_filter: list[str], item_locations: dict[str, dict], options: Options, filter_sunken_treasure=False, filter_excluded_locations=True, filter_excluded_sunken_treasure=True):
+    excluded_locations_set = set(options.excluded_locations)
     filtered_locations = []
     for location_name in locations_to_filter:
       types = item_locations[location_name]["Types"]
       
       # If the location is excluded, filter it out of progression locations.
       # However, have special handling for sunken treasure locations as they may not yet be finalized as being progression.
-      if filter_excluded_locations and location_name in options.excluded_locations and ("Sunken Treasure" not in types or filter_excluded_sunken_treasure):
+      if filter_excluded_locations and location_name in excluded_locations_set and ("Sunken Treasure" not in types or filter_excluded_sunken_treasure):
         continue
       
       if "No progression" in types:
