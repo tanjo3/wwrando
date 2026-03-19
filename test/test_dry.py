@@ -240,8 +240,10 @@ def test_exclude_sunken_treasure_locations_with_randomized_charts():
   assert all(location in non_progress_locations for location in locations_to_exclude)
 
 def test_exclude_all_locations():
+  from logic.logic import Logic
+  
   options = Options()
-  options.excluded_locations = options.progression_locations
+  options.excluded_locations = list(Logic.load_and_parse_item_locations().keys())
   with pytest.raises(TooFewProgressionLocationsError):
     rando = dry_rando_with_options(options)
 

@@ -20,11 +20,6 @@ class TrickDifficulty(StrEnum):
   HARD = "Hard"
   VERY_HARD = "Very Hard"
 
-def get_default_progression_locations():
-  from logic.logic import Logic # lazy import
-  
-  return list(Logic.load_and_parse_item_locations().keys())
-
 @dataclass
 class Options(BaseOptions):
   #region Progress locations
@@ -145,7 +140,7 @@ class Options(BaseOptions):
   )
   
   progression_locations: list[str] = option(
-    default_factory=lambda: get_default_progression_locations(),
+    default_factory=lambda: [],
     description="Randomized locations that can have progress items.",
   )
   excluded_locations: list[str] = option(

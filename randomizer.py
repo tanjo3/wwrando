@@ -641,17 +641,14 @@ class WWRandomizer:
       elif option.name == "excluded_locations":
         assert issubclass(typing.get_origin(option.type) or option.type, list)
         excluded_list = []
-        progression_list = []
         for location_name in Logic.load_and_parse_item_locations():
           excluded = bitsreader.read(1)
           if excluded == 1:
             excluded_list.append(location_name)
-          else:
-            progression_list.append(location_name)
         options.excluded_locations = sorted(excluded_list)
       elif option.name == "progression_locations":
-        # Use default for now. This option will be updated later.
-        options.progression_locations = option.default_factory()
+        # Handled above.
+        continue
       else:
         raise Exception(f"Option {option.name} of type {option.type} is not currently supported by the permalink system.")
     
