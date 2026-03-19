@@ -22,6 +22,13 @@ class TrickDifficulty(StrEnum):
 
 @dataclass
 class Options(BaseOptions):
+  def __post_init__(self):
+    from logic.logic import Logic
+    
+    if self.excluded_locations:
+      valid_locations = set(Logic.load_and_parse_item_locations().keys())
+      self.excluded_locations = sorted(loc for loc in self.excluded_locations if loc in valid_locations)
+
   #region Progress locations
   progression_dungeons: bool = option(
     default=True,
