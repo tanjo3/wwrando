@@ -702,7 +702,7 @@ class ItemRandomizer(BaseRandomizer):
             break
       
       
-      if self.options.shuffle_small_keys in (DungeonItemShuffleMode.VANILLA, DungeonItemShuffleMode.OWN_DUNGEON):
+      if self.logic.small_keys_placed_in_own_dungeon:
         # If the player gained access to any small keys, we need to give them the keys without counting that as a new sphere.
         newly_accessible_predetermined_item_locations = [
           loc for loc in locations_in_this_sphere

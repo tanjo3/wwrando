@@ -196,6 +196,10 @@ class Logic:
     for attr_name, value in vars_backup.items():
       setattr(self, attr_name, copy.deepcopy(value))
   
+  @property
+  def small_keys_placed_in_own_dungeon(self) -> bool:
+    return self.options.shuffle_small_keys in (DungeonItemShuffleMode.VANILLA, DungeonItemShuffleMode.OWN_DUNGEON)
+  
   def set_location_to_item(self, location_name, item_name):
     #print("Setting %s to %s" % (location_name, item_name))
     
