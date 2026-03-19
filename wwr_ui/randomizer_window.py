@@ -731,8 +731,7 @@ class WWRandomizerWindow(QMainWindow):
         if options.progression_treasure_charts and not original_item_is_shard:
           continue
         locations_to_filter_out.append(location_name)
-      
-      if location_name not in progress_locations:
+      elif location_name not in progress_locations:
         locations_to_filter_out.append(location_name)
     
     self.filtered_rgear.setFilterStrings(items_to_filter_out)
