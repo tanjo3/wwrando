@@ -64,12 +64,20 @@ class WWRandomizerWindow(QMainWindow):
     self.ui.exclude_location.clicked.connect(self.exclude_location_from_progression)
     self.progression_locations_model = QStringListModel()
     self.progression_locations_model.setStringList(self.cached_item_locations.keys())
-    self.ui.progression_locations.setModel(self.progression_locations_model)
+    self.filtered_progression_locations = QSortFilterProxyModel()
+    self.filtered_progression_locations.setSourceModel(self.progression_locations_model)
+    self.filtered_progression_locations.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+    self.ui.progression_locations.setModel(self.filtered_progression_locations)
+    self.ui.filter_progression_locations.textChanged.connect(self.filtered_progression_locations.setFilterFixedString)
     
     self.ui.include_location.clicked.connect(self.include_location_for_progression)
     self.excluded_locations_model = QStringListModel()
     self.excluded_locations_model.setStringList([])
-    self.ui.excluded_locations.setModel(self.excluded_locations_model)
+    self.filtered_excluded_locations = QSortFilterProxyModel()
+    self.filtered_excluded_locations.setSourceModel(self.excluded_locations_model)
+    self.filtered_excluded_locations.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+    self.ui.excluded_locations.setModel(self.filtered_excluded_locations)
+    self.ui.filter_excluded_locations.textChanged.connect(self.filtered_excluded_locations.setFilterFixedString)
     
     # We use an Options instance to represent the defaults instead of directly accessing each options default so that
     # default_factory works correctly.
@@ -172,10 +180,13 @@ class WWRandomizerWindow(QMainWindow):
     selection = source.selectionModel().selectedIndexes()
     # Remove starting from the last so the previous indices remain valid
     selection.sort(reverse = True, key = lambda x: x.row())
+    dest_model = dest.model()
+    if isinstance(dest_model, QSortFilterProxyModel):
+      dest_model = dest_model.sourceModel()
     for item in selection:
       value = item.data()
       source.model().removeRow(item.row())
-      self.append_row(dest.model(), value)
+      self.append_row(dest_model, value)
   
   def add_to_starting_gear(self):
     self.move_selected_rows(self.ui.randomized_gear, self.ui.starting_gear)
@@ -189,12 +200,12 @@ class WWRandomizerWindow(QMainWindow):
   
   def exclude_location_from_progression(self):
     self.move_selected_rows(self.ui.progression_locations, self.ui.excluded_locations)
-    self.ui.excluded_locations.model().sort(0)
+    self.excluded_locations_model.sort(0)
     self.update_settings()
   
   def include_location_for_progression(self):
     self.move_selected_rows(self.ui.excluded_locations, self.ui.progression_locations)
-    self.ui.progression_locations.model().sort(0)
+    self.progression_locations_model.sort(0)
     self.update_settings()
   
   def update_health_label(self):
@@ -587,7 +598,7 @@ class WWRandomizerWindow(QMainWindow):
       if widget.model() is None:
         return []
       model = widget.model()
-      if isinstance(model, ModelFilterOut):
+      if isinstance(model, (ModelFilterOut, QSortFilterProxyModel)):
         model = model.sourceModel()
       model.sort(0)
       return [model.data(model.index(i, 0), Qt.ItemDataRole.DisplayRole) for i in range(model.rowCount())]

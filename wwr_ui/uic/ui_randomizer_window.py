@@ -606,6 +606,11 @@ class Ui_MainWindow(object):
 
         self.layout_progression_locations.addWidget(self.label_for_progression_locations)
 
+        self.filter_progression_locations = QLineEdit(self.tab_excluded_locations)
+        self.filter_progression_locations.setObjectName(u"filter_progression_locations")
+
+        self.layout_progression_locations.addWidget(self.filter_progression_locations)
+
         self.progression_locations = QListView(self.tab_excluded_locations)
         self.progression_locations.setObjectName(u"progression_locations")
         font = QFont()
@@ -650,6 +655,11 @@ class Ui_MainWindow(object):
         self.label_for_excluded_locations.setObjectName(u"label_for_excluded_locations")
 
         self.layout_excluded_locations.addWidget(self.label_for_excluded_locations)
+
+        self.filter_excluded_locations = QLineEdit(self.tab_excluded_locations)
+        self.filter_excluded_locations.setObjectName(u"filter_excluded_locations")
+
+        self.layout_excluded_locations.addWidget(self.filter_excluded_locations)
 
         self.excluded_locations = QListView(self.tab_excluded_locations)
         self.excluded_locations.setObjectName(u"excluded_locations")
@@ -1068,8 +1078,10 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.add_gear, self.starting_hcs)
         QWidget.setTabOrder(self.starting_hcs, self.starting_pohs)
         QWidget.setTabOrder(self.starting_pohs, self.num_extra_starting_items)
-        QWidget.setTabOrder(self.num_extra_starting_items, self.progression_locations)
-        QWidget.setTabOrder(self.progression_locations, self.excluded_locations)
+        QWidget.setTabOrder(self.num_extra_starting_items, self.filter_progression_locations)
+        QWidget.setTabOrder(self.filter_progression_locations, self.progression_locations)
+        QWidget.setTabOrder(self.progression_locations, self.filter_excluded_locations)
+        QWidget.setTabOrder(self.filter_excluded_locations, self.excluded_locations)
         QWidget.setTabOrder(self.excluded_locations, self.include_location)
         QWidget.setTabOrder(self.include_location, self.exclude_location)
         QWidget.setTabOrder(self.exclude_location, self.required_bosses)
@@ -1177,9 +1189,11 @@ class Ui_MainWindow(object):
         self.label_for_num_extra_starting_items.setText(QCoreApplication.translate("MainWindow", u"Extra Random Starting Items", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_starting_items), QCoreApplication.translate("MainWindow", u"Starting Items", None))
         self.label_for_progression_locations.setText(QCoreApplication.translate("MainWindow", u"Progression Locations", None))
+        self.filter_progression_locations.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Filter...", None))
         self.include_location.setText(QCoreApplication.translate("MainWindow", u"<-", None))
         self.exclude_location.setText(QCoreApplication.translate("MainWindow", u"->", None))
         self.label_for_excluded_locations.setText(QCoreApplication.translate("MainWindow", u"Excluded Locations", None))
+        self.filter_excluded_locations.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Filter...", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_excluded_locations), QCoreApplication.translate("MainWindow", u"Excluded Locations", None))
         self.groupBox_4.setTitle(QCoreApplication.translate("MainWindow", u"Required Bosses", None))
         self.required_bosses.setText(QCoreApplication.translate("MainWindow", u"Required Bosses Mode", None))
