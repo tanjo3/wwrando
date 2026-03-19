@@ -545,8 +545,9 @@ class WWRandomizer:
         continue
       elif option.name == "excluded_locations":
         assert issubclass(typing.get_origin(option.type) or option.type, list)
+        value_set = set(value)
         for location_name in Logic.load_and_parse_item_locations():
-          bit = location_name in value
+          bit = location_name in value_set
           bitswriter.write(bit, 1)
       elif option.name == "progression_locations":
         # Handled above.
