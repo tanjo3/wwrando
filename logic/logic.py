@@ -206,8 +206,6 @@ class Logic:
   
   @staticmethod
   def get_num_charts_excluded_static(item_locations: dict[str, dict], options: Options):
-    num_charts_excluded = 0
-    
     if options.randomize_charts:
       num_charts_excluded = sum(location_name.endswith(" - Sunken Treasure") for location_name in options.excluded_locations)
     else:
