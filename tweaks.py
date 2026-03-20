@@ -27,7 +27,7 @@ from data_tables import DataTables
 from wwlib.events import EventList
 from wwlib.dzx import DZx, DZxLayer, ACTR, EVNT, FILI, PLYR, SCLS, SCOB, SHIP, TGDR, TRES, Pale
 from options.wwrando_options import SwordMode
-from randomizers.entrances import DUNGEON_ENTRANCES
+from randomizers.entrances import ZoneEntrance
 
 try:
   from keys.seed_key import SEED_KEY # type: ignore
@@ -2153,8 +2153,8 @@ def show_number_of_tingle_statues_on_quest_status_screen(self: WWRandomizer):
 def add_shortcut_warps_into_dungeons(self: WWRandomizer):
   # Add shortcut warps to more quickly re-enter dungeons from the shore after you've already entered them once.
   
+  fh_entrance = ZoneEntrance.all["Dungeon Entrance in Forest Haven Sector"]
   fh_entrance_touched_switch = 0x7F # This switch on the sea should be unused in the vanilla game.
-  fh_entrance_scls_exit_index = 6
   
   fh_dzr = self.get_arc("files/res/Stage/sea/Room41.arc").get_file("room.dzr", DZx)
   
@@ -2166,7 +2166,7 @@ def add_shortcut_warps_into_dungeons(self: WWRandomizer):
   warp.name = "Ysdls00"
   warp.type = 1 # White warp
   warp.activation_switch = fh_entrance_touched_switch
-  warp.exit_index = fh_entrance_scls_exit_index
+  warp.exit_index = fh_entrance.scls_exit_index
   warp.activated_event_index = 0xFF
   warp.x_pos = 217178.1
   warp.y_pos = 34.99997
@@ -2194,12 +2194,13 @@ def add_shortcut_warps_into_dungeons(self: WWRandomizer):
   should_spawn_warp_switch = 0x7E # Unused in the vanilla game.
   
   # Add a new exit for the entrance into the dungeon.
-  dest = self.entrances.done_entrances_to_exits[DUNGEON_ENTRANCES[0]]
+  dri_entrance = ZoneEntrance.all["Dungeon Entrance on Dragon Roost Island"]
+  dest = self.entrances.done_entrances_to_exits[dri_entrance]
   scls_exit = dri_dzr.add_entity(SCLS)
   scls_exit.dest_stage_name = dest.stage_name
   scls_exit.spawn_id = dest.spawn_id
   scls_exit.room_index = dest.room_num
-  dri_entrance_scls_exit_index = 3
+  dri_entrance_scls_exit_index = dri_dzr.entries_by_type(SCLS).index(scls_exit)
   
   # Add the white light beam warp in the DRI pond.
   warp = dri_dzr.add_entity(SCOB)
