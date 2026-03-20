@@ -1127,7 +1127,7 @@ class Ui_MainWindow(object):
         self.shuffle_maps_and_compasses.setItemText(2, QCoreApplication.translate("MainWindow", u"Own Dungeon", None))
         self.shuffle_maps_and_compasses.setItemText(3, QCoreApplication.translate("MainWindow", u"Any Dungeon", None))
         self.shuffle_maps_and_compasses.setItemText(4, QCoreApplication.translate("MainWindow", u"Overworld", None))
-        self.shuffle_maps_and_compasses.setItemText(5, QCoreApplication.translate("MainWindow", u"Anywhere (Keylunacy)", None))
+        self.shuffle_maps_and_compasses.setItemText(5, QCoreApplication.translate("MainWindow", u"Anywhere", None))
 
         self.shuffle_maps_and_compasses.setCurrentText(QCoreApplication.translate("MainWindow", u"Vanilla", None))
         self.label_for_shuffle_big_keys.setText(QCoreApplication.translate("MainWindow", u"Big Keys", None))
@@ -1136,7 +1136,7 @@ class Ui_MainWindow(object):
         self.shuffle_big_keys.setItemText(2, QCoreApplication.translate("MainWindow", u"Own Dungeon", None))
         self.shuffle_big_keys.setItemText(3, QCoreApplication.translate("MainWindow", u"Any Dungeon", None))
         self.shuffle_big_keys.setItemText(4, QCoreApplication.translate("MainWindow", u"Overworld", None))
-        self.shuffle_big_keys.setItemText(5, QCoreApplication.translate("MainWindow", u"Anywhere (Keylunacy)", None))
+        self.shuffle_big_keys.setItemText(5, QCoreApplication.translate("MainWindow", u"Anywhere", None))
 
         self.shuffle_big_keys.setCurrentText(QCoreApplication.translate("MainWindow", u"Vanilla", None))
         self.label_for_sword_mode.setText(QCoreApplication.translate("MainWindow", u"Sword Mode", None))
@@ -1150,7 +1150,7 @@ class Ui_MainWindow(object):
         self.shuffle_small_keys.setItemText(2, QCoreApplication.translate("MainWindow", u"Own Dungeon", None))
         self.shuffle_small_keys.setItemText(3, QCoreApplication.translate("MainWindow", u"Any Dungeon", None))
         self.shuffle_small_keys.setItemText(4, QCoreApplication.translate("MainWindow", u"Overworld", None))
-        self.shuffle_small_keys.setItemText(5, QCoreApplication.translate("MainWindow", u"Anywhere (Keylunacy)", None))
+        self.shuffle_small_keys.setItemText(5, QCoreApplication.translate("MainWindow", u"Anywhere", None))
 
         self.shuffle_small_keys.setCurrentText(QCoreApplication.translate("MainWindow", u"Vanilla", None))
         self.chest_type_matches_contents.setText(QCoreApplication.translate("MainWindow", u"Chest Type Matches Contents", None))
