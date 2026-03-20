@@ -2199,7 +2199,7 @@ def add_shortcut_warps_into_dungeons(self: WWRandomizer):
   scls_exit.dest_stage_name = dest.stage_name
   scls_exit.spawn_id = dest.spawn_id
   scls_exit.room_index = dest.room_num
-  dri_entrance_scls_exit_index = 3
+  dri_entrance_scls_exit_index = dri_dzr.entries_by_type(SCLS).index(scls_exit)
   
   # Add the white light beam warp in the DRI pond.
   warp = dri_dzr.add_entity(SCOB)
