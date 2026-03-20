@@ -864,8 +864,8 @@ gameover_continue_reset_life:
 
 
 
-; Check whether the shortcut light beam warp on DRI should spawn
-; This is inserted into Komali's actor code
+; Propagate Adanmae's "DRC entrance touched" switch onto the sea stage so the DRI shortcut light beam warp's activation switch can fire.
+; DRC's entrance is in Adanmae rather than on the sea, so Komali's actor outside DRI bridges the gap by checking Adanmae's switch and setting the corresponding sea stage switch.
 .open "files/rels/d_a_npc_ac1.rel" ; Komali
 .org 0x718
   b spawn_drc_shortcut_warp

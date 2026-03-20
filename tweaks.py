@@ -2190,8 +2190,11 @@ def add_shortcut_warps_into_dungeons(self: WWRandomizer):
   
   
   # Add a similar shortcut for DRC entrance.
+  # Unlike FH, DRC's entrance is in a different stage (Adanmae), so a two-stage mechanism is used.
+  # A trigger region just outside the dungeon sets an unused switch on Adanmae.
+  # Komali outside the island checks that switch on spawn and activates the warp if that switch is set.
   dri_dzr = self.get_arc("files/res/Stage/sea/Room13.arc").get_file("room.dzr", DZx)
-  should_spawn_warp_switch = 0x7E # Unused in the vanilla game.
+  should_spawn_warp_switch = 0x7E # Unused on the sea stage in the vanilla game.
   
   # Add a new exit for the entrance into the dungeon.
   dri_entrance = ZoneEntrance.all["Dungeon Entrance on Dragon Roost Island"]
@@ -2205,7 +2208,7 @@ def add_shortcut_warps_into_dungeons(self: WWRandomizer):
   # Add the white light beam warp in the DRI pond.
   warp = dri_dzr.add_entity(SCOB)
   warp.name = "Ysdls00"
-  warp.type = 1
+  warp.type = 1 # White warp
   warp.activation_switch = should_spawn_warp_switch
   warp.exit_index = dri_entrance_scls_exit_index
   warp.activated_event_index = 0xFF
@@ -2213,9 +2216,9 @@ def add_shortcut_warps_into_dungeons(self: WWRandomizer):
   warp.y_pos =  68.89603
   warp.z_pos = -201463.4
   
-  # Copy over necessary particle.
-  dri_jpc = self.get_jpc("files/res/Particle/Pscene023.jpc")
-  fh_jpc = self.get_jpc("files/res/Particle/Pscene022.jpc")
+  # Copy the light beam warp particle and its textures from the FH particle bank.
+  dri_jpc = self.get_jpc("files/res/Particle/Pscene023.jpc") # DRI particle bank
+  fh_jpc = self.get_jpc("files/res/Particle/Pscene022.jpc")  # FH particle bank
   
   warp_particle_id = 0x8225
   if warp_particle_id not in dri_jpc.particles_by_id:
@@ -2234,7 +2237,7 @@ def add_shortcut_warps_into_dungeons(self: WWRandomizer):
   
   
   adanmae_dzr = self.get_arc("files/res/Stage/Adanmae/Room0.arc").get_file("room.dzr", DZx)
-  dri_entrance_touched_switch = 0x7F # Unused in the vanilla game.
+  dri_entrance_touched_switch = 0x7F # Unused in Adanmae in the vanilla game.
   
   # Add a SW_C00 (switch setting trigger region) around the entrance to the dungeon.
   # This will set the switch when the player enters the dungeon.
