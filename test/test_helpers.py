@@ -90,6 +90,8 @@ def enable_all_options(options: Options):
   options.prioritize_remote_hints = True
   options.hint_importance = True
   
+  options.rainbow_rupee_progress = True
+  
   options.do_not_generate_spoiler_log = False
   
   options.swift_sail = True
