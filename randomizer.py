@@ -314,6 +314,10 @@ class WWRandomizer:
       tweaks.update_starting_gear(self, self.options.starting_gear)
       if self.options.chest_type_matches_contents:
         tweaks.replace_dark_wood_chest_texture(self)
+      if self.options.open_drc:
+        tweaks.open_drc(self)
+      else:
+        tweaks.replace_drc_entrance_boulder_with_normal_boulder(self)
       if self.options.remove_title_and_ending_videos:
         tweaks.remove_title_and_ending_videos(self)
       if self.options.remove_music:
