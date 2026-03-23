@@ -1,5 +1,5 @@
 import tweaks
-from logic.item_types import DUNGEON_PROGRESS_ITEMS, DUNGEON_SMALL_KEYS, DUNGEON_BIG_KEYS, DUNGEON_MAPS_AND_COMPASSES
+from logic.item_types import DUNGEON_SMALL_KEYS, DUNGEON_BIG_KEYS, DUNGEON_MAPS_AND_COMPASSES
 from options.wwrando_options import DungeonItemShuffleMode, SwordMode
 from randomizers.base_randomizer import BaseRandomizer
 
