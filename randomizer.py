@@ -549,9 +549,6 @@ class WWRandomizer:
         for location_name in Logic.load_and_parse_item_locations():
           bit = location_name in value_set
           bitswriter.write(bit, 1)
-      elif option.name == "progression_locations":
-        # Handled above.
-        continue
       else:
         raise Exception(f"Option {option.name} of type {option.type} is not currently supported by the permalink system.")
     
@@ -651,9 +648,6 @@ class WWRandomizer:
           if excluded == 1:
             excluded_list.append(location_name)
         options.excluded_locations = sorted(excluded_list)
-      elif option.name == "progression_locations":
-        # Handled above.
-        continue
       else:
         raise Exception(f"Option {option.name} of type {option.type} is not currently supported by the permalink system.")
     

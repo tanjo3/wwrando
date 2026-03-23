@@ -148,6 +148,7 @@ class Options(BaseOptions):
   
   progression_locations: list[str] = option(
     default_factory=lambda: [],
+    permalink=False,
     description="Randomized locations that can have progress items.",
   )
   excluded_locations: list[str] = option(
