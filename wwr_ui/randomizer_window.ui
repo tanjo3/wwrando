@@ -826,7 +826,7 @@
                <string>Spoils</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_5">
-               <item row="1" column="2">
+               <item row="1" column="1">
                 <layout class="QHBoxLayout" name="layout_starting_red_chu_jelly">
                  <item>
                   <widget class="QLabel" name="label_for_starting_red_chu_jelly">
@@ -860,7 +860,7 @@
                  </item>
                 </layout>
                </item>
-               <item row="0" column="3">
+               <item row="0" column="2">
                 <layout class="QHBoxLayout" name="layout_starting_boko_baba_seed">
                  <item>
                   <widget class="QLabel" name="label_for_starting_boko_baba_seed">
@@ -877,7 +877,7 @@
                  </item>
                 </layout>
                </item>
-               <item row="0" column="4">
+               <item row="0" column="3">
                 <layout class="QHBoxLayout" name="layout_starting_golden_feather">
                  <item>
                   <widget class="QLabel" name="label_for_starting_golden_feather">
@@ -911,7 +911,7 @@
                  </item>
                 </layout>
                </item>
-               <item row="0" column="2">
+               <item row="0" column="1">
                 <layout class="QHBoxLayout" name="layout_starting_skull_necklace">
                  <item>
                   <widget class="QLabel" name="label_for_starting_skull_necklace">
@@ -928,7 +928,7 @@
                  </item>
                 </layout>
                </item>
-               <item row="1" column="4">
+               <item row="1" column="3">
                 <layout class="QHBoxLayout" name="layout_starting_blue_chu_jelly">
                  <item>
                   <widget class="QLabel" name="label_for_starting_blue_chu_jelly">
@@ -945,7 +945,7 @@
                  </item>
                 </layout>
                </item>
-               <item row="1" column="3">
+               <item row="1" column="2">
                 <layout class="QHBoxLayout" name="layout_starting_green_chu_jelly">
                  <item>
                   <widget class="QLabel" name="label_for_starting_green_chu_jelly">

@@ -587,7 +587,7 @@ class Ui_MainWindow(object):
         self.layout_starting_red_chu_jelly.addWidget(self.starting_red_chu_jelly)
 
 
-        self.gridLayout_5.addLayout(self.layout_starting_red_chu_jelly, 1, 2, 1, 1)
+        self.gridLayout_5.addLayout(self.layout_starting_red_chu_jelly, 1, 1, 1, 1)
 
         self.layout_starting_joy_pendant = QHBoxLayout()
         self.layout_starting_joy_pendant.setObjectName(u"layout_starting_joy_pendant")
@@ -619,7 +619,7 @@ class Ui_MainWindow(object):
         self.layout_starting_boko_baba_seed.addWidget(self.starting_boko_baba_seed)
 
 
-        self.gridLayout_5.addLayout(self.layout_starting_boko_baba_seed, 0, 3, 1, 1)
+        self.gridLayout_5.addLayout(self.layout_starting_boko_baba_seed, 0, 2, 1, 1)
 
         self.layout_starting_golden_feather = QHBoxLayout()
         self.layout_starting_golden_feather.setObjectName(u"layout_starting_golden_feather")
@@ -635,7 +635,7 @@ class Ui_MainWindow(object):
         self.layout_starting_golden_feather.addWidget(self.starting_golden_feather)
 
 
-        self.gridLayout_5.addLayout(self.layout_starting_golden_feather, 0, 4, 1, 1)
+        self.gridLayout_5.addLayout(self.layout_starting_golden_feather, 0, 3, 1, 1)
 
         self.layout_starting_knights_crest = QHBoxLayout()
         self.layout_starting_knights_crest.setObjectName(u"layout_starting_knights_crest")
@@ -667,7 +667,7 @@ class Ui_MainWindow(object):
         self.layout_starting_skull_necklace.addWidget(self.starting_skull_necklace)
 
 
-        self.gridLayout_5.addLayout(self.layout_starting_skull_necklace, 0, 2, 1, 1)
+        self.gridLayout_5.addLayout(self.layout_starting_skull_necklace, 0, 1, 1, 1)
 
         self.layout_starting_blue_chu_jelly = QHBoxLayout()
         self.layout_starting_blue_chu_jelly.setObjectName(u"layout_starting_blue_chu_jelly")
@@ -683,7 +683,7 @@ class Ui_MainWindow(object):
         self.layout_starting_blue_chu_jelly.addWidget(self.starting_blue_chu_jelly)
 
 
-        self.gridLayout_5.addLayout(self.layout_starting_blue_chu_jelly, 1, 4, 1, 1)
+        self.gridLayout_5.addLayout(self.layout_starting_blue_chu_jelly, 1, 3, 1, 1)
 
         self.layout_starting_green_chu_jelly = QHBoxLayout()
         self.layout_starting_green_chu_jelly.setObjectName(u"layout_starting_green_chu_jelly")
@@ -699,7 +699,7 @@ class Ui_MainWindow(object):
         self.layout_starting_green_chu_jelly.addWidget(self.starting_green_chu_jelly)
 
 
-        self.gridLayout_5.addLayout(self.layout_starting_green_chu_jelly, 1, 3, 1, 1)
+        self.gridLayout_5.addLayout(self.layout_starting_green_chu_jelly, 1, 2, 1, 1)
 
 
         self.verticalLayout_4.addWidget(self.groupBox_spoils)
