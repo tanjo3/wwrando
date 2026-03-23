@@ -568,7 +568,11 @@ class WWRandomizer:
     if not base64_encoded_permalink:
       raise Exception(f"Permalink is blank.")
     
-    permalink = zlib.decompress(base64.b64decode(base64_encoded_permalink))
+    raw_permalink = base64.b64decode(base64_encoded_permalink)
+    try:
+      permalink = zlib.decompress(raw_permalink)
+    except zlib.error:
+      permalink = raw_permalink
     given_version_num, seed, options_bytes = permalink.split(b"\0", 2)
     given_version_num = given_version_num.decode("ascii")
     seed = seed.decode("ascii")
