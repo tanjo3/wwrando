@@ -305,7 +305,7 @@ class ItemRandomizer(BaseRandomizer):
         raise Exception("Not enough valid locations left for any of the unplaced progress items!")
       
       # Remove duplicates from the list so items like swords and bows aren't so likely to show up early.
-      # We exclude dungeon items from this so that small keys can still be front-loaded in Key-Lunacy.
+      # We exclude dungeon items from this so that small keys can still be front-loaded when shuffled anywhere.
       # With small keys de-duplicated too, dungeons can be inaccessible until late in the seed (especially when nested).
       unique_possible_items = []
       for item_name in possible_items:
