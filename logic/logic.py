@@ -594,6 +594,12 @@ class Logic:
     elif shuffle_mode == DungeonItemShuffleMode.VANILLA or shuffle_mode == DungeonItemShuffleMode.OWN_DUNGEON:
       if not is_in_own_dungeon:
         return False
+      elif "Boss" in types:
+        # Don't allow dungeon items to be placed on the dungeon boss.
+        return False
+      elif "Randomizable Miniboss Room" in types and self.options.randomize_miniboss_entrances:
+        # Don't allow dungeon items to be placed in miniboss rooms when they are randomized.
+        return False
     elif shuffle_mode == DungeonItemShuffleMode.ANY_DUNGEON:
       if not is_in_any_dungeon:
         return False
@@ -602,14 +608,6 @@ class Logic:
         return False
     elif shuffle_mode == DungeonItemShuffleMode.OVERWORLD:
       if is_in_any_dungeon:
-        return False
-    
-    if is_in_any_dungeon:
-      if "Boss" in types:
-        # Don't allow dungeon items to be placed on the dungeon boss.
-        return False
-      if "Randomizable Miniboss Room" in types and self.options.randomize_miniboss_entrances:
-        # Don't allow dungeon items to be placed in miniboss rooms when they are randomized.
         return False
     
     return True
