@@ -2723,7 +2723,7 @@ def make_rupeesanity_rupees_flexible(self: WWRandomizer):
       actr.save_changes()
       
       if actor_key in force_silent_pickup_actors.get(arc_path_short, set()):
-          silent_pickup_bitmask[flag_index // 8] |= 1 << (flag_index % 8)
+        silent_pickup_bitmask[flag_index // 8] |= 1 << (flag_index % 8)
   
   bitmask_addr = self.main_custom_symbols["rupeesanity_silent_pickup_bitmask"]
   for i, byte_val in enumerate(silent_pickup_bitmask):
