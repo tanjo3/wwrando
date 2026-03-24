@@ -24,6 +24,8 @@ def enable_all_progression_location_options(options: Options):
   options.progression_savage_labyrinth = True
   options.progression_island_puzzles = True
   options.progression_dungeon_secrets = True
+  options.progression_rupee_dungeon = True
+  options.progression_rupee_overworld = True
 
 def disable_all_progression_location_options(options: Options):
   options.progression_dungeons = False
@@ -49,6 +51,8 @@ def disable_all_progression_location_options(options: Options):
   options.progression_savage_labyrinth = False
   options.progression_island_puzzles = False
   options.progression_dungeon_secrets = False
+  options.progression_rupee_dungeon = False
+  options.progression_rupee_overworld = False
 
 def enable_all_options(options: Options):
   enable_all_progression_location_options(options)
