@@ -339,8 +339,9 @@ class HintsRandomizer(BaseRandomizer):
     
     if self.hoho_hint_shards:
       self.update_hoho_item_hints(self.hoho_shard_hints)
-    if self.korl_hints_swords:
-      self.update_npc_item_hints(self.korl_sword_hints, (3444, 3445, 3446))
+    if self.korl_hints_swords and self.korl_sword_hints:
+      patcher.apply_patch(self.rando, "korl_sword_hints")
+      self.update_npc_item_hints(self.korl_sword_hints, (3444,))
     if self.kreeb_hints_bows:
       self.update_npc_item_hints(self.kreeb_bow_hints, (12220,))
   
