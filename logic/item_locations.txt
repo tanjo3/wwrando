@@ -306,7 +306,7 @@ Windfall Island - Chu Jelly Juice Shop - Rupee on Right Shelf:
   Types: Rupee
   Paths:
     - Pdrgsh/Room0.arc/Actor01F
-Windfall Island - Chu Jelly Juice Shop -  Rupee on Left Shelf:
+Windfall Island - Chu Jelly Juice Shop - Rupee on Left Shelf:
   Need: Nothing
   Original item: Green Rupee
   Types: Rupee
