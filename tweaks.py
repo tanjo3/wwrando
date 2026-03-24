@@ -2663,7 +2663,6 @@ def make_rupeesanity_rupees_flexible(self: WWRandomizer):
       "Actor097",
     },
   }
-  silent_pickup_bitmask = [0] * 21
   
   # Items that should keep their vanilla activation switch instead of being set to 0xFF.
   # These items require a specific condition before they can be collected.
@@ -2672,6 +2671,19 @@ def make_rupeesanity_rupees_flexible(self: WWRandomizer):
       "Actor00B",
     },
   }
+  
+  # Derive table sizes from the flag data rather than hardcoding them.
+  all_flag_indices = [
+    flag_index
+    for actors in self.rupeesanity_flags.values()
+    for flag_index in actors.values()
+  ]
+  num_flags = max(all_flag_indices) + 1
+  assert num_flags == len(set(all_flag_indices)), "Rupeesanity flag indices are not unique"
+  assert min(all_flag_indices) == 0, "Rupeesanity flag indices must start at 0"
+  
+  num_bitmask_bytes = (num_flags + 7) // 8
+  silent_pickup_bitmask = [0] * num_bitmask_bytes
   
   # Build set of actors that correspond to rupee locations still in the randomization pool.
   # Only these actors get patched; excluded locations keep vanilla behavior.
@@ -2688,7 +2700,7 @@ def make_rupeesanity_rupees_flexible(self: WWRandomizer):
   # Table of original spawn switch values, indexed by custom flag index.
   # The ASM patch reads from this table to restore the correct mSpawnSwitchNo at runtime,
   # since enable_spawn_switch is repurposed for the flag index.
-  spawn_switch_table = [0xFF] * 165
+  spawn_switch_table = [0xFF] * num_flags
   
   for arc_path_short, actors in self.rupeesanity_flags.items():
     arc_path = "files/res/Stage/" + arc_path_short
