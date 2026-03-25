@@ -31,7 +31,7 @@ from asm import disassemble
 from asm import elf2rel
 
 from options.wwrando_options import Options, SwordMode
-from wwr_ui.inventory import REGULAR_ITEMS, PROGRESSIVE_ITEMS
+from wwr_ui.inventory import REGULAR_ITEMS, PROGRESSIVE_ITEMS, BOSS_SOUL_ITEMS
 from packedbits import PackedBitsReader, PackedBitsWriter
 import base64
 import struct
@@ -198,7 +198,7 @@ class WWRandomizer:
       self.starting_items.append("Heart Container")
     
     if not self.options.boss_soul_shuffle:
-      for soul_name in ["Soul of Gohma", "Soul of Kalle Demos", "Soul of Gohdan", "Soul of Helmaroc King", "Soul of Jalhalla", "Soul of Molgera"]:
+      for soul_name in BOSS_SOUL_ITEMS:
         self.starting_items.append(soul_name)
     
     
@@ -324,7 +324,10 @@ class WWRandomizer:
       if self.options.sword_mode == SwordMode.SWORDLESS:
         patcher.apply_patch(self, "swordless")
         tweaks.update_text_for_swordless(self)
-      tweaks.update_starting_gear(self, self.options.starting_gear)
+      starting_gear = self.options.starting_gear.copy()
+      if not self.options.boss_soul_shuffle:
+        starting_gear += BOSS_SOUL_ITEMS
+      tweaks.update_starting_gear(self, starting_gear)
       if self.options.chest_type_matches_contents:
         tweaks.replace_dark_wood_chest_texture(self)
       if self.options.remove_title_and_ending_videos:

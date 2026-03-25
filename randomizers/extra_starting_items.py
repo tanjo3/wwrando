@@ -1,5 +1,5 @@
-import typing
 from logic.item_types import DUNGEON_PROGRESS_ITEMS
+from wwr_ui.inventory import BOSS_SOUL_ITEMS
 
 from randomizers.base_randomizer import BaseRandomizer
 import tweaks
@@ -133,10 +133,10 @@ class ExtraStartingItemsRandomizer(BaseRandomizer):
   
   def _save(self):
     # This tweak is written in an idempotent way, so this should be ok to call a second time.
-    tweaks.update_starting_gear(
-      self.rando,
-      self.options.starting_gear + self.random_starting_items
-    )
+    starting_gear = self.options.starting_gear + self.random_starting_items
+    if not self.options.boss_soul_shuffle:
+      starting_gear += BOSS_SOUL_ITEMS
+    tweaks.update_starting_gear(self.rando, starting_gear)
   
   def write_to_spoiler_log(self) -> str:
     if self.random_starting_items:
