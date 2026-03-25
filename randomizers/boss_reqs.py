@@ -49,6 +49,9 @@ class RequiredBossesRandomizer(BaseRandomizer):
   def _randomize(self):
     self.randomize_required_bosses()
     self.logic.update_required_bosses_macro()
+    
+    if self.options.boss_soul_shuffle:
+      self.demote_nonrequired_boss_souls_for_logic(self.logic)
   
   def _save(self):
     self.show_quest_markers_on_sea_chart_for_dungeons()
@@ -69,6 +72,16 @@ class RequiredBossesRandomizer(BaseRandomizer):
     
     spoiler_log += "\n\n\n"
     return spoiler_log
+  
+  def demote_nonrequired_boss_souls_for_logic(self, logic):
+    for boss_name in self.banned_bosses:
+      soul_name = f"Soul of {boss_name}"
+      if soul_name in logic.all_progress_items:
+        logic.all_progress_items.remove(soul_name)
+        logic.all_nonprogress_items.append(soul_name)
+      if soul_name in logic.unplaced_progress_items:
+        logic.unplaced_progress_items.remove(soul_name)
+        logic.unplaced_nonprogress_items.append(soul_name)
   
 
   def randomize_required_bosses(self):
