@@ -78,6 +78,7 @@ def enable_all_options(options: Options):
   options.chest_type_matches_contents = True
   
   options.trap_chests = True
+  options.boss_soul_shuffle = True
   
   options.fishmen_hints = True
   options.hoho_hints = True
