@@ -4,7 +4,7 @@ from qtpy.QtWidgets import *
 from wwr_ui.qt_init import load_ui_file
 
 from wwr_ui.update_checker import check_for_updates, LATEST_RELEASE_DOWNLOAD_PAGE_URL
-from wwr_ui.inventory import INVENTORY_ITEMS, DEFAULT_STARTING_ITEMS, DEFAULT_RANDOMIZED_ITEMS
+from wwr_ui.inventory import INVENTORY_ITEMS, DEFAULT_STARTING_ITEMS, DEFAULT_RANDOMIZED_ITEMS, BOSS_SOUL_ITEMS
 
 import os
 import sys
@@ -674,6 +674,9 @@ class WWRandomizerWindow(QMainWindow):
     ])
     if not (dungeon_entrances_random and non_dungeon_entrances_random):
       should_enable_options["mix_entrances"] = False
+    
+    if not options.boss_soul_shuffle:
+      items_to_filter_out += BOSS_SOUL_ITEMS
     
     self.filtered_rgear.setFilterStrings(items_to_filter_out)
     

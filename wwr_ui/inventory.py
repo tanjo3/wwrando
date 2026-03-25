@@ -45,6 +45,9 @@ REGULAR_ITEMS = [
   "Great Fairy Chart",
   "Octo Chart",
   "Tingle's Chart",
+]
+
+BOSS_SOUL_ITEMS = [
   "Soul of Gohma",
   "Soul of Kalle Demos",
   "Soul of Gohdan",
@@ -52,6 +55,8 @@ REGULAR_ITEMS = [
   "Soul of Jalhalla",
   "Soul of Molgera",
 ]
+
+REGULAR_ITEMS += BOSS_SOUL_ITEMS
 
 DUNGEON_NONPROGRESS_ITEMS = \
   ["DRC Dungeon Map", "DRC Compass"] + \
