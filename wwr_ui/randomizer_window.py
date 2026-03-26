@@ -650,6 +650,7 @@ class WWRandomizerWindow(QMainWindow):
     
     if not options.progression_dungeons:
       should_enable_options["required_bosses"] = False
+      should_enable_options["boss_soul_shuffle"] = False
     
     if options.sword_mode == SwordMode.SWORDLESS:
       items_to_filter_out += ["Hurricane Spin"]
