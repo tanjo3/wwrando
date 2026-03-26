@@ -87,6 +87,13 @@ class Logic:
     self.all_fixed_consumable_items = CONSUMABLE_ITEMS.copy()
     self.duplicatable_consumable_items = DUPLICATABLE_CONSUMABLE_ITEMS.copy()
     
+    # Add vanilla rupee items for progression rupeesanity locations to the consumable pool.
+    for location_name in self.remaining_item_locations:
+      types = self.item_locations[location_name]["Types"]
+      if "Rupee" in types:
+        vanilla_item = self.item_locations[location_name]["Original item"]
+        self.all_fixed_consumable_items.append(vanilla_item)
+    
     self.triforce_chart_names = []
     self.treasure_chart_names = []
     for i in range(1, 8+1):
