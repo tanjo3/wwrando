@@ -1019,6 +1019,7 @@ class HintsRandomizer(BaseRandomizer):
         if newly_accessible_small_keys:
           for loc in newly_accessible_small_keys:
             self.path_logic.add_owned_item(self.logic.prerandomization_item_locations[loc])
+          self.path_logic.clear_req_caches()
           previously_accessible += newly_accessible_small_keys
           continue
       
@@ -1031,6 +1032,7 @@ class HintsRandomizer(BaseRandomizer):
         item = self.logic.done_item_locations[loc]
         if item in self.path_logic.all_progress_items:
           self.path_logic.add_owned_item(item)
+      self.path_logic.clear_req_caches()
       
       previously_accessible = accessible
     
@@ -1060,6 +1062,7 @@ class HintsRandomizer(BaseRandomizer):
           if newly_accessible_small_keys:
             for loc in newly_accessible_small_keys:
               self.path_logic.add_owned_item(self.logic.prerandomization_item_locations[loc])
+            self.path_logic.clear_req_caches()
             previously_accessible += newly_accessible_small_keys
             continue
         
@@ -1067,6 +1070,7 @@ class HintsRandomizer(BaseRandomizer):
           item = self.logic.done_item_locations[loc]
           if item in self.path_logic.all_progress_items and item != excluded_item:
             self.path_logic.add_owned_item(item)
+        self.path_logic.clear_req_caches()
         
         previously_accessible = accessible
       
