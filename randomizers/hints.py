@@ -920,7 +920,7 @@ class HintsRandomizer(BaseRandomizer):
     progress_items = {}
     for location_name in progress_locations:
       item_name = self.logic.done_item_locations[location_name]
-      if item_name in self.rando.logic.all_progress_items:
+      if item_name in self.logic.all_progress_items:
         if item_name in progress_items:
           progress_items[item_name].append(location_name)
         else:
@@ -977,7 +977,7 @@ class HintsRandomizer(BaseRandomizer):
     # We do this by giving the player every progress item, then for each item, giving them everything except that item
     # and checking which locations become inaccessible.
     self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
-    for item in self.rando.logic.all_progress_items:
+    for item in self.logic.all_progress_items:
       self.path_logic.add_owned_item(item)
     self.path_logic.clear_req_caches()
     accessible_with_all = set(self.path_logic.get_accessible_remaining_locations(for_progression=True))
@@ -985,7 +985,7 @@ class HintsRandomizer(BaseRandomizer):
     chain_locations_by_item = {}
     for item_name in potentially_useful_items:
       self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
-      for item in self.rando.logic.all_progress_items:
+      for item in self.logic.all_progress_items:
         if item != item_name:
           self.path_logic.add_owned_item(item)
       self.path_logic.clear_req_caches()
