@@ -794,7 +794,7 @@ class HintsRandomizer(BaseRandomizer):
   
   
   def check_if_item_location_is_useful(self, item_name, location_name, has_useful_chain=True, sphere_state=None,
-                                       useful_item_locations=None, reachable_without=None,
+                                       useful_item_locations=None, reachable_locs=None,
                                        reachable_without_item=None, chain_locations_by_item=None,
                                        items_referenced_by_location=None, locations_referencing_item=None):
     # Determine if an item at a specific location is useful for beating the seed.
@@ -861,8 +861,8 @@ class HintsRandomizer(BaseRandomizer):
     
     # Step 3: Reachable-without check. Simulate a full playthrough where this item is never collected. If the location
     # is still reachable, the player could route to pick up this copy.
-    if reachable_without is not None:
-      if location_name in reachable_without:
+    if reachable_locs is not None:
+      if location_name in reachable_locs:
         # The location is independently reachable. However, if the item's usefulness comes solely from OR alternatives
         # (no useful chain locations of its own), check whether the location is locked behind an OR-covering partner.
         if (sphere_state is not None
@@ -1112,7 +1112,7 @@ class HintsRandomizer(BaseRandomizer):
       new_useful = set()
       for item_name in potentially_useful_items:
         has_useful_chain = item_name in items_with_useful_chains
-        reachable_without = reachable_without_item.get(item_name, set())
+        reachable_locs = reachable_without_item.get(item_name, set())
         for location_name in progress_items[item_name]:
           sphere_state = sphere_state_at_location.get(location_name)
           if self.check_if_item_location_is_useful(
@@ -1121,7 +1121,7 @@ class HintsRandomizer(BaseRandomizer):
             has_useful_chain,
             sphere_state=sphere_state,
             useful_item_locations=useful_item_locations,
-            reachable_without=reachable_without,
+            reachable_locs=reachable_locs,
             reachable_without_item=reachable_without_item,
             chain_locations_by_item=chain_locations_by_item,
             items_referenced_by_location=items_referenced_by_location,
