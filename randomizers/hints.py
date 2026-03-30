@@ -1082,8 +1082,18 @@ class HintsRandomizer(BaseRandomizer):
     useful_item_locations = set()
     for item_name in potentially_useful_items:
       useful_item_locations.update(progress_items[item_name])
-    if self.path_locations:
-      useful_item_locations |= self.path_locations
+    
+    # Path locations are seeded as useful, but dungeon key locations are excluded when keylunacy is off.
+    # Dungeon keys are always in their own dungeon without keylunacy, so they don't make a zone non-barren.
+    path_locations_for_barren = self.path_locations
+    if path_locations_for_barren and not self.options.keylunacy:
+      path_locations_for_barren = set()
+      for location_name in self.path_locations:
+        item_name = self.logic.done_item_locations[location_name]
+        if not self.logic.is_dungeon_item(item_name):
+          path_locations_for_barren.add(location_name)
+    if path_locations_for_barren:
+      useful_item_locations |= path_locations_for_barren
     
     for _ in range(10):
       # An item has a useful chain if it uniquely opens a useful location, or if it appears in the access requirements
@@ -1116,8 +1126,8 @@ class HintsRandomizer(BaseRandomizer):
             new_useful.add(location_name)
       
       # Path locations are always useful, so re-add them each pass to prevent the convergence from removing them.
-      if self.path_locations:
-        new_useful |= self.path_locations
+      if path_locations_for_barren:
+        new_useful |= path_locations_for_barren
       
       if new_useful == useful_item_locations:
         break
