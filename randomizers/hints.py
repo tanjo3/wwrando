@@ -908,7 +908,7 @@ class HintsRandomizer(BaseRandomizer):
     
     return False
   
-  def get_barren_zones(self, progress_locations, hinted_remote_locations):
+  def get_barren_zones(self, progress_locations, hinted_remote_locations, location_counter: Counter = None):
     # Helper function to build a list of barren zones in this seed.
     # The list includes only zones which are allowed to be hinted at as barren.
     
@@ -1155,14 +1155,19 @@ class HintsRandomizer(BaseRandomizer):
       for zone in zones & barren_zones:
         barren_locations_by_zone.setdefault(zone, set()).add(location_name)
     
-    zones_to_remove = set()
+    zones_to_remove: dict[str, str] = {}
     for zone_a, locs_a in barren_locations_by_zone.items():
       for zone_b, locs_b in barren_locations_by_zone.items():
         if zone_a != zone_b and locs_a < locs_b:
-          zones_to_remove.add(zone_a)
+          zones_to_remove[zone_a] = zone_b
           break
     
-    barren_zones -= zones_to_remove
+    # Transfer location counts from removed zones to their parent zones.
+    if location_counter is not None:
+      for removed_zone, parent_zone in zones_to_remove.items():
+        location_counter[parent_zone] += location_counter[removed_zone]
+    
+    barren_zones -= set(zones_to_remove)
     
     # Return the list of barren zones sorted to maintain consistent ordering.
     return sorted(barren_zones)
@@ -1483,7 +1488,7 @@ class HintsRandomizer(BaseRandomizer):
     # Generate barren hints.
     # We select at most `self.max_barren_hints` zones at random to hint as barren. Barren zones are weighted by the
     # square root of the number of locations at that zone.
-    unhinted_barren_zones = self.get_barren_zones(progress_locations, [hint.place for hint in hinted_remote_locations])
+    unhinted_barren_zones = self.get_barren_zones(progress_locations, [hint.place for hint in hinted_remote_locations], location_counter)
     hinted_barren_zones: list[Hint] = []
     while len(unhinted_barren_zones) > 0 and len(hinted_barren_zones) < self.max_barren_hints:
       # Weight each barren zone by the square root of the number of locations there.
