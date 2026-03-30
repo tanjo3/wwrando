@@ -1178,7 +1178,7 @@ class HintsRandomizer(BaseRandomizer):
     
     # Transfer location counts from removed zones to their parent zones.
     if location_counter is not None:
-      for removed_zone, parent_zone in zones_to_remove.items():
+      for removed_zone, parent_zone in sorted(zones_to_remove.items(), key=lambda kv: len(barren_locations_by_zone[kv[0]])):
         location_counter[parent_zone] += location_counter[removed_zone]
     
     barren_zones -= set(zones_to_remove)
