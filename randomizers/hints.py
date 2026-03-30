@@ -1146,6 +1146,24 @@ class HintsRandomizer(BaseRandomizer):
     # set of hintable barren zones.
     barren_zones = zones_with_barren_locations - zones_with_useful_locations
     
+    # Remove barren zones that are strictly contained within another barren zone.
+    barren_locations_by_zone: dict[str, set[str]] = {}
+    for location_name in self.barren_locations:
+      if location_name in hinted_remote_locations:
+        continue
+      zones = self.rando.entrances.get_all_zones_for_item_location(location_name)
+      for zone in zones & barren_zones:
+        barren_locations_by_zone.setdefault(zone, set()).add(location_name)
+    
+    zones_to_remove = set()
+    for zone_a, locs_a in barren_locations_by_zone.items():
+      for zone_b, locs_b in barren_locations_by_zone.items():
+        if zone_a != zone_b and locs_a < locs_b:
+          zones_to_remove.add(zone_a)
+          break
+    
+    barren_zones -= zones_to_remove
+    
     # Return the list of barren zones sorted to maintain consistent ordering.
     return sorted(barren_zones)
   
