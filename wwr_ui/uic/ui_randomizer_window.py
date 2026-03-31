@@ -225,6 +225,11 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.progression_misc, 5, 0, 1, 1)
 
+        self.progression_blue_chu_jellies = QCheckBox(self.progression_locations_groupbox)
+        self.progression_blue_chu_jellies.setObjectName(u"progression_blue_chu_jellies")
+
+        self.gridLayout_2.addWidget(self.progression_blue_chu_jellies, 7, 0, 1, 1)
+
         self.progression_platforms_rafts = QCheckBox(self.progression_locations_groupbox)
         self.progression_platforms_rafts.setObjectName(u"progression_platforms_rafts")
 
@@ -1051,6 +1056,7 @@ class Ui_MainWindow(object):
         self.progression_savage_labyrinth.setText(QCoreApplication.translate("MainWindow", u"Savage Labyrinth", None))
         self.progression_long_sidequests.setText(QCoreApplication.translate("MainWindow", u"Long Sidequests", None))
         self.progression_misc.setText(QCoreApplication.translate("MainWindow", u"Miscellaneous", None))
+        self.progression_blue_chu_jellies.setText(QCoreApplication.translate("MainWindow", u"Blue Chu Jellies", None))
         self.progression_platforms_rafts.setText(QCoreApplication.translate("MainWindow", u"Lookout Platforms and Rafts", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"Item Randomizer Modes", None))
         self.trap_chests.setText(QCoreApplication.translate("MainWindow", u"Enable Trap Chests", None))

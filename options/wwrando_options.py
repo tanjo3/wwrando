@@ -138,6 +138,11 @@ class Options(BaseOptions):
     description="Miscellaneous locations that don't fit into any of the above categories (outdoors chests, wind shrine, Cyclos, etc).<br>"
       "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
   )
+  progression_blue_chu_jellies: bool = option(
+    default=False,
+    description="If this is checked, each Blue ChuChu will drop a randomized item instead of Blue Chu Jelly, and 23 Blue Chu Jellies will be added to the item pool.<br>"
+      "If this is not checked, Blue ChuChus will drop Blue Chu Jelly as in vanilla, and Blue Chu Jellies will not be added to the item pool.",
+  )
   #endregion
   
   #region Modes
