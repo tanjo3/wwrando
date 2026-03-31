@@ -3,6 +3,8 @@ g_dComIfG_gameInfo = 0x803c4c08;
 init__10dSv_save_cFv = 0x8005d860;
 
 execItemGet__FUc = 0x800c2dfc;
+fopAcM_createItemForTrBoxDemo__FP4cXyziiiP5csXyzP4cXyz = 0x800261E8;
+fopAcM_createDisappear__FP10fopAc_ac_cP4cXyzUcUcUc = 0x80027A9C;
 item_func_sword__Fv = 0x800c3ad4;
 item_func_shield__Fv = 0x800c3b94;
 item_func_mirror_shield__Fv = 0x800c3bd4;

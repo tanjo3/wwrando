@@ -1090,3 +1090,353 @@ create_stone_head_item:
   bl fopAcM_createItemFromTable__FP4cXyziiiiP5csXyziP4cXyz
   b 0x172C ; Return to original code
 .close
+
+
+
+
+; Allow Blue ChuChu spoil drops to be randomized.
+; There are 23 Blue ChuChus in the game, each of which drops a Blue Chu Jelly exactly once.
+; The game tracks which have been collected using save switches in stage 0xE (one bit per ChuChu).
+; When shuffle is enabled, we replace what the player receives with a randomized item.
+; 
+; There are two paths for obtaining items from Blue ChuChus:
+; * Death path: The ChuChu is killed and drops an item on the ground.
+;   We bypass the vanilla Iball system and create the randomized item directly via fopAcM_createItem. This gives the correct item model.
+;   The save switch is set on pickup, not creation, so the player can leave and come back if they don't pick it up.
+; * Grapple path: The Grappling Hook steals a Blue Chu Jelly that flies to Link.
+;   We let the vanilla steal system handle the item creation (preserving the fly-to-Link animation).
+;   The field model is a Blue Chu Jelly, but we replace what the player actually receives at two points: execItemGet (for the inventory) and fopAcM_createItemForTrBoxDemo (for the first-time get demo).
+;   The vanilla save switch tracking works automatically since m_itemNo remains 0x4B.
+.open "sys/main.dol"
+.org @NextFreeSpace
+
+; Set to 1 by the randomizer when shuffle is on. 0 = vanilla behavior.
+.global blue_chuchu_shuffle_enabled
+blue_chuchu_shuffle_enabled:
+  .byte 0x00
+
+; Relay variable for the grapple path.
+; Set before the itemGetExecute switch dispatch, consumed by the execItemGet and createItemForTrBoxDemo hooks.
+.global blue_chuchu_pending_item_bit_no
+blue_chuchu_pending_item_bit_no:
+  .byte 0xFF
+  .align 2
+
+; Lookup table of randomized item IDs indexed by stealItemBitNo (1-23). Index 0 is unused.
+; Defaults to 0x4B (Blue Chu Jelly). The randomizer overwrites individual bytes via CustomSymbol paths.
+.global blue_chuchu_item_ids
+blue_chuchu_item_ids:
+  .byte 0x4B
+.global blue_chuchu_item_id_01
+blue_chuchu_item_id_01: .byte 0x4B
+.global blue_chuchu_item_id_02
+blue_chuchu_item_id_02: .byte 0x4B
+.global blue_chuchu_item_id_03
+blue_chuchu_item_id_03: .byte 0x4B
+.global blue_chuchu_item_id_04
+blue_chuchu_item_id_04: .byte 0x4B
+.global blue_chuchu_item_id_05
+blue_chuchu_item_id_05: .byte 0x4B
+.global blue_chuchu_item_id_06
+blue_chuchu_item_id_06: .byte 0x4B
+.global blue_chuchu_item_id_07
+blue_chuchu_item_id_07: .byte 0x4B
+.global blue_chuchu_item_id_08
+blue_chuchu_item_id_08: .byte 0x4B
+.global blue_chuchu_item_id_09
+blue_chuchu_item_id_09: .byte 0x4B
+.global blue_chuchu_item_id_0A
+blue_chuchu_item_id_0A: .byte 0x4B
+.global blue_chuchu_item_id_0B
+blue_chuchu_item_id_0B: .byte 0x4B
+.global blue_chuchu_item_id_0C
+blue_chuchu_item_id_0C: .byte 0x4B
+.global blue_chuchu_item_id_0D
+blue_chuchu_item_id_0D: .byte 0x4B
+.global blue_chuchu_item_id_0E
+blue_chuchu_item_id_0E: .byte 0x4B
+.global blue_chuchu_item_id_0F
+blue_chuchu_item_id_0F: .byte 0x4B
+.global blue_chuchu_item_id_10
+blue_chuchu_item_id_10: .byte 0x4B
+.global blue_chuchu_item_id_11
+blue_chuchu_item_id_11: .byte 0x4B
+.global blue_chuchu_item_id_12
+blue_chuchu_item_id_12: .byte 0x4B
+.global blue_chuchu_item_id_13
+blue_chuchu_item_id_13: .byte 0x4B
+.global blue_chuchu_item_id_14
+blue_chuchu_item_id_14: .byte 0x4B
+.global blue_chuchu_item_id_15
+blue_chuchu_item_id_15: .byte 0x4B
+.global blue_chuchu_item_id_16
+blue_chuchu_item_id_16: .byte 0x4B
+.global blue_chuchu_item_id_17
+blue_chuchu_item_id_17: .byte 0x4B
+  .align 2
+
+
+; In itemGetExecute, before the switch dispatch, we set the grapple-path relay and replace r0 with the randomized item ID so the switch dispatches to the correct item's case.
+.org 0x800F6460 ; In daItem_c::itemGetExecute
+  bl blue_chuchu_set_pending_early
+
+.org @NextFreeSpace
+.global blue_chuchu_set_pending_early
+blue_chuchu_set_pending_early:
+  lbz r0, 0x63A (r31) ; Replace the line we overwrote to branch here
+  
+  ; Clear the relay to prevent stale values from previous pickups.
+  li r12, 0xFF
+  lis r11, blue_chuchu_pending_item_bit_no@ha
+  stb r12, blue_chuchu_pending_item_bit_no@l(r11)
+  
+  cmpwi r0, 0x4B
+  bnelr ; Not Blue Chu Jelly, nothing to do.
+  
+  lis r11, blue_chuchu_shuffle_enabled@ha
+  lbz r11, blue_chuchu_shuffle_enabled@l(r11)
+  cmpwi r11, 0
+  beqlr ; Shuffle disabled.
+  
+  lwz r11, 0x630 (r31) ; mItemBitNo
+  cmpwi r11, 1
+  bltlr
+  cmpwi r11, 23
+  bgtlr ; mItemBitNo not in range 1-23, not from a Blue ChuChu.
+  
+  ; Set the relay so the execItemGet and createItemForTrBoxDemo hooks know which item to give.
+  lis r12, blue_chuchu_pending_item_bit_no@ha
+  stb r11, blue_chuchu_pending_item_bit_no@l(r12)
+  
+  ; Look up the randomized item and put it in r0 so the switch dispatches to that item's case.
+  stwu sp, -0x10 (sp)
+  mflr r12
+  stw r12, 0x14 (sp)
+  lis r3, blue_chuchu_item_ids@ha
+  addi r3, r3, blue_chuchu_item_ids@l
+  lbzx r3, r3, r11
+  bl convert_progressive_item_id
+  mr r0, r3
+  lwz r12, 0x14 (sp)
+  mtlr r12
+  addi sp, sp, 0x10
+  blr
+
+
+; In execItemGet, if the item ID is 0x4B and the relay is active, replace it with the randomized item.
+; This is needed because each switch case in itemGetExecute re-reads m_itemNo from the actor (still 0x4B).
+.org 0x800C2DFC ; In execItemGet
+  b blue_chuchu_exec_item_get_entry
+
+.org @NextFreeSpace
+.global blue_chuchu_exec_item_get_entry
+blue_chuchu_exec_item_get_entry:
+  cmpwi r3, 0x4B
+  bne blue_chuchu_exec_entry_original
+  lis r11, blue_chuchu_pending_item_bit_no@ha
+  lbz r11, blue_chuchu_pending_item_bit_no@l(r11)
+  cmpwi r11, 0xFF
+  beq blue_chuchu_exec_entry_original
+  
+  ; Look up the randomized item, convert progressive IDs, then call the item's get function directly.
+  stwu sp, -0x10 (sp)
+  mflr r0
+  stw r0, 0x14 (sp)
+  lis r3, blue_chuchu_item_ids@ha
+  addi r3, r3, blue_chuchu_item_ids@l
+  lbzx r3, r3, r11
+  bl convert_progressive_item_id
+  
+  ; Clear the relay.
+  lis r11, blue_chuchu_pending_item_bit_no@ha
+  li r12, 0xFF
+  stb r12, blue_chuchu_pending_item_bit_no@l(r11)
+  
+  ; Inline the body of execItemGet: look up and call item_func_ptr[itemNo]().
+  rlwinm r0, r3, 2, 22, 29
+  lis r3, 0x803888C8@ha
+  addi r3, r3, 0x803888C8@l
+  lwzx r12, r3, r0
+  mtctr r12
+  bctrl
+  
+  lwz r0, 0x14 (sp)
+  mtlr r0
+  addi sp, sp, 0x10
+  blr
+
+blue_chuchu_exec_entry_original:
+  stwu r1, -16 (r1) ; Replace the line we overwrote to branch here
+  b 0x800C2E00
+
+
+; In execInitGetDemoDirection, replace the item ID passed to fopAcM_createItemForTrBoxDemo so the first-time get demo shows the correct item model and name.
+; The existing convert_progressive_item_id hook inside createDemoItem handles progressive conversion.
+.org 0x800F5C40 ; In daItem_c::execInitGetDemoDirection
+  bl blue_chuchu_create_demo_item_replace
+
+.org @NextFreeSpace
+.global blue_chuchu_create_demo_item_replace
+blue_chuchu_create_demo_item_replace:
+  lis r11, blue_chuchu_pending_item_bit_no@ha
+  lbz r11, blue_chuchu_pending_item_bit_no@l(r11)
+  cmpwi r11, 0xFF
+  beq blue_chuchu_demo_no_replace
+  
+  ; Replace r4 (the item ID parameter) with the randomized item.
+  lis r4, blue_chuchu_item_ids@ha
+  addi r4, r4, blue_chuchu_item_ids@l
+  lbzx r4, r4, r11
+  
+  ; Clear the relay.
+  li r12, 0xFF
+  lis r11, blue_chuchu_pending_item_bit_no@ha
+  stb r12, blue_chuchu_pending_item_bit_no@l(r11)
+
+blue_chuchu_demo_no_replace:
+  b fopAcM_createItemForTrBoxDemo__FP4cXyziiiP5csXyzP4cXyz
+
+
+; In daItem_create, the code skips the room-level isItem pickup check for Blue Chu Jelly (0x4B) because Blue Chu Jelly uses stage 0xE switches instead.
+; Death-path items have a custom m_itemNo (not 0x4B) but still use stage 0xE via mItemBitNo 1-23, so we need to skip the isItem check for them too.
+.org 0x800F5594 ; In daItem_create
+  bl blue_chuchu_check_skip_isitem
+
+.org @NextFreeSpace
+.global blue_chuchu_check_skip_isitem
+blue_chuchu_check_skip_isitem:
+  cmplwi r0, 0x4B
+  beqlr ; Original behavior for Blue Chu Jelly.
+  
+  lis r11, blue_chuchu_shuffle_enabled@ha
+  lbz r11, blue_chuchu_shuffle_enabled@l(r11)
+  cmpwi r11, 0
+  beq blue_chuchu_skip_isitem_no
+  lwz r11, 0x630 (r31) ; mItemBitNo (stored at 0x800F558C, before this hook)
+  cmpwi r11, 1
+  blt blue_chuchu_skip_isitem_no
+  cmpwi r11, 23
+  bgt blue_chuchu_skip_isitem_no
+  crset 2 ; Set EQ to skip the isItem check.
+  blr
+blue_chuchu_skip_isitem_no:
+  crclr 2 ; Clear EQ to proceed with the isItem check.
+  blr
+
+
+; In the fopAcM_onItemForIb inline at the end of itemGetExecute, the code checks if m_itemNo is 0x4B to decide between stage 0xE switches and room-level item flags.
+; Death-path items have a custom m_itemNo but still need stage 0xE, so we check mItemBitNo 1-23.
+.org 0x800F6C98 ; In daItem_c
+  bl blue_chuchu_check_use_stage_switch
+
+.org @NextFreeSpace
+.global blue_chuchu_check_use_stage_switch
+blue_chuchu_check_use_stage_switch:
+  cmplwi r0, 0x4B
+  beqlr ; Original behavior for Blue Chu Jelly.
+  
+  lis r11, blue_chuchu_shuffle_enabled@ha
+  lbz r11, blue_chuchu_shuffle_enabled@l(r11)
+  cmpwi r11, 0
+  beq blue_chuchu_stage_switch_no
+  lwz r11, 0x630 (r31) ; mItemBitNo
+  cmpwi r11, 1
+  blt blue_chuchu_stage_switch_no
+  cmpwi r11, 23
+  bgt blue_chuchu_stage_switch_no
+  crset 2 ; Set EQ to use stage 0xE save switch.
+  blr
+blue_chuchu_stage_switch_no:
+  crclr 2 ; Clear EQ to use room-level item flags.
+  blr
+
+
+; When a Blue ChuChu is killed, we bypass the vanilla Iball (spoil ball) system and create the randomized item directly.
+; This allows the correct item model to appear on the ground.
+; If the save switch is already set, we create a Yellow Rupee instead (matching vanilla behavior).
+; The save switch is set on pickup by the hook above, not on creation, so the player can leave and come back to collect the item if they missed it.
+.global blue_chuchu_create_death_item
+blue_chuchu_create_death_item:
+  lis r11, blue_chuchu_shuffle_enabled@ha
+  lbz r11, blue_chuchu_shuffle_enabled@l(r11)
+  cmpwi r11, 0
+  beq blue_chuchu_death_vanilla_fallback
+  
+  stwu sp, -0x20 (sp)
+  mflr r11
+  stw r11, 0x24 (sp)
+  stw r31, 0x1C (sp)
+  stw r30, 0x18 (sp)
+  stw r29, 0x14 (sp)
+  mr r29, r7 ; stealItemBitNo
+  mr r30, r4 ; pos
+  mr r31, r3 ; actor
+  
+  ; Check the stage 0xE save switch.
+  lis r3, 0x803C5184@ha
+  lwz r3, 0x803C5184@l(r3)
+  li r11, 1
+  slw r11, r11, r29
+  and. r11, r3, r11
+  bne blue_chuchu_death_already_collected
+  
+  ; Not yet collected. Look up the randomized item and create it.
+  lis r3, blue_chuchu_item_ids@ha
+  addi r3, r3, blue_chuchu_item_ids@l
+  lbzx r4, r3, r29
+  mr r3, r30 ; pos
+  mr r5, r29 ; itemBitNo = stealItemBitNo
+  lbz r6, 0x20A (r31) ; roomNo
+  extsb r6, r6
+  li r7, 3 ; Don't fade out
+  li r8, 0
+  li r9, 5 ; Item action 5 (ding sound)
+  li r10, 0
+  bl fopAcM_createItem__FP4cXyziiiiP5csXyziP4cXyz
+  b blue_chuchu_death_func_end
+
+blue_chuchu_death_already_collected:
+  mr r3, r30 ; pos
+  li r4, 0x03 ; Yellow Rupee
+  li r5, -1
+  lbz r6, 0x20A (r31) ; roomNo
+  extsb r6, r6
+  li r7, 0
+  li r8, 0
+  li r9, 0
+  li r10, 0
+  bl fopAcM_createItem__FP4cXyziiiiP5csXyziP4cXyz
+
+blue_chuchu_death_func_end:
+  lwz r29, 0x14 (sp)
+  lwz r30, 0x18 (sp)
+  lwz r31, 0x1C (sp)
+  lwz r11, 0x24 (sp)
+  mtlr r11
+  addi sp, sp, 0x20
+  blr
+
+blue_chuchu_death_vanilla_fallback:
+  b fopAcM_createDisappear__FP10fopAc_ac_cP4cXyzUcUcUc
+
+; Wrapper for the action_up_check death hook, which is shared by all ChuChu colors.
+; Only Blue ChuChus (behaviorType == 3) should use our custom item creation.
+.global blue_chuchu_create_death_item_if_blue
+blue_chuchu_create_death_item_if_blue:
+  lbz r11, 0x2F0 (r3) ; behaviorType from cc_class
+  cmpwi r11, 3
+  beq blue_chuchu_create_death_item
+  b fopAcM_createDisappear__FP10fopAc_ac_cP4cXyzUcUcUc
+
+.close
+
+
+; Replace the three fopAcM_createDisappear calls in d_a_cc.rel that create Blue Chu Jelly drops.
+.open "files/rels/d_a_cc.rel" ; ChuChu
+.org 0x3E28 ; In action_dead_move case 51
+  bl blue_chuchu_create_death_item
+.org 0x40BC ; In action_dead_move case 53
+  bl blue_chuchu_create_death_item
+.org 0x56C4 ; In action_up_check (Skull Hammer break)
+  bl blue_chuchu_create_death_item_if_blue
+.close
