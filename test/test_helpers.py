@@ -24,6 +24,7 @@ def enable_all_progression_location_options(options: Options):
   options.progression_savage_labyrinth = True
   options.progression_island_puzzles = True
   options.progression_dungeon_secrets = True
+  options.progression_blue_chu_jellies = True
 
 def disable_all_progression_location_options(options: Options):
   options.progression_dungeons = False
@@ -49,6 +50,7 @@ def disable_all_progression_location_options(options: Options):
   options.progression_savage_labyrinth = False
   options.progression_island_puzzles = False
   options.progression_dungeon_secrets = False
+  options.progression_blue_chu_jellies = False
 
 def enable_all_options(options: Options):
   enable_all_progression_location_options(options)

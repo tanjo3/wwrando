@@ -309,6 +309,13 @@
                  </property>
                 </widget>
                </item>
+               <item row="7" column="0">
+                <widget class="QCheckBox" name="progression_blue_chu_jellies">
+                 <property name="text">
+                  <string>Blue Chu Jellies</string>
+                 </property>
+                </widget>
+               </item>
                <item row="1" column="4">
                 <widget class="QCheckBox" name="progression_platforms_rafts">
                  <property name="text">
