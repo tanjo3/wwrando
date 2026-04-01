@@ -106,6 +106,11 @@ class Logic:
     else:
       self.all_nonprogress_items += self.treasure_chart_names
     
+    # Add Blue Chu Jelly to the item pool when their shuffle is enabled.
+    # All 23 are progress items so the logic can vary how many are accessible before the trade.
+    if self.options.progression_blue_chu_jellies:
+      self.all_progress_items += 23 * ["Blue Chu Jelly"]
+    
     # Add dungeon items to the progress/nonprogress items lists.
     if self.options.progression_dungeons:
       self.all_progress_items += DUNGEON_PROGRESS_ITEMS
@@ -801,7 +806,7 @@ class Logic:
       if self.is_dungeon_item(item_name) and not self.options.progression_dungeons:
         continue
       if item_name not in self.all_progress_items:
-        if not (item_name.startswith("Triforce Chart ") or item_name.startswith("Treasure Chart")):
+        if not (item_name.startswith("Triforce Chart ") or item_name.startswith("Treasure Chart ") or item_name == "Blue Chu Jelly"):
           raise Exception("Item %s opens up progress locations but is not in the list of all progress items." % item_name)
       all_progress_items_filtered.append(item_name)
     
@@ -809,7 +814,7 @@ class Logic:
     starting_items_to_remove = self.rando.starting_items.copy()
     for item_name in all_progress_items_filtered:
       if item_name not in all_items_to_make_nonprogress:
-        if (item_name.startswith("Triforce Chart ") or item_name.startswith("Treasure Chart")):
+        if (item_name.startswith("Triforce Chart ") or item_name.startswith("Treasure Chart ") or item_name == "Blue Chu Jelly"):
           continue
       all_items_to_make_nonprogress.remove(item_name)
       if item_name in starting_items_to_remove:
@@ -916,6 +921,8 @@ class Logic:
       result = self.check_progressive_item_req(req_name)
     elif " Small Key x" in req_name:
       result = self.check_small_key_req(req_name)
+    elif re.search(r" x\d+$", req_name):
+      result = self.check_item_count_req(req_name)
     elif req_name.startswith("Can Access Item Location \""):
       result = self.check_item_location_requirement(req_name)
     elif req_name.startswith("Option \""):
@@ -1018,6 +1025,11 @@ class Logic:
       small_key_name = match.group(1)
       num_keys_required = int(match.group(2))
       items_needed[small_key_name] = max(num_keys_required, items_needed.setdefault(small_key_name, 0))
+    elif re.search(r" x\d+$", req_name):
+      match = re.search(r"^(.+) x(\d+)$", req_name)
+      item_name = match.group(1)
+      num_required = int(match.group(2))
+      items_needed[item_name] = max(num_required, items_needed.setdefault(item_name, 0))
     elif req_name.startswith("Can Access Item Location \""):
       match = re.search(r"^Can Access Item Location \"([^\"]+)\"$", req_name)
       item_location_name = match.group(1)
@@ -1095,6 +1107,15 @@ class Logic:
     
     num_small_keys_owned = self.currently_owned_items.count(small_key_name)
     return num_small_keys_owned >= num_keys_required
+  
+  def check_item_count_req(self, req_name: str):
+    match = re.search(r"^(.+) x(\d+)$", req_name)
+    assert match
+    item_name = match.group(1)
+    num_required = int(match.group(2))
+    
+    num_owned = self.currently_owned_items.count(item_name)
+    return num_owned >= num_required
   
   def check_item_location_requirement(self, req_name: str):
     match = re.search(r"^Can Access Item Location \"([^\"]+)\"$", req_name)
