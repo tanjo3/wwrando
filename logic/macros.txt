@@ -683,23 +683,29 @@ Can Farm Green Chu Jelly:
   Grappling Hook & Spoils Bag
   # Green ChuChus are accessible without any items on Outset at night.
 Can Obtain 15 Blue Chu Jelly:
-  # There are 23 Blue ChuChus in the game, which each drop their jelly only once.
-  # 14/23 need no items to reach (not counting the items needed to defeat/steal from them).
-  # The remaining 9/23 do need items to reach.
-  # So all you need to get 15 is any 1 out of the 9 requirements.
-  Can Get Blue Chu Jelly from Blue ChuChus
-  & (
-    Can Move Boulders
-    | Hookshot
-    | Bombs
-    | Grappling Hook
-    | Hookshot
-    | (Can Access Secret Cave Entrance on Shark Island & Can Fly With Deku Leaf Outdoors)
-    | Can Access Item Location "Cliff Plateau Isles - Highest Isle"
-    | Can Fan With Deku Leaf
-    | Can Access Secret Cave Entrance on Boating Course
+  # When Blue ChuChu drops are shuffled, the 23 Blue Chu Jelly items are distributed throughout the world as progress items. The player needs to collect 15 of them.
+  # When not shuffled, the vanilla logic applies: 14/23 Blue ChuChus need no items to reach, so the player just needs any 1 of the 9 gated requirements to guarantee access to 15.
+  (
+    Option "progression_blue_chu_jellies" Enabled
+    & Blue Chu Jelly x15
+    & Spoils Bag
   )
-  & Spoils Bag
+  | (
+    Option "progression_blue_chu_jellies" Disabled
+    & Can Get Blue Chu Jelly from Blue ChuChus
+    & (
+      Can Move Boulders
+      | Hookshot
+      | Bombs
+      | Grappling Hook
+      | Hookshot
+      | (Can Access Secret Cave Entrance on Shark Island & Can Fly With Deku Leaf Outdoors)
+      | Can Access Item Location "Cliff Plateau Isles - Highest Isle"
+      | Can Fan With Deku Leaf
+      | Can Access Secret Cave Entrance on Boating Course
+    )
+    & Spoils Bag
+  )
   # Full list of Blue ChuChus:
   # * Star Island, under a boulder
   # * Northern Fairy Island (no requirements)
