@@ -582,10 +582,9 @@ lenzo_set_deluxe_picto_box_event_bit:
 
 
 
-; Zunari usually checks if he gave you the Magic Armor by calling checkGetItem on the Magic Armor item ID. This doesn't work properly when the item he gives is randomized.
-; So we need to set a custom event bit to keep track of whether you've gotten whatever item is in the Magic Armor slot,
-; we also use this to set event bits for the sail item slot, and the town flower item.
-.open "files/rels/d_a_npc_rsh1.rel"
+; Zunari usually checks if he's given you the item in the Magic Armor item slot by calling checkGetItem.
+; This doesn't work properly when the item he gives is randomized, so we need to set custom event bits to keep track of whether you've gotten each of Zunari's gift items.
+.open "files/rels/d_a_npc_rsh1.rel" ; Zunari
 
 .org 0x177C ; Where he checks if you own the Magic Armor by calling checkItemGet.
   ; We replace this with a call to isEventBit checking our custom event bit.
@@ -599,6 +598,7 @@ lenzo_set_deluxe_picto_box_event_bit:
   ; Change the call to createItemForPresentDemo to instead call our custom function so that it can set the custom event bits if necessary.
   bl zunari_check_items_and_set_event_bits
 
+; We identify which gift is being given by checking the dialogue message ID (m778) on the actor instance, which is unique per gift type and unaffected by item randomization.
 .org @NextFreeSpace
 .global zunari_check_items_and_set_event_bits
 zunari_check_items_and_set_event_bits:
@@ -607,58 +607,43 @@ zunari_check_items_and_set_event_bits:
   stw r0, 0x24 (sp)
   stw r31, 0x1C (sp)
   stw r30, 0x18 (sp)
-  mr r31, r4 ; Preserve argument r4, which has the item ID
+  
+  lwz r31, 0x778 (r30) ; Load dialogue message ID from actor instance (m778)
   bl fopAcM_createItemForPresentDemo__FP4cXyziUciiP5csXyzP4cXyz
   mr r30, r3 ; Preserve the return value from createItemForPresentDemo so we can still return that
-
-  lis r4, zunari_sail_slot_item_id@ha
-  addi r4, r4, zunari_sail_slot_item_id@l
-  lbz r4, 0 (r4)
-  cmpw r31, r4
-  bne zunari_check_town_flower_and_set_event_bit ; Not sail slot → check town flower.
+  
+  cmpwi r31, 0x288E ; Sail purchase dialogue
+  bne zunari_check_town_flower_and_set_event_bit
   lis r3, 0x803C522C@ha
   addi r3, r3, 0x803C522C@l
-  li r4, 0x2420
+  li r4, 0x2420 ; Unused event bit for whether Zunari has given the sail item
   bl onEventBit__11dSv_event_cFUs
 
 zunari_check_town_flower_and_set_event_bit:
-  li r4, 0x8C ; town flower item ID. 
-  cmpw r31, r4
-  bne zunari_check_magic_armor_and_set_event_bit ; Not town flower → check magic armor slot.
+  cmpwi r31, 0x2856 ; Town Flower gift dialogue
+  bne zunari_check_magic_armor_and_set_event_bit
   lis r3, 0x803C522C@ha
   addi r3, r3, 0x803C522C@l
-  li r4, 0x0E08 
+  li r4, 0x0E08 ; Event bit for whether the town flower has been given
   bl onEventBit__11dSv_event_cFUs
 
 zunari_check_magic_armor_and_set_event_bit:
-  lis r4, zunari_magic_armor_slot_item_id@ha
-  addi r4, r4, zunari_magic_armor_slot_item_id@l
-  lbz r4, 0 (r4) ; Load what item ID is in the Magic Armor slot. This value is updated by the randomizer when it randomizes that item.
-  cmpw r31, r4 ; Check if the item ID given is the same one from the Magic Armor slot.
-  bne zunari_check_items_and_set_event_bits_end ; ; If it's not the item in the Magic Armor slot, skip setting the event bit.
+  cmpwi r31, 0x285F ; Magic Armor gift dialogue
+  bne zunari_check_items_and_set_event_bits_end
   lis r3, 0x803C522C@ha
   addi r3, r3, 0x803C522C@l
-  li r4, 0x6940 ; Unused event bit that we use to keep track of whether Zunari has given the Magic Armor item.
+  li r4, 0x6940 ; Unused event bit for whether Zunari has given the Magic Armor item
   bl onEventBit__11dSv_event_cFUs
 
 zunari_check_items_and_set_event_bits_end:
-  mr r3, r30 ; Restore the return value from createItemForPresentDemo.
+  mr r3, r30 ; Restore the return value from createItemForPresentDemo
+  
   lwz r30, 0x18 (sp)
   lwz r31, 0x1C (sp)
   lwz r0, 0x24 (sp)
   mtlr r0
   addi sp, sp, 0x20
   blr
-
-.global zunari_magic_armor_slot_item_id
-zunari_magic_armor_slot_item_id:
-  .byte 0x2A ; Default item ID is Magic Armor. This value is updated by the randomizer when this item is randomized.
-  .align 2 ; Align to the next 4 bytes
-
-.global zunari_sail_slot_item_id
-zunari_sail_slot_item_id:
-  .byte 0x78 ; Default item ID is Normal Sail. This value is updated by the randomizer when this item is randomized.
-  .align 2 ; Align to the next 4 bytes
 
 
 .close
