@@ -43,6 +43,15 @@ class Logic:
     self.item_locations = Logic.load_and_parse_item_locations()
     self.load_and_parse_macros()
     
+    # Remove Blue ChuChu locations when their shuffle is disabled.
+    if not self.options.progression_blue_chu_jellies:
+      locs_to_remove = [
+        loc for loc in self.item_locations
+        if "Blue ChuChu" in self.item_locations[loc].get("Types", [])
+      ]
+      for loc in locs_to_remove:
+        del self.item_locations[loc]
+    
     self.nested_entrance_macros: dict[str, str] = {}
     
     self.locations_by_zone_name: dict[str, list] = {}
@@ -539,6 +548,8 @@ class Logic:
       if ("Other Chest" in types or "Misc" in types) and not options.progression_misc:
         continue
       if "Dungeon Secret" in types and not options.progression_dungeon_secrets:
+        continue
+      if "Blue ChuChu" in types and not options.progression_blue_chu_jellies:
         continue
       
       # Note: The Triforce/Treasure Chart sunken treasures are handled differently from other types.
