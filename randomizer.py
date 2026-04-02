@@ -1011,6 +1011,8 @@ class WWRandomizer:
 
   @staticmethod
   def compute_seed_hash(permalink, do_not_generate_spoiler_log):
+    # Static so the UI can call this without a WWRandomizer instance (e.g. to display
+    # the seed hash in the permalink field before randomization has started).
     # Generate some text that will be shown on the name entry screen which has two random character names that vary based on the permalink (so the seed and settings both change it).
     # This is so two players intending to play the same seed can verify if they really are on the same seed or not.
 
