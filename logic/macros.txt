@@ -193,7 +193,7 @@ Can Reach Earth Temple Moblins and Poes Room:
 Can Reach Earth Temple Basement:
   Can Reach Earth Temple Sun Statue Room
   & Can Play Command Melody
-  & Can Aim Mirror Shield
+  & (Can Aim Mirror Shield | Light Arrows)
 Can Reach Earth Temple ReDead Hub Room:
   Can Reach Earth Temple Basement
   & Can Play Earth God's Lyric
@@ -202,6 +202,7 @@ Can Reach Earth Temple Third Crypt:
   & (
     Can Play Command Melody
     | Can Aim Mirror Shield
+    | Light Arrows
   )
   & Power Bracelets
   & Skull Hammer
@@ -211,7 +212,7 @@ Can Reach Earth Temple Third Crypt:
     | Precise 2
   )
   & Can Play Command Melody
-  & Can Aim Mirror Shield
+  & (Can Aim Mirror Shield | Light Arrows)
   # Power Bracelets necessary to move the large mirror under the light.
   # Precise: You can skip killing the Red Bubbles, but reflecting the light to progress is quite annoying while they're still alive.
 Can Reach Earth Temple Tall Vine Room:
