@@ -942,6 +942,28 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_qol_experimental.addWidget(self.fix_auction)
 
+        self.horizontalLayout_sea_companion = QHBoxLayout()
+        self.horizontalLayout_sea_companion.setObjectName(u"horizontalLayout_sea_companion")
+        self.label_for_sea_companion = QLabel(self.groupBox_qol_experimental)
+        self.label_for_sea_companion.setObjectName(u"label_for_sea_companion")
+
+        self.horizontalLayout_sea_companion.addWidget(self.label_for_sea_companion)
+
+        self.sea_companion = QComboBox(self.groupBox_qol_experimental)
+        self.sea_companion.addItem("")
+        self.sea_companion.addItem("")
+        self.sea_companion.addItem("")
+        self.sea_companion.addItem("")
+        self.sea_companion.addItem("")
+        self.sea_companion.setObjectName(u"sea_companion")
+        sizePolicy1.setHeightForWidth(self.sea_companion.sizePolicy().hasHeightForWidth())
+        self.sea_companion.setSizePolicy(sizePolicy1)
+
+        self.horizontalLayout_sea_companion.addWidget(self.sea_companion)
+
+
+        self.verticalLayout_qol_experimental.addLayout(self.horizontalLayout_sea_companion)
+
         self.verticalSpacer_qol = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_qol_experimental.addItem(self.verticalSpacer_qol)
@@ -1239,6 +1261,13 @@ class Ui_MainWindow(object):
         self.wallet_fill_behavior.setText(QCoreApplication.translate("MainWindow", u"Fill Wallets When Received", None))
         self.speedup_tingle_jail.setText(QCoreApplication.translate("MainWindow", u"Speed Up Tingle Jail Cutscenes", None))
         self.fix_auction.setText(QCoreApplication.translate("MainWindow", u"Fix Auction", None))
+        self.label_for_sea_companion.setText(QCoreApplication.translate("MainWindow", u"Sea Companion", None))
+        self.sea_companion.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
+        self.sea_companion.setItemText(1, QCoreApplication.translate("MainWindow", u"Medli", None))
+        self.sea_companion.setItemText(2, QCoreApplication.translate("MainWindow", u"Makar", None))
+        self.sea_companion.setItemText(3, QCoreApplication.translate("MainWindow", u"Both", None))
+        self.sea_companion.setItemText(4, QCoreApplication.translate("MainWindow", u"Random", None))
+
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_quality_of_life), QCoreApplication.translate("MainWindow", u"Quality of Life", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_player_customization), QCoreApplication.translate("MainWindow", u"Player Customization", None))
         self.option_description.setText("")
