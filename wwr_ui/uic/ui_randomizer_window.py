@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'randomizer_window.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -593,6 +593,89 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.addLayout(self.horizontalLayout_random_starting_items)
 
         self.tabWidget.addTab(self.tab_starting_items, "")
+        self.tab_tricks = QWidget()
+        self.tab_tricks.setObjectName(u"tab_tricks")
+        self.verticalLayout_tricks = QVBoxLayout(self.tab_tricks)
+        self.verticalLayout_tricks.setObjectName(u"verticalLayout_tricks")
+        self.layout_tricks = QHBoxLayout()
+        self.layout_tricks.setObjectName(u"layout_tricks")
+        self.layout_available_tricks = QVBoxLayout()
+        self.layout_available_tricks.setObjectName(u"layout_available_tricks")
+        self.label_for_available_tricks = QLabel(self.tab_tricks)
+        self.label_for_available_tricks.setObjectName(u"label_for_available_tricks")
+
+        self.layout_available_tricks.addWidget(self.label_for_available_tricks)
+
+        self.filter_available_tricks = QLineEdit(self.tab_tricks)
+        self.filter_available_tricks.setObjectName(u"filter_available_tricks")
+
+        self.layout_available_tricks.addWidget(self.filter_available_tricks)
+
+        self.available_tricks = QListView(self.tab_tricks)
+        self.available_tricks.setObjectName(u"available_tricks")
+        font = QFont()
+        font.setPointSize(8)
+        self.available_tricks.setFont(font)
+        self.available_tricks.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.available_tricks.setSelectionMode(QAbstractItemView.ExtendedSelection)
+
+        self.layout_available_tricks.addWidget(self.available_tricks)
+
+
+        self.layout_tricks.addLayout(self.layout_available_tricks)
+
+        self.layout_tricks_buttons = QVBoxLayout()
+        self.layout_tricks_buttons.setObjectName(u"layout_tricks_buttons")
+        self.tricks_buttons_spacer_top = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.layout_tricks_buttons.addItem(self.tricks_buttons_spacer_top)
+
+        self.disable_trick = QPushButton(self.tab_tricks)
+        self.disable_trick.setObjectName(u"disable_trick")
+        self.disable_trick.setMinimumSize(QSize(0, 80))
+
+        self.layout_tricks_buttons.addWidget(self.disable_trick)
+
+        self.enable_trick = QPushButton(self.tab_tricks)
+        self.enable_trick.setObjectName(u"enable_trick")
+        self.enable_trick.setMinimumSize(QSize(0, 80))
+
+        self.layout_tricks_buttons.addWidget(self.enable_trick)
+
+        self.tricks_buttons_spacer_bottom = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.layout_tricks_buttons.addItem(self.tricks_buttons_spacer_bottom)
+
+
+        self.layout_tricks.addLayout(self.layout_tricks_buttons)
+
+        self.layout_enabled_tricks = QVBoxLayout()
+        self.layout_enabled_tricks.setObjectName(u"layout_enabled_tricks")
+        self.label_for_enabled_tricks = QLabel(self.tab_tricks)
+        self.label_for_enabled_tricks.setObjectName(u"label_for_enabled_tricks")
+
+        self.layout_enabled_tricks.addWidget(self.label_for_enabled_tricks)
+
+        self.filter_enabled_tricks = QLineEdit(self.tab_tricks)
+        self.filter_enabled_tricks.setObjectName(u"filter_enabled_tricks")
+
+        self.layout_enabled_tricks.addWidget(self.filter_enabled_tricks)
+
+        self.enabled_tricks = QListView(self.tab_tricks)
+        self.enabled_tricks.setObjectName(u"enabled_tricks")
+        self.enabled_tricks.setFont(font)
+        self.enabled_tricks.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.enabled_tricks.setSelectionMode(QAbstractItemView.ExtendedSelection)
+
+        self.layout_enabled_tricks.addWidget(self.enabled_tricks)
+
+
+        self.layout_tricks.addLayout(self.layout_enabled_tricks)
+
+
+        self.verticalLayout_tricks.addLayout(self.layout_tricks)
+
+        self.tabWidget.addTab(self.tab_tricks, "")
         self.tab_advanced = QWidget()
         self.tab_advanced.setObjectName(u"tab_advanced")
         self.verticalLayout_8 = QVBoxLayout(self.tab_advanced)
@@ -644,44 +727,6 @@ class Ui_MainWindow(object):
         self.hero_mode.setObjectName(u"hero_mode")
 
         self.horizontalLayout_22.addWidget(self.hero_mode)
-
-        self.horizontalLayout_20 = QHBoxLayout()
-        self.horizontalLayout_20.setObjectName(u"horizontalLayout_20")
-        self.label_for_logic_obscurity = QLabel(self.groupBox_9)
-        self.label_for_logic_obscurity.setObjectName(u"label_for_logic_obscurity")
-
-        self.horizontalLayout_20.addWidget(self.label_for_logic_obscurity)
-
-        self.logic_obscurity = QComboBox(self.groupBox_9)
-        self.logic_obscurity.addItem("")
-        self.logic_obscurity.addItem("")
-        self.logic_obscurity.addItem("")
-        self.logic_obscurity.addItem("")
-        self.logic_obscurity.setObjectName(u"logic_obscurity")
-
-        self.horizontalLayout_20.addWidget(self.logic_obscurity)
-
-
-        self.horizontalLayout_22.addLayout(self.horizontalLayout_20)
-
-        self.horizontalLayout_21 = QHBoxLayout()
-        self.horizontalLayout_21.setObjectName(u"horizontalLayout_21")
-        self.label_for_logic_precision = QLabel(self.groupBox_9)
-        self.label_for_logic_precision.setObjectName(u"label_for_logic_precision")
-
-        self.horizontalLayout_21.addWidget(self.label_for_logic_precision)
-
-        self.logic_precision = QComboBox(self.groupBox_9)
-        self.logic_precision.addItem("")
-        self.logic_precision.addItem("")
-        self.logic_precision.addItem("")
-        self.logic_precision.addItem("")
-        self.logic_precision.setObjectName(u"logic_precision")
-
-        self.horizontalLayout_21.addWidget(self.logic_precision)
-
-
-        self.horizontalLayout_22.addLayout(self.horizontalLayout_21)
 
         self.widget_10 = QWidget(self.groupBox_9)
         self.widget_10.setObjectName(u"widget_10")
@@ -998,9 +1043,13 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.num_extra_starting_items, self.required_bosses)
         QWidget.setTabOrder(self.required_bosses, self.num_required_bosses)
         QWidget.setTabOrder(self.num_required_bosses, self.hero_mode)
-        QWidget.setTabOrder(self.hero_mode, self.logic_obscurity)
-        QWidget.setTabOrder(self.logic_obscurity, self.logic_precision)
-        QWidget.setTabOrder(self.logic_precision, self.hoho_hints)
+        QWidget.setTabOrder(self.hero_mode, self.filter_available_tricks)
+        QWidget.setTabOrder(self.filter_available_tricks, self.available_tricks)
+        QWidget.setTabOrder(self.available_tricks, self.filter_enabled_tricks)
+        QWidget.setTabOrder(self.filter_enabled_tricks, self.enabled_tricks)
+        QWidget.setTabOrder(self.enabled_tricks, self.disable_trick)
+        QWidget.setTabOrder(self.disable_trick, self.enable_trick)
+        QWidget.setTabOrder(self.enable_trick, self.hoho_hints)
         QWidget.setTabOrder(self.hoho_hints, self.fishmen_hints)
         QWidget.setTabOrder(self.fishmen_hints, self.korl_hints)
         QWidget.setTabOrder(self.korl_hints, self.num_item_hints)
@@ -1099,23 +1148,18 @@ class Ui_MainWindow(object):
         self.current_health.setText(QCoreApplication.translate("MainWindow", u"Current Starting Health: 3 hearts", None))
         self.label_for_num_extra_starting_items.setText(QCoreApplication.translate("MainWindow", u"Extra Random Starting Items", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_starting_items), QCoreApplication.translate("MainWindow", u"Starting Items", None))
+        self.label_for_available_tricks.setText(QCoreApplication.translate("MainWindow", u"Available Tricks", None))
+        self.filter_available_tricks.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Filter...", None))
+        self.disable_trick.setText(QCoreApplication.translate("MainWindow", u"<-", None))
+        self.enable_trick.setText(QCoreApplication.translate("MainWindow", u"->", None))
+        self.label_for_enabled_tricks.setText(QCoreApplication.translate("MainWindow", u"Enabled Tricks", None))
+        self.filter_enabled_tricks.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Filter...", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_tricks), QCoreApplication.translate("MainWindow", u"Logic Tricks", None))
         self.groupBox_4.setTitle(QCoreApplication.translate("MainWindow", u"Required Bosses", None))
         self.required_bosses.setText(QCoreApplication.translate("MainWindow", u"Required Bosses Mode", None))
         self.label_for_num_required_bosses.setText(QCoreApplication.translate("MainWindow", u"Number of Required Bosses", None))
         self.groupBox_9.setTitle(QCoreApplication.translate("MainWindow", u"Difficulty Options", None))
         self.hero_mode.setText(QCoreApplication.translate("MainWindow", u"Hero Mode", None))
-        self.label_for_logic_obscurity.setText(QCoreApplication.translate("MainWindow", u"Obscure Tricks Required", None))
-        self.logic_obscurity.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
-        self.logic_obscurity.setItemText(1, QCoreApplication.translate("MainWindow", u"Normal", None))
-        self.logic_obscurity.setItemText(2, QCoreApplication.translate("MainWindow", u"Hard", None))
-        self.logic_obscurity.setItemText(3, QCoreApplication.translate("MainWindow", u"Very Hard", None))
-
-        self.label_for_logic_precision.setText(QCoreApplication.translate("MainWindow", u"Precise Tricks Required", None))
-        self.logic_precision.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
-        self.logic_precision.setItemText(1, QCoreApplication.translate("MainWindow", u"Normal", None))
-        self.logic_precision.setItemText(2, QCoreApplication.translate("MainWindow", u"Hard", None))
-        self.logic_precision.setItemText(3, QCoreApplication.translate("MainWindow", u"Very Hard", None))
-
         self.groupBox_5.setTitle(QCoreApplication.translate("MainWindow", u"Hint Options", None))
         self.hoho_hints.setText(QCoreApplication.translate("MainWindow", u"Place Hints on Old Man Ho Ho", None))
         self.prioritize_remote_hints.setText(QCoreApplication.translate("MainWindow", u"Prioritize Remote Location Hints", None))
