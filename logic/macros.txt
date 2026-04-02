@@ -1029,7 +1029,7 @@ Can Defeat Jalhalla:
   (Can Aim Mirror Shield | Light Arrows)
   & Power Bracelets
   & Can Defeat Jalhalla Poes
-  # Light Arrows also work to materialize Jalhalla when the sunlight arrows option is enabled.
+  # Light Arrows also work to materialize Jalhalla.
 Can Defeat Molgera:
   Hookshot
   & (
