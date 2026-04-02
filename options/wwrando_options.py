@@ -465,6 +465,7 @@ class Options(BaseOptions):
     description="Makes the Command Melody tablet in Tower of the Gods visible from the start, "
       "without needing to return a servant first.",
   )
+  quick_gohma: bool = option(default=False, description="Significantly shorten the Gohma fight, requiring only 1 grapple instead of 3 to transition to phase 2.")
   #endregion
   
   #region Cosmetic
