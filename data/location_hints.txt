@@ -1,6 +1,12 @@
 Outset Island - Orca - Give 10 Knight's Crests:
   Type: Standard
   Text: giving a fellow swordsman crests of honor
+Outset Island - Orca - Hit 500 Times:
+  Type: Remote
+  Text: dealing a master swordsman 500 blows
+Outset Island - Orca - Hit 1000 Times:
+  Type: Remote
+  Text: dealing a master swordsman 1000 blows
 Outset Island - Great Fairy:
   Type: Standard
   Text: visiting the fairy atop the place of all beginnings
