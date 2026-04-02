@@ -3,6 +3,7 @@ from enum import StrEnum
 
 from options.base_options import BaseOptions, option
 
+from logic.tricks import ALL_TRICK_NAMES
 from wwr_ui.inventory import DEFAULT_STARTING_ITEMS, DEFAULT_RANDOMIZED_ITEMS
 
 class SwordMode(StrEnum):
@@ -14,14 +15,13 @@ class EntranceMixMode(StrEnum):
   SEPARATE_DUNGEONS = "Separate Dungeons From Caves & Fountains"
   MIX_DUNGEONS = "Mix Dungeons & Caves & Fountains"
 
-class TrickDifficulty(StrEnum):
-  NONE = "None"
-  NORMAL = "Normal"
-  HARD = "Hard"
-  VERY_HARD = "Very Hard"
-
 @dataclass
 class Options(BaseOptions):
+  def __post_init__(self):
+    if self.enabled_tricks:
+      valid_tricks = set(ALL_TRICK_NAMES)
+      self.enabled_tricks = sorted(trick for trick in self.enabled_tricks if trick in valid_tricks)
+  
   #region Progress locations
   progression_dungeons: bool = option(
     default=True,
@@ -183,19 +183,21 @@ class Options(BaseOptions):
   #endregion
   
   #region Difficulty
+  available_tricks: list[str] = option(
+    default_factory=lambda: list(ALL_TRICK_NAMES),
+    permalink=False,
+    description="Logic tricks that can be enabled.<br>"
+      "When enabled, the randomizer may require you to perform these tricks to beat the game.",
+  )
+  enabled_tricks: list[str] = option(
+    default_factory=lambda: [],
+    description="Logic tricks that are enabled.<br>"
+      "When enabled, the randomizer may require you to perform these tricks to beat the game.",
+  )
+  
   hero_mode: bool = option(
     default=False,
     description="In Hero Mode, you take four times more damage than normal and heart refills will not drop.",
-  )
-  logic_obscurity: TrickDifficulty = option(
-    default=TrickDifficulty.NONE,
-    description="Obscure tricks are ways of obtaining items that are not obvious and may involve thinking outside the box.<br>"
-      "This option controls the maximum difficulty of obscure tricks the randomizer will require you to do to beat the game.",
-  )
-  logic_precision: TrickDifficulty = option(
-    default=TrickDifficulty.NONE,
-    description="Precise tricks are ways of obtaining items that involve difficult inputs such as accurate aiming or perfect timing.<br>"
-      "This option controls the maximum difficulty of precise tricks the randomizer will require you to do to beat the game.",
   )
   #endregion
   
