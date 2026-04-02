@@ -17,7 +17,9 @@ class EntranceMixMode(StrEnum):
 
 @dataclass
 class Options(BaseOptions):
-  def __post_init__(self):
+  def validate(self):
+    super().validate()
+    
     if self.enabled_tricks:
       valid_tricks = set(ALL_TRICK_NAMES)
       self.enabled_tricks = sorted(trick for trick in self.enabled_tricks if trick in valid_tricks)
