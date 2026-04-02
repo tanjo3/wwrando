@@ -458,8 +458,8 @@ class WWRandomizer:
     tweaks.prevent_fairy_island_softlocks(self)
     tweaks.give_fairy_fountains_distinct_colors(self)
     patcher.apply_patch(self, "orca_minigame_rewards")
-    if self.options.orca_1_life:
-      patcher.apply_patch(self, "orca_1_life")
+    if self.options.orca_one_hit_knockout:
+      patcher.apply_patch(self, "orca_one_hit_ko")
     customizer.replace_link_model(self)
     tweaks.change_starting_clothes(self)
     tweaks.check_hide_ship_sail(self)
