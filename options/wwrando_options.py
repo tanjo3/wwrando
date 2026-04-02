@@ -473,8 +473,12 @@ class Options(BaseOptions):
       "without needing to return a servant first.",
   )
   quick_gohma: bool = option(default=False, description="Significantly shorten the Gohma fight, requiring only 1 grapple instead of 3 to transition to phase 2.")
+  sunlight_arrows: bool = option(default=False, description="Light Arrows fired from Link's bow can activate all mirror-light puzzles in the game, "
+                                 "including mirror walls, switch-lights, stone heads, and coffins.<br>"
+                                 "Note: Medli's light beam is unaffected.")
   sea_companion: SeaCompanion = option(
     default=SeaCompanion.BOTH,
+    permalink=False,
     description="Controls which sage rides the King of Red Lions as a companion on the Great Sea.<br>"
       "(Experimental)",
     choice_descriptions={

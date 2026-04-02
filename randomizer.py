@@ -406,7 +406,8 @@ class WWRandomizer:
     patcher.apply_patch(self, "flexible_item_locations")
     patcher.apply_patch(self, "fix_vanilla_bugs")
     patcher.apply_patch(self, "misc_rando_features")
-    patcher.apply_patch(self, "sunlight_arrows")
+    if self.options.sunlight_arrows:
+      patcher.apply_patch(self, "sunlight_arrows")
     tweaks.add_custom_actor_rels(self)
     tweaks.skip_wakeup_intro_and_start_at_dock(self)
     tweaks.start_ship_at_outset(self)

@@ -1361,50 +1361,11 @@
                 </widget>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_sea_companion">
-                 <item>
-                  <widget class="QLabel" name="label_for_sea_companion">
-                   <property name="text">
-                    <string>Sea Companion</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QComboBox" name="sea_companion">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                     <horstretch>1</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <item>
-                    <property name="text">
-                     <string>None</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Medli</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Makar</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Both</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Random</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                </layout>
+                <widget class="QCheckBox" name="sunlight_arrows">
+                 <property name="text">
+                  <string>Sunlight Arrows</string>
+                 </property>
+                </widget>
                </item>
                <item>
                 <spacer name="verticalSpacer_qol">
@@ -1654,6 +1615,7 @@
   <tabstop>speedup_tingle_jail</tabstop>
   <tabstop>fix_auction</tabstop>
   <tabstop>quick_gohma</tabstop>
+  <tabstop>sunlight_arrows</tabstop>
  </tabstops>
  <resources/>
  <connections/>
