@@ -458,7 +458,7 @@ class Options(BaseOptions):
                            "- <b>Dragon Roost</b>: Add bomb, arrow, and magic drop pots.<br>"
                            "- <b>Needle Rock</b>: Lock barrels to arrow and bomb drops.<br>"
                            "- <b>Forest Haven</b>: Add bomb, arrow, and magic drop pots.")
-  speedup_lenzos_assistant: bool = option(default=False, description="Speed up Lenzo's Assistant sidequest by speeding up Garrickson and Aton's movement around Windfall.")
+  speedup_lenzos_assistant: bool = option(default=False, description="Speed up Lenzo's Assistant sidequest by speeding up Garrickson and Anton's movement around Windfall.")
   kamo_any_moon_phase: bool = option(default=False, description="Kamo will accept a picture of any moon phase, rather than just a full moon.")
   shorten_mail_minigame: bool = option(default=False, description="The mail sorting minigame on Dragon Roost Island is shortened to the final round with Baito.")
   skip_drc_plat_cs: bool = option(default=False, description="Skip the DRC cutscenes that play when riding the hanging platform and making a magma platform for the first time.")
@@ -471,11 +471,11 @@ class Options(BaseOptions):
     default=False,
     description="Makes the Command Melody tablet in Tower of the Gods visible from the start, and once the tablet check is obtained the portal will appear. This means the statues will not be required.",)
   quick_gohma: bool = option(default=False, description="Shortens the Gohma fight to require only 1 tail grapple instead of 3 to trigger phase 2. Also skips the transition cutscene.")
-  sunlight_arrows: bool = option(default=False, description="Light Arrows fired from Link's bow can activate all mirror-light puzzles in the game, including walls, sun switches, stone statues, and coffins")
+  sunlight_arrows: bool = option(default=False, description="Light Arrows fired from Link's bow can activate all mirror-light puzzles in the game, including walls, sun switches, stone statues, and coffins.")
   sea_companion: SeaCompanion = option(
     default=SeaCompanion.NONE,
     permalink=False,
-    description="Controls which sage rides the King of Red Lions as a companion on the Great Sea",
+    description="Controls which sage rides the King of Red Lions as a companion on the Great Sea.",
     choice_descriptions={
       SeaCompanion.NONE: "No companion will ride the ship.",
       SeaCompanion.MEDLI: "Medli will ride the ship.",

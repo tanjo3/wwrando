@@ -860,7 +860,7 @@ beq wallet_func_end
 lis r5, 0x803CA768@ha
 addi r5, r5, 0x803CA768@l
 li r0, 5000
-stw r0, 0 (r5) ; Set saved rupees to 1000
+stw r0, 0 (r5) ; Set saved rupees to 5000
 
 wallet_func_end:
 blr
