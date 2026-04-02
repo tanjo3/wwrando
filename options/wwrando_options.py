@@ -469,18 +469,13 @@ class Options(BaseOptions):
                              "The prizes for each auction will be displayed on the auction flyer inside the House of Wealth.")
   totg_tablet_from_start: bool = option(
     default=False,
-    description="Makes the Command Melody tablet in Tower of the Gods visible from the start, "
-      "without needing to return a servant first.",
-  )
-  quick_gohma: bool = option(default=False, description="Significantly shorten the Gohma fight, requiring only 1 grapple instead of 3 to transition to phase 2.")
-  sunlight_arrows: bool = option(default=False, description="Light Arrows fired from Link's bow can activate all mirror-light puzzles in the game, "
-                                 "including mirror walls, switch-lights, stone heads, and coffins.<br>"
-                                 "Note: Medli's light beam is unaffected.")
+    description="Makes the Command Melody tablet in Tower of the Gods visible from the start, and once the tablet check is obtained the portal will appear. This means the statues will not be required.",)
+  quick_gohma: bool = option(default=False, description="Shortens the Gohma fight to require only 1 tail grapple instead of 3 to trigger phase 2. Also skips the transition cutscene.")
+  sunlight_arrows: bool = option(default=False, description="Light Arrows fired from Link's bow can activate all mirror-light puzzles in the game, including walls, sun switches, stone statues, and coffins")
   sea_companion: SeaCompanion = option(
-    default=SeaCompanion.BOTH,
+    default=SeaCompanion.NONE,
     permalink=False,
-    description="Controls which sage rides the King of Red Lions as a companion on the Great Sea.<br>"
-      "(Experimental)",
+    description="Controls which sage rides the King of Red Lions as a companion on the Great Sea",
     choice_descriptions={
       SeaCompanion.NONE: "No companion will ride the ship.",
       SeaCompanion.MEDLI: "Medli will ride the ship.",
