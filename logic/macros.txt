@@ -1026,7 +1026,7 @@ Can Defeat Helmaroc King:
   Skull Hammer
   # Doesn't require a sword or anything - just the hammer both breaks his mask and damages him.
 Can Defeat Jalhalla:
-  (Can Aim Mirror Shield | Can Use Sunlight Arrows)
+  (Can Aim Mirror Shield | Light Arrows)
   & Power Bracelets
   & Can Defeat Jalhalla Poes
   # Light Arrows also work to materialize Jalhalla when the sunlight arrows option is enabled.
