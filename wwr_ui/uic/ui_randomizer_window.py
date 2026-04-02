@@ -1015,6 +1015,12 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
+        self.seed_hash_label = QLabel(self.centralwidget)
+        self.seed_hash_label.setObjectName(u"seed_hash_label")
+        self.seed_hash_label.setTextFormat(Qt.TextFormat.RichText)
+
+        self.verticalLayout.addWidget(self.seed_hash_label)
+
         self.update_checker_label = QLabel(self.centralwidget)
         self.update_checker_label.setObjectName(u"update_checker_label")
         self.update_checker_label.setOpenExternalLinks(True)
@@ -1297,6 +1303,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_player_customization), QCoreApplication.translate("MainWindow", u"Player Customization", None))
         self.option_description.setText("")
         self.label_for_permalink.setText(QCoreApplication.translate("MainWindow", u"Permalink (copy paste to share your settings):", None))
+        self.seed_hash_label.setText("")
         self.update_checker_label.setText(QCoreApplication.translate("MainWindow", u"Checking for updates to the randomizer...", None))
         self.about_button.setText(QCoreApplication.translate("MainWindow", u"About", None))
         self.reset_settings_to_default.setText(QCoreApplication.translate("MainWindow", u"Reset All Settings to Default", None))

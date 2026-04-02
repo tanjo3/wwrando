@@ -1469,6 +1469,16 @@
      </layout>
     </item>
     <item>
+     <widget class="QLabel" name="seed_hash_label">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::TextFormat::RichText</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QLabel" name="update_checker_label">
       <property name="text">
        <string>Checking for updates to the randomizer...</string>
