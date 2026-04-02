@@ -1027,7 +1027,7 @@ class WWRandomizer:
     non_disabled_options = [
       option.name for option in Options.all()
       if self.options[option.name] not in [False, [], {}]
-      and option.name != "randomized_gear" # Just takes up space
+      and option.name not in ["randomized_gear", "available_tricks"] # Just takes up space
     ]
     option_strings = []
     for option_name in non_disabled_options:
