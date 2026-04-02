@@ -119,6 +119,10 @@ files/rels/d_a_npc_bs1.rel:
   set_shop_item_in_bait_bag_slot_sold_out: 0x61F0
   check_shop_item_in_bait_bag_slot_sold_out: 0x6220
   custom_getSelectItemNo_progressive: 0x624C
+files/rels/d_a_obj_homen.rel:
+  init_homen_falldown_timer: 0x36DC
+  check_homen_falldown_timeout: 0x36EC
+  create_stone_head_item: 0x3720
 files/rels/d_a_st.rel:
   stalfos_kill_lower_body_when_upper_body_light_arrowed: 0xA778
   stalfos_set_death_switch: 0xA7C0
@@ -174,8 +178,6 @@ files/rels/d_a_npc_ds1.rel:
   doc_bandam_blue_potion_slot_item_id: 0x6155
 files/rels/d_a_tsubo.rel:
   create_pot_item: 0x9964
-files/rels/d_a_obj_homen.rel:
-  create_stone_head_item: 0x36DC
 files/rels/d_a_npc_cb1.rel:
   reset_makar_position: 0xB214
   makar_possible_wt_spawn_positions: 0xB2EC
