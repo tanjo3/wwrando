@@ -25,6 +25,13 @@ class MilaSpeedup(StrEnum):
   SHORTENED = "Shortened"
   INSTANT = "Instant"
 
+class SeaCompanion(StrEnum):
+  NONE = "None"
+  MEDLI = "Medli"
+  MAKAR = "Makar"
+  BOTH = "Both"
+  RANDOM = "Random"
+
 @dataclass
 class Options(BaseOptions):
   #region Progress locations
@@ -466,6 +473,18 @@ class Options(BaseOptions):
       "without needing to return a servant first.",
   )
   quick_gohma: bool = option(default=False, description="Significantly shorten the Gohma fight, requiring only 1 grapple instead of 3 to transition to phase 2.")
+  sea_companion: SeaCompanion = option(
+    default=SeaCompanion.BOTH,
+    description="Controls which sage rides the King of Red Lions as a companion on the Great Sea.<br>"
+      "(Experimental)",
+    choice_descriptions={
+      SeaCompanion.NONE: "No companion will ride the ship.",
+      SeaCompanion.MEDLI: "Medli will ride the ship.",
+      SeaCompanion.MAKAR: "Makar will ride the ship.",
+      SeaCompanion.BOTH: "Both Medli and Makar will ride the ship.",
+      SeaCompanion.RANDOM: "Randomly selects between Medli, Makar, or Both per seed.",
+    },
+  )
   #endregion
   
   #region Cosmetic

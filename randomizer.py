@@ -30,7 +30,7 @@ from wwlib import stage_searcher
 from asm import disassemble
 from asm import elf2rel
 
-from options.wwrando_options import Options, SwordMode
+from options.wwrando_options import Options, SwordMode, SeaCompanion
 from wwr_ui.inventory import REGULAR_ITEMS, PROGRESSIVE_ITEMS
 from packedbits import PackedBitsReader, PackedBitsWriter
 import base64
@@ -333,7 +333,16 @@ class WWRandomizer:
         tweaks.enable_hero_mode(self)
       if self.options.switch_targeting_mode:
         tweaks.set_default_targeting_mode_to_switch(self)
-      
+
+      sea_companion = self.options.sea_companion
+      if sea_companion == SeaCompanion.RANDOM:
+        rng = self.get_new_rng()
+        sea_companion = rng.choice([SeaCompanion.MEDLI, SeaCompanion.MAKAR, SeaCompanion.BOTH])
+      if sea_companion in (SeaCompanion.MEDLI, SeaCompanion.BOTH):
+        patcher.apply_patch(self, "medli_ship_companion")
+      if sea_companion in (SeaCompanion.MAKAR, SeaCompanion.BOTH):
+        patcher.apply_patch(self, "makar_ship_companion")
+
       if self.map_select:
         patcher.apply_patch(self, "map_select")
       if IS_RUNNING_FROM_SOURCE or "BETA" in VERSION_WITHOUT_COMMIT:
