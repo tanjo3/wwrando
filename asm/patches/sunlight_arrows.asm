@@ -1,5 +1,5 @@
 
-; Allow Light Arrows to satisfy mirror-light receivers, and make relevant interactions trigger from a single arrow hit.
+; Allow Sunlight Arrows to satisfy sunlight receivers, and make relevant interactions trigger from a single arrow hit.
 ; (Medli is intentionally excluded for now.)
 
 ; Mirrored wall actor.
