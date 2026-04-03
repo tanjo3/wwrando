@@ -930,9 +930,9 @@
                 </widget>
                </item>
                 <item>
-                <widget class="QCheckBox" name="orca_1_life">
+                <widget class="QCheckBox" name="orca_one_hit_knockout">
                  <property name="text">
-                  <string>Orca 1 life</string>
+                  <string>Orca One-Hit KO</string>
                  </property>
                 </widget>
                </item>
