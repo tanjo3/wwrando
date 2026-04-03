@@ -37,6 +37,8 @@ class ItemRandomizer(BaseRandomizer):
     return "Saving items..."
   
   def _randomize(self):
+    self.logic.initialize_from_randomizer_state()
+    
     self.randomize_dungeon_items()
     
     self.randomize_progression_items_forward_fill()
