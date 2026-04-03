@@ -216,8 +216,8 @@ files/rels/d_a_obj_ftree.rel:
 files/rels/d_a_npc_photo.rel:
   lenzo_set_deluxe_picto_box_event_bit: 0x5EC8
 files/rels/d_a_npc_rsh1.rel:
-  zunari_give_item_and_set_magic_armor_event_bit: 0x5D18
-  zunari_magic_armor_slot_item_id: 0x5D70
+  zunari_check_items_and_set_event_bits: 0x5D18
+  zunari_dialogue_switcher: 0x5D9C
 files/rels/d_a_npc_sv.rel:
   salvage_corp_give_item_and_set_event_bit: 0x3580
 files/rels/d_a_npc_kp1.rel:
