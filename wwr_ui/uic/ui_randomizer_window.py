@@ -35,7 +35,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.scrollArea = QScrollArea(self.centralwidget)
         self.scrollArea.setObjectName(u"scrollArea")
-        self.scrollArea.setMinimumSize(QSize(600, 400))
+        self.scrollArea.setMinimumSize(QSize(600, 720))
         self.scrollArea.setFrameShape(QFrame.NoFrame)
         self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
@@ -368,6 +368,11 @@ class Ui_MainWindow(object):
         self.trap_chests.setObjectName(u"trap_chests")
 
         self.gridLayout_3.addWidget(self.trap_chests, 3, 1, 1, 1)
+
+        self.boss_soul_shuffle = QCheckBox(self.item_randomizer_modes_groupbox)
+        self.boss_soul_shuffle.setObjectName(u"boss_soul_shuffle")
+
+        self.gridLayout_3.addWidget(self.boss_soul_shuffle, 3, 2, 1, 1)
 
 
         self.verticalLayout_3.addWidget(self.item_randomizer_modes_groupbox)
@@ -1376,7 +1381,8 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.shuffle_big_keys, self.shuffle_maps_and_compasses)
         QWidget.setTabOrder(self.shuffle_maps_and_compasses, self.chest_type_matches_contents)
         QWidget.setTabOrder(self.chest_type_matches_contents, self.trap_chests)
-        QWidget.setTabOrder(self.trap_chests, self.randomize_dungeon_entrances)
+        QWidget.setTabOrder(self.trap_chests, self.boss_soul_shuffle)
+        QWidget.setTabOrder(self.boss_soul_shuffle, self.randomize_dungeon_entrances)
         QWidget.setTabOrder(self.randomize_dungeon_entrances, self.randomize_boss_entrances)
         QWidget.setTabOrder(self.randomize_boss_entrances, self.randomize_miniboss_entrances)
         QWidget.setTabOrder(self.randomize_miniboss_entrances, self.randomize_secret_cave_entrances)
@@ -1528,6 +1534,7 @@ class Ui_MainWindow(object):
         self.shuffle_small_keys.setCurrentText(QCoreApplication.translate("MainWindow", u"Vanilla", None))
         self.chest_type_matches_contents.setText(QCoreApplication.translate("MainWindow", u"Chest Type Matches Contents", None))
         self.trap_chests.setText(QCoreApplication.translate("MainWindow", u"Enable Trap Chests", None))
+        self.boss_soul_shuffle.setText(QCoreApplication.translate("MainWindow", u"Boss Soul Shuffle", None))
         self.entrance_randomizer_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Entrance Randomizer Options", None))
         self.randomize_dungeon_entrances.setText(QCoreApplication.translate("MainWindow", u"Dungeons", None))
         self.randomize_fairy_fountain_entrances.setText(QCoreApplication.translate("MainWindow", u"Fairy Fountains", None))

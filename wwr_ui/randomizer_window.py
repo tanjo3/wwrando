@@ -4,7 +4,7 @@ from qtpy.QtWidgets import *
 from wwr_ui.qt_init import load_ui_file
 
 from wwr_ui.update_checker import check_for_updates, LATEST_RELEASE_DOWNLOAD_PAGE_URL
-from wwr_ui.inventory import INVENTORY_ITEMS, DEFAULT_STARTING_ITEMS, DEFAULT_RANDOMIZED_ITEMS
+from wwr_ui.inventory import INVENTORY_ITEMS, DEFAULT_STARTING_ITEMS, DEFAULT_RANDOMIZED_ITEMS, BOSS_SOUL_ITEMS
 
 import os
 import sys
@@ -739,6 +739,7 @@ class WWRandomizerWindow(QMainWindow):
     
     if not options.progression_dungeons:
       should_enable_options["required_bosses"] = False
+      should_enable_options["boss_soul_shuffle"] = False
     
     if options.sword_mode == SwordMode.SWORDLESS:
       items_to_filter_out += ["Hurricane Spin"]
@@ -777,6 +778,9 @@ class WWRandomizerWindow(QMainWindow):
     if not (dungeon_entrances_random and non_dungeon_entrances_random):
       should_enable_options["mix_entrances"] = False
     
+    if not options.boss_soul_shuffle:
+      items_to_filter_out += BOSS_SOUL_ITEMS
+
     filter_sunken_treasure = True
     if options.progression_triforce_charts or options.progression_treasure_charts:
       filter_sunken_treasure = False
@@ -793,7 +797,7 @@ class WWRandomizerWindow(QMainWindow):
       if "Sunken Treasure" in types and not filter_sunken_treasure:
         if options.randomize_charts:
           continue
-        
+
         original_item = self.cached_item_locations[location_name]["Original item"]
         original_item_is_shard = original_item.startswith("Triforce Shard ")
         if options.progression_triforce_charts and original_item_is_shard:

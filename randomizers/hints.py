@@ -609,6 +609,8 @@ class HintsRandomizer(BaseRandomizer):
       return "Treasure Chart"
     if item_name.endswith("Tingle Statue"):
       return "Tingle Statue"
+    if item_name.startswith("Soul of "):
+      return "Boss Soul"
     if item_name.endswith("Small Key"):
       return "Small Key"
     if item_name.endswith("Big Key"):

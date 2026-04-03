@@ -743,6 +743,9 @@ class ItemRandomizer(BaseRandomizer):
       for dungeon_name in self.rando.boss_reqs.banned_dungeons
       for key_name in ["Small Key", "Big Key"]
     ]
+    if self.options.boss_soul_shuffle:
+      banned_keys += [f"Soul of {boss_name}" for boss_name in self.rando.boss_reqs.banned_bosses]
+      self.rando.boss_reqs.demote_nonrequired_boss_souls_for_logic(logic)
     while True:
       progress_items_in_this_sphere = {}
       

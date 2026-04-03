@@ -33,7 +33,7 @@ from asm import disassemble
 from asm import elf2rel
 
 from options.wwrando_options import Options, SwordMode
-from wwr_ui.inventory import REGULAR_ITEMS, PROGRESSIVE_ITEMS
+from wwr_ui.inventory import REGULAR_ITEMS, PROGRESSIVE_ITEMS, BOSS_SOUL_ITEMS
 from packedbits import PackedBitsReader, PackedBitsWriter
 import base64
 import struct
@@ -181,6 +181,10 @@ class WWRandomizer:
     for i in range(self.options.starting_hcs):
       self.starting_items.append("Heart Container")
     
+    if not self.options.boss_soul_shuffle:
+      for soul_name in BOSS_SOUL_ITEMS:
+        self.starting_items.append(soul_name)
+    
     
     self.custom_model_name = self.options.custom_player_model
     self.using_custom_sail_texture = False
@@ -317,7 +321,10 @@ class WWRandomizer:
       if self.options.sword_mode == SwordMode.SWORDLESS:
         patcher.apply_patch(self, "swordless")
         tweaks.update_text_for_swordless(self)
-      tweaks.update_starting_gear(self, self.options.starting_gear)
+      starting_gear = self.options.starting_gear.copy()
+      if not self.options.boss_soul_shuffle:
+        starting_gear += BOSS_SOUL_ITEMS
+      tweaks.update_starting_gear(self, starting_gear)
       if self.options.chest_type_matches_contents:
         tweaks.replace_dark_wood_chest_texture(self)
       if self.options.remove_title_and_ending_videos:
@@ -428,6 +435,7 @@ class WWRandomizer:
     tweaks.add_hint_signs(self)
     tweaks.prevent_door_boulder_softlocks(self)
     tweaks.update_tingle_statue_item_get_funcs(self)
+    tweaks.setup_soul_items(self)
     patcher.apply_patch(self, "tingle_chests_without_tuner")
     tweaks.make_tingle_statue_reward_rupee_rainbow_colored(self)
     if self.seed_hash is not None:
@@ -449,6 +457,7 @@ class WWRandomizer:
     tweaks.fix_stone_head_bugs(self)
     tweaks.show_number_of_tingle_statues_on_quest_status_screen(self)
     patcher.apply_patch(self, "flexible_enemies")
+    patcher.apply_patch(self, "boss_soul_shuffle")
     tweaks.fix_needle_rock_island_salvage_flags(self)
     tweaks.allow_nonlinear_servants_of_the_towers(self)
     tweaks.fix_helmaroc_king_table_softlock(self)

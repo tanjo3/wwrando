@@ -273,6 +273,11 @@ class Options(BaseOptions):
     description="Allows the randomizer to place several trapped chests across the game that do not give you items.<br>"
       "Perfect for spicing up any run!",
   )
+  boss_soul_shuffle: bool = option(
+    default=False,
+    description="Boss souls are new randomizable progress items. Without finding a boss's soul, the boss won't spawn when entering its arena.<br>"
+      "Souls exist for Gohma, Kalle Demos, Gohdan, Helmaroc King, Jalhalla, and Molgera.",
+  )
   #endregion
   
   #region Difficulty

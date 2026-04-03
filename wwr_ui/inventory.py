@@ -48,6 +48,16 @@ REGULAR_ITEMS = [
   "Tingle's Chart",
 ]
 
+BOSS_SOUL_ITEMS = [
+  "Soul of Gohma",
+  "Soul of Kalle Demos",
+  "Soul of Gohdan",
+  "Soul of Helmaroc King",
+  "Soul of Jalhalla",
+  "Soul of Molgera",
+]
+
+REGULAR_ITEMS += BOSS_SOUL_ITEMS
 REGULAR_ITEMS += DUNGEON_MAPS_AND_COMPASSES
 REGULAR_ITEMS += DUNGEON_BIG_KEYS
 REGULAR_ITEMS.sort()
