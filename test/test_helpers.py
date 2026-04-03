@@ -99,6 +99,8 @@ def enable_all_options(options: Options):
   options.korl_hints_swords = True
   options.kreeb_hints_bows = True
   
+  options.always_double_magic = True
+  
   options.do_not_generate_spoiler_log = False
   
   options.swift_sail = True
