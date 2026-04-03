@@ -165,11 +165,12 @@ files/rels/d_a_tsubo.rel:
 files/rels/d_a_obj_homen.rel:
   create_stone_head_item: 0x36DC
 files/rels/d_a_ship.rel:
-  set_wind_dir_to_ship_dir: 0xE3A8
-  slow_down_ship_when_stopping: 0xE3F0
-  ship_stopping_deceleration: 0xE420
-  slow_down_ship_when_idle: 0xE428
-  ship_idle_deceleration: 0xE458
+  korl_sword_hint_precheck: 0xE3A8
+  set_wind_dir_to_ship_dir: 0xE3D4
+  slow_down_ship_when_stopping: 0xE41C
+  ship_stopping_deceleration: 0xE44C
+  slow_down_ship_when_idle: 0xE454
+  ship_idle_deceleration: 0xE484
 files/rels/d_a_npc_md.rel:
   reset_medli_position: 0x15D78
   medli_possible_et_spawn_positions: 0x15E50
