@@ -163,6 +163,8 @@ sys/main.dol:
   test_room_spawn_id: 0x800531E3
   test_room_room_index: 0x800531E7
   test_room_override_layer_num: 0x800531EB
+files/rels/d_a_npc_people.rel:
+  create_item_and_set_event_bit_for_townsperson: 0xCF18
 files/rels/d_a_auction.rel:
   custom_getItemNo: 0x49F8
   auction_event_bits: 0x4AB8
@@ -211,8 +213,6 @@ files/rels/d_a_obj_ftree.rel:
   create_item_for_withered_trees_without_setting_speeds: 0x535C
   withered_tree_item_try_give_momentum: 0x5384
   withered_tree_item_speeds: 0x53F8
-files/rels/d_a_npc_people.rel:
-  create_item_and_set_event_bit_for_townsperson: 0xCF18
 files/rels/d_a_npc_photo.rel:
   lenzo_set_deluxe_picto_box_event_bit: 0x5EC8
 files/rels/d_a_npc_rsh1.rel:

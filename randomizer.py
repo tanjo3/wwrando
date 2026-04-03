@@ -427,6 +427,7 @@ class WWRandomizer:
     patcher.apply_patch(self, "misc_rando_features")
     if self.options.sunlight_arrows:
       patcher.apply_patch(self, "sunlight_arrows")
+    patcher.apply_patch(self, "dampa_minigames_fixes")
     tweaks.add_custom_actor_rels(self)
     tweaks.skip_wakeup_intro_and_start_at_dock(self)
     tweaks.start_ship_at_outset(self)
