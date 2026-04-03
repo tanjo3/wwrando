@@ -512,6 +512,9 @@ class WWRandomizer:
     if self.options.quick_gohma:
       patcher.apply_patch(self, "quick_gohma")
 
+    patcher.apply_patch(self, "orca_minigame_rewards")
+    if self.options.orca_one_hit_knockout:
+      patcher.apply_patch(self, "orca_one_hit_ko")
     customizer.replace_link_model(self)
     tweaks.change_starting_clothes(self)
     tweaks.check_hide_ship_sail(self)

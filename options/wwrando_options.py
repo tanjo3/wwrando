@@ -181,6 +181,11 @@ class Options(BaseOptions):
     description="If this is checked, each Blue ChuChu will drop a randomized item instead of Blue Chu Jelly, and 23 Blue Chu Jellies will be added to the item pool.<br>"
       "If this is not checked, Blue ChuChus will drop Blue Chu Jelly as in vanilla, and Blue Chu Jellies will not be added to the item pool.",
   )
+  progression_orca_minigame: bool = option(
+    default=False,
+    description="This controls whether the Orca mini-game can contain progression items.<br>"
+      "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
+  )
   
   progression_locations: list[str] = option(
     default_factory=lambda: [],
@@ -313,6 +318,10 @@ class Options(BaseOptions):
   hero_mode: bool = option(
     default=False,
     description="In Hero Mode, you take four times more damage than normal and heart refills will not drop.",
+  )
+  orca_one_hit_knockout: bool = option(
+    default=False,
+    description="This option makes Orca's minigame end immediately upon taking a hit.",
   )
   #endregion
   

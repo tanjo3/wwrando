@@ -245,6 +245,11 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.progression_blue_chu_jellies, 7, 2, 1, 1)
 
+        self.progression_orca_minigame = QCheckBox(self.progression_locations_groupbox)
+        self.progression_orca_minigame.setObjectName(u"progression_orca_minigame")
+
+        self.gridLayout_2.addWidget(self.progression_orca_minigame, 7, 3, 1, 1)
+
 
         self.verticalLayout_3.addWidget(self.progression_locations_groupbox)
 
@@ -1033,10 +1038,20 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addWidget(self.hero_mode, 0, 0, 1, 1)
 
-        self.widget_16 = QWidget(self.difficulty_options_groupbox)
-        self.widget_16.setObjectName(u"widget_16")
+        self.orca_one_hit_knockout = QCheckBox(self.difficulty_options_groupbox)
+        self.orca_one_hit_knockout.setObjectName(u"orca_one_hit_knockout")
 
-        self.gridLayout_5.addWidget(self.widget_16, 0, 0, 1, 1)
+        self.gridLayout_5.addWidget(self.orca_one_hit_knockout, 0, 1, 1, 1)
+
+        self.widget_20 = QWidget(self.difficulty_options_groupbox)
+        self.widget_20.setObjectName(u"widget_20")
+
+        self.gridLayout_5.addWidget(self.widget_20, 0, 2, 1, 1)
+
+        self.widget_21 = QWidget(self.difficulty_options_groupbox)
+        self.widget_21.setObjectName(u"widget_21")
+
+        self.gridLayout_5.addWidget(self.widget_21, 0, 3, 1, 1)
 
 
         self.verticalLayout_9.addWidget(self.difficulty_options_groupbox)
@@ -1492,7 +1507,8 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.progression_treasure_charts, self.progression_rupee_dungeon)
         QWidget.setTabOrder(self.progression_rupee_dungeon, self.progression_rupee_overworld)
         QWidget.setTabOrder(self.progression_rupee_overworld, self.progression_blue_chu_jellies)
-        QWidget.setTabOrder(self.progression_blue_chu_jellies, self.sword_mode)
+        QWidget.setTabOrder(self.progression_blue_chu_jellies, self.progression_orca_minigame)
+        QWidget.setTabOrder(self.progression_orca_minigame, self.sword_mode)
         QWidget.setTabOrder(self.sword_mode, self.num_starting_triforce_shards)
         QWidget.setTabOrder(self.num_starting_triforce_shards, self.shuffle_small_keys)
         QWidget.setTabOrder(self.shuffle_small_keys, self.shuffle_big_keys)
@@ -1632,6 +1648,7 @@ class Ui_MainWindow(object):
         self.progression_rupee_dungeon.setText(QCoreApplication.translate("MainWindow", u"Dungeon Rupees", None))
         self.progression_rupee_overworld.setText(QCoreApplication.translate("MainWindow", u"Overworld Rupees", None))
         self.progression_blue_chu_jellies.setText(QCoreApplication.translate("MainWindow", u"Blue Chu Jellies", None))
+        self.progression_orca_minigame.setText(QCoreApplication.translate("MainWindow", u"Orca Minigame", None))
         self.item_randomizer_modes_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Item Randomizer Modes", None))
         self.label_for_num_starting_triforce_shards.setText(QCoreApplication.translate("MainWindow", u"Triforce Shards to Start With", None))
         self.label_for_shuffle_maps_and_compasses.setText(QCoreApplication.translate("MainWindow", u"Dungeon Maps and Compasses", None))
@@ -1735,6 +1752,7 @@ class Ui_MainWindow(object):
         self.prioritize_required_bosses.setText(QCoreApplication.translate("MainWindow", u"Prioritize Required Bosses", None))
         self.difficulty_options_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Difficulty Options", None))
         self.hero_mode.setText(QCoreApplication.translate("MainWindow", u"Hero Mode", None))
+        self.orca_one_hit_knockout.setText(QCoreApplication.translate("MainWindow", u"Orca One-Hit KO", None))
         self.hint_options_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Hint Options", None))
         self.hoho_hints.setText(QCoreApplication.translate("MainWindow", u"Place Hints on Old Man Ho Ho", None))
         self.prioritize_remote_hints.setText(QCoreApplication.translate("MainWindow", u"Prioritize Remote Location Hints", None))

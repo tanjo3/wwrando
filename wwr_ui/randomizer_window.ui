@@ -337,6 +337,13 @@
                  </property>
                 </widget>
                </item>
+               <item row="7" column="3">
+                <widget class="QCheckBox" name="progression_orca_minigame">
+                 <property name="text">
+                  <string>Orca Minigame</string>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </widget>
             </item>
@@ -1523,8 +1530,18 @@
                  </property>
                 </widget>
                </item>
-               <item>
-                <widget class="QWidget" name="widget_16" native="true"/>
+               <item row="0" column="1">
+                <widget class="QCheckBox" name="orca_one_hit_knockout">
+                 <property name="text">
+                  <string>Orca One-Hit KO</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QWidget" name="widget_20" native="true"/>
+               </item>
+               <item row="0" column="3">
+                <widget class="QWidget" name="widget_21" native="true"/>
                </item>
               </layout>
              </widget>
@@ -2158,6 +2175,7 @@
   <tabstop>progression_rupee_dungeon</tabstop>
   <tabstop>progression_rupee_overworld</tabstop>
   <tabstop>progression_blue_chu_jellies</tabstop>
+  <tabstop>progression_orca_minigame</tabstop>
   <tabstop>sword_mode</tabstop>
   <tabstop>num_starting_triforce_shards</tabstop>
   <tabstop>shuffle_small_keys</tabstop>

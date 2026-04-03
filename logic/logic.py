@@ -657,7 +657,8 @@ class Logic:
           continue
       if "Blue ChuChu" in types and not options.progression_blue_chu_jellies:
         continue
-      
+      if "Orca Minigame" in types and not options.progression_orca_minigame:
+        continue
       # Note: The Triforce/Treasure Chart sunken treasures are handled differently from other types.
       # During randomization they are handled by not considering the charts themselves to be progress items.
       # That results in the item randomizer considering these locations inaccessible until after all progress items are placed.
@@ -945,7 +946,7 @@ class Logic:
       if self.is_dungeon_item(item_name) and not self.options.progression_dungeons:
         continue
       if item_name not in self.all_progress_items:
-        if not (item_name.startswith("Triforce Chart ") or item_name.startswith("Treasure Chart ") or item_name == "Blue Chu Jelly"):
+        if not (item_name.startswith("Triforce Chart ") or item_name.startswith("Treasure Chart ") or item_name == "Blue Chu Jelly" or item_name.startswith("Soul of ")):
           raise Exception("Item %s opens up progress locations but is not in the list of all progress items." % item_name)
       all_progress_items_filtered.append(item_name)
     
@@ -953,7 +954,7 @@ class Logic:
     starting_items_to_remove = self.rando.starting_items.copy()
     for item_name in all_progress_items_filtered:
       if item_name not in all_items_to_make_nonprogress:
-        if (item_name.startswith("Triforce Chart ") or item_name.startswith("Treasure Chart ") or item_name == "Blue Chu Jelly"):
+        if (item_name.startswith("Triforce Chart ") or item_name.startswith("Treasure Chart ") or item_name == "Blue Chu Jelly" or item_name.startswith("Soul of ")):
           continue
       all_items_to_make_nonprogress.remove(item_name)
       if item_name in starting_items_to_remove:

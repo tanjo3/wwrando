@@ -169,6 +169,13 @@ files/rels/d_a_auction.rel:
   custom_getItemNo: 0x49F8
   auction_event_bits: 0x4AB8
   auction_price_order: 0x4AC0
+files/rels/d_a_npc_ji1.rel:
+  orca_reward_select: 0x137B4
+  orca_check_chain: 0x13918
+  orca_100_hit_item_id: 0x13A14
+  orca_300_hit_item_id: 0x13A15
+  orca_500_hit_item_id: 0x13A16
+  orca_1000_hit_item_id: 0x13A17
 files/rels/d_a_npc_bs1.rel:
   set_shop_item_in_bait_bag_slot_sold_out: 0x61F0
   check_shop_item_in_bait_bag_slot_sold_out: 0x6220
