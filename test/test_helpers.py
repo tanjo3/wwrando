@@ -119,6 +119,14 @@ def enable_all_options(options: Options):
   # options.starting_gear
   options.starting_pohs = 3
   options.starting_hcs = 2
+  options.starting_joy_pendant = 10
+  options.starting_skull_necklace = 10
+  options.starting_boko_baba_seed = 10
+  options.starting_golden_feather = 10
+  options.starting_knights_crest = 10
+  options.starting_red_chu_jelly = 10
+  options.starting_green_chu_jelly = 10
+  options.starting_blue_chu_jelly = 10
   options.num_extra_starting_items = 3
   
   # options.dry_run
