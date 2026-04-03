@@ -862,7 +862,122 @@ class HintsRandomizer(BaseRandomizer):
     shuffle_mode = self.logic.get_dungeon_item_shuffle_mode(item_name)
     return shuffle_mode in (DungeonItemShuffleMode.ANY_DUNGEON, DungeonItemShuffleMode.OVERWORLD, DungeonItemShuffleMode.ANYWHERE)
   
-  def get_barren_zones(self, progress_locations, hinted_remote_locations):
+  def check_if_item_location_is_useful(self, item_name, location_name, has_useful_chain=True, sphere_state=None,
+                                       useful_item_locations=None, reachable_locs=None,
+                                       reachable_without_item=None, chain_locations_by_item=None,
+                                       items_referenced_by_location=None, locations_referencing_item=None):
+    # Determine if an item at a specific location is useful for beating the seed.
+    # The check proceeds through several steps:
+    # 
+    # 1. Sphere check: simulate the player's realistic inventory when they reach this location and see if adding the
+    #    item opens any useful location. If so, the item is useful.
+    #    If the item opens nothing and the player already has a copy, check for a circular utility chain. A "circular
+    #    utility chain" occurs when an item's only value is providing access to items the player already needs to reach
+    #    this location. If the chain is circular, the item is not useful.
+    # 
+    # 2. Chain analysis gate: if removing all copies of this item from the game doesn't make any useful location
+    #    inaccessible, the item doesn't matter in this seed.
+    # 
+    # 3. Reachable-without check: simulate a full playthrough where this item is never collected. If the location is
+    #    still reachable, there exists a valid routing where the player picks up this copy, so it's useful. For items
+    #    whose usefulness comes from OR alternatives, also check that the location is not locked behind an OR-covering
+    #    partner that the player would always have first.
+    # 
+    # 4. Transitive dependency check: if the location is not reachable without the item, this copy is behind an earlier
+    #    copy. For progressive items, check if the Ganondorf path needs more copies than this location requires.
+    #    Otherwise, the copy is redundant.
+    
+    if item_name not in self.path_logic.all_cleaned_item_names:
+      return False
+    
+    # Step 1: Sphere check. Runs before the chain analysis gate because it can detect utility the chain analysis misses.
+    if sphere_state is not None:
+      self.path_logic.load_simulated_playthrough_state(sphere_state)
+      already_has_item = item_name in self.path_logic.currently_owned_items
+      accessible_before = set(self.path_logic.get_accessible_remaining_locations(for_progression=True))
+      
+      self.path_logic.add_owned_item(item_name)
+      accessible_after = set(self.path_logic.get_accessible_remaining_locations(for_progression=True))
+      
+      newly_accessible = accessible_after - accessible_before
+      if newly_accessible & useful_item_locations:
+        return True
+      
+      # Circular chain check. If the item opens nothing and the player already has a copy, check whether the items at
+      # this item's chain locations are all transitively required to reach this location. If so, the chain is circular
+      # and this copy provides nothing new.
+      if (len(newly_accessible) == 0 and already_has_item
+          and chain_locations_by_item is not None and reachable_without_item is not None
+          and useful_item_locations is not None):
+        useful_chains = chain_locations_by_item.get(item_name, set()) & useful_item_locations
+        if useful_chains:
+          all_circular = True
+          for chain_loc in useful_chains:
+            chain_placed = self.logic.done_item_locations.get(chain_loc)
+            if chain_placed and chain_placed in reachable_without_item:
+              if location_name in reachable_without_item[chain_placed]:
+                all_circular = False
+                break
+            else:
+              all_circular = False
+              break
+          if all_circular:
+            return False
+    
+    # Step 2: Chain analysis gate.
+    if not has_useful_chain:
+      return False
+    
+    # Step 3: Reachable-without check. Simulate a full playthrough where this item is never collected. If the location
+    # is still reachable, the player could route to pick up this copy.
+    if reachable_locs is not None:
+      if location_name in reachable_locs:
+        # The location is independently reachable. However, if the item's usefulness comes solely from OR alternatives
+        # (no useful chain locations of its own), check whether the location is locked behind an OR-covering partner.
+        if (sphere_state is not None
+            and useful_item_locations is not None
+            and reachable_without_item is not None
+            and chain_locations_by_item is not None
+            and items_referenced_by_location is not None
+            and locations_referencing_item is not None
+            and not (chain_locations_by_item.get(item_name, set()) & useful_item_locations)):
+          # Find the OR partners: items that appear in the requirements of every useful location
+          # that references this item. Items unique to individual locations drop out.
+          shared_locs = locations_referencing_item.get(item_name, set()) & useful_item_locations
+          if shared_locs:
+            common_items = None
+            for loc in shared_locs:
+              if common_items is None:
+                common_items = set(items_referenced_by_location[loc])
+              else:
+                common_items &= items_referenced_by_location[loc]
+            common_items.discard(item_name)
+            # If this location is not reachable without an OR partner, the player always has that partner before
+            # reaching here, making this item redundant.
+            for partner in common_items:
+              if partner in reachable_without_item and location_name not in reachable_without_item[partner]:
+                return False
+        return True
+      
+      # Step 4: Transitive dependency check. The location is not reachable without this item, so this copy is behind an
+      # earlier copy. For progressive items where the location directly requires an earlier tier, check if the Ganondorf
+      # path needs more copies than this location requires. If the item doesn't appear in the location's direct
+      # requirements, the dependency is purely through other items' placements and this copy is redundant.
+      self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
+      requirement_name = "Can Access Item Location \"%s\"" % location_name
+      items_needed = self.path_logic.get_items_needed_by_req_name(requirement_name)
+      location_count = items_needed.get(item_name, 0)
+      
+      if location_count == 0:
+        return False
+      
+      ganondorf_items = self.path_logic.get_items_needed_by_req_name("Can Reach and Defeat Ganondorf")
+      ganondorf_count = ganondorf_items.get(item_name, 0)
+      return ganondorf_count > location_count
+    
+    return False
+  
+  def get_barren_zones(self, progress_locations, hinted_remote_locations, location_counter: Counter = None):
     # Helper function to build a list of barren zones in this seed.
     # The list includes only zones which are allowed to be hinted at as barren.
     
@@ -874,7 +989,7 @@ class HintsRandomizer(BaseRandomizer):
     progress_items = {}
     for location_name in progress_locations:
       item_name = self.logic.done_item_locations[location_name]
-      if item_name in self.rando.logic.all_progress_items:
+      if item_name in self.logic.all_progress_items:
         if item_name in progress_items:
           progress_items[item_name].append(location_name)
         else:
@@ -888,21 +1003,20 @@ class HintsRandomizer(BaseRandomizer):
     # check item requirements to get those items, and so on.
     self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
     items_needed = deque(self.path_logic.get_item_names_by_req_name("Can Reach and Defeat Ganondorf"))
-    items_checked = []
-    useful_locations = set()
+    potentially_useful_items = set()
     while len(items_needed) > 0:
       # Dequeue one item from the queue.
       item_name = items_needed.popleft()
       
       # Don't consider the same item more than once or items which are not in the list of randomized progress items.
-      if item_name in items_checked or item_name not in progress_items:
+      if item_name in potentially_useful_items or item_name not in progress_items:
         continue
       
       # Don't consider dungeon items unless they can appear outside of their original dungeons.
       if not self.should_hint_dungeon_item(item_name):
         continue
       
-      items_checked.append(item_name)
+      potentially_useful_items.add(item_name)
       
       # Consider all instances of this item, even if those extra copies might not be required.
       item_locations = progress_items[item_name]
@@ -910,9 +1024,189 @@ class HintsRandomizer(BaseRandomizer):
         requirement_name = "Can Access Item Location \"%s\"" % location_name
         other_items_needed = self.path_logic.get_item_names_by_req_name(requirement_name)
         items_needed.extend(other_items_needed)
+    
+    # Build a reverse map of which items are referenced by each location's access requirements.
+    # This is used in the iteration below to detect items that share OR branches with other items.
+    # Such items don't uniquely open any location, but they're still valid routing options.
+    items_referenced_by_location = {}
+    for item_name in potentially_useful_items:
+      for location_name in progress_items[item_name]:
+        requirement_name = "Can Access Item Location \"%s\"" % location_name
+        req_items = set(self.path_logic.get_item_names_by_req_name(requirement_name))
+        items_referenced_by_location[location_name] = req_items
+    
+    # Build a reverse index: for each item, which locations' requirements reference it?
+    locations_referencing_item = {}
+    for loc, req_items in items_referenced_by_location.items():
+      for item in req_items:
+        locations_referencing_item.setdefault(item, set()).add(loc)
+    
+    # Next, compute "chain locations" for each item.
+    # A chain location is a location that becomes inaccessible when all copies of the item are removed from the game.
+    # We do this by giving the player every progress item, then for each item, giving them everything except that item
+    # and checking which locations become inaccessible.
+    self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
+    for item in self.logic.all_progress_items:
+      self.path_logic.add_owned_item(item)
+    self.path_logic.clear_req_caches()
+    accessible_with_all = set(self.path_logic.get_accessible_remaining_locations(for_progression=True))
+    
+    chain_locations_by_item = {}
+    for item_name in potentially_useful_items:
+      self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
+      for item in self.logic.all_progress_items:
+        if item != item_name:
+          self.path_logic.add_owned_item(item)
+      self.path_logic.clear_req_caches()
+      accessible_without = set(self.path_logic.get_accessible_remaining_locations(for_progression=True))
+      chain_locations_by_item[item_name] = accessible_with_all - accessible_without
+    
+    # Simulate a normal playthrough to record the player's inventory at each sphere.
+    # This is used by the sphere check in check_if_item_location_is_useful to determine what the player would
+    # realistically have when they first reach each location.
+    # The state is saved before collecting each sphere's items, so it represents what the player has when they discover
+    # the location (not after picking up items from that sphere).
+    sphere_state_at_location = {}
+    self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
+    previously_accessible = []
+    
+    while self.path_logic.unplaced_progress_items:
+      accessible = self.path_logic.get_accessible_remaining_locations(for_progression=True)
+      accessible = [loc for loc in accessible if loc not in self.rando.boss_reqs.banned_locations]
+      new_locations = [loc for loc in accessible if loc not in previously_accessible]
+      if not new_locations:
+        break
       
-      # The set of "useful locations" is the set of all locations which contain these "useful" items.
-      useful_locations |= set(item_locations)
+      if self.logic.small_keys_placed_in_own_dungeon:
+        newly_accessible_predetermined = [
+          loc for loc in new_locations if loc in self.logic.prerandomization_item_locations
+        ]
+        newly_accessible_small_keys = [
+          loc for loc in newly_accessible_predetermined
+          if self.logic.prerandomization_item_locations[loc].endswith(" Small Key")
+        ]
+        if newly_accessible_small_keys:
+          for loc in newly_accessible_small_keys:
+            self.path_logic.add_owned_item(self.logic.prerandomization_item_locations[loc])
+          self.path_logic.clear_req_caches()
+          previously_accessible += newly_accessible_small_keys
+          continue
+      
+      state_before_sphere = self.path_logic.save_simulated_playthrough_state()
+      for loc in new_locations:
+        if loc not in sphere_state_at_location:
+          sphere_state_at_location[loc] = state_before_sphere
+      
+      for loc in new_locations:
+        item = self.logic.done_item_locations[loc]
+        if item in self.path_logic.all_progress_items:
+          self.path_logic.add_owned_item(item)
+      self.path_logic.clear_req_caches()
+      
+      previously_accessible = accessible
+    
+    # For each potentially useful item, simulate a playthrough where that item is never collected.
+    # This tells us which locations are reachable without the item, accounting for the full transitive dependency chain
+    # through actual item placements.
+    reachable_without_item = {}
+    for excluded_item in potentially_useful_items:
+      self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
+      previously_accessible = []
+      
+      while self.path_logic.unplaced_progress_items:
+        accessible = self.path_logic.get_accessible_remaining_locations(for_progression=True)
+        accessible = [loc for loc in accessible if loc not in self.rando.boss_reqs.banned_locations]
+        new_locations = [loc for loc in accessible if loc not in previously_accessible]
+        if not new_locations:
+          break
+        
+        if self.logic.small_keys_placed_in_own_dungeon:
+          newly_accessible_predetermined = [
+            loc for loc in new_locations if loc in self.logic.prerandomization_item_locations
+          ]
+          newly_accessible_small_keys = [
+            loc for loc in newly_accessible_predetermined
+            if self.logic.prerandomization_item_locations[loc].endswith(" Small Key")
+          ]
+          if newly_accessible_small_keys:
+            for loc in newly_accessible_small_keys:
+              self.path_logic.add_owned_item(self.logic.prerandomization_item_locations[loc])
+            self.path_logic.clear_req_caches()
+            previously_accessible += newly_accessible_small_keys
+            continue
+        
+        for loc in new_locations:
+          item = self.logic.done_item_locations[loc]
+          if item in self.path_logic.all_progress_items and item != excluded_item:
+            self.path_logic.add_owned_item(item)
+        self.path_logic.clear_req_caches()
+        
+        previously_accessible = accessible
+      
+      reachable_without_item[excluded_item] = set(previously_accessible)
+    
+    # Determine which locations are truly useful by iterating until stable.
+    # We start with all locations that have potentially useful items plus path locations (which are always useful).
+    # Each pass checks every (item, location) pair using check_if_item_location_is_useful.
+    # Locations where the check returns False are removed from the set, which may cascade: if Cabana Deed only gates a
+    # location with a redundant Magic Meter, the Magic Meter is removed first, and then the Deed loses its only useful
+    # chain location and is removed too.
+    # The chain analysis is re-derived each pass against the current set.
+    useful_item_locations = set()
+    for item_name in potentially_useful_items:
+      useful_item_locations.update(progress_items[item_name])
+    
+    # Path locations are seeded as useful, but dungeon key locations are excluded when they are confined to their own
+    # dungeon, since they don't make a zone non-barren.
+    path_locations_for_barren = self.path_locations
+    if path_locations_for_barren:
+      path_locations_for_barren = set()
+      for location_name in self.path_locations:
+        item_name = self.logic.done_item_locations[location_name]
+        if self.should_hint_dungeon_item(item_name):
+          path_locations_for_barren.add(location_name)
+    if path_locations_for_barren:
+      useful_item_locations |= path_locations_for_barren
+    
+    for _ in range(10):
+      # An item has a useful chain if it uniquely opens a useful location, or if it appears in the access requirements
+      # of a useful location (as an OR alternative).
+      items_with_useful_chains = set()
+      for item_name in potentially_useful_items:
+        if chain_locations_by_item.get(item_name, set()) & useful_item_locations:
+          items_with_useful_chains.add(item_name)
+        elif locations_referencing_item.get(item_name, set()) & useful_item_locations:
+          items_with_useful_chains.add(item_name)
+      
+      new_useful = set()
+      for item_name in potentially_useful_items:
+        has_useful_chain = item_name in items_with_useful_chains
+        reachable_locs = reachable_without_item.get(item_name, set())
+        for location_name in progress_items[item_name]:
+          sphere_state = sphere_state_at_location.get(location_name)
+          if self.check_if_item_location_is_useful(
+            item_name,
+            location_name,
+            has_useful_chain,
+            sphere_state=sphere_state,
+            useful_item_locations=useful_item_locations,
+            reachable_locs=reachable_locs,
+            reachable_without_item=reachable_without_item,
+            chain_locations_by_item=chain_locations_by_item,
+            items_referenced_by_location=items_referenced_by_location,
+            locations_referencing_item=locations_referencing_item,
+          ):
+            new_useful.add(location_name)
+      
+      # Path locations are always useful, so re-add them each pass to prevent the convergence from removing them.
+      if path_locations_for_barren:
+        new_useful |= path_locations_for_barren
+      
+      if new_useful == useful_item_locations:
+        break
+      useful_item_locations = new_useful
+    
+    useful_locations = useful_item_locations
     
     # Subtracting the set of useful locations from the set of progress locations gives us our set of barren locations.
     self.barren_locations = set(progress_locations) - useful_locations
@@ -934,6 +1228,29 @@ class HintsRandomizer(BaseRandomizer):
     # Finally, the difference between the zones with barren locations and the zones with useful locations gives us our
     # set of hintable barren zones.
     barren_zones = zones_with_barren_locations - zones_with_useful_locations
+    
+    # Remove barren zones that are strictly contained within another barren zone.
+    barren_locations_by_zone: dict[str, set[str]] = {}
+    for location_name in self.barren_locations:
+      if location_name in hinted_remote_locations:
+        continue
+      zones = self.rando.entrances.get_all_zones_for_item_location(location_name)
+      for zone in zones & barren_zones:
+        barren_locations_by_zone.setdefault(zone, set()).add(location_name)
+    
+    zones_to_remove: dict[str, str] = {}
+    for zone_a, locs_a in barren_locations_by_zone.items():
+      for zone_b, locs_b in barren_locations_by_zone.items():
+        if zone_a != zone_b and locs_a < locs_b:
+          zones_to_remove[zone_a] = zone_b
+          break
+    
+    # Transfer location counts from removed zones to their parent zones.
+    if location_counter is not None:
+      for removed_zone, parent_zone in sorted(zones_to_remove.items(), key=lambda kv: len(barren_locations_by_zone[kv[0]])):
+        location_counter[parent_zone] += location_counter[removed_zone]
+    
+    barren_zones -= set(zones_to_remove)
     
     # Return the list of barren zones sorted to maintain consistent ordering.
     return sorted(barren_zones)
@@ -986,6 +1303,23 @@ class HintsRandomizer(BaseRandomizer):
     item_name = self.logic.done_item_locations[location_name]
     if item_name not in self.logic.all_progress_items:
       return None
+    
+    # Progress items at nonprogress locations are never relevant to hints.
+    if not self.logic.filter_locations_for_progression([location_name]):
+      return ItemImportance.NOT_REQUIRED
+    
+    # Locations in nonrequired dungeons are always not required.
+    if location_name in self.rando.boss_reqs.banned_locations:
+      return ItemImportance.NOT_REQUIRED
+    
+    # Sunken treasure locations are handled specially and not required unless their chart type has progression enabled.
+    types = self.logic.item_locations[location_name]["Types"]
+    if "Sunken Treasure" in types:
+      chart_name = self.logic.chart_name_for_location(location_name)
+      if "Triforce Chart" in chart_name and not self.options.progression_triforce_charts:
+        return ItemImportance.NOT_REQUIRED
+      if "Triforce Chart" not in chart_name and not self.options.progression_treasure_charts:
+        return ItemImportance.NOT_REQUIRED
     
     if location_name in self.path_locations:
       return ItemImportance.REQUIRED
@@ -1270,7 +1604,7 @@ class HintsRandomizer(BaseRandomizer):
     # Generate barren hints.
     # We select at most `self.max_barren_hints` zones at random to hint as barren. Barren zones are weighted by the
     # square root of the number of locations at that zone.
-    unhinted_barren_zones = self.get_barren_zones(progress_locations, [hint.place for hint in hinted_remote_locations])
+    unhinted_barren_zones = self.get_barren_zones(progress_locations, [hint.place for hint in hinted_remote_locations], location_counter)
     hinted_barren_zones: list[Hint] = []
     while len(unhinted_barren_zones) > 0 and len(hinted_barren_zones) < self.max_barren_hints:
       # Weight each barren zone by the square root of the number of locations there.

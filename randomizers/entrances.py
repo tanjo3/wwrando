@@ -1061,6 +1061,7 @@ class EntranceRandomizer(BaseRandomizer):
     # entrances are randomized.
     #
     # A letter that is obtained from defeating a boss is considered part of the boss's dungeon.
+    # A letter that is associated with an NPC on a specific island is also considered part of that island.
     #
     # Here are some examples:
     # - If the location is inside Dragon Roost Cavern, which is inside Forbidden Woods, which is
@@ -1083,8 +1084,14 @@ class EntranceRandomizer(BaseRandomizer):
       return {loc_zone_name} | self.get_all_zones_for_item_location("Earth Temple - Jalhalla Heart Container")
     if location_name == "Mailbox - Letter from Orca":
       return {loc_zone_name} | self.get_all_zones_for_item_location("Forbidden Woods - Kalle Demos Heart Container")
-    if location_name == "Mailbox - Letter from Aryll" or location_name == "Mailbox - Letter from Tingle":
+    if location_name == "Mailbox - Letter from Aryll":
       return {loc_zone_name} | self.get_all_zones_for_item_location("Forsaken Fortress - Helmaroc King Heart Container")
+    if location_name == "Mailbox - Letter from Tingle":
+      return {loc_zone_name, "Windfall Island"} | self.get_all_zones_for_item_location("Forsaken Fortress - Helmaroc King Heart Container")
+    if location_name == "Mailbox - Letter from Grandma":
+      return {loc_zone_name, "Outset Island"}
+    if location_name == "Mailbox - Letter from Hoskit's Girlfriend":
+      return {loc_zone_name, "Dragon Roost Island"}
     if location_name == "The Great Sea - Withered Trees":
       return {loc_zone_name} | self.get_all_zones_for_item_location("Cliff Plateau Isles - Highest Isle")
     
