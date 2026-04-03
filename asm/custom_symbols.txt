@@ -6,159 +6,175 @@ sys/main.dol:
   ballad_of_gales_warp_float_bank: 0x803FD010
   custom_DynamicNameTable: 0x803FD068
   custom_l_objectName: 0x803FD09C
-  custom_DMC: 0x803FD0B4
   custom_l_objectName_end: 0x803FD0B4
+  custom_DMC: 0x803FD0B4
   rupeesanity_silent_pickup_bitmask: 0x803FD894
   rupeesanity_spawn_switch_table: 0x803FD8AC
-  init_save_with_tweaks: 0x803FD954
-  init_starting_gear: 0x803FDD14
-  num_triforce_shards_to_start_with: 0x803FDD5C
-  should_start_with_heros_clothes: 0x803FDD5D
-  sword_mode: 0x803FDD5E
-  skip_rematch_bosses: 0x803FDD5F
-  starting_gear: 0x803FDD60
-  starting_quarter_hearts: 0x803FE0E0
-  starting_magic: 0x803FE0E2
-  captured_prologue_pigs_bitfield: 0x803FE0E3
-  option_targeting_mode: 0x803FE0E4
-  always_double_magic_enabled: 0x803FE0E5
-  open_drc: 0x803FE0E6
-  convert_progressive_item_id: 0x803FE0E8
-  progressive_sword_item_func: 0x803FE388
-  progressive_shield_item_func: 0x803FE3F0
-  progressive_bow_func: 0x803FE438
-  progressive_wallet_item_func: 0x803FE490
-  progressive_bomb_bag_item_func: 0x803FE4C8
-  progressive_quiver_item_func: 0x803FE508
-  progressive_picto_box_item_func: 0x803FE548
-  progressive_magic_meter_item_func: 0x803FE590
-  normal_magic_meter_item_func: 0x803FE614
-  hurricane_spin_item_func: 0x803FE62C
-  custom_createItem: 0x803FE658
-  generic_on_dungeon_bit: 0x803FE6A4
-  generic_small_key_item_get_func: 0x803FE700
-  drc_small_key_item_get_func: 0x803FE798
-  fw_small_key_item_get_func: 0x803FE7BC
-  totg_small_key_item_get_func: 0x803FE7E0
-  et_small_key_item_get_func: 0x803FE804
-  wt_small_key_item_get_func: 0x803FE828
-  drc_big_key_item_get_func: 0x803FE84C
-  fw_big_key_item_get_func: 0x803FE874
-  totg_big_key_item_get_func: 0x803FE89C
-  et_big_key_item_get_func: 0x803FE8C4
-  wt_big_key_item_get_func: 0x803FE8EC
-  drc_dungeon_map_item_get_func: 0x803FE914
-  fw_dungeon_map_item_get_func: 0x803FE93C
-  totg_dungeon_map_item_get_func: 0x803FE964
-  ff_dungeon_map_item_get_func: 0x803FE98C
-  et_dungeon_map_item_get_func: 0x803FE9B4
-  wt_dungeon_map_item_get_func: 0x803FE9DC
-  drc_compass_item_get_func: 0x803FEA04
-  fw_compass_item_get_func: 0x803FEA2C
-  totg_compass_item_get_func: 0x803FEA54
-  ff_compass_item_get_func: 0x803FEA7C
-  et_compass_item_get_func: 0x803FEAA4
-  wt_compass_item_get_func: 0x803FEACC
-  dragon_tingle_statue_item_get_func: 0x803FEAF4
-  forbidden_tingle_statue_item_get_func: 0x803FEB20
-  goddess_tingle_statue_item_get_func: 0x803FEB4C
-  earth_tingle_statue_item_get_func: 0x803FEB78
-  wind_tingle_statue_item_get_func: 0x803FEBA4
-  check_tingle_statue_owned: 0x803FEBD0
-  custom_isTbox_for_unloaded_stage_save_info: 0x803FEC58
-  soul_of_gohma_item_get_func: 0x803FEC88
-  soul_of_kalle_demos_item_get_func: 0x803FEC90
-  soul_of_gohdan_item_get_func: 0x803FEC98
-  soul_of_helmaroc_king_item_get_func: 0x803FECA0
-  soul_of_jalhalla_item_get_func: 0x803FECA8
-  soul_of_molgera_item_get_func: 0x803FECB0
-  soul_item_get_handler: 0x803FECB8
-  check_boss_soul_before_create: 0x803FECFC
-  hookshot_sight_failsafe_check: 0x803FED98
-  deluxe_picto_box_item_func_fix_equipped_picto_box: 0x803FEDB0
-  stop_sub_bgm_when_unloading_stage: 0x803FEDE4
-  zero_out_arrow_on_hit_callback: 0x803FEDFC
-  check_can_defend: 0x803FEE0C
-  check_ganondorf_in_phase_3: 0x803FEE3C
-  check_play_special_item_get_music: 0x803FEE58
-  blue_chuchu_shuffle_enabled: 0x803FEEC0
-  blue_chuchu_pending_item_bit_no: 0x803FEEC1
-  blue_chuchu_item_ids: 0x803FEEC4
-  blue_chuchu_item_id_01: 0x803FEEC5
-  blue_chuchu_item_id_02: 0x803FEEC6
-  blue_chuchu_item_id_03: 0x803FEEC7
-  blue_chuchu_item_id_04: 0x803FEEC8
-  blue_chuchu_item_id_05: 0x803FEEC9
-  blue_chuchu_item_id_06: 0x803FEECA
-  blue_chuchu_item_id_07: 0x803FEECB
-  blue_chuchu_item_id_08: 0x803FEECC
-  blue_chuchu_item_id_09: 0x803FEECD
-  blue_chuchu_item_id_0A: 0x803FEECE
-  blue_chuchu_item_id_0B: 0x803FEECF
-  blue_chuchu_item_id_0C: 0x803FEED0
-  blue_chuchu_item_id_0D: 0x803FEED1
-  blue_chuchu_item_id_0E: 0x803FEED2
-  blue_chuchu_item_id_0F: 0x803FEED3
-  blue_chuchu_item_id_10: 0x803FEED4
-  blue_chuchu_item_id_11: 0x803FEED5
-  blue_chuchu_item_id_12: 0x803FEED6
-  blue_chuchu_item_id_13: 0x803FEED7
-  blue_chuchu_item_id_14: 0x803FEED8
-  blue_chuchu_item_id_15: 0x803FEED9
-  blue_chuchu_item_id_16: 0x803FEEDA
-  blue_chuchu_item_id_17: 0x803FEEDB
-  blue_chuchu_set_pending_early: 0x803FEEDC
-  blue_chuchu_exec_item_get_entry: 0x803FEF50
-  blue_chuchu_create_demo_item_replace: 0x803FEFC0
-  blue_chuchu_check_skip_isitem: 0x803FEFEC
-  blue_chuchu_check_use_stage_switch: 0x803FF028
-  blue_chuchu_create_death_item: 0x803FF064
-  blue_chuchu_create_death_item_if_blue: 0x803FF12C
-  multiply_damage_amount: 0x803FF13C
-  damage_multiplier: 0x803FF160
-  invert_camera_horizontal_axis: 0x803FF164
-  convert_progressive_item_id_for_createDemoItem: 0x803FF170
-  convert_progressive_item_id_for_daItem_create: 0x803FF19C
-  convert_progressive_item_id_for_dProcGetItem_init_1: 0x803FF1C8
-  convert_progressive_item_id_for_dProcGetItem_init_2: 0x803FF1F0
-  check_open_map_select: 0x803FF218
-  set_starting_health: 0x803FF278
-  get_current_health_for_file_select_screen: 0x803FF294
-  get_max_health_for_file_select_screen: 0x803FF2BC
-  fully_refill_magic_meter_and_cap_health_on_load_save: 0x803FF2E0
-  turn_while_swinging: 0x803FF310
-  check_animate_rainbow_rupee_color: 0x803FF370
-  rainbow_rupee_keyframe: 0x803FF3B0
-  check_run_new_text_commands: 0x803FF3C0
-  exec_curr_num_keys_text_command: 0x803FF400
-  set_warp_confirm_dialog_message_id_for_custom_warps: 0x803FF4E0
-  check_player_in_casual_clothes: 0x803FF4F8
-  read_custom_DynamicNameTable_loop: 0x803FF534
-  read_custom_l_objectName_loop_for_dStage_searchName: 0x803FF560
-  read_custom_l_objectName_loop_for_dStage_getName: 0x803FF588
-  get_num_owned_tingle_statues: 0x803FF5B4
-  ladder_up_check_unequip_held_item: 0x803FF628
-  ladder_down_check_unequip_held_item: 0x803FF640
-  gameover_continue_reset_life: 0x803FF658
-  give_pearl_and_raise_totg_if_necessary: 0x803FF674
-  remove_low_health_anim_at_full_health: 0x803FF708
-  rupeesanity_clear_reserve: 0x803FF72C
-  rupeesanity_check_spawn: 0x803FF750
-  rupeesanity_fix_spawn_switch: 0x803FF7A4
-  rupeesanity_set_flag: 0x803FF7D4
-  rupeesanity_add_sparkle: 0x803FF8A0
-  give_temporary_sword_during_ganondorf_fight_in_swordless: 0x803FF910
-  give_temporary_sword_in_orcas_house_in_swordless: 0x803FF92C
-  remove_temporary_sword_when_loading_stage_in_swordless: 0x803FF974
+  auction_cycle_index: 0x803FD954
+  init_save_with_tweaks: 0x803FD958
+  init_starting_gear: 0x803FDDD0
+  num_triforce_shards_to_start_with: 0x803FDE18
+  should_start_with_heros_clothes: 0x803FDE19
+  sword_mode: 0x803FDE1A
+  skip_rematch_bosses: 0x803FDE1B
+  should_fill_wallet_on_receive: 0x803FDE1C
+  should_skip_triforce_cutscene: 0x803FDE1D
+  should_skip_drc_platform_cutscenes: 0x803FDE1E
+  should_shorten_mail_minigame: 0x803FDE1F
+  starting_gear: 0x803FDE20
+  starting_quarter_hearts: 0x803FE1A0
+  starting_magic: 0x803FE1A2
+  captured_prologue_pigs_bitfield: 0x803FE1A3
+  option_targeting_mode: 0x803FE1A4
+  always_double_magic_enabled: 0x803FE1A5
+  open_drc: 0x803FE1A6
+  should_set_totg_servants_done: 0x803FE1A7
+  convert_progressive_item_id: 0x803FE1A8
+  progressive_sword_item_func: 0x803FE448
+  progressive_shield_item_func: 0x803FE4B0
+  progressive_bow_func: 0x803FE4F8
+  progressive_wallet_item_func: 0x803FE550
+  progressive_bomb_bag_item_func: 0x803FE5D0
+  progressive_quiver_item_func: 0x803FE610
+  progressive_picto_box_item_func: 0x803FE650
+  progressive_magic_meter_item_func: 0x803FE698
+  normal_magic_meter_item_func: 0x803FE71C
+  hurricane_spin_item_func: 0x803FE734
+  custom_createItem: 0x803FE760
+  generic_on_dungeon_bit: 0x803FE7AC
+  generic_small_key_item_get_func: 0x803FE808
+  drc_small_key_item_get_func: 0x803FE8A0
+  fw_small_key_item_get_func: 0x803FE8C4
+  totg_small_key_item_get_func: 0x803FE8E8
+  et_small_key_item_get_func: 0x803FE90C
+  wt_small_key_item_get_func: 0x803FE930
+  drc_big_key_item_get_func: 0x803FE954
+  fw_big_key_item_get_func: 0x803FE97C
+  totg_big_key_item_get_func: 0x803FE9A4
+  et_big_key_item_get_func: 0x803FE9CC
+  wt_big_key_item_get_func: 0x803FE9F4
+  drc_dungeon_map_item_get_func: 0x803FEA1C
+  fw_dungeon_map_item_get_func: 0x803FEA44
+  totg_dungeon_map_item_get_func: 0x803FEA6C
+  ff_dungeon_map_item_get_func: 0x803FEA94
+  et_dungeon_map_item_get_func: 0x803FEABC
+  wt_dungeon_map_item_get_func: 0x803FEAE4
+  drc_compass_item_get_func: 0x803FEB0C
+  fw_compass_item_get_func: 0x803FEB34
+  totg_compass_item_get_func: 0x803FEB5C
+  ff_compass_item_get_func: 0x803FEB84
+  et_compass_item_get_func: 0x803FEBAC
+  wt_compass_item_get_func: 0x803FEBD4
+  dragon_tingle_statue_item_get_func: 0x803FEBFC
+  forbidden_tingle_statue_item_get_func: 0x803FEC28
+  goddess_tingle_statue_item_get_func: 0x803FEC54
+  earth_tingle_statue_item_get_func: 0x803FEC80
+  wind_tingle_statue_item_get_func: 0x803FECAC
+  check_tingle_statue_owned: 0x803FECD8
+  custom_isTbox_for_unloaded_stage_save_info: 0x803FED60
+  soul_of_gohma_item_get_func: 0x803FED90
+  soul_of_kalle_demos_item_get_func: 0x803FED98
+  soul_of_gohdan_item_get_func: 0x803FEDA0
+  soul_of_helmaroc_king_item_get_func: 0x803FEDA8
+  soul_of_jalhalla_item_get_func: 0x803FEDB0
+  soul_of_molgera_item_get_func: 0x803FEDB8
+  soul_item_get_handler: 0x803FEDC0
+  check_boss_soul_before_create: 0x803FEE04
+  hookshot_sight_failsafe_check: 0x803FEEA0
+  deluxe_picto_box_item_func_fix_equipped_picto_box: 0x803FEEB8
+  stop_sub_bgm_when_unloading_stage: 0x803FEEEC
+  zero_out_arrow_on_hit_callback: 0x803FEF04
+  check_can_defend: 0x803FEF14
+  check_ganondorf_in_phase_3: 0x803FEF44
+  check_play_special_item_get_music: 0x803FEF60
+  blue_chuchu_shuffle_enabled: 0x803FEFC8
+  blue_chuchu_pending_item_bit_no: 0x803FEFC9
+  blue_chuchu_item_ids: 0x803FEFCC
+  blue_chuchu_item_id_01: 0x803FEFCD
+  blue_chuchu_item_id_02: 0x803FEFCE
+  blue_chuchu_item_id_03: 0x803FEFCF
+  blue_chuchu_item_id_04: 0x803FEFD0
+  blue_chuchu_item_id_05: 0x803FEFD1
+  blue_chuchu_item_id_06: 0x803FEFD2
+  blue_chuchu_item_id_07: 0x803FEFD3
+  blue_chuchu_item_id_08: 0x803FEFD4
+  blue_chuchu_item_id_09: 0x803FEFD5
+  blue_chuchu_item_id_0A: 0x803FEFD6
+  blue_chuchu_item_id_0B: 0x803FEFD7
+  blue_chuchu_item_id_0C: 0x803FEFD8
+  blue_chuchu_item_id_0D: 0x803FEFD9
+  blue_chuchu_item_id_0E: 0x803FEFDA
+  blue_chuchu_item_id_0F: 0x803FEFDB
+  blue_chuchu_item_id_10: 0x803FEFDC
+  blue_chuchu_item_id_11: 0x803FEFDD
+  blue_chuchu_item_id_12: 0x803FEFDE
+  blue_chuchu_item_id_13: 0x803FEFDF
+  blue_chuchu_item_id_14: 0x803FEFE0
+  blue_chuchu_item_id_15: 0x803FEFE1
+  blue_chuchu_item_id_16: 0x803FEFE2
+  blue_chuchu_item_id_17: 0x803FEFE3
+  blue_chuchu_set_pending_early: 0x803FEFE4
+  blue_chuchu_exec_item_get_entry: 0x803FF058
+  blue_chuchu_create_demo_item_replace: 0x803FF0C8
+  blue_chuchu_check_skip_isitem: 0x803FF0F4
+  blue_chuchu_check_use_stage_switch: 0x803FF130
+  blue_chuchu_create_death_item: 0x803FF16C
+  blue_chuchu_create_death_item_if_blue: 0x803FF234
+  multiply_damage_amount: 0x803FF244
+  damage_multiplier: 0x803FF268
+  invert_camera_horizontal_axis: 0x803FF26C
+  convert_progressive_item_id_for_createDemoItem: 0x803FF278
+  convert_progressive_item_id_for_daItem_create: 0x803FF2A4
+  convert_progressive_item_id_for_dProcGetItem_init_1: 0x803FF2D0
+  convert_progressive_item_id_for_dProcGetItem_init_2: 0x803FF2F8
+  check_open_map_select: 0x803FF320
+  set_starting_health: 0x803FF380
+  get_current_health_for_file_select_screen: 0x803FF39C
+  get_max_health_for_file_select_screen: 0x803FF3C4
+  reset_auction_cycle: 0x803FF3E8
+  auction_reset_value_instr: 0x803FF3F0
+  fully_refill_magic_meter_and_cap_health_on_load_save: 0x803FF3FC
+  turn_while_swinging: 0x803FF42C
+  check_animate_rainbow_rupee_color: 0x803FF48C
+  rainbow_rupee_keyframe: 0x803FF4CC
+  check_run_new_text_commands: 0x803FF4DC
+  exec_curr_num_keys_text_command: 0x803FF51C
+  set_warp_confirm_dialog_message_id_for_custom_warps: 0x803FF5FC
+  check_player_in_casual_clothes: 0x803FF614
+  read_custom_DynamicNameTable_loop: 0x803FF650
+  read_custom_l_objectName_loop_for_dStage_searchName: 0x803FF67C
+  read_custom_l_objectName_loop_for_dStage_getName: 0x803FF6A4
+  get_num_owned_tingle_statues: 0x803FF6D0
+  ladder_up_check_unequip_held_item: 0x803FF744
+  ladder_down_check_unequip_held_item: 0x803FF75C
+  gameover_continue_reset_life: 0x803FF774
+  give_pearl_and_raise_totg_if_necessary: 0x803FF790
+  remove_low_health_anim_at_full_health: 0x803FF824
+  rupeesanity_clear_reserve: 0x803FF848
+  rupeesanity_check_spawn: 0x803FF86C
+  rupeesanity_fix_spawn_switch: 0x803FF8C0
+  rupeesanity_set_flag: 0x803FF8F0
+  rupeesanity_add_sparkle: 0x803FF9BC
+  give_temporary_sword_during_ganondorf_fight_in_swordless: 0x803FFA2C
+  give_temporary_sword_in_orcas_house_in_swordless: 0x803FFA48
+  remove_temporary_sword_when_loading_stage_in_swordless: 0x803FFA90
   test_room_stage_name: 0x8022D034
   test_room_starting_items_list: 0x8022D03C
   test_room_spawn_id: 0x800531E3
   test_room_room_index: 0x800531E7
   test_room_override_layer_num: 0x800531EB
+files/rels/d_a_auction.rel:
+  custom_getItemNo: 0x49F8
+  auction_event_bits: 0x4AB8
+  auction_price_order: 0x4AC0
 files/rels/d_a_npc_bs1.rel:
   set_shop_item_in_bait_bag_slot_sold_out: 0x61F0
   check_shop_item_in_bait_bag_slot_sold_out: 0x6220
   custom_getSelectItemNo_progressive: 0x624C
+files/rels/d_a_obj_homen.rel:
+  init_homen_falldown_timer: 0x36DC
+  check_homen_falldown_timeout: 0x36EC
+  create_stone_head_item: 0x3720
 files/rels/d_a_st.rel:
   stalfos_kill_lower_body_when_upper_body_light_arrowed: 0xA778
   stalfos_set_death_switch: 0xA7C0
@@ -214,8 +230,6 @@ files/rels/d_a_npc_ds1.rel:
   doc_bandam_blue_potion_slot_item_id: 0x6155
 files/rels/d_a_tsubo.rel:
   create_pot_item: 0x9964
-files/rels/d_a_obj_homen.rel:
-  create_stone_head_item: 0x36DC
 files/rels/d_a_ship.rel:
   korl_sword_hint_precheck: 0xE3A8
   set_wind_dir_to_ship_dir: 0xE3D4
@@ -223,12 +237,12 @@ files/rels/d_a_ship.rel:
   ship_stopping_deceleration: 0xE44C
   slow_down_ship_when_idle: 0xE454
   ship_idle_deceleration: 0xE484
-files/rels/d_a_npc_md.rel:
-  reset_medli_position: 0x15D78
-  medli_possible_et_spawn_positions: 0x15E50
 files/rels/d_a_npc_cb1.rel:
   reset_makar_position: 0xB214
   makar_possible_wt_spawn_positions: 0xB2EC
+files/rels/d_a_npc_md.rel:
+  reset_medli_position: 0x15D78
+  medli_possible_et_spawn_positions: 0x15E50
 files/rels/d_a_warpdm20.rel:
   check_hyrule_warp_unlocked: 0x1EBC
 files/rels/d_a_npc_os.rel:
@@ -244,3 +258,9 @@ files/rels/d_a_obj_warpt.rel:
   custom_warp_pot_env_color: 0x32D4
 files/rels/d_a_npc_ac1.rel:
   spawn_drc_shortcut_warp: 0x3818
+files/rels/d_a_obj_swlight.rel:
+  swlight_chk_arrow_hit: 0x20CC
+  swlight_keep_charged_moon: 0x20FC
+  swlight_keep_charged_sun: 0x2114
+  swlight_init_keep_charged: 0x212C
+  swlight_sun_lit_check: 0x2140

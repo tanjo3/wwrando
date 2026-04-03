@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'cosmetic_tab.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -111,6 +111,31 @@ class Ui_CosmeticTab(object):
 
         self.verticalLayout_10.addLayout(self.gridLayout_5)
 
+        self.horizontalLayout_sea_companion = QHBoxLayout()
+        self.horizontalLayout_sea_companion.setObjectName(u"horizontalLayout_sea_companion")
+        self.label_for_sea_companion = QLabel(CosmeticTab)
+        self.label_for_sea_companion.setObjectName(u"label_for_sea_companion")
+
+        self.horizontalLayout_sea_companion.addWidget(self.label_for_sea_companion)
+
+        self.sea_companion = QComboBox(CosmeticTab)
+        self.sea_companion.addItem("")
+        self.sea_companion.addItem("")
+        self.sea_companion.addItem("")
+        self.sea_companion.addItem("")
+        self.sea_companion.addItem("")
+        self.sea_companion.setObjectName(u"sea_companion")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(1)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.sea_companion.sizePolicy().hasHeightForWidth())
+        self.sea_companion.setSizePolicy(sizePolicy)
+
+        self.horizontalLayout_sea_companion.addWidget(self.sea_companion)
+
+
+        self.verticalLayout_10.addLayout(self.horizontalLayout_sea_companion)
+
         self.custom_colors_layout = QVBoxLayout()
         self.custom_colors_layout.setObjectName(u"custom_colors_layout")
 
@@ -142,11 +167,11 @@ class Ui_CosmeticTab(object):
         self.verticalLayout_11.setObjectName(u"verticalLayout_11")
         self.custom_model_preview_label = QLabel(CosmeticTab)
         self.custom_model_preview_label.setObjectName(u"custom_model_preview_label")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.custom_model_preview_label.sizePolicy().hasHeightForWidth())
-        self.custom_model_preview_label.setSizePolicy(sizePolicy)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.custom_model_preview_label.sizePolicy().hasHeightForWidth())
+        self.custom_model_preview_label.setSizePolicy(sizePolicy1)
         self.custom_model_preview_label.setMinimumSize(QSize(225, 350))
 
         self.verticalLayout_11.addWidget(self.custom_model_preview_label)
@@ -175,6 +200,13 @@ class Ui_CosmeticTab(object):
         self.disable_custom_player_items.setText(QCoreApplication.translate("CosmeticTab", u"No Custom Items", None))
         self.install_custom_model.setText(QCoreApplication.translate("CosmeticTab", u"Install a Custom Model or Model Pack", None))
         self.custom_model_comment.setText("")
+        self.label_for_sea_companion.setText(QCoreApplication.translate("CosmeticTab", u"Sea Companion", None))
+        self.sea_companion.setItemText(0, QCoreApplication.translate("CosmeticTab", u"None", None))
+        self.sea_companion.setItemText(1, QCoreApplication.translate("CosmeticTab", u"Medli", None))
+        self.sea_companion.setItemText(2, QCoreApplication.translate("CosmeticTab", u"Makar", None))
+        self.sea_companion.setItemText(3, QCoreApplication.translate("CosmeticTab", u"Both", None))
+        self.sea_companion.setItemText(4, QCoreApplication.translate("CosmeticTab", u"Random", None))
+
         self.save_custom_color_preset.setText(QCoreApplication.translate("CosmeticTab", u"Save Custom Preset", None))
         self.load_custom_color_preset.setText(QCoreApplication.translate("CosmeticTab", u"Load Custom Preset", None))
         self.custom_model_preview_label.setText("")

@@ -217,7 +217,7 @@ Outset Island - Savage Labyrinth - Floor 30:
 Outset Island - Savage Labyrinth - Floor 50:
   Need:
     Can Access Item Location "Outset Island - Savage Labyrinth - Floor 30"
-    & Can Aim Mirror Shield
+    & (Can Aim Mirror Shield | Can Use Sunlight Arrows)
     & Can Defeat ReDeads
     & Can Defeat Blue Bubbles
     & Can Defeat Dark ChuChus
@@ -1604,7 +1604,8 @@ Tower of the Gods - Stone Tablet:
   Need:
     Can Reach Tower of the Gods Second Floor
     & (
-      Can Bring East Servant of the Tower
+      Option "totg_tablet_from_start" Enabled
+      | Can Bring East Servant of the Tower
       | Can Bring West Servant of the Tower
       | Can Bring North Servant of the Tower
     )
@@ -2015,9 +2016,10 @@ Earth Temple - Transparent Chest in First Crypt:
     & (
       Can Play Command Melody
       | Mirror Shield
+      | Can Use Sunlight Arrows
     )
     # Power Bracelets necessary to move the large black pushable box and reveal a light ray.
-    # Then you can make the chest appear with either Medli or your own Mirror Shield (aiming not required).
+    # Then you can make the chest appear with either Medli or your own Mirror Shield (aiming not required), or a Light Arrow shot when sunlight arrows is enabled.
   Original item: Small Key
   Types: Dungeon
   Paths:
@@ -2025,8 +2027,8 @@ Earth Temple - Transparent Chest in First Crypt:
 Earth Temple - Chest Behind Destructible Walls:
   Need:
     Can Reach Earth Temple Right Path
-    & Mirror Shield
-    # Put Medli on the button and then use your Mirror Shield on the wall (aiming not required).
+    & (Mirror Shield | Can Use Sunlight Arrows)
+    # Put Medli on the button and then use your Mirror Shield on the wall (aiming not required), or a Light Arrow shot when sunlight arrows is enabled.
   Original item: Joy Pendant
   Types: Dungeon
   Paths:
@@ -2040,6 +2042,7 @@ Earth Temple - Chest In Three Blocks Room:
     & (
       Can Play Command Melody
       | Can Aim Mirror Shield
+      | Can Use Sunlight Arrows
     )
     # Power Bracelets necessary again to move the large black pushable box and unlock a door.
     # You need to push blocks near the Floormaster to progress in this room, which basically requires killing it.
@@ -2054,6 +2057,7 @@ Earth Temple - Chest Behind Statues:
     & (
       Can Play Command Melody
       | Can Aim Mirror Shield
+      | Can Use Sunlight Arrows
     )
   Original item: Joy Pendant
   Types: Dungeon
@@ -2191,6 +2195,7 @@ Earth Temple - End of Foggy Room With Floormasters:
     & (
       Can Play Command Melody
       | Can Aim Mirror Shield
+      | Can Use Sunlight Arrows
     )
   Original item: Small Key
   Types: Dungeon
@@ -2202,6 +2207,7 @@ Earth Temple - Kill All Floormasters in Foggy Room:
     & (
       Can Play Command Melody
       | Can Aim Mirror Shield
+      | Can Use Sunlight Arrows
     )
     & Can Defeat Floormasters
   Original item: Treasure Chart 20
@@ -2214,6 +2220,7 @@ Earth Temple - Behind Curtain Next to Hammer Button:
     & (
       Can Play Command Melody
       | Can Aim Mirror Shield
+      | Can Use Sunlight Arrows
     )
     & Fire Arrows
     & (Boomerang | Hookshot)
@@ -2270,7 +2277,7 @@ Earth Temple - Many Mirrors Room Left Chest:
     Can Reach Earth Temple Many Mirrors Room
     & Power Bracelets
     & Can Play Command Melody
-    & Can Aim Mirror Shield
+    & (Can Aim Mirror Shield | Can Use Sunlight Arrows)
   Original item: Joy Pendant
   Types: Dungeon
   Paths:
@@ -2288,7 +2295,7 @@ Earth Temple - Big Key Chest:
     Can Reach Earth Temple Many Mirrors Room
     & Power Bracelets
     & Can Play Command Melody
-    & Can Aim Mirror Shield
+    & (Can Aim Mirror Shield | Can Use Sunlight Arrows)
     & (
       Can Defeat Blue Bubbles
       | (Hero's Bow & Option "enabled_tricks" Contains "ET - Defeat Inactive Blue Bubbles with Bow")
@@ -3059,7 +3066,7 @@ Angular Isles - Cave:
     # Mirror Shield is to shine light on the chest and make it not be transparent.
     # Either Deku Leaf or Hookshot are needed to reach the chest in the cave.
     Can Access Angular Isles Secret Cave
-    & Can Aim Mirror Shield
+    & (Can Aim Mirror Shield | Can Use Sunlight Arrows)
     & (Can Fly With Deku Leaf Indoors | Hookshot)
   Original item: Silver Rupee
   Types: Puzzle Secret Cave

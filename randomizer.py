@@ -32,7 +32,7 @@ from wwlib import stage_searcher
 from asm import disassemble
 from asm import elf2rel
 
-from options.wwrando_options import Options, SwordMode
+from options.wwrando_options import Options, SwordMode, SeaCompanion
 from wwr_ui.inventory import REGULAR_ITEMS, PROGRESSIVE_ITEMS, BOSS_SOUL_ITEMS
 from packedbits import PackedBitsReader, PackedBitsWriter
 import base64
@@ -318,13 +318,15 @@ class WWRandomizer:
         tweaks.make_sail_behave_like_swift_sail(self)
       if self.options.reveal_full_sea_chart:
         patcher.apply_patch(self, "reveal_sea_chart")
-      if self.options.add_shortcut_warps_between_dungeons:
-        tweaks.add_inter_dungeon_warp_pots(self)
       if self.options.invert_camera_x_axis:
         patcher.apply_patch(self, "invert_camera_x_axis")
       if self.options.invert_sea_compass_x_axis:
         patcher.apply_patch(self, "invert_sea_compass_x_axis")
       tweaks.update_skip_rematch_bosses_game_variable(self)
+      tweaks.set_should_skip_drc_platform_cutscenes(self)
+      tweaks.set_should_skip_triforce_cutscene(self)
+      tweaks.set_should_shorten_mail_minigame(self)
+      tweaks.set_should_set_totg_servants_done(self)
       tweaks.update_sword_mode_game_variable(self)
       tweaks.update_blue_chuchu_shuffle_game_variable(self)
       if self.options.sword_mode == SwordMode.SWORDLESS:
@@ -350,6 +352,15 @@ class WWRandomizer:
         tweaks.set_default_targeting_mode_to_switch(self)
       if self.options.always_double_magic:
         tweaks.set_always_double_magic(self)
+      
+      sea_companion = self.options.sea_companion
+      if sea_companion == SeaCompanion.RANDOM:
+        rng = self.get_new_rng()
+        sea_companion = rng.choice([SeaCompanion.MEDLI, SeaCompanion.MAKAR, SeaCompanion.BOTH])
+      if sea_companion in (SeaCompanion.MEDLI, SeaCompanion.BOTH):
+        patcher.apply_patch(self, "medli_ship_companion")
+      if sea_companion in (SeaCompanion.MAKAR, SeaCompanion.BOTH):
+        patcher.apply_patch(self, "makar_ship_companion")
       
       if self.map_select:
         patcher.apply_patch(self, "map_select")
@@ -414,6 +425,8 @@ class WWRandomizer:
     patcher.apply_patch(self, "flexible_item_locations")
     patcher.apply_patch(self, "fix_vanilla_bugs")
     patcher.apply_patch(self, "misc_rando_features")
+    if self.options.sunlight_arrows:
+      patcher.apply_patch(self, "sunlight_arrows")
     tweaks.add_custom_actor_rels(self)
     tweaks.skip_wakeup_intro_and_start_at_dock(self)
     tweaks.start_ship_at_outset(self)
@@ -430,7 +443,6 @@ class WWRandomizer:
     tweaks.modify_title_screen_logo(self)
     tweaks.update_game_name_icon_and_banners(self)
     tweaks.allow_dungeon_items_to_appear_anywhere(self)
-    #tweaks.remove_ballad_of_gales_warp_in_cutscene(self)
     tweaks.fix_shop_item_y_offsets(self)
     tweaks.shorten_zephos_event(self)
     tweaks.update_korl_dialogue(self)
@@ -480,16 +492,37 @@ class WWRandomizer:
       tweaks.make_rupeesanity_rupees_flexible(self)
     tweaks.prevent_fairy_island_softlocks(self)
     tweaks.give_fairy_fountains_distinct_colors(self)
-    
+
+    tweaks.apply_mila_speedup(self) # handles options in function since some logic is shared
+    if self.options.remove_ballad_of_gales_warp_in_cutscene:
+      tweaks.remove_ballad_of_gales_warp_in_cutscene(self)
+    if self.options.add_drops:
+      tweaks.modify_and_add_drops(self)
+    if self.options.speedup_lenzos_assistant:
+      tweaks.speedup_lenzos_assistant(self)
+    if self.options.kamo_any_moon_phase:
+      tweaks.force_full_moon_photos(self)
+    if self.options.skip_drc_plat_cs:
+      patcher.apply_patch(self, "remove_drc_magma_cutscene")
+    tweaks.set_wallet_fill_behavior(self)
+    if self.options.speedup_tingle_jail:
+      tweaks.speed_up_tingle_jail_cutscene(self)
+    if self.options.quick_gohma:
+      patcher.apply_patch(self, "quick_gohma")
+
     customizer.replace_link_model(self)
     tweaks.change_starting_clothes(self)
     tweaks.check_hide_ship_sail(self)
     customizer.change_player_custom_colors(self)
   
   def apply_necessary_post_randomization_tweaks(self):
+    if self.options.add_shortcut_warps_between_dungeons:
+      tweaks.add_inter_dungeon_warp_pots(self)
     if self.randomize_items:
       tweaks.update_shop_item_descriptions(self)
       tweaks.update_auction_item_names(self)
+      if self.options.fix_auction:
+        tweaks.fix_auction(self)
       tweaks.update_battlesquid_item_names(self)
       tweaks.update_item_names_in_letter_advertising_rock_spire_shop(self)
     tweaks.add_shortcut_warps_into_dungeons(self)
@@ -1024,17 +1057,23 @@ class WWRandomizer:
     return rng.sample(seq, 1, counts=element_weights)[0]
   
   def get_seed_hash(self):
+    return self.compute_seed_hash(self.permalink, self.options.do_not_generate_spoiler_log)
+
+  @staticmethod
+  def compute_seed_hash(permalink, do_not_generate_spoiler_log):
+    # Static so the UI can call this without a WWRandomizer instance (e.g. to display
+    # the seed hash in the permalink field before randomization has started).
     # Generate some text that will be shown on the name entry screen which has two random character names that vary based on the permalink (so the seed and settings both change it).
     # This is so two players intending to play the same seed can verify if they really are on the same seed or not.
 
-    if not self.permalink:
+    if not permalink:
       return None
 
-    if not self.options.do_not_generate_spoiler_log:
-      integer_seed = self.convert_string_to_integer_md5(self.permalink)
+    if not do_not_generate_spoiler_log:
+      integer_seed = int(hashlib.md5(permalink.encode('utf-8')).hexdigest(), 16)
     else:
       # When no spoiler log is generated, the seed key also affects randomization, not just the data in the permalink.
-      integer_seed = self.convert_string_to_integer_md5(self.permalink + SEED_KEY)
+      integer_seed = int(hashlib.md5((permalink + SEED_KEY).encode('utf-8')).hexdigest(), 16)
     temp_rng = Random()
     temp_rng.seed(integer_seed)
 
