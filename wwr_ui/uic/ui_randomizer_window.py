@@ -991,6 +991,11 @@ class Ui_MainWindow(object):
 
         self.gridLayout_6.addWidget(self.required_bosses, 0, 0, 1, 1)
 
+        self.prioritize_required_bosses = QCheckBox(self.required_bosses_groupbox)
+        self.prioritize_required_bosses.setObjectName(u"prioritize_required_bosses")
+
+        self.gridLayout_6.addWidget(self.prioritize_required_bosses, 0, 2, 1, 1)
+
         self.widget_3 = QWidget(self.required_bosses_groupbox)
         self.widget_3.setObjectName(u"widget_3")
 
@@ -1353,7 +1358,8 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.include_location, self.exclude_location)
         QWidget.setTabOrder(self.exclude_location, self.required_bosses)
         QWidget.setTabOrder(self.required_bosses, self.num_required_bosses)
-        QWidget.setTabOrder(self.num_required_bosses, self.hero_mode)
+        QWidget.setTabOrder(self.num_required_bosses, self.prioritize_required_bosses)
+        QWidget.setTabOrder(self.prioritize_required_bosses, self.hero_mode)
         QWidget.setTabOrder(self.hero_mode, self.filter_available_tricks)
         QWidget.setTabOrder(self.filter_available_tricks, self.available_tricks)
         QWidget.setTabOrder(self.available_tricks, self.filter_enabled_tricks)
@@ -1515,6 +1521,7 @@ class Ui_MainWindow(object):
         self.required_bosses_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Required Bosses", None))
         self.label_for_num_required_bosses.setText(QCoreApplication.translate("MainWindow", u"Number of Required Bosses", None))
         self.required_bosses.setText(QCoreApplication.translate("MainWindow", u"Required Bosses Mode", None))
+        self.prioritize_required_bosses.setText(QCoreApplication.translate("MainWindow", u"Prioritize Required Bosses", None))
         self.difficulty_options_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Difficulty Options", None))
         self.hero_mode.setText(QCoreApplication.translate("MainWindow", u"Hero Mode", None))
         self.hint_options_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Hint Options", None))
