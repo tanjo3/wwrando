@@ -1,6 +1,7 @@
 
 g_dComIfG_gameInfo = 0x803c4c08;
 init__10dSv_save_cFv = 0x8005d860;
+setLoadError__12daItemBase_cFv = 0x80068738;
 
 execItemGet__FUc = 0x800c2dfc;
 item_func_sword__Fv = 0x800c3ad4;
@@ -81,3 +82,4 @@ mPadButton__10JUTGamePad = 0x803ed848;
 isItem__21dSv_player_get_item_cFiUc = 0x8005955c;
 isEnableEnlargementScroll__6dMap_cFv = 0x8004826c;
 seStart__11JAIZelBasicFUlP3VecUlScffffUc = 0x802a6720;
+set__13dPa_control_cFUcUsPC4cXyzPC5csXyzPC4cXyzUcP18dPa_levelEcallBackScPC8_GXColorPC8_GXColorPC4cXyz = 0x8007d1dc;

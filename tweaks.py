@@ -2687,6 +2687,140 @@ def make_dungeon_joy_pendant_locations_flexible(self: WWRandomizer):
   stone_head.destroyed_switch = 0xFF
   stone_head.save_changes()
 
+def make_rupeesanity_rupees_flexible(self: WWRandomizer):
+  # Modify the parameters of all rupeesanity rupees so that the rupeesanity ASM patch can manage them.
+  # We mark each rupee with a sentinel value (item_action = 0x3F) so the ASM hooks can identify them,
+  # disable the vanilla per-room flag check (item_pickup_flag = 0x7F) since some rooms have more rupees
+  # than the 16 available vanilla flags, and store a custom flag index in enable_spawn_switch for the
+  # ASM patch to use with its own flag storage in mReserve.
+  
+  # Some items need the hold-above-head demo suppressed.
+  # The ASM patch checks a bitmask to identify these items and forces silent collection instead.
+  force_silent_pickup_actors = {
+    "A_mori/Room0.arc": {
+      "Actor060",
+    },
+    "M_NewD2/Room14.arc": {
+      "Actor00F",
+      "Actor010",
+      "Actor011",
+      "Actor012",
+      "Actor013",
+      "Actor014",
+      "Actor015",
+      "Actor016",
+      "Actor017",
+    },
+    "MiniHyo/Room0.arc": {
+      "Actor011",
+      "Actor012",
+    },
+    "Omasao/Room0.arc": {
+      "Actor004",
+    },
+    "Pnezumi/Room0.arc": {
+      "Actor002",
+      "Actor003",
+      "Actor004",
+      "Actor024",
+    },
+    "sea/Room33.arc": {
+      "Actor04A",
+      "Actor04B",
+      "Actor04C",
+      "Actor04D",
+      "Actor04E",
+      "Actor04F",
+      "Actor050",
+      "Actor051",
+      "Actor0B7",
+    },
+    "sea/Room44.arc": {
+      "Actor097",
+    },
+  }
+  
+  # Items that should keep their vanilla activation switch instead of being set to 0xFF.
+  # These items require a specific condition before they can be collected.
+  keep_activation_switch_actors = {
+    "sea/Room40.arc": {
+      "Actor00B",
+    },
+  }
+  
+  # Derive table sizes from the flag data rather than hardcoding them.
+  all_flag_indices = [
+    flag_index
+    for actors in self.rupeesanity_flags.values()
+    for flag_index in actors.values()
+  ]
+  num_flags = max(all_flag_indices) + 1
+  assert num_flags == len(set(all_flag_indices)), "Rupeesanity flag indices are not unique"
+  assert min(all_flag_indices) == 0, "Rupeesanity flag indices must start at 0"
+  
+  num_bitmask_bytes = (num_flags + 7) // 8
+  silent_pickup_bitmask = [0] * num_bitmask_bytes
+  
+  # Build set of actors that correspond to rupee locations still in the randomization pool.
+  # Only these actors get patched; excluded locations keep vanilla behavior.
+  included_actors: set[tuple[str, str]] = set()
+  for loc_name, loc in self.logic.item_locations.items():
+    if "Rupee" not in loc["Types"]:
+      continue
+    if loc_name not in self.logic.done_item_locations:
+      continue
+    for path in loc.get("Paths", []):
+      arc_path_short, actor_key = path.rsplit("/", 1)
+      included_actors.add((arc_path_short, actor_key))
+  
+  # Table of original spawn switch values, indexed by custom flag index.
+  # The ASM patch reads from this table to restore the correct mSpawnSwitchNo at runtime,
+  # since enable_spawn_switch is repurposed for the flag index.
+  spawn_switch_table = [0xFF] * num_flags
+  
+  for arc_path_short, actors in self.rupeesanity_flags.items():
+    arc_path = "files/res/Stage/" + arc_path_short
+    dzx = self.get_arc(arc_path).get_file("room.dzr", DZx)
+    
+    for actor_key, flag_index in actors.items():
+      if (arc_path_short, actor_key) not in included_actors:
+        continue
+      
+      actor_index = int(actor_key[5:], 16)
+      
+      actr = dzx.entries_by_type_and_layer(ACTR, layer=DZxLayer.Default)[actor_index]
+      
+      # Save the original spawn switch value before overwriting it with the flag index.
+      spawn_switch_table[flag_index] = actr.enable_spawn_switch
+      
+      actr.item_action = 0x3F
+      actr.item_pickup_flag = 0x7F
+      actr.enable_spawn_switch = flag_index & 0xFF
+      
+      if actr.behavior_type == 0:
+        # Only change behavior_type for ground-level rupees (0) to prevent them from fading out.
+        # Rupees with behavior_type 1 need to keep their original value so they continue to float in place.
+        actr.behavior_type = 3
+      
+      # Set enable_activation_switch to 0xFF to disable the collision switch check, which would
+      # otherwise prevent the player from picking up the item.
+      # However, some items intentionally keep their vanilla activation switch.
+      if actor_key not in keep_activation_switch_actors.get(arc_path_short, set()):
+        actr.enable_activation_switch = 0xFF
+      
+      actr.save_changes()
+      
+      if actor_key in force_silent_pickup_actors.get(arc_path_short, set()):
+        silent_pickup_bitmask[flag_index // 8] |= 1 << (flag_index % 8)
+  
+  bitmask_addr = self.main_custom_symbols["rupeesanity_silent_pickup_bitmask"]
+  for i, byte_val in enumerate(silent_pickup_bitmask):
+    self.dol.write_data(fs.write_u8, bitmask_addr + i, byte_val)
+  
+  table_addr = self.main_custom_symbols["rupeesanity_spawn_switch_table"]
+  for i, byte_val in enumerate(spawn_switch_table):
+    self.dol.write_data(fs.write_u8, table_addr + i, byte_val)
+
 def prevent_fairy_island_softlocks(self: WWRandomizer):
   # If the player somehow managed to get inside Western Fairy Island's Fairy Fountain without
   # properly solving the puzzle to open the entrance up (e.g. with glitches), then the ring of

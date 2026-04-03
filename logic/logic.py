@@ -69,6 +69,22 @@ class Logic:
     for location_name in self.item_locations:
       self.done_item_locations[location_name] = None
     
+    # Remove non-progress rupee locations from the pool entirely.
+    # They keep their original item/behavior and won't appear in the spoiler log.
+    locations_to_remove = []
+    for location_name in self.remaining_item_locations:
+      types = self.item_locations[location_name]["Types"]
+      if "Rupee" in types:
+        if "Dungeon" in types and not self.options.progression_rupee_dungeon:
+          locations_to_remove.append(location_name)
+        elif "Puzzle Secret Cave" in types and not self.options.progression_rupee_overworld:
+          locations_to_remove.append(location_name)
+        elif "Dungeon" not in types and "Puzzle Secret Cave" not in types and not self.options.progression_rupee_overworld:
+          locations_to_remove.append(location_name)
+    for location_name in locations_to_remove:
+      self.remaining_item_locations.remove(location_name)
+      del self.done_item_locations[location_name]
+    
     self.rock_spire_shop_ship_locations = []
     for location_name in self.item_locations:
       if location_name.startswith("Rock Spire Isle - Beedle's Special Shop Ship - "):
@@ -80,6 +96,13 @@ class Logic:
     self.all_nonprogress_items = NONPROGRESS_ITEMS.copy()
     self.all_fixed_consumable_items = CONSUMABLE_ITEMS.copy()
     self.duplicatable_consumable_items = DUPLICATABLE_CONSUMABLE_ITEMS.copy()
+    
+    # Add vanilla rupee items for progression rupeesanity locations to the consumable pool.
+    for location_name in self.remaining_item_locations:
+      types = self.item_locations[location_name]["Types"]
+      if "Rupee" in types:
+        vanilla_item = self.item_locations[location_name]["Original item"]
+        self.all_fixed_consumable_items.append(vanilla_item)
     
     self.triforce_chart_names = []
     self.treasure_chart_names = []
@@ -605,6 +628,13 @@ class Logic:
         continue
       if "Dungeon Secret" in types and not options.progression_dungeon_secrets:
         continue
+      if "Rupee" in types:
+        if "Dungeon" in types and not options.progression_rupee_dungeon:
+          continue
+        if "Puzzle Secret Cave" in types and not options.progression_rupee_overworld:
+          continue
+        if "Dungeon" not in types and "Puzzle Secret Cave" not in types and not options.progression_rupee_overworld:
+          continue
       
       # Note: The Triforce/Treasure Chart sunken treasures are handled differently from other types.
       # During randomization they are handled by not considering the charts themselves to be progress items.

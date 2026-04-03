@@ -86,14 +86,26 @@ ALL_TRICKS: list[Trick] = [
     description="Starting from the center of the hub room, use the hookshot on one of the targets above you to gain height, then take out the Deku Leaf when you hit the target with precise timing and float over to the upper level.",
   ),
   Trick(
-    name="Outset Island - Circumvent Trees with Deku Leaf",
+    name="Circumvent Outset Island Trees with Deku Leaf",
     description="You can circumvent the trees entirely by jumping off the edge of the path near the trees and flying northeast to land on the elevated cliff on the side of the island.<br>" \
     "Then follow the path on top of the cliff to get behind the trees.",
   ),
   Trick(
-    name="Outset Island - Use Big Pig to Cut Down Trees",
+    name="Use Big Pig to Cut Down Outset Island Trees",
     description="To do this, first carry the pig to the trees. Then pick it up and throw it against the wall several times. For the tenth throw, instead of throwing it against the wall, throw it through the trees. " \
     "Being thrown ten times will enrage it, so it will start rushing at you, cutting the trees down in the process.",
+  ),
+  Trick(
+    name="Jump Slash to Water Pool Roof Near Link's House",
+    description="You can get onto the roof of the water pool near Link's house from on top of the wooden board using a jump slash.",
+  ),
+  Trick(
+    name="Grab Pawprint Isle Rupees with Boomerang",
+    description="Grabbing the rupees around the tree with the Boomerang from the boat requires some precision with where you throw from.",
+  ),
+  Trick(
+    name="Grab Shark Island Rupees with Boomerang",
+    description="Getting all upper-level rupees with the Boomerang from the boat requires precision, but it is possible.",
   ),
   Trick(
     name="Reach Pillar Outside Forest Haven without Grappling Hook",
