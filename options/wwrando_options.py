@@ -140,13 +140,13 @@ class Options(BaseOptions):
   )
   progression_rupee_dungeon: bool = option(
     default=False,
-    description="This controls whether rupees inside dungeons can contain progress items.<br>"
-      "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
+    description="This controls whether rupees inside dungeons can contain progress items. These rupees will have a sparkle effect to clearly identify them.<br>"
+      "If this is not checked, the rupees will not be randomized and will not have the sparkle effect.",
   )
   progression_rupee_overworld: bool = option(
     default=False,
-    description="This controls whether rupees in the overworld can contain progress items.<br>"
-      "<u>If this is not checked, they will still be randomized</u>, but will only contain optional items you don't need to beat the game.",
+    description="This controls whether rupees in the overworld can contain progress items. These rupees will have a sparkle effect to clearly identify them.<br>"
+      "If this is not checked, the rupees will not be randomized and will not have the sparkle effect.",
   )
   #endregion
   
