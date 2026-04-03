@@ -370,9 +370,10 @@ class ItemRandomizer(BaseRandomizer):
       # Remove duplicates from the list so items like swords and bows aren't so likely to show up early.
       # We exclude dungeon items from this so that small keys can still be front-loaded when shuffled anywhere.
       # With small keys de-duplicated too, dungeons can be inaccessible until late in the seed (especially when nested).
+      # We also exclude Blue Chu Jelly so that enough copies are placed early for the Doc Bandam trade to be relevant.
       unique_possible_items = []
       for item_name in possible_items:
-        if self.logic.is_dungeon_item(item_name) or item_name not in unique_possible_items:
+        if self.logic.is_dungeon_item(item_name) or item_name == "Blue Chu Jelly" or item_name not in unique_possible_items:
           unique_possible_items.append(item_name)
       possible_items = unique_possible_items
       

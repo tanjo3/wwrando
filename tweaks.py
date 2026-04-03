@@ -1393,6 +1393,13 @@ def disable_invisible_walls(self: WWRandomizer):
   invisible_wall.disable_spawn_switch = 0xFF
   invisible_wall.save_changes()
 
+def update_blue_chuchu_shuffle_game_variable(self: WWRandomizer):
+  blue_chuchu_shuffle_address = self.main_custom_symbols["blue_chuchu_shuffle_enabled"]
+  if self.options.progression_blue_chu_jellies:
+    self.dol.write_data(fs.write_u8, blue_chuchu_shuffle_address, 1)
+  else:
+    self.dol.write_data(fs.write_u8, blue_chuchu_shuffle_address, 0)
+
 def update_skip_rematch_bosses_game_variable(self: WWRandomizer):
   skip_rematch_bosses_address = self.main_custom_symbols["skip_rematch_bosses"]
   if self.options.skip_rematch_bosses:

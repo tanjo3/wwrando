@@ -88,3 +88,5 @@ Magic Armor:
   a protective crystal
 Boss Soul:
   the essence of a great beast
+Blue Chu Jelly:
+  a blob of blue jelly

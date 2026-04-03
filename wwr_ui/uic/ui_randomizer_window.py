@@ -240,6 +240,11 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.progression_rupee_overworld, 7, 1, 1, 1)
 
+        self.progression_blue_chu_jellies = QCheckBox(self.progression_locations_groupbox)
+        self.progression_blue_chu_jellies.setObjectName(u"progression_blue_chu_jellies")
+
+        self.gridLayout_2.addWidget(self.progression_blue_chu_jellies, 7, 2, 1, 1)
+
 
         self.verticalLayout_3.addWidget(self.progression_locations_groupbox)
 
@@ -1374,7 +1379,8 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.progression_triforce_charts, self.progression_treasure_charts)
         QWidget.setTabOrder(self.progression_treasure_charts, self.progression_rupee_dungeon)
         QWidget.setTabOrder(self.progression_rupee_dungeon, self.progression_rupee_overworld)
-        QWidget.setTabOrder(self.progression_rupee_overworld, self.sword_mode)
+        QWidget.setTabOrder(self.progression_rupee_overworld, self.progression_blue_chu_jellies)
+        QWidget.setTabOrder(self.progression_blue_chu_jellies, self.sword_mode)
         QWidget.setTabOrder(self.sword_mode, self.num_starting_triforce_shards)
         QWidget.setTabOrder(self.num_starting_triforce_shards, self.shuffle_small_keys)
         QWidget.setTabOrder(self.shuffle_small_keys, self.shuffle_big_keys)
@@ -1498,6 +1504,7 @@ class Ui_MainWindow(object):
         self.progression_platforms_rafts.setText(QCoreApplication.translate("MainWindow", u"Lookout Platforms and Rafts", None))
         self.progression_rupee_dungeon.setText(QCoreApplication.translate("MainWindow", u"Dungeon Rupees", None))
         self.progression_rupee_overworld.setText(QCoreApplication.translate("MainWindow", u"Overworld Rupees", None))
+        self.progression_blue_chu_jellies.setText(QCoreApplication.translate("MainWindow", u"Blue Chu Jellies", None))
         self.item_randomizer_modes_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Item Randomizer Modes", None))
         self.label_for_num_starting_triforce_shards.setText(QCoreApplication.translate("MainWindow", u"Triforce Shards to Start With", None))
         self.label_for_shuffle_maps_and_compasses.setText(QCoreApplication.translate("MainWindow", u"Dungeon Maps and Compasses", None))

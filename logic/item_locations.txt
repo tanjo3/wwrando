@@ -1769,6 +1769,12 @@ Mother and Child Isles - Inside Mother Isle:
   Paths:
     - main.dol@8035BD3C
     - sea/Room9.arc/Chest000
+Mother and Child Isles - Blue ChuChu Drop:
+  Need: Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_05
 
 Fire Mountain - Cave - Chest:
   Need:
@@ -3006,6 +3012,12 @@ Spectacle Island - Barrel Shooting - Second Prize:
 #  Original item: Orange Rupee
 #  Paths:
 #    - rels/d_a_npc_kg2.rel@210F
+Spectacle Island - Blue ChuChu Drop:
+  Need: Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_06
 
 Needle Rock Isle - Chest:
   Need: Bait Bag & Can Buy Hyoi Pears
@@ -3029,6 +3041,12 @@ Needle Rock Isle - Golden Gunboat:
   Types: Gunboat
   Paths:
     - sea/Room29.arc/ScalableObject00D
+Needle Rock Isle - Blue ChuChu Drop:
+  Need: Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_0D
 
 Angular Isles - Peak:
   Need: Nothing
@@ -3047,6 +3065,12 @@ Angular Isles - Cave:
   Types: Puzzle Secret Cave
   Paths:
     - SubD43/Stage.arc/Chest000
+Angular Isles - Blue ChuChu Drop:
+  Need: Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_14
 
 Boating Course - Raft:
   Need: Nothing
@@ -3068,6 +3092,14 @@ Boating Course - Cave:
   Types: Puzzle Secret Cave, Combat Secret Cave
   Paths:
     - SubD71/Stage.arc/Chest000
+Boating Course - Blue ChuChu Drop:
+  Need:
+    Can Access Secret Cave Entrance on Boating Course
+    & Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_15
 
 Stone Watcher Island - Cave:
   Need:
@@ -3093,6 +3125,12 @@ Stone Watcher Island - Lookout Platform - Destroy the Cannons:
   Types: Platform
   Paths:
     - sea/Room31.arc/Chest000
+Stone Watcher Island - Blue ChuChu Drop:
+  Need: Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_0E
 
 Islet of Steel - Interior:
   Need:
@@ -3130,6 +3168,14 @@ Overlook Island - Cave:
   Types: Combat Secret Cave
   Paths:
     - TF_02/Stage.arc/Chest000
+Overlook Island - Blue ChuChu Drop:
+  Need:
+    Can Access Secret Cave Entrance on Overlook Island
+    & Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_04
 
 Bird's Peak Rock - Cave:
   Need:
@@ -3140,6 +3186,12 @@ Bird's Peak Rock - Cave:
   Types: Puzzle Secret Cave
   Paths:
     - TF_03/Stage.arc/Chest000
+Bird's Peak Rock - Blue ChuChu Drop:
+  Need: Grappling Hook & Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_0F
 
 Pawprint Isle - Rupee Hidden On Small ChuChu Statue 1:
   Need: Nothing
@@ -3239,6 +3291,12 @@ Pawprint Isle - Lookout Platform - Defeat the Enemies:
   Types: Platform
   Paths:
     - sea/Room12.arc/Chest000
+Pawprint Isle - Blue ChuChu Drop:
+  Need: Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_07
 
 Thorned Fairy Island - Great Fairy:
   Need: Can Access Thorned Fairy Fountain
@@ -3259,6 +3317,12 @@ Thorned Fairy Island - Southwestern Lookout Platform - Defeat the Enemies:
   Types: Platform
   Paths:
     - sea/Room28.arc/Chest001
+Thorned Fairy Island - Blue ChuChu Drop:
+  Need: Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_0C
 
 Eastern Fairy Island - Great Fairy:
   Need: Can Access Eastern Fairy Fountain
@@ -3273,6 +3337,12 @@ Eastern Fairy Island - Lookout Platform - Defeat the Cannons and Enemies:
   Types: Platform
   Paths:
     - sea/Room19.arc/Chest000
+Eastern Fairy Island - Blue ChuChu Drop:
+  Need: Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_0B
 
 Western Fairy Island - Great Fairy:
   Need: Can Access Western Fairy Fountain
@@ -3286,6 +3356,12 @@ Western Fairy Island - Lookout Platform:
   Types: Platform
   Paths:
     - sea/Room15.arc/Chest000
+Western Fairy Island - Blue ChuChu Drop:
+  Need: Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_08
 
 Southern Fairy Island - Great Fairy:
   Need: Can Access Southern Fairy Fountain
@@ -3309,6 +3385,12 @@ Southern Fairy Island - Lookout Platform - Destroy the Southeast Cannons:
   Types: Platform
   Paths:
     - sea/Room39.arc/Chest001
+Southern Fairy Island - Blue ChuChu Drop:
+  Need: Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_11
 
 Northern Fairy Island - Great Fairy:
   Need: Can Access Northern Fairy Fountain
@@ -3323,6 +3405,12 @@ Northern Fairy Island - Submarine:
   Types: Submarine
   Paths:
     - Abship/Room4.arc/Chest000
+Northern Fairy Island - Blue ChuChu Drop:
+  Need: Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_01
 
 #Tingle Island - Ankle - Reward for 1 Tingle Statue:
 #  Need: 
@@ -3413,6 +3501,12 @@ Tingle Island - Big Octo:
   Types: Big Octo
   Paths:
     - sea/Room17.arc/ScalableObject001
+Tingle Island - Blue ChuChu Drop:
+  Need: Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_0A
 
 Diamond Steppe Island - Warp Maze Cave - First Chest:
   Need: Can Access Diamond Steppe Island Warp Maze Cave
@@ -3434,6 +3528,14 @@ Diamond Steppe Island - Big Octo:
   Types: Big Octo
   Paths:
     - sea/Room36.arc/ScalableObject001
+Diamond Steppe Island - Blue ChuChu Drop:
+  Need:
+    Can Access Secret Cave Entrance on Diamond Steppe Island
+    & Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_10
 
 Bomb Island - Cave:
   Need:
@@ -3519,6 +3621,14 @@ Rock Spire Isle - Southeast Gunboat:
   Types: Gunboat
   Paths:
     - sea/Room16.arc/ScalableObject000
+Rock Spire Isle - Blue ChuChu Drop:
+  Need:
+    Can Access Secret Cave Entrance on Rock Spire Isle
+    & Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_09
 
 Shark Island - Rupee in Trees 1:
   Need:
@@ -3634,6 +3744,15 @@ Shark Island - Cave:
   Types: Combat Secret Cave
   Paths:
     - ITest63/Stage.arc/Chest000
+Shark Island - Blue ChuChu Drop:
+  Need:
+    Can Access Secret Cave Entrance on Shark Island
+    & Can Fly With Deku Leaf Outdoors
+    & Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_16
 
 Cliff Plateau Isles - Cave:
   Need:
@@ -3709,6 +3828,14 @@ Cliff Plateau Isles - Lookout Platform:
   Types: Platform
   Paths:
     - sea/Room42.arc/Chest001
+Cliff Plateau Isles - Blue ChuChu Drop:
+  Need:
+    Can Access Cliff Plateau Isles Inner Cave
+    & Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_12
 
 Crescent Moon Island - Chest:
   Need: Nothing
@@ -3723,6 +3850,18 @@ Crescent Moon Island - Submarine:
   Types: Submarine
   Paths:
     - Abship/Room7.arc/Chest000
+Crescent Moon Island - First Blue ChuChu Drop:
+  Need: Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_02
+Crescent Moon Island - Second Blue ChuChu Drop:
+  Need: Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_03
 
 Horseshoe Island - Play Golf:
   Need:
@@ -3754,6 +3893,12 @@ Horseshoe Island - Southeastern Lookout Platform:
   Types: Platform
   Paths:
     - sea/Room43.arc/Chest002
+Horseshoe Island - Blue ChuChu Drop:
+  Need: Can Fan With Deku Leaf & Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_13
 
 Flight Control Platform - Bird-Man Contest - First Prize:
   Need:
@@ -3795,6 +3940,12 @@ Star Island - Lookout Platform:
   Types: Platform
   Paths:
     - sea/Room2.arc/Chest000
+Star Island - Blue ChuChu Drop:
+  Need: Can Move Boulders & Can Get Blue Chu Jelly from Blue ChuChus
+  Original item: Blue Chu Jelly
+  Types: Blue ChuChu
+  Paths:
+    - CustomSymbol:blue_chuchu_item_id_17
 
 Star Belt Archipelago - Lookout Platform:
   Need: Nothing

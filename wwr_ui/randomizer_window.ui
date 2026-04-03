@@ -330,6 +330,13 @@
                  </property>
                 </widget>
                </item>
+               <item row="7" column="2">
+                <widget class="QCheckBox" name="progression_blue_chu_jellies">
+                 <property name="text">
+                  <string>Blue Chu Jellies</string>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </widget>
             </item>
@@ -1973,6 +1980,7 @@
   <tabstop>progression_treasure_charts</tabstop>
   <tabstop>progression_rupee_dungeon</tabstop>
   <tabstop>progression_rupee_overworld</tabstop>
+  <tabstop>progression_blue_chu_jellies</tabstop>
   <tabstop>sword_mode</tabstop>
   <tabstop>num_starting_triforce_shards</tabstop>
   <tabstop>shuffle_small_keys</tabstop>

@@ -164,6 +164,11 @@ class Options(BaseOptions):
     description="This controls whether rupees in the overworld can contain progress items. These rupees will have a sparkle effect to clearly identify them.<br>"
       "If this is not checked, the rupees will not be randomized and will not have the sparkle effect.",
   )
+  progression_blue_chu_jellies: bool = option(
+    default=False,
+    description="If this is checked, each Blue ChuChu will drop a randomized item instead of Blue Chu Jelly, and 23 Blue Chu Jellies will be added to the item pool.<br>"
+      "If this is not checked, Blue ChuChus will drop Blue Chu Jelly as in vanilla, and Blue Chu Jellies will not be added to the item pool.",
+  )
   
   progression_locations: list[str] = option(
     default_factory=lambda: [],

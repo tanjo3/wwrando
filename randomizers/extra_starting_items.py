@@ -69,11 +69,9 @@ class ExtraStartingItemsRandomizer(BaseRandomizer):
     self.add_starting_dungeon_items()
     
     # Add desired starting spoils to the player's inventory.
-    # This currently has no logical implications, since apart from Blue
-    # Chu Jelly, the player could sell all the spoils they start with
-    # and still need logical access to spoils.
-    # The logic behind starting Blue Chu Jelly could be considered in
-    # the future.
+    # Most spoils have no logical implications since the player could sell them.
+    # Blue Chu Jelly is the exception: it can't be sold, so starting copies
+    # count toward the Blue Chu Jelly x15 requirement when that shuffle is enabled.
     self.starting_spoils.extend(["Joy Pendant"]     * self.options.starting_joy_pendant)
     self.starting_spoils.extend(["Skull Necklace"]  * self.options.starting_skull_necklace)
     self.starting_spoils.extend(["Boko Baba Seed"]  * self.options.starting_boko_baba_seed)
@@ -82,6 +80,10 @@ class ExtraStartingItemsRandomizer(BaseRandomizer):
     self.starting_spoils.extend(["Red Chu Jelly"]   * self.options.starting_red_chu_jelly)
     self.starting_spoils.extend(["Green Chu Jelly"] * self.options.starting_green_chu_jelly)
     self.starting_spoils.extend(["Blue Chu Jelly"]  * self.options.starting_blue_chu_jelly)
+    
+    if self.options.progression_blue_chu_jellies:
+      for _ in range(self.options.starting_blue_chu_jelly):
+        self.logic.add_owned_item("Blue Chu Jelly")
     
     # Then, handle random starting items.
     if self.options.num_extra_starting_items == 0:
