@@ -1201,10 +1201,10 @@ class Ui_MainWindow(object):
 
         self.layout_logic_tweaks.addWidget(self.always_double_magic, 0, 0, 1, 1)
 
-        self.widget_11 = QWidget(self.logic_tweaks_groupbox)
-        self.widget_11.setObjectName(u"widget_11")
+        self.open_drc = QCheckBox(self.logic_tweaks_groupbox)
+        self.open_drc.setObjectName(u"open_drc")
 
-        self.layout_logic_tweaks.addWidget(self.widget_11, 0, 1, 1, 1)
+        self.layout_logic_tweaks.addWidget(self.open_drc, 0, 1, 1, 1)
 
         self.widget_12 = QWidget(self.logic_tweaks_groupbox)
         self.widget_12.setObjectName(u"widget_12")
@@ -1458,7 +1458,8 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.hoho_hint_shards, self.korl_hints_swords)
         QWidget.setTabOrder(self.korl_hints_swords, self.kreeb_hints_bows)
         QWidget.setTabOrder(self.kreeb_hints_bows, self.always_double_magic)
-        QWidget.setTabOrder(self.always_double_magic, self.rainbow_rupee_progress)
+        QWidget.setTabOrder(self.always_double_magic, self.open_drc)
+        QWidget.setTabOrder(self.open_drc, self.rainbow_rupee_progress)
         QWidget.setTabOrder(self.rainbow_rupee_progress, self.do_not_generate_spoiler_log)
         QWidget.setTabOrder(self.do_not_generate_spoiler_log, self.dry_run)
 
@@ -1624,6 +1625,7 @@ class Ui_MainWindow(object):
         self.kreeb_hints_bows.setText(QCoreApplication.translate("MainWindow", u"Kreeb Hints Bows", None))
         self.logic_tweaks_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Logic Tweaks", None))
         self.always_double_magic.setText(QCoreApplication.translate("MainWindow", u"All Magic Meters are Double", None))
+        self.open_drc.setText(QCoreApplication.translate("MainWindow", u"Open DRC", None))
         self.dev_features_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Miscellaneous Dev Features", None))
         self.rainbow_rupee_progress.setText(QCoreApplication.translate("MainWindow", u"Make Rainbow Rupee Progression", None))
         self.additional_advanced_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))

@@ -1744,7 +1744,11 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QWidget" name="widget_11" native="true"/>
+                <widget class="QCheckBox" name="open_drc">
+                 <property name="text">
+                  <string>Open DRC</string>
+                 </property>
+                </widget>
                </item>
                <item row="0" column="2">
                 <widget class="QWidget" name="widget_12" native="true"/>
@@ -2059,6 +2063,7 @@
   <tabstop>korl_hints_swords</tabstop>
   <tabstop>kreeb_hints_bows</tabstop>
   <tabstop>always_double_magic</tabstop>
+  <tabstop>open_drc</tabstop>
   <tabstop>rainbow_rupee_progress</tabstop>
   <tabstop>do_not_generate_spoiler_log</tabstop>
   <tabstop>dry_run</tabstop>
