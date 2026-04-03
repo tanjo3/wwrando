@@ -1199,6 +1199,33 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_9.addWidget(self.logic_tweaks_groupbox)
 
+        self.dev_features_groupbox = QGroupBox(self.tab_advanced)
+        self.dev_features_groupbox.setObjectName(u"dev_features_groupbox")
+        self.layout_dev_features = QGridLayout(self.dev_features_groupbox)
+        self.layout_dev_features.setObjectName(u"layout_dev_features")
+        self.rainbow_rupee_progress = QCheckBox(self.dev_features_groupbox)
+        self.rainbow_rupee_progress.setObjectName(u"rainbow_rupee_progress")
+
+        self.layout_dev_features.addWidget(self.rainbow_rupee_progress, 0, 0, 1, 1)
+
+        self.widget_17 = QWidget(self.dev_features_groupbox)
+        self.widget_17.setObjectName(u"widget_17")
+
+        self.layout_dev_features.addWidget(self.widget_17, 0, 1, 1, 1)
+
+        self.widget_18 = QWidget(self.dev_features_groupbox)
+        self.widget_18.setObjectName(u"widget_18")
+
+        self.layout_dev_features.addWidget(self.widget_18, 0, 2, 1, 1)
+
+        self.widget_19 = QWidget(self.dev_features_groupbox)
+        self.widget_19.setObjectName(u"widget_19")
+
+        self.layout_dev_features.addWidget(self.widget_19, 0, 3, 1, 1)
+
+
+        self.verticalLayout_9.addWidget(self.dev_features_groupbox)
+
         self.additional_advanced_groupbox = QGroupBox(self.tab_advanced)
         self.additional_advanced_groupbox.setObjectName(u"additional_advanced_groupbox")
         self.gridLayout_8 = QGridLayout(self.additional_advanced_groupbox)
@@ -1407,7 +1434,8 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.hoho_hint_shards, self.korl_hints_swords)
         QWidget.setTabOrder(self.korl_hints_swords, self.kreeb_hints_bows)
         QWidget.setTabOrder(self.kreeb_hints_bows, self.always_double_magic)
-        QWidget.setTabOrder(self.always_double_magic, self.do_not_generate_spoiler_log)
+        QWidget.setTabOrder(self.always_double_magic, self.rainbow_rupee_progress)
+        QWidget.setTabOrder(self.rainbow_rupee_progress, self.do_not_generate_spoiler_log)
         QWidget.setTabOrder(self.do_not_generate_spoiler_log, self.dry_run)
 
         self.retranslateUi(MainWindow)
@@ -1568,6 +1596,8 @@ class Ui_MainWindow(object):
         self.kreeb_hints_bows.setText(QCoreApplication.translate("MainWindow", u"Kreeb Hints Bows", None))
         self.logic_tweaks_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Logic Tweaks", None))
         self.always_double_magic.setText(QCoreApplication.translate("MainWindow", u"All Magic Meters are Double", None))
+        self.dev_features_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Miscellaneous Dev Features", None))
+        self.rainbow_rupee_progress.setText(QCoreApplication.translate("MainWindow", u"Make Rainbow Rupee Progression", None))
         self.additional_advanced_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))
         self.do_not_generate_spoiler_log.setText(QCoreApplication.translate("MainWindow", u"Do Not Generate Spoiler Log", None))
         self.dry_run.setText(QCoreApplication.translate("MainWindow", u"Dry Run", None))

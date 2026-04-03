@@ -117,6 +117,10 @@ class Logic:
     if self.options.trap_chests:
       self.all_progress_items += ["Ice Trap Chest"]*5
     
+    if self.options.rainbow_rupee_progress:
+      self.all_progress_items.append("Rainbow Rupee")
+      self.all_fixed_consumable_items.remove("Rainbow Rupee")
+    
     self.all_cleaned_item_names = []
     all_item_names = []
     all_item_names += self.all_progress_items
@@ -913,9 +917,16 @@ class Logic:
       if item_name.endswith(" Trap Chest"):
         # Don't remove traps from the progress items list even though they are useless.
         continue
+      if self.options.rainbow_rupee_progress and item_name == "Rainbow Rupee":
+        # Don't remove Rainbow Rupee if it should be marked as a progress item.
+        continue
       self.all_progress_items.remove(item_name)
       self.all_nonprogress_items.append(item_name)
     for item_name in unplaced_items_to_make_nonprogress:
+      if item_name.endswith(" Trap Chest"):
+        continue
+      if self.options.rainbow_rupee_progress and item_name == "Rainbow Rupee":
+        continue
       self.unplaced_progress_items.remove(item_name)
       self.unplaced_nonprogress_items.append(item_name)
     

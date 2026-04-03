@@ -1292,6 +1292,10 @@ class HintsRandomizer(BaseRandomizer):
     if item_name.endswith(" Trap Chest"):
       return False
     
+    # Don't hint at logically useless progress items.
+    if item_name == "Rainbow Rupee":
+      return False
+    
     return True
   
   def get_importance_for_location(self, location_name):
