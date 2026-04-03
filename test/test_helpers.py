@@ -1,4 +1,5 @@
-from options.wwrando_options import DungeonItemShuffleMode, EntranceMixMode, Options, SwordMode, TrickDifficulty
+from logic.tricks import ALL_TRICK_NAMES
+from options.wwrando_options import DungeonItemShuffleMode, EntranceMixMode, Options, SwordMode
 
 def enable_all_progression_location_options(options: Options):
   options.progression_dungeons = True
@@ -122,6 +123,5 @@ def enable_all_options(options: Options):
   
   # options.dry_run
   
-  options.logic_obscurity = TrickDifficulty.VERY_HARD
-  options.logic_precision = TrickDifficulty.VERY_HARD
+  options.enabled_tricks = list(ALL_TRICK_NAMES)
   options.hero_mode = True

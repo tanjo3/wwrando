@@ -16,9 +16,10 @@ from ruamel.yaml import YAML
 from ruamel.yaml.error import YAMLError
 yaml_dumper = YAML(typ="rt") # Use RoundTripDumper for pretty-formatted dumps.
 
+from options.wwrando_options import DungeonItemShuffleMode, Options, SwordMode
 from logic.item_types import DUNGEON_MAPS_AND_COMPASSES, DUNGEON_SMALL_KEYS, DUNGEON_BIG_KEYS
 from logic.logic import Logic
-from options.wwrando_options import DungeonItemShuffleMode, Options, SwordMode
+from logic.tricks import ALL_TRICK_NAMES, ALL_TRICKS
 from randomizer import WWRandomizer, TooFewProgressionLocationsError, InvalidCleanISOError, PermalinkWrongVersionError, PermalinkWrongCommitError
 from seedgen import seedgen
 from version import VERSION
@@ -79,6 +80,32 @@ class WWRandomizerWindow(QMainWindow):
     self.filtered_excluded_locations.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
     self.ui.excluded_locations.setModel(self.filtered_excluded_locations)
     self.ui.filter_excluded_locations.textChanged.connect(self.filtered_excluded_locations.setFilterFixedString)
+    self.trick_descriptions = {trick.name: trick.description for trick in ALL_TRICKS}
+    
+    self.ui.enable_trick.clicked.connect(self.enable_selected_tricks)
+    self.available_tricks_model = QStringListModel()
+    self.available_tricks_model.setStringList(list(ALL_TRICK_NAMES))
+    self.filtered_available_tricks = QSortFilterProxyModel()
+    self.filtered_available_tricks.setSourceModel(self.available_tricks_model)
+    self.filtered_available_tricks.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+    self.ui.available_tricks.setModel(self.filtered_available_tricks)
+    self.ui.filter_available_tricks.textChanged.connect(self.filtered_available_tricks.setFilterFixedString)
+    
+    self.ui.disable_trick.clicked.connect(self.disable_selected_tricks)
+    self.enabled_tricks_model = QStringListModel()
+    self.enabled_tricks_model.setStringList([])
+    self.filtered_enabled_tricks = QSortFilterProxyModel()
+    self.filtered_enabled_tricks.setSourceModel(self.enabled_tricks_model)
+    self.filtered_enabled_tricks.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+    self.ui.enabled_tricks.setModel(self.filtered_enabled_tricks)
+    self.ui.filter_enabled_tricks.textChanged.connect(self.filtered_enabled_tricks.setFilterFixedString)
+    
+    self.ui.available_tricks.setMouseTracking(True)
+    self.ui.available_tricks.entered.connect(self.show_trick_description)
+    self.ui.available_tricks.installEventFilter(self)
+    self.ui.enabled_tricks.setMouseTracking(True)
+    self.ui.enabled_tricks.entered.connect(self.show_trick_description)
+    self.ui.enabled_tricks.installEventFilter(self)
     
     # We use an Options instance to represent the defaults instead of directly accessing each options default so that
     # default_factory works correctly.
@@ -208,6 +235,21 @@ class WWRandomizerWindow(QMainWindow):
     self.move_selected_rows(self.ui.excluded_locations, self.ui.progression_locations)
     self.progression_locations_model.sort(0)
     self.update_settings()
+  
+  def enable_selected_tricks(self):
+    self.move_selected_rows(self.ui.available_tricks, self.ui.enabled_tricks)
+    self.enabled_tricks_model.sort(0)
+    self.update_settings()
+  
+  def disable_selected_tricks(self):
+    self.move_selected_rows(self.ui.enabled_tricks, self.ui.available_tricks)
+    self.available_tricks_model.sort(0)
+    self.update_settings()
+  
+  def show_trick_description(self, index):
+    trick_name = index.data()
+    if trick_name and trick_name in self.trick_descriptions:
+      self.set_option_description(self.trick_descriptions[trick_name])
   
   def update_health_label(self):
     pohs = self.ui.starting_pohs.value()
@@ -548,6 +590,14 @@ class WWRandomizerWindow(QMainWindow):
       return None
   
   def eventFilter(self, target: QObject, event: QEvent):
+    if target in (self.ui.available_tricks, self.ui.enabled_tricks):
+      # Trick list views use the entered signal for per-item descriptions.
+      # Only handle Leave to clear the description.
+      if event.type() == QEvent.Type.Leave:
+        self.set_option_description(None)
+        return True
+      return QMainWindow.eventFilter(self, target, event)
+    
     if event.type() == QEvent.Type.Enter:
       option = self.get_option_from_widget(target)
       if option:
@@ -654,6 +704,12 @@ class WWRandomizerWindow(QMainWindow):
           model = model.sourceModel()
         model.setStringList(new_value)
         model.sort(0)
+      
+      if option_name == "enabled_tricks":
+        enabled_set = set(new_value)
+        available = sorted([t for t in ALL_TRICK_NAMES if t not in enabled_set])
+        self.available_tricks_model.setStringList(available)
+        self.available_tricks_model.sort(0)
     else:
       print("Option widget is invalid: %s" % option_name)
   

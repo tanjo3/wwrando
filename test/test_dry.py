@@ -1,9 +1,9 @@
 import os
 import pytest
 from wwrando import make_argparser
+from logic.tricks import ALL_TRICK_NAMES
 from randomizer import TooFewProgressionLocationsError, WWRandomizer
-from options.wwrando_options import Options, TrickDifficulty
-from enum import StrEnum
+from options.wwrando_options import Options
 from test_helpers import *
 
 def dry_rando_with_options(options) -> WWRandomizer:
@@ -28,19 +28,21 @@ def test_dry_all_options():
   rando = dry_rando_with_options(options)
   rando.randomize_all()
 
-def test_tricks_precise_no_obscure():
+def test_tricks_some_enabled():
   options = Options()
   enable_all_progression_location_options(options)
-  options.logic_obscurity = TrickDifficulty.NONE
-  options.logic_precision = TrickDifficulty.VERY_HARD
+  options.enabled_tricks = [
+    "DRC - Hookshot Across Lava Pit",
+    "FW - Fly Through Vines Without Destroying Seeds",
+    "Cliff Plateau Isles Cave with Only Grappling Hook",
+  ]
   rando = dry_rando_with_options(options)
   rando.randomize_all()
 
-def test_tricks_obscure_no_precise():
+def test_tricks_all_enabled():
   options = Options()
   enable_all_progression_location_options(options)
-  options.logic_obscurity = TrickDifficulty.VERY_HARD
-  options.logic_precision = TrickDifficulty.NONE
+  options.enabled_tricks = list(ALL_TRICK_NAMES)
   rando = dry_rando_with_options(options)
   rando.randomize_all()
 
@@ -71,23 +73,15 @@ def test_regression_entrance_inner_rando():
 
 def test_trick_logic_checks():
   options = Options()
-  options.logic_obscurity = TrickDifficulty.HARD
-  options.logic_precision = TrickDifficulty.NORMAL
+  options.enabled_tricks = ["Defeat Puppet Ganon Without Boomerang", "Reflect Light Arrows with Skull Hammer"]
   rando = dry_rando_with_options(options)
-  assert rando.logic.check_requirement_met("Obscure 2")
-  assert not rando.logic.check_requirement_met("Obscure 3")
-  assert rando.logic.check_requirement_met("Precise 1")
-  assert not rando.logic.check_requirement_met("Precise 2")
-
-def test_parse_string_option_to_enum():
-  options = Options()
-  options.logic_precision = "Normal" # pyright: ignore [reportAttributeAccessIssue]
-  rando = dry_rando_with_options(options)
-  assert isinstance(rando.options.logic_precision, StrEnum)
+  assert rando.logic.check_requirement_met('Option "enabled_tricks" Contains "Defeat Puppet Ganon Without Boomerang"')
+  assert not rando.logic.check_requirement_met('Option "enabled_tricks" Contains "Defeat Wizzrobes with Hookshot"')
+  assert rando.logic.check_requirement_met('Option "enabled_tricks" Contains "Reflect Light Arrows with Skull Hammer"')
 
 def test_convert_options_to_dict_and_back():
   default_options = Options()
-  orig_options = Options(progression_dungeons=False, num_required_bosses=2, logic_precision=TrickDifficulty.HARD)
+  orig_options = Options(progression_dungeons=False, num_required_bosses=2, enabled_tricks=["Defeat Wizzrobes with Hookshot"])
   options_dict = orig_options.dict()
   converted_options = Options(**options_dict)
   assert converted_options == orig_options
@@ -96,7 +90,7 @@ def test_convert_options_to_dict_and_back():
 
 def test_convert_options_to_permalink_and_back():
   default_options = Options()
-  orig_options = Options(progression_dungeons=False, num_required_bosses=2, logic_precision=TrickDifficulty.HARD)
+  orig_options = Options(progression_dungeons=False, num_required_bosses=2, enabled_tricks=["Defeat Wizzrobes with Hookshot"])
   orig_seed = "test"
   permalink = WWRandomizer.encode_permalink(orig_seed, orig_options)
   converted_seed, converted_options = WWRandomizer.decode_permalink(permalink)

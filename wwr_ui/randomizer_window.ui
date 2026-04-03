@@ -1150,6 +1150,139 @@
             </item>
            </layout>
           </widget>
+          <widget class="QWidget" name="tab_tricks">
+           <attribute name="title">
+            <string>Logic Tricks</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_tricks">
+            <item>
+             <layout class="QHBoxLayout" name="layout_tricks">
+              <item>
+               <layout class="QVBoxLayout" name="layout_available_tricks">
+                <item>
+                 <widget class="QLabel" name="label_for_available_tricks">
+                  <property name="text">
+                   <string>Available Tricks</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="filter_available_tricks">
+                  <property name="placeholderText">
+                   <string>Filter...</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QListView" name="available_tricks">
+                  <property name="font">
+                   <font>
+                    <pointsize>8</pointsize>
+                   </font>
+                  </property>
+                  <property name="editTriggers">
+                   <set>QAbstractItemView::NoEditTriggers</set>
+                  </property>
+                  <property name="selectionMode">
+                   <enum>QAbstractItemView::ExtendedSelection</enum>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="layout_tricks_buttons">
+                <item>
+                 <spacer name="tricks_buttons_spacer_top">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="disable_trick">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>80</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>&lt;-</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="enable_trick">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>80</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>-&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="tricks_buttons_spacer_bottom">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="layout_enabled_tricks">
+                <item>
+                 <widget class="QLabel" name="label_for_enabled_tricks">
+                  <property name="text">
+                   <string>Enabled Tricks</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="filter_enabled_tricks">
+                  <property name="placeholderText">
+                   <string>Filter...</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QListView" name="enabled_tricks">
+                  <property name="font">
+                   <font>
+                    <pointsize>8</pointsize>
+                   </font>
+                  </property>
+                  <property name="editTriggers">
+                   <set>QAbstractItemView::NoEditTriggers</set>
+                  </property>
+                  <property name="selectionMode">
+                   <enum>QAbstractItemView::ExtendedSelection</enum>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
           <widget class="QWidget" name="tab_advanced">
            <attribute name="title">
             <string>Advanced Options</string>
@@ -1210,78 +1343,8 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="2">
-                <layout class="QHBoxLayout" name="layout_logic_precision">
-                 <item>
-                  <widget class="QLabel" name="label_for_logic_precision">
-                   <property name="text">
-                    <string>Precise Tricks Required</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QComboBox" name="logic_precision">
-                   <item>
-                    <property name="text">
-                     <string>None</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Normal</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Hard</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Very Hard</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="0" column="1">
-                <layout class="QHBoxLayout" name="layout_logic_obscurity">
-                 <item>
-                  <widget class="QLabel" name="label_for_logic_obscurity">
-                   <property name="text">
-                    <string>Obscure Tricks Required</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QComboBox" name="logic_obscurity">
-                   <item>
-                    <property name="text">
-                     <string>None</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Normal</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Hard</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Very Hard</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="0" column="3">
-                <widget class="QWidget" name="widget_4" native="true"/>
+               <item>
+                <widget class="QWidget" name="widget_11" native="true"/>
                </item>
               </layout>
              </widget>
@@ -1712,8 +1775,12 @@
   <tabstop>required_bosses</tabstop>
   <tabstop>num_required_bosses</tabstop>
   <tabstop>hero_mode</tabstop>
-  <tabstop>logic_obscurity</tabstop>
-  <tabstop>logic_precision</tabstop>
+  <tabstop>filter_available_tricks</tabstop>
+  <tabstop>available_tricks</tabstop>
+  <tabstop>filter_enabled_tricks</tabstop>
+  <tabstop>enabled_tricks</tabstop>
+  <tabstop>disable_trick</tabstop>
+  <tabstop>enable_trick</tabstop>
   <tabstop>hoho_hints</tabstop>
   <tabstop>fishmen_hints</tabstop>
   <tabstop>korl_hints</tabstop>

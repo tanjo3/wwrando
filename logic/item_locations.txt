@@ -632,9 +632,9 @@ Dragon Roost Cavern - Chest Across Lava Pit:
     & (
       Grappling Hook
       | Can Fly With Deku Leaf Indoors
-      | (Hookshot & Obscure 1)
+      | (Hookshot & Option "enabled_tricks" Contains "DRC - Hookshot Across Lava Pit")
     )
-  # Obscure: Throw a burning stick across the pit to burn the barricade, then stand at a certain specific spot on the edge of the cliff and hookshot the chest to get across.
+  # Trick: Throw a burning stick across the pit to burn the barricade, then stand at a certain specific spot on the edge of the cliff and hookshot the chest to get across.
   # Note: In swordless, you can throw a burning stick across the lava pit, then grapple across.
   Original item: Treasure Chart 11
   Types: Dungeon
@@ -772,14 +772,11 @@ Forest Haven - On Tree Branch:
       | (
         Can Fly With Deku Leaf Indoors
         & Can Fly With Deku Leaf Outdoors
-        & Obscure 1
-        & (
-          (Can Cut Grass & Precise 1)
-          | (Magic Meter Upgrade & Precise 2)
-        )
+        & Option "enabled_tricks" Contains "Reach Pillar Outside Forest Haven without Grappling Hook"
+        & (Can Cut Grass | Magic Meter Upgrade)
       )
     )
-  # Obscure&Precise: You can access this without Grappling Hook if you fly to the lowest elevated exit out of Forest Haven, fly southwest to the pillar outside (Noob Skip), then use the whirlwind to gain height and fly back northeast to Forest Haven entering via the middle elevated platform exit.
+  # Trick: You can access this without Grappling Hook if you fly to the lowest elevated exit out of Forest Haven, fly southwest to the pillar outside (Noob Skip), then use the whirlwind to gain height and fly back northeast to Forest Haven entering via the middle elevated platform exit.
   # This requires using either precise ledge grabbing, leaf pumping, or simply abusing the respawn mechanic to get on the FH ledge without actually reaching it.
   # It is possible to do this skip without the ability to cut grass if you have Magic Meter Upgrade, but you can't waste even a single point of magic in that case.
   Original item: Deku Leaf
@@ -801,16 +798,13 @@ Forest Haven - Small Island Chest:
       | (
         Can Fly With Deku Leaf Indoors
         & Can Fly With Deku Leaf Outdoors
-        & Obscure 1
-        & (
-          (Can Cut Grass & Precise 1)
-          | (Magic Meter Upgrade & Precise 2)
-        )
+        & Option "enabled_tricks" Contains "Reach Pillar Outside Forest Haven without Grappling Hook"
+        & (Can Cut Grass | Magic Meter Upgrade)
       )
     )
     & Can Fly With Deku Leaf Outdoors
     & (Can Cut Grass | Magic Meter Upgrade)
-  # Obscure&Precise: You can access this without Grappling Hook if you fly to the lowest elevated exit out of Forest Haven, fly southwest to the pillar outside (Noob Skip), then fly east to this small island.
+  # Trick: You can access this without Grappling Hook if you fly to the lowest elevated exit out of Forest Haven, fly southwest to the pillar outside (Noob Skip), then fly east to this small island.
   # It is possible to do this skip without the ability to cut grass if you have Magic Meter Upgrade, but you can't waste even a single point of magic in that case.
   Original item: Treasure Chart 3
   Types: Island Puzzle
@@ -912,9 +906,9 @@ Forbidden Woods - Tall Room Before Miniboss:
     & FW Small Key x1
     & (
       Can Defeat Peahats
-      | Precise 2
+      | Option "enabled_tricks" Contains "FW - Grapple Up Tall Room Before Miniboss Without Killing Peahats"
     )
-    # Precise: Grappling up is tricky while the Peahats are still alive since they knock you around.
+    # Trick: Grappling up is tricky while the Peahats are still alive since they knock you around.
   Original item: Joy Pendant
   Types: Dungeon
   Paths:
@@ -938,9 +932,9 @@ Forbidden Woods - Past Seeds Hanging by Vines:
     & Can Defeat Door Flowers
     & (
       Can Destroy Seeds Hanging by Vines
-      | Precise 1
+      | Option "enabled_tricks" Contains "FW - Fly Through Vines Without Destroying Seeds"
     )
-    # Precise: You can fly through the vines without destroying the seeds first, but it's slightly tricky to thread the needle like that, so you may fall.
+    # Trick: You can fly through the vines without destroying the seeds first, but it's slightly tricky to thread the needle like that, so you may fall.
   Original item: Joy Pendant
   Types: Dungeon
   Paths:
@@ -1123,11 +1117,11 @@ Tower of the Gods - Floating Platforms Room:
     Can Reach Tower of the Gods Second Floor
     & (
       Hero's Bow
-      | (Can Fly With Deku Leaf Indoors & Precise 1)
-      | (Hookshot & Obscure 1)
+      | (Can Fly With Deku Leaf Indoors & Option "enabled_tricks" Contains "TotG - Use Deku Leaf to Fly Between Floating Platforms")
+      | (Hookshot & Option "enabled_tricks" Contains "TotG - Hookshot Floating Platforms Room Chest from Door")
     )
-    # Precise: Instead of shooting the first eye, you can use Deku Leaf to fly from the platform near the entrance to the platform to the left of this chest. This doesn't require leaf pumping or any tricks, but it does require the cycles of the two platforms to be in sync, and decent timing.
-    # Obscure: Instead of shooting the first eye, you can simply hookshot the chest from the platform near the entrance.
+    # Trick: Instead of shooting the first eye, you can use Deku Leaf to fly from the platform near the entrance to the platform to the left of this chest. This doesn't require leaf pumping or any tricks, but it does require the cycles of the two platforms to be in sync, and decent timing.
+    # Trick: Instead of shooting the first eye, you can simply hookshot the chest from the platform near the entrance.
   Original item: Small Key
   Types: Dungeon
   Paths:
@@ -1197,10 +1191,10 @@ Forsaken Fortress - Chest Outside Upper Jail Cell:
     & (
       Can Fly With Deku Leaf Indoors
       | Hookshot
-      | Obscure 1
+      | Option "enabled_tricks" Contains "FF - Use Floormaster to Reach Upper Jail Cell"
     )
     # Instead of using Deku Leaf to fly over to the chest, you can also use the Hookshot on the chest.
-    # Obscure: You can intentionally get caught by the Floormaster in the boat room so that it takes you to jail, then escape and access this chest without needing any items.
+    # Trick: You can intentionally get caught by the Floormaster in the boat room so that it takes you to jail, then escape and access this chest without needing any items.
   Original item: Dungeon Map
   Types: Dungeon
   Paths:
@@ -1500,18 +1494,18 @@ Earth Temple - Big Key Chest:
     & Can Aim Mirror Shield
     & (
       Can Defeat Blue Bubbles
-      | (Hero's Bow & Obscure 1)
+      | (Hero's Bow & Option "enabled_tricks" Contains "ET - Defeat Inactive Blue Bubbles with Bow")
       | (
           (
             Hero's Sword
             | Any Master Sword
             | Skull Hammer
-          ) & Obscure 1 & Precise 1
+          ) & Option "enabled_tricks" Contains "ET - Defeat Inactive Blue Bubbles with a Melee Weapon"
         )
       )
     & Can Defeat Darknuts
-    # Obscure: The Blue Bubbles here start off inactive and vulnerable, so you can use the bow to defeat them without ever activating them.
-    # Obscure&Precise: You can also defeat them with a melee weapon as long as you're somewhat fast and you avoid activating both at once.
+    # Trick: The Blue Bubbles here start off inactive and vulnerable, so you can use the bow to defeat them without ever activating them.
+    # Trick: You can also defeat them with a melee weapon as long as you're somewhat fast and you avoid activating both at once.
   Original item: Big Key
   Types: Dungeon
   Paths:
@@ -1614,8 +1608,7 @@ Wind Temple - Chest In Many Cyclones Room:
       ) | (
         Hookshot
         & Can Fly With Deku Leaf Indoors
-        & Obscure 1
-        & Precise 2
+        & Option "enabled_tricks" Contains "WT - Reach Hub Room Upper Level with Hookshot"
       )
     )
     # There's 3 paths you can take:
@@ -2023,10 +2016,10 @@ Boating Course - Cave:
     & Can Hit Diamond Switches at Range
     & (
       Can Defeat Miniblins Easily
-      | Precise 2
+      | Option "enabled_tricks" Contains "Boating Course Cave with Only Hookshot"
     )
     # Hitting the 3 diamond switches inside the cave needs a ranged weapon.
-    # Precise: Hitting the switches with Hookshot without being able to kill the Miniblins is difficult and involves a lot of running around.
+    # Trick: Hitting the switches with Hookshot without being able to kill the Miniblins is difficult and involves a lot of running around.
   Original item: Submarine Chart
   Types: Puzzle Secret Cave, Combat Secret Cave
   Paths:
@@ -2447,9 +2440,9 @@ Cliff Plateau Isles - Cave:
     Can Access Cliff Plateau Isles Secret Cave
     & (
       Can Defeat Boko Babas
-      | (Grappling Hook & Obscure 1 & Precise 1)
+      | (Grappling Hook & Option "enabled_tricks" Contains "Cliff Plateau Isles Cave with Only Grappling Hook")
     )
-    # Obscure&Precise: You can kill a Boko Baba here by throwing a nut at it to stun it, then using the Grappling Hook to finish it off. Then you can take its Boko Stick.
+    # Trick: You can kill a Boko Baba here by throwing a nut at it to stun it, then using the Grappling Hook to finish it off. Then you can take its Boko Stick.
   Original item: Joy Pendant
   Types: Puzzle Secret Cave
   Paths:
@@ -2759,9 +2752,9 @@ Seven-Star Isles - Sunken Treasure:
     & Chart for Island 6
     & (
       Bombs
-      | Precise 1
+      | Option "enabled_tricks" Contains "Salvage Without Killing Enemies"
     )
-  # Precise: Bombs are not necessary, but it's slightly tricky to salvage this treasure with two stationary gunboats shooting at you, so being able to destroy them makes this easier.
+  # Trick: Bombs are not necessary, but it's slightly tricky to salvage this treasure with two stationary gunboats shooting at you, so being able to destroy them makes this easier.
   # (Note that these gunboats only spawn after you have deciphered Triforce Chart 7, which is the chart for this island when the chart randomizer is disabled.)
   Original item: Triforce Shard 7
   Types: Sunken Treasure
@@ -2785,11 +2778,11 @@ Four-Eye Reef - Sunken Treasure:
     & Chart for Island 8
     & (
       Bombs
-      | Precise 1
-      | (Can Use Magic Armor & Obscure 1)
+      | Option "enabled_tricks" Contains "Salvage Without Killing Enemies"
+      | (Can Use Magic Armor & Option "enabled_tricks" Contains "Use Magic Armor While Salvaging")
     )
-  # Precise: The cannons and gunboats can get in the way when trying to salvage this treasure, so being able to destroy them makes this easier.
-  # Obscure: Magic Armor prevents you from being knocked out of the ship if you get hit by the gunboats while salvaging.
+  # Trick: The cannons and gunboats can get in the way when trying to salvage this treasure, so being able to destroy them makes this easier.
+  # Trick: Magic Armor prevents you from being knocked out of the ship if you get hit by the gunboats while salvaging.
   Original item: Great Fairy Chart
   Types: Sunken Treasure
   Paths:
@@ -2920,11 +2913,11 @@ Three-Eye Reef - Sunken Treasure:
     & Chart for Island 22
     & (
       Bombs
-      | Precise 1
-      | (Can Use Magic Armor & Obscure 1)
+      | Option "enabled_tricks" Contains "Salvage Without Killing Enemies"
+      | (Can Use Magic Armor & Option "enabled_tricks" Contains "Use Magic Armor While Salvaging")
     )
-  # Precise: The cannons and gunboats can get in the way when trying to salvage this treasure, so being able to destroy them makes this easier.
-  # Obscure: Magic Armor prevents you from being knocked out of the ship if you get hit by the gunboats while salvaging.
+  # Trick: The cannons and gunboats can get in the way when trying to salvage this treasure, so being able to destroy them makes this easier.
+  # Trick: Magic Armor prevents you from being knocked out of the ship if you get hit by the gunboats while salvaging.
   Original item: Piece of Heart
   Types: Sunken Treasure
   Paths:
@@ -2947,11 +2940,11 @@ Cyclops Reef - Sunken Treasure:
     & Chart for Island 24
     & (
       Bombs
-      | Precise 1
-      | (Can Use Magic Armor & Obscure 1)
+      | Option "enabled_tricks" Contains "Salvage Without Killing Enemies"
+      | (Can Use Magic Armor & Option "enabled_tricks" Contains "Use Magic Armor While Salvaging")
     )
-  # Precise: The cannons and gunboats can get in the way when trying to salvage this treasure, so being able to destroy them makes this easier.
-  # Obscure: Magic Armor prevents you from being knocked out of the ship if you get hit by the gunboats while salvaging.
+  # Trick: The cannons and gunboats can get in the way when trying to salvage this treasure, so being able to destroy them makes this easier.
+  # Trick: Magic Armor prevents you from being knocked out of the ship if you get hit by the gunboats while salvaging.
   Original item: Light Ring Chart
   Types: Sunken Treasure
   Paths:
@@ -2965,11 +2958,11 @@ Six-Eye Reef - Sunken Treasure:
     & Chart for Island 25
     & (
       Bombs
-      | Precise 1
-      | (Can Use Magic Armor & Obscure 1)
+      | Option "enabled_tricks" Contains "Salvage Without Killing Enemies"
+      | (Can Use Magic Armor & Option "enabled_tricks" Contains "Use Magic Armor While Salvaging")
     )
-  # Precise: The cannons and gunboats can get in the way when trying to salvage this treasure, so being able to destroy them makes this easier.
-  # Obscure: Magic Armor prevents you from being knocked out of the ship if you get hit by the gunboats while salvaging.
+  # Trick: The cannons and gunboats can get in the way when trying to salvage this treasure, so being able to destroy them makes this easier.
+  # Trick: Magic Armor prevents you from being knocked out of the ship if you get hit by the gunboats while salvaging.
   Original item: Silver Rupee
   Types: Sunken Treasure
   Paths:
@@ -3039,9 +3032,9 @@ Southern Triangle Island - Sunken Treasure:
     & Chart for Island 32
     & (
       Can Defeat Seahats
-      | Precise 1
+      | Option "enabled_tricks" Contains "Salvage Without Killing Enemies"
     )
-  # Precise: The seahats will try to knock you out of your ship when trying to salvage this treasure, so being able to kill them makes this much easier.
+  # Trick: The seahats will try to knock you out of your ship when trying to salvage this treasure, so being able to kill them makes this much easier.
   Original item: Triforce Shard 6
   Types: Sunken Treasure
   Paths:
@@ -3173,11 +3166,11 @@ Two-Eye Reef - Sunken Treasure:
     & Chart for Island 46
     & (
       Bombs
-      | Precise 1
-      | (Can Use Magic Armor & Obscure 1)
+      | Option "enabled_tricks" Contains "Salvage Without Killing Enemies"
+      | (Can Use Magic Armor & Option "enabled_tricks" Contains "Use Magic Armor While Salvaging")
     )
-  # Precise: The cannons and gunboats can get in the way when trying to salvage this treasure, so being able to destroy them makes this easier.
-  # Obscure: Magic Armor prevents you from being knocked out of the ship if you get hit by the gunboats while salvaging.
+  # Trick: The cannons and gunboats can get in the way when trying to salvage this treasure, so being able to destroy them makes this easier.
+  # Trick: Magic Armor prevents you from being knocked out of the ship if you get hit by the gunboats while salvaging.
   Original item: Triforce Shard 8
   Types: Sunken Treasure
   Paths:

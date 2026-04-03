@@ -24,6 +24,7 @@ from gclib.jpc import JPC100
 import tweaks
 from asm import patcher
 from logic.logic import Logic
+from logic.tricks import ALL_TRICK_NAMES
 from wwlib.charts import ChartList
 from wwrando_paths import DATA_PATH, ASM_PATH, IS_RUNNING_FROM_SOURCE, SEEDGEN_PATH
 import customizer
@@ -531,6 +532,11 @@ class WWRandomizer:
         for location_name in Logic.load_and_parse_item_locations():
           bit = location_name in value_set
           bitswriter.write(bit, 1)
+      elif option.name == "enabled_tricks":
+        assert issubclass(typing.get_origin(option.type) or option.type, list)
+        value_set = set(value)
+        for trick_name in ALL_TRICK_NAMES:
+          bitswriter.write(int(trick_name in value_set), 1)
       else:
         raise Exception(f"Option {option.name} of type {option.type} is not currently supported by the permalink system.")
     
@@ -630,6 +636,13 @@ class WWRandomizer:
           if excluded == 1:
             excluded_list.append(location_name)
         options.excluded_locations = sorted(excluded_list)
+      elif option.name == "enabled_tricks":
+        assert issubclass(typing.get_origin(option.type) or option.type, list)
+        enabled = []
+        for trick_name in ALL_TRICK_NAMES:
+          if bitsreader.read(1):
+            enabled.append(trick_name)
+        options.enabled_tricks = enabled
       else:
         raise Exception(f"Option {option.name} of type {option.type} is not currently supported by the permalink system.")
     
@@ -1021,7 +1034,7 @@ class WWRandomizer:
     non_disabled_options = [
       option.name for option in Options.all()
       if self.options[option.name] not in [False, [], {}]
-      and option.name not in ["randomized_gear", "progression_locations"] # Just takes up space
+      and option.name not in ["randomized_gear", "progression_locations", "available_tricks"] # Just takes up space
     ]
     option_strings = []
     for option_name in non_disabled_options:
