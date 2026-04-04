@@ -67,7 +67,7 @@ class Logic:
       if "Rupee" in types:
         if "Dungeon" in types and not self.options.progression_rupee_dungeon:
           locations_to_remove.append(location_name)
-        elif "Puzzle Secret Cave" in types and not (self.options.progression_rupee_dungeon and self.options.progression_rupee_overworld):
+        elif "Puzzle Secret Cave" in types and not self.options.progression_rupee_overworld:
           locations_to_remove.append(location_name)
         elif "Dungeon" not in types and "Puzzle Secret Cave" not in types and not self.options.progression_rupee_overworld:
           locations_to_remove.append(location_name)
@@ -566,7 +566,7 @@ class Logic:
       if "Rupee" in types:
         if "Dungeon" in types and not options.progression_rupee_dungeon:
           continue
-        if "Puzzle Secret Cave" in types and not (options.progression_rupee_dungeon and options.progression_rupee_overworld):
+        if "Puzzle Secret Cave" in types and not options.progression_rupee_overworld:
           continue
         if "Dungeon" not in types and "Puzzle Secret Cave" not in types and not options.progression_rupee_overworld:
           continue
