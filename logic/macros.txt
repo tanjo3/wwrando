@@ -140,9 +140,14 @@ Can Reach Tower of the Gods Second Floor:
   & Can Defeat Yellow ChuChus
 Can Reach Tower of the Gods Third Floor:
   Can Reach Tower of the Gods Second Floor
-  & Can Bring East Servant of the Tower
-  & Can Bring West Servant of the Tower
-  & Can Bring North Servant of the Tower
+  & (
+    Option "totg_tablet_from_start" Enabled
+    | (
+      Can Bring East Servant of the Tower
+      & Can Bring West Servant of the Tower
+      & Can Bring North Servant of the Tower
+    )
+  )
   & Wind Waker
   # Note: The Wind Waker is required for getting the item from "Tower of the Gods - Stone Tablet".
   # Although the randomizer removes the forced linearity of bringing the servants, it still requires you to get that item before the warp will appear, because otherwise the stone tablet would physically block Link from using the warp, softlocking the game in an event.
