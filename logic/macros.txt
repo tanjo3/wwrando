@@ -102,7 +102,7 @@ Can Activate Tingle Bomb Triggers Without Tingle Tuner:
 
 Can Reach Outset Island Upper Level:
   Can Cut Down Outset Trees
-  | (Can Fly With Deku Leaf Outdoors & Option "enabled_tricks" Contains "Outset Island - Circumvent Trees with Deku Leaf")
+  | (Can Fly With Deku Leaf Outdoors & Option "enabled_tricks" Contains "Circumvent Outset Island Trees with Deku Leaf")
   # Trick: You can circumvent the trees entirely by jumping off the edge of the path near the trees and flying northeast to land on the elevated cliff on the side of the island. Then follow the path on top of the cliff to get behind the trees.
 Can Access Forest of Fairies:
   Can Reach Outset Island Upper Level
@@ -1045,7 +1045,7 @@ Can Cut Down Outset Trees:
   Hero's Sword
   | Boomerang
   | Skull Hammer
-  | (Power Bracelets & Option "enabled_tricks" Contains "Outset Island - Use Big Pig to Cut Down Trees")
+  | (Power Bracelets & Option "enabled_tricks" Contains "Use Big Pig to Cut Down Outset Island Trees")
   # Fire Arrows and Bombs don't work.
   # Luring a ChuChu up the hill and having it jump on the trees doesn't work.
   # Trick: You can carry the big pig to the trees and enrage it, then trick it into cutting down the trees, although this is slow.
