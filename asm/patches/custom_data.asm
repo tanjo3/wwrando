@@ -9,12 +9,12 @@ hurricane_spin_item_resource_arc_name:
 
 .global soul_item_arc_name_figure6b
 soul_item_arc_name_figure6b:
-.string "Figure6b"
+.string "SoulB"
 .align 2 ; Align to the next 4 bytes
 
 .global soul_item_arc_name_figure6c
 soul_item_arc_name_figure6c:
-.string "Figure6c"
+.string "SoulC"
 .align 2 ; Align to the next 4 bytes
 
 
