@@ -307,7 +307,7 @@ class EntranceRandomizer(BaseRandomizer):
     
     self.entrance_names_with_no_requirements = []
     self.exit_names_with_no_requirements = []
-    if self.options.progression_dungeons:
+    if self.options.progression_dungeons and self.options.open_drc:
       self.entrance_names_with_no_requirements += DUNGEON_ENTRANCE_NAMES_WITH_NO_REQUIREMENTS
     if self.options.progression_puzzle_secret_caves \
         or self.options.progression_combat_secret_caves \

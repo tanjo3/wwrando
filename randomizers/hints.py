@@ -1482,7 +1482,8 @@ class HintsRandomizer(BaseRandomizer):
     return hint
   
   def generate_item_specific_hints(self, predicate: Callable[[str], bool]) -> list[Hint]:
-    locations = sorted([loc for loc, item in self.logic.done_item_locations.items() if predicate(item)])
+    banned = set(self.rando.boss_reqs.banned_locations)
+    locations = sorted([loc for loc, item in self.logic.done_item_locations.items() if predicate(item) and loc not in banned])
     
     hints = []
     for location in locations:

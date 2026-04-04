@@ -130,7 +130,7 @@ Outset Island - Orca - Hit 500 Times:
   Original item: Piece of Heart
   Types: Orca Minigame
   Paths:
-    - rels/d_a_npc_ji1.rel@42F7
+    - CustomSymbol:orca_500_hit_item_id
 Outset Island - Orca - Hit 1000 Times:
   Need: Can Sword Fight with Orca
   Original item: Silver Rupee
@@ -160,7 +160,6 @@ Outset Island - Rupee in Log in Forest of Fairies:
   Types: Rupee
   Paths:
     - A_mori/Room0.arc/Actor060
-    - CustomSymbol:orca_500_hit_item_id
 Outset Island - Great Fairy:
   Need: Can Access Outset Fairy Fountain
   Original item: 5000 Rupee Wallet
@@ -2072,7 +2071,7 @@ Earth Temple - Rupee Behind Destructible Wall in Shortcut 1:
   Need:
     Can Reach Earth Temple Moblins and Poes Room
     & Can Play Command Melody
-    & Can Aim Mirror Shield
+    & (Can Aim Mirror Shield | Can Use Sunlight Arrows)
   Original item: Blue Rupee
   Types: Dungeon, Rupee
   Paths:
@@ -2081,7 +2080,7 @@ Earth Temple - Rupee Behind Destructible Wall in Shortcut 2:
   Need:
     Can Reach Earth Temple Moblins and Poes Room
     & Can Play Command Melody
-    & Can Aim Mirror Shield
+    & (Can Aim Mirror Shield | Can Use Sunlight Arrows)
   Original item: Yellow Rupee
   Types: Dungeon, Rupee
   Paths:
@@ -2090,7 +2089,7 @@ Earth Temple - Rupee Behind Destructible Wall in Shortcut 3:
   Need:
     Can Reach Earth Temple Moblins and Poes Room
     & Can Play Command Melody
-    & Can Aim Mirror Shield
+    & (Can Aim Mirror Shield | Can Use Sunlight Arrows)
   Original item: Blue Rupee
   Types: Dungeon, Rupee
   Paths:
@@ -2099,7 +2098,7 @@ Earth Temple - Rupee Behind Destructible Wall in Shortcut 4:
   Need:
     Can Reach Earth Temple Moblins and Poes Room
     & Can Play Command Melody
-    & Can Aim Mirror Shield
+    & (Can Aim Mirror Shield | Can Use Sunlight Arrows)
   Original item: Yellow Rupee
   Types: Dungeon, Rupee
   Paths:
@@ -2108,7 +2107,7 @@ Earth Temple - Rupee Behind Destructible Wall in Shortcut 5:
   Need:
     Can Reach Earth Temple Moblins and Poes Room
     & Can Play Command Melody
-    & Can Aim Mirror Shield
+    & (Can Aim Mirror Shield | Can Use Sunlight Arrows)
   Original item: Red Rupee
   Types: Dungeon, Rupee
   Paths:
@@ -2117,7 +2116,7 @@ Earth Temple - Rupee Behind Destructible Wall in Shortcut 6:
   Need:
     Can Reach Earth Temple Moblins and Poes Room
     & Can Play Command Melody
-    & Can Aim Mirror Shield
+    & (Can Aim Mirror Shield | Can Use Sunlight Arrows)
   Original item: Yellow Rupee
   Types: Dungeon, Rupee
   Paths:
@@ -2126,7 +2125,7 @@ Earth Temple - Rupee Behind Destructible Wall in Shortcut 7:
   Need:
     Can Reach Earth Temple Moblins and Poes Room
     & Can Play Command Melody
-    & Can Aim Mirror Shield
+    & (Can Aim Mirror Shield | Can Use Sunlight Arrows)
   Original item: Blue Rupee
   Types: Dungeon, Rupee
   Paths:
@@ -2135,7 +2134,7 @@ Earth Temple - Rupee Behind Destructible Wall in Shortcut 8:
   Need:
     Can Reach Earth Temple Moblins and Poes Room
     & Can Play Command Melody
-    & Can Aim Mirror Shield
+    & (Can Aim Mirror Shield | Can Use Sunlight Arrows)
   Original item: Yellow Rupee
   Types: Dungeon, Rupee
   Paths:
@@ -2144,7 +2143,7 @@ Earth Temple - Rupee Behind Destructible Wall in Shortcut 9:
   Need:
     Can Reach Earth Temple Moblins and Poes Room
     & Can Play Command Melody
-    & Can Aim Mirror Shield
+    & (Can Aim Mirror Shield | Can Use Sunlight Arrows)
   Original item: Blue Rupee
   Types: Dungeon, Rupee
   Paths:
@@ -2153,7 +2152,7 @@ Earth Temple - Rupee Under Destructible Statue in Shortcut:
   Need:
     Can Reach Earth Temple Moblins and Poes Room
     & Can Play Command Melody
-    & Can Aim Mirror Shield
+    & (Can Aim Mirror Shield | Can Use Sunlight Arrows)
   Original item: Blue Rupee
   Types: Dungeon, Rupee
   Paths:

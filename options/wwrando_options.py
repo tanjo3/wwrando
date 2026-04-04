@@ -49,7 +49,10 @@ class Options(BaseOptions):
     if self.enabled_tricks:
       valid_tricks = set(ALL_TRICK_NAMES)
       self.enabled_tricks = sorted(trick for trick in self.enabled_tricks if trick in valid_tricks)
-  
+    
+    if self.hoho_hints and self.hoho_hint_shards:
+      self.hoho_hint_shards = False
+    
   #region Progress locations
   progression_dungeons: bool = option(
     default=True,
@@ -469,6 +472,10 @@ class Options(BaseOptions):
     description="The first Progressive Magic Meter grants double magic instead of single magic. The second Progressive Magic Meter refills your magic instead of upgrading capacity.<br>"
       "Logic considers one Progressive Magic Meter as having the Magic Meter Upgrade.",
   )
+  open_drc: bool = option(
+    default=True,
+    description="Allow DRC entrance to be accessed from the beginning of the game with no items"
+  )
   #endregion
   
   #region Miscellaneous Dev Features
@@ -476,13 +483,6 @@ class Options(BaseOptions):
     default=False,
     description="Place the Rainbow Rupee into the progress item pool. This means that it will be found in a progress location. If CTMC is enabled, it will be in a metal chest.<br>"
       "This setting has no effect on the logic.",
-  )
-  #endregion
-
-  #region Logic Tweaks
-  open_drc: bool = option(
-    default=True,
-    description="Allow DRC entrance to be accessed from the beginning of the game with no items"
   )
   #endregion
   
@@ -619,7 +619,7 @@ class Options(BaseOptions):
     minimum=0,
     maximum=99,
     description="Amount of Blue Chu Jellies to start with.<br>"
-      "This is a convenience setting and does not affect the logic.",
+      "When Blue ChuChu shuffle is enabled, these count toward the Blue Chu Jelly progression requirement.",
   )
   num_extra_starting_items: int = option(
     default=0,

@@ -2,7 +2,7 @@
 ; This patch makes Orca's minigame rewards work correctly when randomized.
 ; Each of the 4 rewards (100/300/500/1000 hits) is given exactly once as a randomized item.
 ; When the player passes multiple thresholds in one session, all uncollected rewards are chained in sequence without requiring replay.
-; Uses event bits 0x6B01-0x6B08 (byte 0x6B, completely unused in vanilla) to track which randomized rewards have been collected.
+; Uses event bits 0x6C01-0x6C08 (byte 0x6C, completely unused in vanilla) to track which randomized rewards have been collected.
 
 .open "files/rels/d_a_npc_ji1.rel"
 
@@ -57,37 +57,37 @@ orca_reward_level_ready:
   cmpwi r0, 1
   blt orca_reward_vanilla_fallback
   mr r3, r31
-  li r4, 0x6B01
+  li r4, 0x6C01
   bl isEventBit__11dSv_event_cFUs
   cmpwi r3, 0
   beq orca_give_100_hit
-  
-  ; Check 300-hit reward: level >= 2 and 0x6B02 not set
+
+  ; Check 300-hit reward: level >= 2 and 0x6C02 not set
   lwz r0, 0x08 (sp)
   cmpwi r0, 2
   blt orca_reward_vanilla_fallback
   mr r3, r31
-  li r4, 0x6B02
+  li r4, 0x6C02
   bl isEventBit__11dSv_event_cFUs
   cmpwi r3, 0
   beq orca_give_300_hit
-  
-  ; Check 500-hit reward: level >= 3 and 0x6B04 not set
+
+  ; Check 500-hit reward: level >= 3 and 0x6C04 not set
   lwz r0, 0x08 (sp)
   cmpwi r0, 3
   blt orca_reward_vanilla_fallback
   mr r3, r31
-  li r4, 0x6B04
+  li r4, 0x6C04
   bl isEventBit__11dSv_event_cFUs
   cmpwi r3, 0
   beq orca_give_500_hit
-  
-  ; Check 1000-hit reward: level >= 4 and 0x6B08 not set
+
+  ; Check 1000-hit reward: level >= 4 and 0x6C08 not set
   lwz r0, 0x08 (sp)
   cmpwi r0, 4
   blt orca_reward_vanilla_fallback
   mr r3, r31
-  li r4, 0x6B08
+  li r4, 0x6C08
   bl isEventBit__11dSv_event_cFUs
   cmpwi r3, 0
   beq orca_give_1000_hit
@@ -101,7 +101,7 @@ orca_reward_vanilla_fallback:
 
 orca_give_100_hit:
   mr r3, r31
-  li r4, 0x6B01 ; Mark 100-hit reward as collected
+  li r4, 0x6C01 ; Mark 100-hit reward as collected
   bl onEventBit__11dSv_event_cFUs
   lis r3, orca_100_hit_item_id@ha
   addi r3, r3, orca_100_hit_item_id@l
@@ -110,7 +110,7 @@ orca_give_100_hit:
 
 orca_give_300_hit:
   mr r3, r31
-  li r4, 0x6B02 ; Mark 300-hit reward as collected
+  li r4, 0x6C02 ; Mark 300-hit reward as collected
   bl onEventBit__11dSv_event_cFUs
   lis r3, orca_300_hit_item_id@ha
   addi r3, r3, orca_300_hit_item_id@l
@@ -119,7 +119,7 @@ orca_give_300_hit:
 
 orca_give_500_hit:
   mr r3, r31
-  li r4, 0x6B04 ; Mark 500-hit reward as collected
+  li r4, 0x6C04 ; Mark 500-hit reward as collected
   bl onEventBit__11dSv_event_cFUs
   ; Also set UNK_0F10 to preserve vanilla behavior (this flag gates the 1000-hit Silver Rupee reward on replays)
   mr r3, r31
@@ -132,7 +132,7 @@ orca_give_500_hit:
 
 orca_give_1000_hit:
   mr r3, r31
-  li r4, 0x6B08 ; Mark 1000-hit reward as collected
+  li r4, 0x6C08 ; Mark 1000-hit reward as collected
   bl onEventBit__11dSv_event_cFUs
   lis r3, orca_1000_hit_item_id@ha
   addi r3, r3, orca_1000_hit_item_id@l
@@ -184,37 +184,37 @@ orca_chain_level_ready:
   cmpwi r3, 1
   blt orca_chain_no_more
   lwz r3, 0x08 (sp)
-  li r4, 0x6B01
+  li r4, 0x6C01
   bl isEventBit__11dSv_event_cFUs
   cmpwi r3, 0
   beq orca_chain_has_more
-  
+
   ; Check 300-hit
   lwz r3, 0x0C (sp)
   cmpwi r3, 2
   blt orca_chain_no_more
   lwz r3, 0x08 (sp)
-  li r4, 0x6B02
+  li r4, 0x6C02
   bl isEventBit__11dSv_event_cFUs
   cmpwi r3, 0
   beq orca_chain_has_more
-  
+
   ; Check 500-hit
   lwz r3, 0x0C (sp)
   cmpwi r3, 3
   blt orca_chain_no_more
   lwz r3, 0x08 (sp)
-  li r4, 0x6B04
+  li r4, 0x6C04
   bl isEventBit__11dSv_event_cFUs
   cmpwi r3, 0
   beq orca_chain_has_more
-  
+
   ; Check 1000-hit
   lwz r3, 0x0C (sp)
   cmpwi r3, 4
   blt orca_chain_no_more
   lwz r3, 0x08 (sp)
-  li r4, 0x6B08
+  li r4, 0x6C08
   bl isEventBit__11dSv_event_cFUs
   cmpwi r3, 0
   beq orca_chain_has_more

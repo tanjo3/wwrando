@@ -706,7 +706,6 @@ Can Obtain 15 Blue Chu Jelly:
       | Hookshot
       | Bombs
       | Grappling Hook
-      | Hookshot
       | (Can Access Secret Cave Entrance on Shark Island & Can Fly With Deku Leaf Outdoors)
       | Can Access Item Location "Cliff Plateau Isles - Highest Isle"
       | Can Fan With Deku Leaf

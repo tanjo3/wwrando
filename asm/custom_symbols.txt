@@ -1,17 +1,17 @@
 sys/main.dol:
   hurricane_spin_item_resource_arc_name: 0x803FCFA8
   soul_item_arc_name_figure6b: 0x803FCFB0
-  soul_item_arc_name_figure6c: 0x803FCFBC
-  ballad_of_gales_warp_table: 0x803FCFC8
-  ballad_of_gales_warp_float_bank: 0x803FD010
-  custom_DynamicNameTable: 0x803FD068
-  custom_l_objectName: 0x803FD09C
-  custom_l_objectName_end: 0x803FD0B4
-  custom_DMC: 0x803FD0B4
-  rupeesanity_silent_pickup_bitmask: 0x803FD894
-  rupeesanity_spawn_switch_table: 0x803FD8AC
-  auction_cycle_index: 0x803FD954
-  init_save_with_tweaks: 0x803FD958
+  soul_item_arc_name_figure6c: 0x803FCFB8
+  ballad_of_gales_warp_table: 0x803FCFC0
+  ballad_of_gales_warp_float_bank: 0x803FD008
+  custom_DynamicNameTable: 0x803FD060
+  custom_l_objectName: 0x803FD094
+  custom_l_objectName_end: 0x803FD0AC
+  custom_DMC: 0x803FD0AC
+  rupeesanity_silent_pickup_bitmask: 0x803FD88C
+  rupeesanity_spawn_switch_table: 0x803FD8A4
+  auction_cycle_index: 0x803FD94C
+  init_save_with_tweaks: 0x803FD950
   init_starting_gear: 0x803FDDD0
   num_triforce_shards_to_start_with: 0x803FDE18
   should_start_with_heros_clothes: 0x803FDE19
