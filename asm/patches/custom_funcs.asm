@@ -133,6 +133,8 @@ li r4, 0x1610 ; Makar is in dungeon mode and can be lifted/called
 bl onEventBit__11dSv_event_cFUs
 li r4, 0x1604 ; Makar should ride ship on sea
 bl onEventBit__11dSv_event_cFUs
+li r4, 0x2E02 ; Gale Isle arrival flag - prevents arrival cutscene and satisfies checkSeaLandingEvent
+bl onEventBit__11dSv_event_cFUs
 li r4, 0x3440 ; Saw event where Makar calls to you from within jail
 bl onEventBit__11dSv_event_cFUs
 li r4, 0x3A20 ; Fishman and KoRL talked about Forsaken Fortress after you beat Molgera
