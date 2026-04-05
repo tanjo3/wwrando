@@ -52,7 +52,7 @@ orca_reward_select:
   stw r0, 0x08 (sp) ; Override level to 4
 
 orca_reward_level_ready:
-  ; Check 100-hit reward: level >= 1 and 0x6B01 not set
+  ; Check 100-hit reward: level >= 1 and 0x6C01 not set
   lwz r0, 0x08 (sp)
   cmpwi r0, 1
   blt orca_reward_vanilla_fallback

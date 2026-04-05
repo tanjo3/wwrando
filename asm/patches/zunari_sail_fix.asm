@@ -58,7 +58,7 @@ zunari_shop_dialogue:
   b 0x1808
 
 zunari_sail_dialogue:
-  lwz r0, 0x788 (r31) ; Check which side of the shop we're on, we need this as the sail dialogue doesn't check it normally. and will block shop otherwise.
+  lwz r0, 0x788 (r31) ; Check which side of the shop we're on, we need this as the sail dialogue doesn't check it normally and will block shop otherwise.
   cmpwi r0, -0x1
   lwz r0, 0x14 (sp)
   mtlr r0

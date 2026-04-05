@@ -1934,7 +1934,7 @@ Headstone Island - Rupee East of Headstone 1:
     | Boomerang
     | Hookshot
     | Can Fly With Deku Leaf Outdoors
-    # It is possible to use to fly to this island from the main part of the island.
+    # It is possible to use Deku Leaf to fly to this island from the main part of the island.
   Original item: Green Rupee
   Types: Rupee
   Paths:
@@ -1945,7 +1945,7 @@ Headstone Island - Rupee East of Headstone 2:
     | Boomerang
     | Hookshot
     | Can Fly With Deku Leaf Outdoors
-    # It is possible to use to fly to this island from the main part of the island.
+    # It is possible to use Deku Leaf to fly to this island from the main part of the island.
   Original item: Green Rupee
   Types: Rupee
   Paths:
@@ -1956,7 +1956,7 @@ Headstone Island - Rupee East of Headstone 3:
     | Boomerang
     | Hookshot
     | Can Fly With Deku Leaf Outdoors
-    # It is possible to use to fly to this island from the main part of the island.
+    # It is possible to use Deku Leaf to fly to this island from the main part of the island.
   Original item: Green Rupee
   Types: Rupee
   Paths:
@@ -1967,7 +1967,7 @@ Headstone Island - Rupee East of Headstone 4:
     | Boomerang
     | Hookshot
     | Can Fly With Deku Leaf Outdoors
-    # It is possible to use to fly to this island from the main part of the island.
+    # It is possible to use Deku Leaf to fly to this island from the main part of the island.
   Original item: Green Rupee
   Types: Rupee
   Paths:
