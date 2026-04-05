@@ -28,7 +28,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(914, 830)
+        MainWindow.resize(1000, 830)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -257,75 +257,6 @@ class Ui_MainWindow(object):
         self.item_randomizer_modes_groupbox.setObjectName(u"item_randomizer_modes_groupbox")
         self.gridLayout_3 = QGridLayout(self.item_randomizer_modes_groupbox)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.layout_num_starting_triforce_shards = QHBoxLayout()
-        self.layout_num_starting_triforce_shards.setObjectName(u"layout_num_starting_triforce_shards")
-        self.label_for_num_starting_triforce_shards = QLabel(self.item_randomizer_modes_groupbox)
-        self.label_for_num_starting_triforce_shards.setObjectName(u"label_for_num_starting_triforce_shards")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_for_num_starting_triforce_shards.sizePolicy().hasHeightForWidth())
-        self.label_for_num_starting_triforce_shards.setSizePolicy(sizePolicy)
-
-        self.layout_num_starting_triforce_shards.addWidget(self.label_for_num_starting_triforce_shards)
-
-        self.num_starting_triforce_shards = QSpinBox(self.item_randomizer_modes_groupbox)
-        self.num_starting_triforce_shards.setObjectName(u"num_starting_triforce_shards")
-
-        self.layout_num_starting_triforce_shards.addWidget(self.num_starting_triforce_shards)
-
-
-        self.gridLayout_3.addLayout(self.layout_num_starting_triforce_shards, 0, 1, 1, 1)
-
-        self.layout_shuffle_maps_and_compasses = QHBoxLayout()
-        self.layout_shuffle_maps_and_compasses.setObjectName(u"layout_shuffle_maps_and_compasses")
-        self.label_for_shuffle_maps_and_compasses = QLabel(self.item_randomizer_modes_groupbox)
-        self.label_for_shuffle_maps_and_compasses.setObjectName(u"label_for_shuffle_maps_and_compasses")
-
-        self.layout_shuffle_maps_and_compasses.addWidget(self.label_for_shuffle_maps_and_compasses)
-
-        self.shuffle_maps_and_compasses = QComboBox(self.item_randomizer_modes_groupbox)
-        self.shuffle_maps_and_compasses.addItem("")
-        self.shuffle_maps_and_compasses.addItem("")
-        self.shuffle_maps_and_compasses.addItem("")
-        self.shuffle_maps_and_compasses.addItem("")
-        self.shuffle_maps_and_compasses.addItem("")
-        self.shuffle_maps_and_compasses.addItem("")
-        self.shuffle_maps_and_compasses.setObjectName(u"shuffle_maps_and_compasses")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
-        sizePolicy1.setHorizontalStretch(1)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.shuffle_maps_and_compasses.sizePolicy().hasHeightForWidth())
-        self.shuffle_maps_and_compasses.setSizePolicy(sizePolicy1)
-
-        self.layout_shuffle_maps_and_compasses.addWidget(self.shuffle_maps_and_compasses)
-
-
-        self.gridLayout_3.addLayout(self.layout_shuffle_maps_and_compasses, 2, 2, 1, 1)
-
-        self.layout_shuffle_big_keys = QHBoxLayout()
-        self.layout_shuffle_big_keys.setObjectName(u"layout_shuffle_big_keys")
-        self.label_for_shuffle_big_keys = QLabel(self.item_randomizer_modes_groupbox)
-        self.label_for_shuffle_big_keys.setObjectName(u"label_for_shuffle_big_keys")
-
-        self.layout_shuffle_big_keys.addWidget(self.label_for_shuffle_big_keys)
-
-        self.shuffle_big_keys = QComboBox(self.item_randomizer_modes_groupbox)
-        self.shuffle_big_keys.addItem("")
-        self.shuffle_big_keys.addItem("")
-        self.shuffle_big_keys.addItem("")
-        self.shuffle_big_keys.addItem("")
-        self.shuffle_big_keys.addItem("")
-        self.shuffle_big_keys.addItem("")
-        self.shuffle_big_keys.setObjectName(u"shuffle_big_keys")
-        sizePolicy1.setHeightForWidth(self.shuffle_big_keys.sizePolicy().hasHeightForWidth())
-        self.shuffle_big_keys.setSizePolicy(sizePolicy1)
-
-        self.layout_shuffle_big_keys.addWidget(self.shuffle_big_keys)
-
-
-        self.gridLayout_3.addLayout(self.layout_shuffle_big_keys, 2, 1, 1, 1)
-
         self.layout_sword_mode = QHBoxLayout()
         self.layout_sword_mode.setObjectName(u"layout_sword_mode")
         self.label_for_sword_mode = QLabel(self.item_randomizer_modes_groupbox)
@@ -338,13 +269,46 @@ class Ui_MainWindow(object):
         self.sword_mode.addItem("")
         self.sword_mode.addItem("")
         self.sword_mode.setObjectName(u"sword_mode")
-        sizePolicy1.setHeightForWidth(self.sword_mode.sizePolicy().hasHeightForWidth())
-        self.sword_mode.setSizePolicy(sizePolicy1)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(1)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.sword_mode.sizePolicy().hasHeightForWidth())
+        self.sword_mode.setSizePolicy(sizePolicy)
 
         self.layout_sword_mode.addWidget(self.sword_mode)
 
 
         self.gridLayout_3.addLayout(self.layout_sword_mode, 0, 0, 1, 1)
+
+        self.layout_num_starting_triforce_shards = QHBoxLayout()
+        self.layout_num_starting_triforce_shards.setObjectName(u"layout_num_starting_triforce_shards")
+        self.label_for_num_starting_triforce_shards = QLabel(self.item_randomizer_modes_groupbox)
+        self.label_for_num_starting_triforce_shards.setObjectName(u"label_for_num_starting_triforce_shards")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.label_for_num_starting_triforce_shards.sizePolicy().hasHeightForWidth())
+        self.label_for_num_starting_triforce_shards.setSizePolicy(sizePolicy1)
+
+        self.layout_num_starting_triforce_shards.addWidget(self.label_for_num_starting_triforce_shards)
+
+        self.num_starting_triforce_shards = QSpinBox(self.item_randomizer_modes_groupbox)
+        self.num_starting_triforce_shards.setObjectName(u"num_starting_triforce_shards")
+
+        self.layout_num_starting_triforce_shards.addWidget(self.num_starting_triforce_shards)
+
+
+        self.gridLayout_3.addLayout(self.layout_num_starting_triforce_shards, 0, 1, 1, 1)
+
+        self.chest_type_matches_contents = QCheckBox(self.item_randomizer_modes_groupbox)
+        self.chest_type_matches_contents.setObjectName(u"chest_type_matches_contents")
+
+        self.gridLayout_3.addWidget(self.chest_type_matches_contents, 0, 2, 1, 1)
+
+        self.trap_chests = QCheckBox(self.item_randomizer_modes_groupbox)
+        self.trap_chests.setObjectName(u"trap_chests")
+
+        self.gridLayout_3.addWidget(self.trap_chests, 0, 3, 1, 1)
 
         self.layout_shuffle_small_keys = QHBoxLayout()
         self.layout_shuffle_small_keys.setObjectName(u"layout_shuffle_small_keys")
@@ -361,28 +325,64 @@ class Ui_MainWindow(object):
         self.shuffle_small_keys.addItem("")
         self.shuffle_small_keys.addItem("")
         self.shuffle_small_keys.setObjectName(u"shuffle_small_keys")
-        sizePolicy1.setHeightForWidth(self.shuffle_small_keys.sizePolicy().hasHeightForWidth())
-        self.shuffle_small_keys.setSizePolicy(sizePolicy1)
+        sizePolicy.setHeightForWidth(self.shuffle_small_keys.sizePolicy().hasHeightForWidth())
+        self.shuffle_small_keys.setSizePolicy(sizePolicy)
 
         self.layout_shuffle_small_keys.addWidget(self.shuffle_small_keys)
 
 
-        self.gridLayout_3.addLayout(self.layout_shuffle_small_keys, 2, 0, 1, 1)
+        self.gridLayout_3.addLayout(self.layout_shuffle_small_keys, 1, 0, 1, 1)
 
-        self.chest_type_matches_contents = QCheckBox(self.item_randomizer_modes_groupbox)
-        self.chest_type_matches_contents.setObjectName(u"chest_type_matches_contents")
+        self.layout_shuffle_big_keys = QHBoxLayout()
+        self.layout_shuffle_big_keys.setObjectName(u"layout_shuffle_big_keys")
+        self.label_for_shuffle_big_keys = QLabel(self.item_randomizer_modes_groupbox)
+        self.label_for_shuffle_big_keys.setObjectName(u"label_for_shuffle_big_keys")
 
-        self.gridLayout_3.addWidget(self.chest_type_matches_contents, 3, 0, 1, 1)
+        self.layout_shuffle_big_keys.addWidget(self.label_for_shuffle_big_keys)
 
-        self.trap_chests = QCheckBox(self.item_randomizer_modes_groupbox)
-        self.trap_chests.setObjectName(u"trap_chests")
+        self.shuffle_big_keys = QComboBox(self.item_randomizer_modes_groupbox)
+        self.shuffle_big_keys.addItem("")
+        self.shuffle_big_keys.addItem("")
+        self.shuffle_big_keys.addItem("")
+        self.shuffle_big_keys.addItem("")
+        self.shuffle_big_keys.addItem("")
+        self.shuffle_big_keys.addItem("")
+        self.shuffle_big_keys.setObjectName(u"shuffle_big_keys")
+        sizePolicy.setHeightForWidth(self.shuffle_big_keys.sizePolicy().hasHeightForWidth())
+        self.shuffle_big_keys.setSizePolicy(sizePolicy)
 
-        self.gridLayout_3.addWidget(self.trap_chests, 3, 1, 1, 1)
+        self.layout_shuffle_big_keys.addWidget(self.shuffle_big_keys)
+
+
+        self.gridLayout_3.addLayout(self.layout_shuffle_big_keys, 1, 1, 1, 1)
+
+        self.layout_shuffle_maps_and_compasses = QHBoxLayout()
+        self.layout_shuffle_maps_and_compasses.setObjectName(u"layout_shuffle_maps_and_compasses")
+        self.label_for_shuffle_maps_and_compasses = QLabel(self.item_randomizer_modes_groupbox)
+        self.label_for_shuffle_maps_and_compasses.setObjectName(u"label_for_shuffle_maps_and_compasses")
+
+        self.layout_shuffle_maps_and_compasses.addWidget(self.label_for_shuffle_maps_and_compasses)
+
+        self.shuffle_maps_and_compasses = QComboBox(self.item_randomizer_modes_groupbox)
+        self.shuffle_maps_and_compasses.addItem("")
+        self.shuffle_maps_and_compasses.addItem("")
+        self.shuffle_maps_and_compasses.addItem("")
+        self.shuffle_maps_and_compasses.addItem("")
+        self.shuffle_maps_and_compasses.addItem("")
+        self.shuffle_maps_and_compasses.addItem("")
+        self.shuffle_maps_and_compasses.setObjectName(u"shuffle_maps_and_compasses")
+        sizePolicy.setHeightForWidth(self.shuffle_maps_and_compasses.sizePolicy().hasHeightForWidth())
+        self.shuffle_maps_and_compasses.setSizePolicy(sizePolicy)
+
+        self.layout_shuffle_maps_and_compasses.addWidget(self.shuffle_maps_and_compasses)
+
+
+        self.gridLayout_3.addLayout(self.layout_shuffle_maps_and_compasses, 1, 2, 1, 1)
 
         self.boss_soul_shuffle = QCheckBox(self.item_randomizer_modes_groupbox)
         self.boss_soul_shuffle.setObjectName(u"boss_soul_shuffle")
 
-        self.gridLayout_3.addWidget(self.boss_soul_shuffle, 3, 2, 1, 1)
+        self.gridLayout_3.addWidget(self.boss_soul_shuffle, 1, 3, 1, 1)
 
 
         self.verticalLayout_3.addWidget(self.item_randomizer_modes_groupbox)
@@ -434,8 +434,8 @@ class Ui_MainWindow(object):
         self.mix_entrances.addItem("")
         self.mix_entrances.addItem("")
         self.mix_entrances.setObjectName(u"mix_entrances")
-        sizePolicy1.setHeightForWidth(self.mix_entrances.sizePolicy().hasHeightForWidth())
-        self.mix_entrances.setSizePolicy(sizePolicy1)
+        sizePolicy.setHeightForWidth(self.mix_entrances.sizePolicy().hasHeightForWidth())
+        self.mix_entrances.setSizePolicy(sizePolicy)
 
         self.layout_mix_entrances.addWidget(self.mix_entrances)
 
@@ -998,8 +998,8 @@ class Ui_MainWindow(object):
         self.layout_required_bosses.setObjectName(u"layout_required_bosses")
         self.label_for_num_required_bosses = QLabel(self.required_bosses_groupbox)
         self.label_for_num_required_bosses.setObjectName(u"label_for_num_required_bosses")
-        sizePolicy.setHeightForWidth(self.label_for_num_required_bosses.sizePolicy().hasHeightForWidth())
-        self.label_for_num_required_bosses.setSizePolicy(sizePolicy)
+        sizePolicy1.setHeightForWidth(self.label_for_num_required_bosses.sizePolicy().hasHeightForWidth())
+        self.label_for_num_required_bosses.setSizePolicy(sizePolicy1)
 
         self.layout_required_bosses.addWidget(self.label_for_num_required_bosses)
 
@@ -1221,15 +1221,15 @@ class Ui_MainWindow(object):
 
         self.layout_logic_tweaks.addWidget(self.open_drc, 0, 1, 1, 1)
 
-        self.widget_12 = QWidget(self.logic_tweaks_groupbox)
-        self.widget_12.setObjectName(u"widget_12")
+        self.totg_tablet_from_start = QCheckBox(self.logic_tweaks_groupbox)
+        self.totg_tablet_from_start.setObjectName(u"totg_tablet_from_start")
 
-        self.layout_logic_tweaks.addWidget(self.widget_12, 0, 2, 1, 1)
+        self.layout_logic_tweaks.addWidget(self.totg_tablet_from_start, 0, 2, 1, 1)
 
-        self.widget_13 = QWidget(self.logic_tweaks_groupbox)
-        self.widget_13.setObjectName(u"widget_13")
+        self.sunlight_arrows = QCheckBox(self.logic_tweaks_groupbox)
+        self.sunlight_arrows.setObjectName(u"sunlight_arrows")
 
-        self.layout_logic_tweaks.addWidget(self.widget_13, 0, 3, 1, 1)
+        self.layout_logic_tweaks.addWidget(self.sunlight_arrows, 0, 3, 1, 1)
 
 
         self.verticalLayout_9.addWidget(self.logic_tweaks_groupbox)
@@ -1238,25 +1238,100 @@ class Ui_MainWindow(object):
         self.dev_features_groupbox.setObjectName(u"dev_features_groupbox")
         self.layout_dev_features = QGridLayout(self.dev_features_groupbox)
         self.layout_dev_features.setObjectName(u"layout_dev_features")
-        self.rainbow_rupee_progress = QCheckBox(self.dev_features_groupbox)
-        self.rainbow_rupee_progress.setObjectName(u"rainbow_rupee_progress")
+        self.quick_gohma = QCheckBox(self.dev_features_groupbox)
+        self.quick_gohma.setObjectName(u"quick_gohma")
 
-        self.layout_dev_features.addWidget(self.rainbow_rupee_progress, 0, 0, 1, 1)
-
-        self.widget_17 = QWidget(self.dev_features_groupbox)
-        self.widget_17.setObjectName(u"widget_17")
-
-        self.layout_dev_features.addWidget(self.widget_17, 0, 1, 1, 1)
-
-        self.widget_18 = QWidget(self.dev_features_groupbox)
-        self.widget_18.setObjectName(u"widget_18")
-
-        self.layout_dev_features.addWidget(self.widget_18, 0, 2, 1, 1)
+        self.layout_dev_features.addWidget(self.quick_gohma, 4, 1, 1, 1)
 
         self.widget_19 = QWidget(self.dev_features_groupbox)
         self.widget_19.setObjectName(u"widget_19")
 
-        self.layout_dev_features.addWidget(self.widget_19, 0, 3, 1, 1)
+        self.layout_dev_features.addWidget(self.widget_19, 4, 3, 1, 1)
+
+        self.widget_18 = QWidget(self.dev_features_groupbox)
+        self.widget_18.setObjectName(u"widget_18")
+
+        self.layout_dev_features.addWidget(self.widget_18, 4, 2, 1, 1)
+
+        self.layout_mila_speedup = QHBoxLayout()
+        self.layout_mila_speedup.setObjectName(u"layout_mila_speedup")
+        self.label_for_mila_speedup = QLabel(self.dev_features_groupbox)
+        self.label_for_mila_speedup.setObjectName(u"label_for_mila_speedup")
+
+        self.layout_mila_speedup.addWidget(self.label_for_mila_speedup)
+
+        self.mila_speedup = QComboBox(self.dev_features_groupbox)
+        self.mila_speedup.addItem("")
+        self.mila_speedup.addItem("")
+        self.mila_speedup.addItem("")
+        self.mila_speedup.setObjectName(u"mila_speedup")
+        sizePolicy.setHeightForWidth(self.mila_speedup.sizePolicy().hasHeightForWidth())
+        self.mila_speedup.setSizePolicy(sizePolicy)
+
+        self.layout_mila_speedup.addWidget(self.mila_speedup)
+
+
+        self.layout_dev_features.addLayout(self.layout_mila_speedup, 1, 0, 1, 1)
+
+        self.split_interdungeon_warps_by_required = QCheckBox(self.dev_features_groupbox)
+        self.split_interdungeon_warps_by_required.setObjectName(u"split_interdungeon_warps_by_required")
+
+        self.layout_dev_features.addWidget(self.split_interdungeon_warps_by_required, 0, 0, 1, 1)
+
+        self.remove_ballad_of_gales_warp_in_cutscene = QCheckBox(self.dev_features_groupbox)
+        self.remove_ballad_of_gales_warp_in_cutscene.setObjectName(u"remove_ballad_of_gales_warp_in_cutscene")
+
+        self.layout_dev_features.addWidget(self.remove_ballad_of_gales_warp_in_cutscene, 0, 1, 1, 1)
+
+        self.rainbow_rupee_progress = QCheckBox(self.dev_features_groupbox)
+        self.rainbow_rupee_progress.setObjectName(u"rainbow_rupee_progress")
+
+        self.layout_dev_features.addWidget(self.rainbow_rupee_progress, 0, 2, 1, 1)
+
+        self.speedup_tingle_jail = QCheckBox(self.dev_features_groupbox)
+        self.speedup_tingle_jail.setObjectName(u"speedup_tingle_jail")
+
+        self.layout_dev_features.addWidget(self.speedup_tingle_jail, 1, 1, 1, 1)
+
+        self.speedup_lenzos_assistant = QCheckBox(self.dev_features_groupbox)
+        self.speedup_lenzos_assistant.setObjectName(u"speedup_lenzos_assistant")
+
+        self.layout_dev_features.addWidget(self.speedup_lenzos_assistant, 1, 2, 1, 1)
+
+        self.kamo_any_moon_phase = QCheckBox(self.dev_features_groupbox)
+        self.kamo_any_moon_phase.setObjectName(u"kamo_any_moon_phase")
+
+        self.layout_dev_features.addWidget(self.kamo_any_moon_phase, 1, 3, 1, 1)
+
+        self.wallet_fill_behavior = QCheckBox(self.dev_features_groupbox)
+        self.wallet_fill_behavior.setObjectName(u"wallet_fill_behavior")
+
+        self.layout_dev_features.addWidget(self.wallet_fill_behavior, 0, 3, 1, 1)
+
+        self.fix_auction = QCheckBox(self.dev_features_groupbox)
+        self.fix_auction.setObjectName(u"fix_auction")
+
+        self.layout_dev_features.addWidget(self.fix_auction, 2, 0, 1, 1)
+
+        self.add_drops = QCheckBox(self.dev_features_groupbox)
+        self.add_drops.setObjectName(u"add_drops")
+
+        self.layout_dev_features.addWidget(self.add_drops, 4, 0, 1, 1)
+
+        self.shorten_mail_minigame = QCheckBox(self.dev_features_groupbox)
+        self.shorten_mail_minigame.setObjectName(u"shorten_mail_minigame")
+
+        self.layout_dev_features.addWidget(self.shorten_mail_minigame, 2, 1, 1, 1)
+
+        self.always_skip_triforce_cutscene = QCheckBox(self.dev_features_groupbox)
+        self.always_skip_triforce_cutscene.setObjectName(u"always_skip_triforce_cutscene")
+
+        self.layout_dev_features.addWidget(self.always_skip_triforce_cutscene, 2, 3, 1, 1)
+
+        self.skip_drc_plat_cs = QCheckBox(self.dev_features_groupbox)
+        self.skip_drc_plat_cs.setObjectName(u"skip_drc_plat_cs")
+
+        self.layout_dev_features.addWidget(self.skip_drc_plat_cs, 2, 2, 1, 1)
 
 
         self.verticalLayout_9.addWidget(self.dev_features_groupbox)
@@ -1293,112 +1368,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_9.addItem(self.advanced_spacer)
 
         self.tabWidget.addTab(self.tab_advanced, "")
-        self.tab_quality_of_life = QWidget()
-        self.tab_quality_of_life.setObjectName(u"tab_quality_of_life")
-        self.verticalLayout_qol = QVBoxLayout(self.tab_quality_of_life)
-        self.verticalLayout_qol.setObjectName(u"verticalLayout_qol")
-        self.groupBox_qol_experimental = QGroupBox(self.tab_quality_of_life)
-        self.groupBox_qol_experimental.setObjectName(u"groupBox_qol_experimental")
-        self.verticalLayout_qol_experimental = QVBoxLayout(self.groupBox_qol_experimental)
-        self.verticalLayout_qol_experimental.setObjectName(u"verticalLayout_qol_experimental")
-        self.horizontalLayout_mila_speedup = QHBoxLayout()
-        self.horizontalLayout_mila_speedup.setObjectName(u"horizontalLayout_mila_speedup")
-        self.label_for_mila_speedup = QLabel(self.groupBox_qol_experimental)
-        self.label_for_mila_speedup.setObjectName(u"label_for_mila_speedup")
-
-        self.horizontalLayout_mila_speedup.addWidget(self.label_for_mila_speedup)
-
-        self.mila_speedup = QComboBox(self.groupBox_qol_experimental)
-        self.mila_speedup.addItem("")
-        self.mila_speedup.addItem("")
-        self.mila_speedup.addItem("")
-        self.mila_speedup.setObjectName(u"mila_speedup")
-        sizePolicy1.setHeightForWidth(self.mila_speedup.sizePolicy().hasHeightForWidth())
-        self.mila_speedup.setSizePolicy(sizePolicy1)
-
-        self.horizontalLayout_mila_speedup.addWidget(self.mila_speedup)
-
-
-        self.verticalLayout_qol_experimental.addLayout(self.horizontalLayout_mila_speedup)
-
-        self.split_interdungeon_warps_by_required = QCheckBox(self.groupBox_qol_experimental)
-        self.split_interdungeon_warps_by_required.setObjectName(u"split_interdungeon_warps_by_required")
-
-        self.verticalLayout_qol_experimental.addWidget(self.split_interdungeon_warps_by_required)
-
-        self.remove_ballad_of_gales_warp_in_cutscene = QCheckBox(self.groupBox_qol_experimental)
-        self.remove_ballad_of_gales_warp_in_cutscene.setObjectName(u"remove_ballad_of_gales_warp_in_cutscene")
-
-        self.verticalLayout_qol_experimental.addWidget(self.remove_ballad_of_gales_warp_in_cutscene)
-
-        self.always_skip_triforce_cutscene = QCheckBox(self.groupBox_qol_experimental)
-        self.always_skip_triforce_cutscene.setObjectName(u"always_skip_triforce_cutscene")
-
-        self.verticalLayout_qol_experimental.addWidget(self.always_skip_triforce_cutscene)
-
-        self.add_drops = QCheckBox(self.groupBox_qol_experimental)
-        self.add_drops.setObjectName(u"add_drops")
-
-        self.verticalLayout_qol_experimental.addWidget(self.add_drops)
-
-        self.speedup_lenzos_assistant = QCheckBox(self.groupBox_qol_experimental)
-        self.speedup_lenzos_assistant.setObjectName(u"speedup_lenzos_assistant")
-
-        self.verticalLayout_qol_experimental.addWidget(self.speedup_lenzos_assistant)
-
-        self.kamo_any_moon_phase = QCheckBox(self.groupBox_qol_experimental)
-        self.kamo_any_moon_phase.setObjectName(u"kamo_any_moon_phase")
-
-        self.verticalLayout_qol_experimental.addWidget(self.kamo_any_moon_phase)
-
-        self.shorten_mail_minigame = QCheckBox(self.groupBox_qol_experimental)
-        self.shorten_mail_minigame.setObjectName(u"shorten_mail_minigame")
-
-        self.verticalLayout_qol_experimental.addWidget(self.shorten_mail_minigame)
-
-        self.skip_drc_plat_cs = QCheckBox(self.groupBox_qol_experimental)
-        self.skip_drc_plat_cs.setObjectName(u"skip_drc_plat_cs")
-
-        self.verticalLayout_qol_experimental.addWidget(self.skip_drc_plat_cs)
-
-        self.wallet_fill_behavior = QCheckBox(self.groupBox_qol_experimental)
-        self.wallet_fill_behavior.setObjectName(u"wallet_fill_behavior")
-
-        self.verticalLayout_qol_experimental.addWidget(self.wallet_fill_behavior)
-
-        self.speedup_tingle_jail = QCheckBox(self.groupBox_qol_experimental)
-        self.speedup_tingle_jail.setObjectName(u"speedup_tingle_jail")
-
-        self.verticalLayout_qol_experimental.addWidget(self.speedup_tingle_jail)
-
-        self.fix_auction = QCheckBox(self.groupBox_qol_experimental)
-        self.fix_auction.setObjectName(u"fix_auction")
-
-        self.verticalLayout_qol_experimental.addWidget(self.fix_auction)
-
-        self.totg_tablet_from_start = QCheckBox(self.groupBox_qol_experimental)
-        self.totg_tablet_from_start.setObjectName(u"totg_tablet_from_start")
-
-        self.verticalLayout_qol_experimental.addWidget(self.totg_tablet_from_start)
-
-        self.quick_gohma = QCheckBox(self.groupBox_qol_experimental)
-        self.quick_gohma.setObjectName(u"quick_gohma")
-
-        self.verticalLayout_qol_experimental.addWidget(self.quick_gohma)
-
-        self.sunlight_arrows = QCheckBox(self.groupBox_qol_experimental)
-        self.sunlight_arrows.setObjectName(u"sunlight_arrows")
-
-        self.verticalLayout_qol_experimental.addWidget(self.sunlight_arrows)
-
-        self.verticalSpacer_qol = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout_qol_experimental.addItem(self.verticalSpacer_qol)
-
-
-        self.verticalLayout_qol.addWidget(self.groupBox_qol_experimental)
-
-        self.tabWidget.addTab(self.tab_quality_of_life, "")
         self.tab_player_customization = CosmeticTab()
         self.tab_player_customization.setObjectName(u"tab_player_customization")
         self.tabWidget.addTab(self.tab_player_customization, "")
@@ -1434,7 +1403,7 @@ class Ui_MainWindow(object):
 
         self.seed_hash_label = QLabel(self.centralwidget)
         self.seed_hash_label.setObjectName(u"seed_hash_label")
-        self.seed_hash_label.setTextFormat(Qt.TextFormat.RichText)
+        self.seed_hash_label.setTextFormat(Qt.RichText)
 
         self.verticalLayout.addWidget(self.seed_hash_label)
 
@@ -1510,12 +1479,12 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.progression_blue_chu_jellies, self.progression_orca_minigame)
         QWidget.setTabOrder(self.progression_orca_minigame, self.sword_mode)
         QWidget.setTabOrder(self.sword_mode, self.num_starting_triforce_shards)
-        QWidget.setTabOrder(self.num_starting_triforce_shards, self.shuffle_small_keys)
+        QWidget.setTabOrder(self.num_starting_triforce_shards, self.chest_type_matches_contents)
+        QWidget.setTabOrder(self.chest_type_matches_contents, self.trap_chests)
+        QWidget.setTabOrder(self.trap_chests, self.shuffle_small_keys)
         QWidget.setTabOrder(self.shuffle_small_keys, self.shuffle_big_keys)
         QWidget.setTabOrder(self.shuffle_big_keys, self.shuffle_maps_and_compasses)
-        QWidget.setTabOrder(self.shuffle_maps_and_compasses, self.chest_type_matches_contents)
-        QWidget.setTabOrder(self.chest_type_matches_contents, self.trap_chests)
-        QWidget.setTabOrder(self.trap_chests, self.boss_soul_shuffle)
+        QWidget.setTabOrder(self.shuffle_maps_and_compasses, self.boss_soul_shuffle)
         QWidget.setTabOrder(self.boss_soul_shuffle, self.randomize_dungeon_entrances)
         QWidget.setTabOrder(self.randomize_dungeon_entrances, self.randomize_boss_entrances)
         QWidget.setTabOrder(self.randomize_boss_entrances, self.randomize_miniboss_entrances)
@@ -1562,17 +1531,18 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.filter_excluded_locations, self.excluded_locations)
         QWidget.setTabOrder(self.excluded_locations, self.include_location)
         QWidget.setTabOrder(self.include_location, self.exclude_location)
-        QWidget.setTabOrder(self.exclude_location, self.required_bosses)
-        QWidget.setTabOrder(self.required_bosses, self.num_required_bosses)
-        QWidget.setTabOrder(self.num_required_bosses, self.prioritize_required_bosses)
-        QWidget.setTabOrder(self.prioritize_required_bosses, self.hero_mode)
-        QWidget.setTabOrder(self.hero_mode, self.filter_available_tricks)
+        QWidget.setTabOrder(self.exclude_location, self.filter_available_tricks)
         QWidget.setTabOrder(self.filter_available_tricks, self.available_tricks)
         QWidget.setTabOrder(self.available_tricks, self.filter_enabled_tricks)
         QWidget.setTabOrder(self.filter_enabled_tricks, self.enabled_tricks)
         QWidget.setTabOrder(self.enabled_tricks, self.disable_trick)
         QWidget.setTabOrder(self.disable_trick, self.enable_trick)
-        QWidget.setTabOrder(self.enable_trick, self.hoho_hints)
+        QWidget.setTabOrder(self.enable_trick, self.required_bosses)
+        QWidget.setTabOrder(self.required_bosses, self.num_required_bosses)
+        QWidget.setTabOrder(self.num_required_bosses, self.prioritize_required_bosses)
+        QWidget.setTabOrder(self.prioritize_required_bosses, self.hero_mode)
+        QWidget.setTabOrder(self.hero_mode, self.orca_one_hit_knockout)
+        QWidget.setTabOrder(self.orca_one_hit_knockout, self.hoho_hints)
         QWidget.setTabOrder(self.hoho_hints, self.fishmen_hints)
         QWidget.setTabOrder(self.fishmen_hints, self.korl_hints)
         QWidget.setTabOrder(self.korl_hints, self.num_item_hints)
@@ -1587,23 +1557,24 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.korl_hints_swords, self.kreeb_hints_bows)
         QWidget.setTabOrder(self.kreeb_hints_bows, self.always_double_magic)
         QWidget.setTabOrder(self.always_double_magic, self.open_drc)
-        QWidget.setTabOrder(self.open_drc, self.rainbow_rupee_progress)
-        QWidget.setTabOrder(self.rainbow_rupee_progress, self.do_not_generate_spoiler_log)
-        QWidget.setTabOrder(self.do_not_generate_spoiler_log, self.dry_run)
-        QWidget.setTabOrder(self.dry_run, self.mila_speedup)
-        QWidget.setTabOrder(self.mila_speedup, self.split_interdungeon_warps_by_required)
+        QWidget.setTabOrder(self.open_drc, self.totg_tablet_from_start)
+        QWidget.setTabOrder(self.totg_tablet_from_start, self.sunlight_arrows)
+        QWidget.setTabOrder(self.sunlight_arrows, self.split_interdungeon_warps_by_required)
         QWidget.setTabOrder(self.split_interdungeon_warps_by_required, self.remove_ballad_of_gales_warp_in_cutscene)
-        QWidget.setTabOrder(self.remove_ballad_of_gales_warp_in_cutscene, self.always_skip_triforce_cutscene)
-        QWidget.setTabOrder(self.always_skip_triforce_cutscene, self.add_drops)
-        QWidget.setTabOrder(self.add_drops, self.speedup_lenzos_assistant)
+        QWidget.setTabOrder(self.remove_ballad_of_gales_warp_in_cutscene, self.rainbow_rupee_progress)
+        QWidget.setTabOrder(self.rainbow_rupee_progress, self.wallet_fill_behavior)
+        QWidget.setTabOrder(self.wallet_fill_behavior, self.mila_speedup)
+        QWidget.setTabOrder(self.mila_speedup, self.speedup_tingle_jail)
+        QWidget.setTabOrder(self.speedup_tingle_jail, self.speedup_lenzos_assistant)
         QWidget.setTabOrder(self.speedup_lenzos_assistant, self.kamo_any_moon_phase)
-        QWidget.setTabOrder(self.kamo_any_moon_phase, self.shorten_mail_minigame)
+        QWidget.setTabOrder(self.kamo_any_moon_phase, self.fix_auction)
+        QWidget.setTabOrder(self.fix_auction, self.shorten_mail_minigame)
         QWidget.setTabOrder(self.shorten_mail_minigame, self.skip_drc_plat_cs)
-        QWidget.setTabOrder(self.skip_drc_plat_cs, self.wallet_fill_behavior)
-        QWidget.setTabOrder(self.wallet_fill_behavior, self.speedup_tingle_jail)
-        QWidget.setTabOrder(self.speedup_tingle_jail, self.fix_auction)
-        QWidget.setTabOrder(self.fix_auction, self.quick_gohma)
-        QWidget.setTabOrder(self.quick_gohma, self.sunlight_arrows)
+        QWidget.setTabOrder(self.skip_drc_plat_cs, self.always_skip_triforce_cutscene)
+        QWidget.setTabOrder(self.always_skip_triforce_cutscene, self.add_drops)
+        QWidget.setTabOrder(self.add_drops, self.quick_gohma)
+        QWidget.setTabOrder(self.quick_gohma, self.do_not_generate_spoiler_log)
+        QWidget.setTabOrder(self.do_not_generate_spoiler_log, self.dry_run)
 
         self.retranslateUi(MainWindow)
 
@@ -1650,30 +1621,14 @@ class Ui_MainWindow(object):
         self.progression_blue_chu_jellies.setText(QCoreApplication.translate("MainWindow", u"Blue Chu Jellies", None))
         self.progression_orca_minigame.setText(QCoreApplication.translate("MainWindow", u"Orca Minigame", None))
         self.item_randomizer_modes_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Item Randomizer Modes", None))
-        self.label_for_num_starting_triforce_shards.setText(QCoreApplication.translate("MainWindow", u"Triforce Shards to Start With", None))
-        self.label_for_shuffle_maps_and_compasses.setText(QCoreApplication.translate("MainWindow", u"Dungeon Maps and Compasses", None))
-        self.shuffle_maps_and_compasses.setItemText(0, QCoreApplication.translate("MainWindow", u"Vanilla", None))
-        self.shuffle_maps_and_compasses.setItemText(1, QCoreApplication.translate("MainWindow", u"Start With", None))
-        self.shuffle_maps_and_compasses.setItemText(2, QCoreApplication.translate("MainWindow", u"Own Dungeon", None))
-        self.shuffle_maps_and_compasses.setItemText(3, QCoreApplication.translate("MainWindow", u"Any Dungeon", None))
-        self.shuffle_maps_and_compasses.setItemText(4, QCoreApplication.translate("MainWindow", u"Overworld", None))
-        self.shuffle_maps_and_compasses.setItemText(5, QCoreApplication.translate("MainWindow", u"Anywhere", None))
-
-        self.shuffle_maps_and_compasses.setCurrentText(QCoreApplication.translate("MainWindow", u"Vanilla", None))
-        self.label_for_shuffle_big_keys.setText(QCoreApplication.translate("MainWindow", u"Big Keys", None))
-        self.shuffle_big_keys.setItemText(0, QCoreApplication.translate("MainWindow", u"Vanilla", None))
-        self.shuffle_big_keys.setItemText(1, QCoreApplication.translate("MainWindow", u"Start With", None))
-        self.shuffle_big_keys.setItemText(2, QCoreApplication.translate("MainWindow", u"Own Dungeon", None))
-        self.shuffle_big_keys.setItemText(3, QCoreApplication.translate("MainWindow", u"Any Dungeon", None))
-        self.shuffle_big_keys.setItemText(4, QCoreApplication.translate("MainWindow", u"Overworld", None))
-        self.shuffle_big_keys.setItemText(5, QCoreApplication.translate("MainWindow", u"Anywhere", None))
-
-        self.shuffle_big_keys.setCurrentText(QCoreApplication.translate("MainWindow", u"Vanilla", None))
         self.label_for_sword_mode.setText(QCoreApplication.translate("MainWindow", u"Sword Mode", None))
         self.sword_mode.setItemText(0, QCoreApplication.translate("MainWindow", u"Start with Hero's Sword", None))
         self.sword_mode.setItemText(1, QCoreApplication.translate("MainWindow", u"No Starting Sword", None))
         self.sword_mode.setItemText(2, QCoreApplication.translate("MainWindow", u"Swordless", None))
 
+        self.label_for_num_starting_triforce_shards.setText(QCoreApplication.translate("MainWindow", u"Triforce Shards to Start With", None))
+        self.chest_type_matches_contents.setText(QCoreApplication.translate("MainWindow", u"Chest Type Matches Contents", None))
+        self.trap_chests.setText(QCoreApplication.translate("MainWindow", u"Enable Trap Chests", None))
         self.label_for_shuffle_small_keys.setText(QCoreApplication.translate("MainWindow", u"Small Keys", None))
         self.shuffle_small_keys.setItemText(0, QCoreApplication.translate("MainWindow", u"Vanilla", None))
         self.shuffle_small_keys.setItemText(1, QCoreApplication.translate("MainWindow", u"Start With", None))
@@ -1683,8 +1638,24 @@ class Ui_MainWindow(object):
         self.shuffle_small_keys.setItemText(5, QCoreApplication.translate("MainWindow", u"Anywhere", None))
 
         self.shuffle_small_keys.setCurrentText(QCoreApplication.translate("MainWindow", u"Vanilla", None))
-        self.chest_type_matches_contents.setText(QCoreApplication.translate("MainWindow", u"Chest Type Matches Contents", None))
-        self.trap_chests.setText(QCoreApplication.translate("MainWindow", u"Enable Trap Chests", None))
+        self.label_for_shuffle_big_keys.setText(QCoreApplication.translate("MainWindow", u"Big Keys", None))
+        self.shuffle_big_keys.setItemText(0, QCoreApplication.translate("MainWindow", u"Vanilla", None))
+        self.shuffle_big_keys.setItemText(1, QCoreApplication.translate("MainWindow", u"Start With", None))
+        self.shuffle_big_keys.setItemText(2, QCoreApplication.translate("MainWindow", u"Own Dungeon", None))
+        self.shuffle_big_keys.setItemText(3, QCoreApplication.translate("MainWindow", u"Any Dungeon", None))
+        self.shuffle_big_keys.setItemText(4, QCoreApplication.translate("MainWindow", u"Overworld", None))
+        self.shuffle_big_keys.setItemText(5, QCoreApplication.translate("MainWindow", u"Anywhere", None))
+
+        self.shuffle_big_keys.setCurrentText(QCoreApplication.translate("MainWindow", u"Vanilla", None))
+        self.label_for_shuffle_maps_and_compasses.setText(QCoreApplication.translate("MainWindow", u"Dungeon Maps and Compasses", None))
+        self.shuffle_maps_and_compasses.setItemText(0, QCoreApplication.translate("MainWindow", u"Vanilla", None))
+        self.shuffle_maps_and_compasses.setItemText(1, QCoreApplication.translate("MainWindow", u"Start With", None))
+        self.shuffle_maps_and_compasses.setItemText(2, QCoreApplication.translate("MainWindow", u"Own Dungeon", None))
+        self.shuffle_maps_and_compasses.setItemText(3, QCoreApplication.translate("MainWindow", u"Any Dungeon", None))
+        self.shuffle_maps_and_compasses.setItemText(4, QCoreApplication.translate("MainWindow", u"Overworld", None))
+        self.shuffle_maps_and_compasses.setItemText(5, QCoreApplication.translate("MainWindow", u"Anywhere", None))
+
+        self.shuffle_maps_and_compasses.setCurrentText(QCoreApplication.translate("MainWindow", u"Vanilla", None))
         self.boss_soul_shuffle.setText(QCoreApplication.translate("MainWindow", u"Boss Soul Shuffle", None))
         self.entrance_randomizer_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Entrance Randomizer Options", None))
         self.randomize_dungeon_entrances.setText(QCoreApplication.translate("MainWindow", u"Dungeons", None))
@@ -1770,13 +1741,10 @@ class Ui_MainWindow(object):
         self.logic_tweaks_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Logic Tweaks", None))
         self.always_double_magic.setText(QCoreApplication.translate("MainWindow", u"All Magic Meters are Double", None))
         self.open_drc.setText(QCoreApplication.translate("MainWindow", u"Open DRC", None))
+        self.totg_tablet_from_start.setText(QCoreApplication.translate("MainWindow", u"Skip TotG Statues", None))
+        self.sunlight_arrows.setText(QCoreApplication.translate("MainWindow", u"Sunlight Arrows", None))
         self.dev_features_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Miscellaneous Dev Features", None))
-        self.rainbow_rupee_progress.setText(QCoreApplication.translate("MainWindow", u"Make Rainbow Rupee Progression", None))
-        self.additional_advanced_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))
-        self.do_not_generate_spoiler_log.setText(QCoreApplication.translate("MainWindow", u"Do Not Generate Spoiler Log", None))
-        self.dry_run.setText(QCoreApplication.translate("MainWindow", u"Dry Run", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_advanced), QCoreApplication.translate("MainWindow", u"Advanced Options", None))
-        self.groupBox_qol_experimental.setTitle(QCoreApplication.translate("MainWindow", u"Experimental Features", None))
+        self.quick_gohma.setText(QCoreApplication.translate("MainWindow", u"Quick Gohma", None))
         self.label_for_mila_speedup.setText(QCoreApplication.translate("MainWindow", u"Mila Speedup", None))
         self.mila_speedup.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
         self.mila_speedup.setItemText(1, QCoreApplication.translate("MainWindow", u"Shortened", None))
@@ -1784,19 +1752,20 @@ class Ui_MainWindow(object):
 
         self.split_interdungeon_warps_by_required.setText(QCoreApplication.translate("MainWindow", u"Split Warp Pots by Required (1, 2, 3 DRM)", None))
         self.remove_ballad_of_gales_warp_in_cutscene.setText(QCoreApplication.translate("MainWindow", u"Remove Ballad of Gales Landing Cutscene", None))
-        self.always_skip_triforce_cutscene.setText(QCoreApplication.translate("MainWindow", u"Always Skip Triforce Cutscene", None))
-        self.add_drops.setText(QCoreApplication.translate("MainWindow", u"Add Static Drops", None))
+        self.rainbow_rupee_progress.setText(QCoreApplication.translate("MainWindow", u"Make Rainbow Rupee Progression", None))
+        self.speedup_tingle_jail.setText(QCoreApplication.translate("MainWindow", u"Speed Up Tingle Jail Cutscenes", None))
         self.speedup_lenzos_assistant.setText(QCoreApplication.translate("MainWindow", u"Speed Up Lenzo's Assistant", None))
         self.kamo_any_moon_phase.setText(QCoreApplication.translate("MainWindow", u"Kamo Accepts Any Moon Phase", None))
-        self.shorten_mail_minigame.setText(QCoreApplication.translate("MainWindow", u"Shorten Mail Sorting Minigame", None))
-        self.skip_drc_plat_cs.setText(QCoreApplication.translate("MainWindow", u"Skip DRC Platform Cutscenes", None))
         self.wallet_fill_behavior.setText(QCoreApplication.translate("MainWindow", u"Fill Wallets When Received", None))
-        self.speedup_tingle_jail.setText(QCoreApplication.translate("MainWindow", u"Speed Up Tingle Jail Cutscenes", None))
         self.fix_auction.setText(QCoreApplication.translate("MainWindow", u"Fix Auction", None))
-        self.totg_tablet_from_start.setText(QCoreApplication.translate("MainWindow", u"Skip TotG Statues", None))
-        self.quick_gohma.setText(QCoreApplication.translate("MainWindow", u"Quick Gohma", None))
-        self.sunlight_arrows.setText(QCoreApplication.translate("MainWindow", u"Sunlight Arrows", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_quality_of_life), QCoreApplication.translate("MainWindow", u"Quality of Life", None))
+        self.add_drops.setText(QCoreApplication.translate("MainWindow", u"Add Static Drops", None))
+        self.shorten_mail_minigame.setText(QCoreApplication.translate("MainWindow", u"Shorten Mail Sorting Minigame", None))
+        self.always_skip_triforce_cutscene.setText(QCoreApplication.translate("MainWindow", u"Always Skip Triforce Cutscene", None))
+        self.skip_drc_plat_cs.setText(QCoreApplication.translate("MainWindow", u"Skip DRC Platform Cutscenes", None))
+        self.additional_advanced_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Additional Advanced Options", None))
+        self.do_not_generate_spoiler_log.setText(QCoreApplication.translate("MainWindow", u"Do Not Generate Spoiler Log", None))
+        self.dry_run.setText(QCoreApplication.translate("MainWindow", u"Dry Run", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_advanced), QCoreApplication.translate("MainWindow", u"Advanced Options", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_player_customization), QCoreApplication.translate("MainWindow", u"Player Customization", None))
         self.option_description.setText("")
         self.label_for_permalink.setText(QCoreApplication.translate("MainWindow", u"Permalink (copy paste to share your settings):", None))
