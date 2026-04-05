@@ -781,6 +781,9 @@ class WWRandomizerWindow(QMainWindow):
     if not (dungeon_entrances_random and non_dungeon_entrances_random):
       should_enable_options["mix_entrances"] = False
     
+    if not (options.required_bosses and options.add_shortcut_warps_between_dungeons and options.num_required_bosses <= 3):
+      should_enable_options["split_interdungeon_warps_by_required"] = False
+    
     if not options.boss_soul_shuffle:
       items_to_filter_out += BOSS_SOUL_ITEMS
 
