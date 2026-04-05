@@ -2238,6 +2238,7 @@ Earth Temple - Rupee Behind Destructible Statue Before Third Crypt:
     & (
       Can Play Command Melody
       | Can Aim Mirror Shield
+      | Can Use Sunlight Arrows
     )
     & Power Bracelets
     & Skull Hammer
