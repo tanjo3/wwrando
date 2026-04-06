@@ -376,6 +376,8 @@ class ItemRandomizer(BaseRandomizer):
         prerand_item = self.logic.prerandomization_item_locations[location_name]
         if prerand_item not in self.logic.all_progress_items:
           continue
+        if prerand_item not in possible_items:
+          continue
         possible_items.remove(prerand_item)
       
       if len(possible_items) == 0:
