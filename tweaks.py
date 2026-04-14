@@ -2801,7 +2801,7 @@ def setup_soul_items(self: WWRandomizer):
 
   for new_arc_name, source_arc_path, file_id in soul_arc_sources:
     source_arc = self.get_arc(source_arc_path)
-    
+
     new_arc = RARC()
     new_arc.add_root_directory()
     root_node = new_arc.nodes[0]
