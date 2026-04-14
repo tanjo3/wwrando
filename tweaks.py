@@ -2719,6 +2719,7 @@ def setup_soul_items(self: WWRandomizer):
   # Each soul uses its boss's Nintendo Gallery figurine model.
   # Each soul gets its own single-BDL archive to avoid heap exhaustion when the game parses all files
   # in the archive. The file index is always 3 (bdl/ dir at 0, ./.. at 1-2, then the single BDL at 3).
+  # The file index matches vanilla item archive structure: bdl/ dir at 0, ./.. at 1-2, then files at 3+.
   soul_items = [
     ("Soul of Gohma",         0x86, "soul_item_arc_name_gohma",         3),
     ("Soul of Kalle Demos",   0x87, "soul_item_arc_name_kalle_demos",   3),
@@ -2787,9 +2788,12 @@ def setup_soul_items(self: WWRandomizer):
     self.dol.write_data(fs.write_u32, item_info_entry_addr, 0x32503201)
   
   # Create one small custom archive per soul item, each containing a single BDL figurine model.
+  # We extract only the needed BDL files into small archives, shrink and re-center them so they look good as item pickups.
   # Using one BDL per archive prevents heap exhaustion: the game parses ALL files in an archive,
   # and with 3 BDLs the combined J3DModelData allocation can exceed available heap in complex stages.
   # The original Figure archives are left unmodified to preserve Nintendo Gallery functionality.
+
+  # Map each source Figure archive to the new custom archive name and the file IDs to extract.
   soul_arc_sources = [
     ("Soul0", "files/res/Object/Figure6b.arc", 2),  # Gohma
     ("Soul1", "files/res/Object/Figure6b.arc", 3),  # Kalle Demos
@@ -2805,12 +2809,18 @@ def setup_soul_items(self: WWRandomizer):
     new_arc = RARC()
     new_arc.add_root_directory()
     root_node = new_arc.nodes[0]
+
+    # Create a "bdl" subdirectory matching vanilla item archive structure.
+    # The game's resource system expects BDL files inside a typed subdirectory.
     _, bdl_node = new_arc.add_new_directory("bdl", "BDL ", root_node)
 
+
+    # Add the needed BDL files in order
     for file_entry in source_arc.file_entries:
       if file_entry.is_dir or file_entry.id != file_id:
         continue
 
+      # Copy the BDL data so we don't modify the original Figure archive.
       file_entry.data.seek(0)
       bdl_data_copy = BytesIO(file_entry.data.read())
       bdl_model = BDL(bdl_data_copy)
