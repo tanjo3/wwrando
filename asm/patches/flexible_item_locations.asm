@@ -624,7 +624,7 @@ zunari_check_town_flower_and_set_event_bit:
   bne zunari_check_magic_armor_and_set_event_bit
   lis r3, 0x803C522C@ha
   addi r3, r3, 0x803C522C@l
-  li r4, 0x0E08 ; Event bit for whether the town flower has been given
+  li r4, 0x6B20 ; Unused event bit for whether the town flower has been given
   bl onEventBit__11dSv_event_cFUs
 
 zunari_check_magic_armor_and_set_event_bit:

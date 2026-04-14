@@ -44,7 +44,7 @@ zunari_dialogue_switcher:
   cmpwi r3, 0x0
   beq zunari_sail_dialogue ; No delivery bag → show sail dialogue.
 
-  li r3, 0x0E08 ; Check if the town flower has already been obtained (vanilla bit).
+  li r3, 0x6B20 ; Check if the town flower has already been obtained (Unused event bit).
   bl dComIfGs_isEventBit__FUs
   cmpwi r3, 0x0
   beq zunari_shop_dialogue ; Town flower not yet obtained → skip to shop/town flower dialogue.
