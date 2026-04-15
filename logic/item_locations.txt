@@ -3780,49 +3780,49 @@ Cliff Plateau Isles - Cave:
     - Cave03/Stage.arc/Chest000
 Cliff Plateau Isles - Rupee on Platform in Lower Pool 1:
   Need:
-    Can Access Cliff Plateau Isles Inner Cave
+    Can Access Cliff Plateau Isles Secret Cave
   Original item: Green Rupee
   Types: Puzzle Secret Cave, Rupee
   Paths:
     - Cave03/Room0.arc/Actor036
 Cliff Plateau Isles - Rupee on Platform in Lower Pool 2:
   Need:
-    Can Access Cliff Plateau Isles Inner Cave
+    Can Access Cliff Plateau Isles Secret Cave
   Original item: Green Rupee
   Types: Puzzle Secret Cave, Rupee
   Paths:
     - Cave03/Room0.arc/Actor033
 Cliff Plateau Isles - Rupee on Platform in Lower Pool 3:
   Need:
-    Can Access Cliff Plateau Isles Inner Cave
+    Can Access Cliff Plateau Isles Secret Cave
   Original item: Green Rupee
   Types: Puzzle Secret Cave, Rupee
   Paths:
     - Cave03/Room0.arc/Actor02D
 Cliff Plateau Isles - Rupee on Platform in Lower Pool 4:
   Need:
-    Can Access Cliff Plateau Isles Inner Cave
+    Can Access Cliff Plateau Isles Secret Cave
   Original item: Green Rupee
   Types: Puzzle Secret Cave, Rupee
   Paths:
     - Cave03/Room0.arc/Actor02B
 Cliff Plateau Isles - Rupee on Platform in Middle Pool 1:
   Need:
-    Can Access Cliff Plateau Isles Inner Cave
+    Can Access Cliff Plateau Isles Secret Cave
   Original item: Blue Rupee
   Types: Puzzle Secret Cave, Rupee
   Paths:
     - Cave03/Room0.arc/Actor02F
 Cliff Plateau Isles - Rupee on Platform in Middle Pool 2:
   Need:
-    Can Access Cliff Plateau Isles Inner Cave
+    Can Access Cliff Plateau Isles Secret Cave
   Original item: Blue Rupee
   Types: Puzzle Secret Cave, Rupee
   Paths:
     - Cave03/Room0.arc/Actor031
 Cliff Plateau Isles - Rupee on Platform in Upper Pool:
   Need:
-    Can Access Cliff Plateau Isles Inner Cave
+    Can Access Cliff Plateau Isles Secret Cave
   Original item: Yellow Rupee
   Types: Puzzle Secret Cave, Rupee
   Paths:
