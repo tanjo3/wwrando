@@ -7,14 +7,34 @@ hurricane_spin_item_resource_arc_name:
 .string "Vscroll"
 .align 2 ; Align to the next 4 bytes
 
-.global soul_item_arc_name_figure6b
-soul_item_arc_name_figure6b:
-.string "SoulB"
+.global soul_item_arc_name_gohma
+soul_item_arc_name_gohma:
+.string "Soul0"
 .align 2 ; Align to the next 4 bytes
 
-.global soul_item_arc_name_figure6c
-soul_item_arc_name_figure6c:
-.string "SoulC"
+.global soul_item_arc_name_kalle_demos
+soul_item_arc_name_kalle_demos:
+.string "Soul1"
+.align 2 ; Align to the next 4 bytes
+
+.global soul_item_arc_name_gohdan
+soul_item_arc_name_gohdan:
+.string "Soul2"
+.align 2 ; Align to the next 4 bytes
+
+.global soul_item_arc_name_helmaroc_king
+soul_item_arc_name_helmaroc_king:
+.string "Soul3"
+.align 2 ; Align to the next 4 bytes
+
+.global soul_item_arc_name_jalhalla
+soul_item_arc_name_jalhalla:
+.string "Soul4"
+.align 2 ; Align to the next 4 bytes
+
+.global soul_item_arc_name_molgera
+soul_item_arc_name_molgera:
+.string "Soul5"
 .align 2 ; Align to the next 4 bytes
 
 

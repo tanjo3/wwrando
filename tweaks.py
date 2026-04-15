@@ -2980,16 +2980,16 @@ def setup_soul_items(self: WWRandomizer):
   item_info_list_start = 0x803882B0
   
   # Each soul uses its boss's Nintendo Gallery figurine model.
-  # The models are extracted from the original Figure archives into small custom archives (SoulB, SoulC)
-  # to avoid loading all figurine models in the archive, which would cause heap exhaustion in complex stages.
+  # Each soul gets its own single-BDL archive to avoid heap exhaustion when the game parses all files
+  # in the archive. The file index is always 3 (bdl/ dir at 0, ./.. at 1-2, then the single BDL at 3).
   # The file index matches vanilla item archive structure: bdl/ dir at 0, ./.. at 1-2, then files at 3+.
   soul_items = [
-    ("Soul of Gohma",         0x86, "soul_item_arc_name_figure6b", 3),
-    ("Soul of Kalle Demos",   0x87, "soul_item_arc_name_figure6b", 4),
-    ("Soul of Gohdan",        0x88, "soul_item_arc_name_figure6b", 5),
-    ("Soul of Helmaroc King", 0x89, "soul_item_arc_name_figure6c", 3),
-    ("Soul of Jalhalla",      0x8A, "soul_item_arc_name_figure6c", 4),
-    ("Soul of Molgera",       0x8B, "soul_item_arc_name_figure6c", 5),
+    ("Soul of Gohma",         0x86, "soul_item_arc_name_gohma",         3),
+    ("Soul of Kalle Demos",   0x87, "soul_item_arc_name_kalle_demos",   3),
+    ("Soul of Gohdan",        0x88, "soul_item_arc_name_gohdan",        3),
+    ("Soul of Helmaroc King", 0x89, "soul_item_arc_name_helmaroc_king", 3),
+    ("Soul of Jalhalla",      0x8A, "soul_item_arc_name_jalhalla",      3),
+    ("Soul of Molgera",       0x8B, "soul_item_arc_name_molgera",       3),
   ]
   
   # Use the Heart Container's icon and message number as a base.
@@ -3050,46 +3050,52 @@ def setup_soul_items(self: WWRandomizer):
     item_info_entry_addr = item_info_list_start+4*item_id
     self.dol.write_data(fs.write_u32, item_info_entry_addr, 0x32503201)
   
-  # Create small custom archives containing only the needed figurine models.
+  # Create one small custom archive per soul item, each containing a single BDL figurine model.
   # We extract only the needed BDL files into small archives, shrink and re-center them so they look good as item pickups.
+  # Using one BDL per archive prevents heap exhaustion: the game parses ALL files in an archive,
+  # and with 3 BDLs the combined J3DModelData allocation can exceed available heap in complex stages.
   # The original Figure archives are left unmodified to preserve Nintendo Gallery functionality.
+  
   # Map each source Figure archive to the new custom archive name and the file IDs to extract.
-  source_arc_info = {
-    "files/res/Object/Figure6b.arc": ("SoulB", [2, 3, 4]),
-    "files/res/Object/Figure6c.arc": ("SoulC", [0, 1, 2]),
-  }
-
-  for source_arc_path, (new_arc_name, file_ids) in source_arc_info.items():
+  soul_arc_sources = [
+    ("Soul0", "files/res/Object/Figure6b.arc", 2),  # Gohma
+    ("Soul1", "files/res/Object/Figure6b.arc", 3),  # Kalle Demos
+    ("Soul2", "files/res/Object/Figure6b.arc", 4),  # Gohdan
+    ("Soul3", "files/res/Object/Figure6c.arc", 0),  # Helmaroc King
+    ("Soul4", "files/res/Object/Figure6c.arc", 1),  # Jalhalla
+    ("Soul5", "files/res/Object/Figure6c.arc", 2),  # Molgera
+  ]
+  
+  for new_arc_name, source_arc_path, file_id in soul_arc_sources:
     source_arc = self.get_arc(source_arc_path)
-
+    
     new_arc = RARC()
     new_arc.add_root_directory()
     root_node = new_arc.nodes[0]
-
+    
     # Create a "bdl" subdirectory matching vanilla item archive structure.
     # The game's resource system expects BDL files inside a typed subdirectory.
     _, bdl_node = new_arc.add_new_directory("bdl", "BDL ", root_node)
-
-    # Add the needed BDL files in order so their indices match the bmd_idx values (3, 4, 5).
-    for file_id in file_ids:
-      for file_entry in source_arc.file_entries:
-        if file_entry.is_dir or file_entry.id != file_id:
-          continue
-
-        # Copy the BDL data so we don't modify the original Figure archive.
-        file_entry.data.seek(0)
-        bdl_data_copy = BytesIO(file_entry.data.read())
-        bdl_model = BDL(bdl_data_copy)
-        root_joint = bdl_model.jnt1.joints[0]
-        root_joint.scale.x = 0.45
-        root_joint.scale.y = 0.45
-        root_joint.scale.z = 0.45
-        root_joint.translation.y -= 25.0
-        bdl_model.save()
-
-        new_arc.add_new_file(file_entry.name, bdl_model.data, bdl_node)
-        break
-
+    
+    # Add the needed BDL files in order
+    for file_entry in source_arc.file_entries:
+      if file_entry.is_dir or file_entry.id != file_id:
+        continue
+      
+      # Copy the BDL data so we don't modify the original Figure archive.
+      file_entry.data.seek(0)
+      bdl_data_copy = BytesIO(file_entry.data.read())
+      bdl_model = BDL(bdl_data_copy)
+      root_joint = bdl_model.jnt1.joints[0]
+      root_joint.scale.x = 0.45
+      root_joint.scale.y = 0.45
+      root_joint.scale.z = 0.45
+      root_joint.translation.y -= 25.0
+      bdl_model.save()
+      
+      new_arc.add_new_file(file_entry.name, bdl_model.data, bdl_node)
+      break
+    
     new_arc.save_changes()
     self.add_new_raw_file("files/res/Object/%s.arc" % new_arc_name, new_arc.data)
 
