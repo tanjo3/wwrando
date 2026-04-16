@@ -96,41 +96,42 @@ sys/main.dol:
   blue_chuchu_set_pending_early: 0x803FE96C
   blue_chuchu_exec_item_get_entry: 0x803FE9E0
   blue_chuchu_create_demo_item_replace: 0x803FEA50
-  blue_chuchu_check_skip_isitem: 0x803FEA7C
-  blue_chuchu_check_use_stage_switch: 0x803FEAB8
-  blue_chuchu_create_death_item: 0x803FEAF4
-  blue_chuchu_create_death_item_if_blue: 0x803FEBBC
-  multiply_damage_amount: 0x803FEBCC
-  damage_multiplier: 0x803FEBF0
-  invert_camera_horizontal_axis: 0x803FEBF4
-  convert_progressive_item_id_for_createDemoItem: 0x803FEC00
-  convert_progressive_item_id_for_daItem_create: 0x803FEC2C
-  convert_progressive_item_id_for_dProcGetItem_init_1: 0x803FEC58
-  convert_progressive_item_id_for_dProcGetItem_init_2: 0x803FEC80
-  check_open_map_select: 0x803FECA8
-  set_starting_health: 0x803FED08
-  get_current_health_for_file_select_screen: 0x803FED24
-  get_max_health_for_file_select_screen: 0x803FED4C
-  fully_refill_magic_meter_and_cap_health_on_load_save: 0x803FED70
-  turn_while_swinging: 0x803FEDA0
-  check_animate_rainbow_rupee_color: 0x803FEE00
-  rainbow_rupee_keyframe: 0x803FEE40
-  check_run_new_text_commands: 0x803FEE50
-  exec_curr_num_keys_text_command: 0x803FEE90
-  set_warp_confirm_dialog_message_id_for_custom_warps: 0x803FEF70
-  check_player_in_casual_clothes: 0x803FEF88
-  read_custom_DynamicNameTable_loop: 0x803FEFC4
-  read_custom_l_objectName_loop_for_dStage_searchName: 0x803FEFF0
-  read_custom_l_objectName_loop_for_dStage_getName: 0x803FF018
-  get_num_owned_tingle_statues: 0x803FF044
-  ladder_up_check_unequip_held_item: 0x803FF0B8
-  ladder_down_check_unequip_held_item: 0x803FF0D0
-  gameover_continue_reset_life: 0x803FF0E8
-  give_pearl_and_raise_totg_if_necessary: 0x803FF104
-  remove_low_health_anim_at_full_health: 0x803FF198
-  give_temporary_sword_during_ganondorf_fight_in_swordless: 0x803FF1BC
-  give_temporary_sword_in_orcas_house_in_swordless: 0x803FF1D8
-  remove_temporary_sword_when_loading_stage_in_swordless: 0x803FF220
+  blue_chuchu_restore_action: 0x803FEA7C
+  blue_chuchu_check_skip_isitem: 0x803FEA98
+  blue_chuchu_check_use_stage_switch: 0x803FEAD0
+  blue_chuchu_create_death_item: 0x803FEB08
+  blue_chuchu_create_death_item_if_blue: 0x803FEBD0
+  multiply_damage_amount: 0x803FEBE0
+  damage_multiplier: 0x803FEC04
+  invert_camera_horizontal_axis: 0x803FEC08
+  convert_progressive_item_id_for_createDemoItem: 0x803FEC14
+  convert_progressive_item_id_for_daItem_create: 0x803FEC40
+  convert_progressive_item_id_for_dProcGetItem_init_1: 0x803FEC6C
+  convert_progressive_item_id_for_dProcGetItem_init_2: 0x803FEC94
+  check_open_map_select: 0x803FECBC
+  set_starting_health: 0x803FED1C
+  get_current_health_for_file_select_screen: 0x803FED38
+  get_max_health_for_file_select_screen: 0x803FED60
+  fully_refill_magic_meter_and_cap_health_on_load_save: 0x803FED84
+  turn_while_swinging: 0x803FEDB4
+  check_animate_rainbow_rupee_color: 0x803FEE14
+  rainbow_rupee_keyframe: 0x803FEE54
+  check_run_new_text_commands: 0x803FEE64
+  exec_curr_num_keys_text_command: 0x803FEEA4
+  set_warp_confirm_dialog_message_id_for_custom_warps: 0x803FEF84
+  check_player_in_casual_clothes: 0x803FEF9C
+  read_custom_DynamicNameTable_loop: 0x803FEFD8
+  read_custom_l_objectName_loop_for_dStage_searchName: 0x803FF004
+  read_custom_l_objectName_loop_for_dStage_getName: 0x803FF02C
+  get_num_owned_tingle_statues: 0x803FF058
+  ladder_up_check_unequip_held_item: 0x803FF0CC
+  ladder_down_check_unequip_held_item: 0x803FF0E4
+  gameover_continue_reset_life: 0x803FF0FC
+  give_pearl_and_raise_totg_if_necessary: 0x803FF118
+  remove_low_health_anim_at_full_health: 0x803FF1AC
+  give_temporary_sword_during_ganondorf_fight_in_swordless: 0x803FF1D0
+  give_temporary_sword_in_orcas_house_in_swordless: 0x803FF1EC
+  remove_temporary_sword_when_loading_stage_in_swordless: 0x803FF234
   test_room_stage_name: 0x8022D034
   test_room_starting_items_list: 0x8022D03C
   test_room_spawn_id: 0x800531E3
