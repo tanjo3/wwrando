@@ -24,13 +24,13 @@
        </size>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Shape::NoFrame</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="verticalScrollBarPolicy">
-       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
+       <enum>Qt::ScrollBarAlwaysOn</enum>
       </property>
       <property name="horizontalScrollBarPolicy">
-       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
+       <enum>Qt::ScrollBarAlwaysOn</enum>
       </property>
       <property name="widgetResizable">
        <bool>true</bool>
@@ -81,7 +81,7 @@
                  <string>Vanilla Wind Waker ISO [[?]](help)</string>
                 </property>
                 <property name="textFormat">
-                 <enum>Qt::TextFormat::MarkdownText</enum>
+                 <enum>Qt::MarkdownText</enum>
                 </property>
                </widget>
               </item>
@@ -628,7 +628,7 @@
             <item>
              <spacer name="verticalSpacer_7">
               <property name="orientation">
-               <enum>Qt::Orientation::Vertical</enum>
+               <enum>Qt::Vertical</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -662,10 +662,10 @@
                 <item>
                  <widget class="QListView" name="randomized_gear">
                   <property name="editTriggers">
-                   <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+                   <set>QAbstractItemView::NoEditTriggers</set>
                   </property>
                   <property name="selectionMode">
-                   <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
+                   <enum>QAbstractItemView::ExtendedSelection</enum>
                   </property>
                  </widget>
                 </item>
@@ -676,7 +676,7 @@
                 <item>
                  <spacer name="verticalSpacer">
                   <property name="orientation">
-                   <enum>Qt::Orientation::Vertical</enum>
+                   <enum>Qt::Vertical</enum>
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
@@ -715,7 +715,7 @@
                 <item>
                  <spacer name="verticalSpacer_2">
                   <property name="orientation">
-                   <enum>Qt::Orientation::Vertical</enum>
+                   <enum>Qt::Vertical</enum>
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
@@ -739,10 +739,10 @@
                 <item>
                  <widget class="QListView" name="starting_gear">
                   <property name="editTriggers">
-                   <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+                   <set>QAbstractItemView::NoEditTriggers</set>
                   </property>
                   <property name="selectionMode">
-                   <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
+                   <enum>QAbstractItemView::ExtendedSelection</enum>
                   </property>
                  </widget>
                 </item>
@@ -762,7 +762,7 @@
               <item>
                <widget class="QSpinBox" name="starting_hcs">
                 <property name="layoutDirection">
-                 <enum>Qt::LayoutDirection::LeftToRight</enum>
+                 <enum>Qt::LeftToRight</enum>
                 </property>
                 <property name="minimum">
                  <number>1</number>
@@ -808,7 +808,7 @@
               <item>
                <spacer name="horizontalSpacer_3">
                 <property name="orientation">
-                 <enum>Qt::Orientation::Horizontal</enum>
+                 <enum>Qt::Horizontal</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -832,7 +832,7 @@
               <item>
                <widget class="QSpinBox" name="num_extra_starting_items">
                 <property name="layoutDirection">
-                 <enum>Qt::LayoutDirection::LeftToRight</enum>
+                 <enum>Qt::LeftToRight</enum>
                 </property>
                 <property name="maximum">
                  <number>3</number>
@@ -848,7 +848,7 @@
               <item>
                <spacer name="horizontalSpacer_random_starting_item">
                 <property name="orientation">
-                 <enum>Qt::Orientation::Horizontal</enum>
+                 <enum>Qt::Horizontal</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -1040,7 +1040,7 @@
                  <item>
                   <widget class="QSpinBox" name="num_barren_hints">
                    <property name="correctionMode">
-                    <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+                    <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
                    </property>
                    <property name="minimum">
                     <number>0</number>
@@ -1090,7 +1090,7 @@
                  <item>
                   <widget class="QSpinBox" name="num_location_hints">
                    <property name="correctionMode">
-                    <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+                    <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
                    </property>
                    <property name="minimum">
                     <number>0</number>
@@ -1120,7 +1120,7 @@
                  <item>
                   <widget class="QSpinBox" name="num_item_hints">
                    <property name="correctionMode">
-                    <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+                    <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
                    </property>
                    <property name="minimum">
                     <number>0</number>
@@ -1150,7 +1150,7 @@
                  <item>
                   <widget class="QSpinBox" name="num_path_hints">
                    <property name="correctionMode">
-                    <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+                    <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
                    </property>
                    <property name="minimum">
                     <number>0</number>
@@ -1210,7 +1210,7 @@
             <item>
              <spacer name="verticalSpacer_3">
               <property name="orientation">
-               <enum>Qt::Orientation::Vertical</enum>
+               <enum>Qt::Vertical</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -1245,7 +1245,7 @@
        <string/>
       </property>
       <property name="textFormat">
-       <enum>Qt::TextFormat::RichText</enum>
+       <enum>Qt::RichText</enum>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
@@ -1288,7 +1288,7 @@
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
+         <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -1314,7 +1314,7 @@
       <item>
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
+         <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>

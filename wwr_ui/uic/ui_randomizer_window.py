@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'randomizer_window.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -36,9 +36,9 @@ class Ui_MainWindow(object):
         self.scrollArea = QScrollArea(self.centralwidget)
         self.scrollArea.setObjectName(u"scrollArea")
         self.scrollArea.setMinimumSize(QSize(600, 400))
-        self.scrollArea.setFrameShape(QFrame.Shape.NoFrame)
-        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.scrollArea.setFrameShape(QFrame.NoFrame)
+        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
@@ -62,7 +62,7 @@ class Ui_MainWindow(object):
 
         self.label_for_clean_iso_path = QLabel(self.tab_randomizer_settings)
         self.label_for_clean_iso_path.setObjectName(u"label_for_clean_iso_path")
-        self.label_for_clean_iso_path.setTextFormat(Qt.TextFormat.MarkdownText)
+        self.label_for_clean_iso_path.setTextFormat(Qt.MarkdownText)
 
         self.gridLayout.addWidget(self.label_for_clean_iso_path, 0, 0, 1, 1)
 
@@ -474,8 +474,8 @@ class Ui_MainWindow(object):
 
         self.randomized_gear = QListView(self.tab_starting_items)
         self.randomized_gear.setObjectName(u"randomized_gear")
-        self.randomized_gear.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.randomized_gear.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
+        self.randomized_gear.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.randomized_gear.setSelectionMode(QAbstractItemView.ExtendedSelection)
 
         self.verticalLayout_5.addWidget(self.randomized_gear)
 
@@ -516,8 +516,8 @@ class Ui_MainWindow(object):
 
         self.starting_gear = QListView(self.tab_starting_items)
         self.starting_gear.setObjectName(u"starting_gear")
-        self.starting_gear.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.starting_gear.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
+        self.starting_gear.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.starting_gear.setSelectionMode(QAbstractItemView.ExtendedSelection)
 
         self.verticalLayout_7.addWidget(self.starting_gear)
 
@@ -536,7 +536,7 @@ class Ui_MainWindow(object):
 
         self.starting_hcs = QSpinBox(self.tab_starting_items)
         self.starting_hcs.setObjectName(u"starting_hcs")
-        self.starting_hcs.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.starting_hcs.setLayoutDirection(Qt.LeftToRight)
         self.starting_hcs.setMinimum(1)
         self.starting_hcs.setMaximum(9)
         self.starting_hcs.setValue(3)
@@ -578,7 +578,7 @@ class Ui_MainWindow(object):
 
         self.num_extra_starting_items = QSpinBox(self.tab_starting_items)
         self.num_extra_starting_items.setObjectName(u"num_extra_starting_items")
-        self.num_extra_starting_items.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.num_extra_starting_items.setLayoutDirection(Qt.LeftToRight)
         self.num_extra_starting_items.setMaximum(3)
         self.num_extra_starting_items.setValue(0)
         self.num_extra_starting_items.setDisplayIntegerBase(10)
@@ -720,7 +720,7 @@ class Ui_MainWindow(object):
 
         self.num_barren_hints = QSpinBox(self.groupBox_5)
         self.num_barren_hints.setObjectName(u"num_barren_hints")
-        self.num_barren_hints.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
+        self.num_barren_hints.setCorrectionMode(QAbstractSpinBox.CorrectToNearestValue)
         self.num_barren_hints.setMinimum(0)
         self.num_barren_hints.setMaximum(15)
         self.num_barren_hints.setValue(0)
@@ -756,7 +756,7 @@ class Ui_MainWindow(object):
 
         self.num_location_hints = QSpinBox(self.groupBox_5)
         self.num_location_hints.setObjectName(u"num_location_hints")
-        self.num_location_hints.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
+        self.num_location_hints.setCorrectionMode(QAbstractSpinBox.CorrectToNearestValue)
         self.num_location_hints.setMinimum(0)
         self.num_location_hints.setMaximum(15)
         self.num_location_hints.setValue(5)
@@ -780,7 +780,7 @@ class Ui_MainWindow(object):
 
         self.num_item_hints = QSpinBox(self.groupBox_5)
         self.num_item_hints.setObjectName(u"num_item_hints")
-        self.num_item_hints.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
+        self.num_item_hints.setCorrectionMode(QAbstractSpinBox.CorrectToNearestValue)
         self.num_item_hints.setMinimum(0)
         self.num_item_hints.setMaximum(15)
         self.num_item_hints.setValue(15)
@@ -804,7 +804,7 @@ class Ui_MainWindow(object):
 
         self.num_path_hints = QSpinBox(self.groupBox_5)
         self.num_path_hints.setObjectName(u"num_path_hints")
-        self.num_path_hints.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
+        self.num_path_hints.setCorrectionMode(QAbstractSpinBox.CorrectToNearestValue)
         self.num_path_hints.setMinimum(0)
         self.num_path_hints.setMaximum(15)
         self.num_path_hints.setValue(0)
@@ -872,7 +872,7 @@ class Ui_MainWindow(object):
         self.option_description = QLabel(self.centralwidget)
         self.option_description.setObjectName(u"option_description")
         self.option_description.setMinimumSize(QSize(0, 32))
-        self.option_description.setTextFormat(Qt.TextFormat.RichText)
+        self.option_description.setTextFormat(Qt.RichText)
         self.option_description.setWordWrap(True)
 
         self.verticalLayout.addWidget(self.option_description)
