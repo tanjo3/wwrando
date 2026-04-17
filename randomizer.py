@@ -14,7 +14,7 @@ yaml = YAML(typ="safe")
 from gclib import fs_helpers as fs
 from gclib.bfn import BFN
 from gclib.bmg import BMG
-from gclib.yaz0_yay0 import Yaz0
+from gclib.yaz0_yay0 import Yaz0, PY_FAST_YAZ0_YAY0_INSTALLED
 from gclib.rarc import RARC
 from gclib.dol import DOL
 from gclib.rel import REL, RELRelocation, RELRelocationType
@@ -913,15 +913,18 @@ class WWRandomizer:
     self.dol.save_changes()
     self.gcm.changed_files["sys/main.dol"] = self.dol.data
     
+    if not PY_FAST_YAZ0_YAY0_INSTALLED:
+      raise Exception("Missing the PyFastYaz0Yay0 library that is required to run the randomizer.")
     for rel_path, rel in self.rels_by_path.items():
       rel.save_changes(preserve_section_data_offsets=True)
       
       rel_name = os.path.basename(rel_path)
       rels_arc = self.get_arc("files/RELS.arc")
       rel_file_entry = rels_arc.get_file_entry(rel_name)
+      if not Yaz0.check_is_compressed(rel.data):
+        rel.data = Yaz0.compress(rel.data)
       if rel_file_entry:
-        # The REL already wrote to the same BytesIO object as the file entry uses, so no need to do anything more here.
-        assert rel_file_entry.data == rel.data
+        rel_file_entry.data = rel.data
       else:
         self.gcm.changed_files[rel_path] = rel.data
     

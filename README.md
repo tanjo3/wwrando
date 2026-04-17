@@ -77,7 +77,7 @@ Then run the randomizer with:
 `python3 wwrando.py` (on Mac)  
 `python3 wwrando.py` (on Linux)  
 
-Optionally, you can also install `requirements_full.txt` with the same process you used for `requirements.txt` above.  
-`requirements_full.txt` will install additional libraries that speed up texture recoloring, as well as for building a distributable version of the randomizer. You can still run the randomizer from source without these.  
+If you are interested in helping *develop* the randomizer, you may want to install `requirements_full.txt` with the same process you used for `requirements.txt` above for additional dev libraries.  
+This step is not necessary if you simply want to play the randomizer.
 
 If you are on Windows 8 or below, use `requirements_qt5.txt`/`requirements_qt5_full.txt` instead of the normal requirements files.  
