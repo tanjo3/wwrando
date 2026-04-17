@@ -1,13 +1,13 @@
 QtPy==2.4.3
-PySide6~=6.8.2.1
-ruamel.yaml~=0.18.16
+PySide6~=6.11.0
+ruamel.yaml~=0.19.1
 pillow>=11.1.0
 appdirs==1.4.4
-certifi==2025.1.31
+certifi==2026.2.25
 tqdm>=4.67.1
 -r ./gclib/requirements_full.txt
-pyinstaller~=6.12.0
-pytest~=8.3.4
-pytest-cov~=6.0.0
+pyinstaller~=6.19.0
+pytest~=9.0.3
+pytest-cov~=7.1.0
 pytest-dotenv~=0.5.2
-pytest-qt~=4.4.0
+pytest-qt~=4.5.0
