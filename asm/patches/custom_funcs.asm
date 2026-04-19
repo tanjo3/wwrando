@@ -403,6 +403,12 @@ mflr r0
 stw r0, 0x14 (sp)
 stw r31, 0xC (sp)
 
+; Set init-flag so progressive_wallet_item_func writes mRupee directly
+lis r4, is_initializing_starting_gear@ha
+addi r4, r4, is_initializing_starting_gear@l
+li r5, 1
+stb r5, 0 (r4)
+
 lis r31, starting_gear@ha
 addi r31, r31, starting_gear@l
 lbz r3, 0 (r31)
@@ -417,6 +423,12 @@ cmplwi r3, 255
 bne+ init_starting_gear_begin_loop
 
 end_init_starting_gear:
+; Clear init-flag
+lis r4, is_initializing_starting_gear@ha
+addi r4, r4, is_initializing_starting_gear@l
+li r5, 0
+stb r5, 0 (r4)
+
 lwz r31, 0xC (sp)
 lwz r0, 0x14 (sp)
 mtlr r0
@@ -439,6 +451,9 @@ skip_rematch_bosses:
 .global should_fill_wallet_on_receive
 should_fill_wallet_on_receive:
 .byte 0 ; By default do not fill
+.global is_initializing_starting_gear
+is_initializing_starting_gear:
+.byte 0 ; Runtime flag: set to 1 only during init_starting_gear loop
 .global should_skip_triforce_cutscene
 should_skip_triforce_cutscene:
 .byte 0 ; By default don't skip
@@ -854,7 +869,7 @@ b wallet_func_end
 
 get_1000_rupee_wallet:
 li r4, 1
-stb r4, 0 (r3) ; Which wallet you have
+stb r4, 0 (r3) ; Upgrade mWalletSize to 1 (1000 wallet)
 
 lis r5, should_fill_wallet_on_receive@ha
 addi r5, r5, should_fill_wallet_on_receive@l
@@ -862,16 +877,29 @@ lbz r5, 0 (r5)
 cmpwi r5, 0
 beq wallet_func_end
 
+lis r6, is_initializing_starting_gear@ha
+addi r6, r6, is_initializing_starting_gear@l
+lbz r6, 0 (r6)
+cmpwi r6, 0
+bne fill_1000_to_mRupee
+
+; Mid-game pickup: queue HUD count-up via mItemRupeeCount (s32)
 lis r5, 0x803CA768@ha
 addi r5, r5, 0x803CA768@l
 li r0, 1000
-stw r0, 0 (r5) ; Set saved rupees to 1000
+stw r0, 0 (r5)
+b wallet_func_end
 
+fill_1000_to_mRupee:
+; Starting-gear: write persisted u16 mRupee directly, no HUD sound
+lis r5, 0x803C4C0C@ha
+li r0, 1000
+sth r0, 0x803C4C0C@l(r5)
 b wallet_func_end
 
 get_5000_rupee_wallet:
 li r4, 2
-stb r4, 0 (r3) ; Which wallet you have
+stb r4, 0 (r3) ; Upgrade mWalletSize to 2 (5000 wallet)
 
 lis r5, should_fill_wallet_on_receive@ha
 addi r5, r5, should_fill_wallet_on_receive@l
@@ -879,10 +907,24 @@ lbz r5, 0 (r5)
 cmpwi r5, 0
 beq wallet_func_end
 
+lis r6, is_initializing_starting_gear@ha
+addi r6, r6, is_initializing_starting_gear@l
+lbz r6, 0 (r6)
+cmpwi r6, 0
+bne fill_5000_to_mRupee
+
+; Mid-game pickup: queue HUD count-up via mItemRupeeCount (s32)
 lis r5, 0x803CA768@ha
 addi r5, r5, 0x803CA768@l
 li r0, 5000
-stw r0, 0 (r5) ; Set saved rupees to 5000
+stw r0, 0 (r5)
+b wallet_func_end
+
+fill_5000_to_mRupee:
+; Starting-gear: write persisted u16 mRupee directly, no HUD sound
+lis r5, 0x803C4C0C@ha
+li r0, 5000
+sth r0, 0x803C4C0C@l(r5)
 
 wallet_func_end:
 blr
