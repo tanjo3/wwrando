@@ -632,7 +632,7 @@ Windfall Island - Dampa Pig Minigame - Deliver 1 Pig:
 Windfall Island - Dampa Pig Minigame - Deliver 3 Pigs:
   Need: Spoils Bag & Can Farm Skull Necklaces
   Original item: Purple Rupee
-  Types: Minigame
+  Types: Minigame, Spoils Trading
   Paths:
     - rels/d_a_npc_people.rel@5BDF
 Windfall Island - Pompie and Vera - Secret Meeting Photo:
