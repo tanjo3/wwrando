@@ -321,6 +321,7 @@ class WWRandomizer:
         patcher.apply_patch(self, "invert_sea_compass_x_axis")
       tweaks.update_skip_rematch_bosses_game_variable(self)
       tweaks.update_sword_mode_game_variable(self)
+      tweaks.update_boss_soul_shuffle_game_variable(self)
       if self.options.sword_mode == SwordMode.SWORDLESS:
         patcher.apply_patch(self, "swordless")
         tweaks.update_text_for_swordless(self)

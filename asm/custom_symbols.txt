@@ -97,21 +97,23 @@ sys/main.dol:
   check_animate_rainbow_rupee_color: 0x803FECC4
   rainbow_rupee_keyframe: 0x803FED04
   check_run_new_text_commands: 0x803FED14
-  exec_curr_num_keys_text_command: 0x803FED54
-  set_warp_confirm_dialog_message_id_for_custom_warps: 0x803FEE34
-  check_player_in_casual_clothes: 0x803FEE4C
-  read_custom_DynamicNameTable_loop: 0x803FEE88
-  read_custom_l_objectName_loop_for_dStage_searchName: 0x803FEEB4
-  read_custom_l_objectName_loop_for_dStage_getName: 0x803FEEDC
-  get_num_owned_tingle_statues: 0x803FEF08
-  ladder_up_check_unequip_held_item: 0x803FEF7C
-  ladder_down_check_unequip_held_item: 0x803FEF94
-  gameover_continue_reset_life: 0x803FEFAC
-  give_pearl_and_raise_totg_if_necessary: 0x803FEFC8
-  remove_low_health_anim_at_full_health: 0x803FF05C
-  give_temporary_sword_during_ganondorf_fight_in_swordless: 0x803FF080
-  give_temporary_sword_in_orcas_house_in_swordless: 0x803FF09C
-  remove_temporary_sword_when_loading_stage_in_swordless: 0x803FF0E4
+  exec_curr_num_keys_text_command: 0x803FED68
+  boss_soul_shuffle_enabled: 0x803FEECC
+  exec_ff_boss_soul_text_command: 0x803FEED0
+  set_warp_confirm_dialog_message_id_for_custom_warps: 0x803FEF44
+  check_player_in_casual_clothes: 0x803FEF5C
+  read_custom_DynamicNameTable_loop: 0x803FEF98
+  read_custom_l_objectName_loop_for_dStage_searchName: 0x803FEFC4
+  read_custom_l_objectName_loop_for_dStage_getName: 0x803FEFEC
+  get_num_owned_tingle_statues: 0x803FF018
+  ladder_up_check_unequip_held_item: 0x803FF08C
+  ladder_down_check_unequip_held_item: 0x803FF0A4
+  gameover_continue_reset_life: 0x803FF0BC
+  give_pearl_and_raise_totg_if_necessary: 0x803FF0D8
+  remove_low_health_anim_at_full_health: 0x803FF16C
+  give_temporary_sword_during_ganondorf_fight_in_swordless: 0x803FF190
+  give_temporary_sword_in_orcas_house_in_swordless: 0x803FF1AC
+  remove_temporary_sword_when_loading_stage_in_swordless: 0x803FF1F4
   test_room_stage_name: 0x8022D034
   test_room_starting_items_list: 0x8022D03C
   test_room_spawn_id: 0x800531E3

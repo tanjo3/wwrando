@@ -245,14 +245,21 @@ check_run_new_text_commands:
   bne check_run_new_text_commands_check_failed
   
   lbz r6,4(r3)
+  cmplwi r6, 0x50 ; Forsaken Fortress boss soul text command ID
+  beq check_run_new_text_commands_ff_boss_soul
   cmplwi r6, 0x4B ; Lowest key counter text command ID
   blt check_run_new_text_commands_check_failed
   cmplwi r6, 0x4F ; Highest key counter text command ID
   bgt check_run_new_text_commands_check_failed
-  
+
   mr r3,r31
   mr r4, r6
   bl exec_curr_num_keys_text_command
+  b 0x80034D34 ; Return (to after a text command has been successfully executed)
+
+check_run_new_text_commands_ff_boss_soul:
+  mr r3, r31
+  bl exec_ff_boss_soul_text_command
   b 0x80034D34 ; Return (to after a text command has been successfully executed)
 
 check_run_new_text_commands_check_failed:
@@ -268,13 +275,15 @@ exec_curr_num_keys_text_command:
   stw r0, 0x54 (sp)
   stw r31, 0xC (sp)
   stw r30, 8 (sp)
+  stw r29, 4 (sp)
   mr r31, r3
-  
+
   ; Convert the text command ID to the dungeon stage ID.
   ; The text command ID ranges from 0x4B-0x4F, for DRC, FW, TotG, ET, and WT.
   ; The dungeon stage IDs for those same 5 dungeons range from 3-7.
   ; So just subtract 0x48 to get the right stage ID.
   addi r4, r4, -0x48
+  mr r29, r4 ; Remember the dungeon stage ID for the boss soul check later
   
   lis r3, 0x803C53A4@ha ; This value is the stage ID of the current stage
   addi r3, r3, 0x803C53A4@l
@@ -324,13 +333,49 @@ exec_curr_num_keys_text_command_does_not_have_big_key:
   lis r4, key_text_command_does_not_have_big_key_text@ha
   addi r4, r4, key_text_command_does_not_have_big_key_text@l
   bl strcat
-  
+
 exec_curr_num_keys_text_command_after_appending_big_key_text:
+  ; If boss soul shuffle is disabled, skip the soul text entirely.
+  lis r3, boss_soul_shuffle_enabled@ha
+  addi r3, r3, boss_soul_shuffle_enabled@l
+  lbz r3, 0 (r3)
+  cmpwi r3, 0
+  beq exec_curr_num_keys_text_command_after_appending_boss_soul_text
+  
+  ; Check whether the player has the boss soul for this dungeon.
+  lis r3, boss_soul_event_bit_table@ha
+  addi r3, r3, boss_soul_event_bit_table@l
+  subi r4, r29, 3 ; Convert stage ID (3-7) to table index (0-4)
+  slwi r4, r4, 1 ; Each entry is 2 bytes (halfword)
+  lhzx r4, r3, r4 ; Load the boss soul event bit for this dungeon
+  
+  lis r3, 0x803C522C@ha
+  addi r3, r3, 0x803C522C@l
+  bl isEventBit__11dSv_event_cFUs
+  cmpwi r3, 0
+  beq exec_curr_num_keys_text_command_does_not_have_boss_soul
+
+exec_curr_num_keys_text_command_has_boss_soul:
+  ; Append the " +Soul" text
+  addi r3, sp, 0x1C
+  lis r4, key_text_command_has_boss_soul_text@ha
+  addi r4, r4, key_text_command_has_boss_soul_text@l
+  bl strcat
+  b exec_curr_num_keys_text_command_after_appending_boss_soul_text
+
+exec_curr_num_keys_text_command_does_not_have_boss_soul:
+  ; Append some whitespace so that the text stays in the same spot regardless of whether you have the boss soul or not
+  addi r3, sp, 0x1C
+  lis r4, key_text_command_does_not_have_boss_soul_text@ha
+  addi r4, r4, key_text_command_does_not_have_boss_soul_text@l
+  bl strcat
+
+exec_curr_num_keys_text_command_after_appending_boss_soul_text:
   ; Concatenate to one of the main strings
   lwz r3, 0x60(r31)
   addi r4, sp, 0x1C
   bl strcat
-  
+
   ; Concatenate to one of the main strings
   lwz r3, 0x68(r31)
   addi r4, sp, 0x1C
@@ -343,6 +388,7 @@ exec_curr_num_keys_text_command_after_appending_big_key_text:
   
   ; Note: There are some other things that the vanilla text commands did that are currently not implemented for these custom ones. Such as what appears to be keeping track of the current line length, possibly for word wrapping or text alignment purposes (which aren't necessary for the Key Bag).
   
+  lwz r29, 4 (sp)
   lwz r30, 8 (sp)
   lwz r31, 0xC (sp)
   lwz r0, 0x54 (sp)
@@ -354,6 +400,71 @@ key_text_command_has_big_key_text:
   .string " +Big"
 key_text_command_does_not_have_big_key_text:
   .string "     "
+key_text_command_has_boss_soul_text:
+  .string " +Soul"
+key_text_command_does_not_have_boss_soul_text:
+  .string "      "
+
+; Boss soul event bits for each dungeon with dungeon keys, indexed by (stage ID - 3).
+boss_soul_event_bit_table:
+  .short 0x6A80 ; Soul of Gohma (DRC)
+  .short 0x6B01 ; Soul of Kalle Demos (FW)
+  .short 0x6B02 ; Soul of Gohdan (TotG)
+  .short 0x6B08 ; Soul of Jalhalla (ET)
+  .short 0x6B10 ; Soul of Molgera (WT)
+.align 2
+
+.global boss_soul_shuffle_enabled
+boss_soul_shuffle_enabled:
+  .byte 0 ; Set to 1 when Boss Soul Shuffle option is on
+.align 2
+
+
+; Updates the current message string with the Forsaken Fortress boss soul status.
+; FF has no small or big keys, so this handler only appends "Soul" (or nothing) after the literal "FF: " text.
+.global exec_ff_boss_soul_text_command
+exec_ff_boss_soul_text_command:
+  stwu sp, -0x50 (sp)
+  mflr r0
+  stw r0, 0x54 (sp)
+  stw r31, 0xC (sp)
+  mr r31, r3
+  
+  ; Check whether the player has the Helmaroc King boss soul.
+  lis r3, 0x803C522C@ha
+  addi r3, r3, 0x803C522C@l
+  li r4, 0x6B04 ; Soul of Helmaroc King event bit
+  bl isEventBit__11dSv_event_cFUs
+  cmpwi r3, 0
+  beq exec_ff_boss_soul_text_command_after_appending_boss_soul_text
+
+exec_ff_boss_soul_text_command_has_boss_soul:
+  ; Concatenate "Soul" directly to the main strings.
+  lwz r3, 0x60(r31)
+  lis r4, ff_boss_soul_text@ha
+  addi r4, r4, ff_boss_soul_text@l
+  bl strcat
+  
+  lwz r3, 0x68(r31)
+  lis r4, ff_boss_soul_text@ha
+  addi r4, r4, ff_boss_soul_text@l
+  bl strcat
+
+exec_ff_boss_soul_text_command_after_appending_boss_soul_text:
+  ; Increase the offset within the encoded message string to be past the end of this text command
+  lwz r4, 0x118(r31)
+  addi r4, r4, 5
+  stw r4, 0x118(r31)
+  
+  lwz r31, 0xC (sp)
+  lwz r0, 0x54 (sp)
+  mtlr r0
+  addi sp, sp, 0x50
+  blr
+
+ff_boss_soul_text:
+  .string "Soul"
+.align 2
 .close
 
 
