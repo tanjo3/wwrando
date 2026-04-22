@@ -329,6 +329,7 @@ class WWRandomizer:
       tweaks.set_should_set_totg_servants_done(self)
       tweaks.update_sword_mode_game_variable(self)
       tweaks.update_blue_chuchu_shuffle_game_variable(self)
+      tweaks.update_boss_soul_shuffle_game_variable(self)
       if self.options.sword_mode == SwordMode.SWORDLESS:
         patcher.apply_patch(self, "swordless")
         tweaks.update_text_for_swordless(self)

@@ -1450,6 +1450,13 @@ def update_skip_rematch_bosses_game_variable(self: WWRandomizer):
   else:
     self.dol.write_data(fs.write_u8, skip_rematch_bosses_address, 0)
 
+def update_boss_soul_shuffle_game_variable(self: WWRandomizer):
+  boss_soul_shuffle_enabled_address = self.main_custom_symbols["boss_soul_shuffle_enabled"]
+  if self.options.boss_soul_shuffle:
+    self.dol.write_data(fs.write_u8, boss_soul_shuffle_enabled_address, 1)
+  else:
+    self.dol.write_data(fs.write_u8, boss_soul_shuffle_enabled_address, 0)
+
 def update_sword_mode_game_variable(self: WWRandomizer):
   sword_mode_address = self.main_custom_symbols["sword_mode"]
   if self.options.sword_mode == SwordMode.START_WITH_SWORD:
@@ -1614,16 +1621,26 @@ def fix_ghost_ship_chest_crash(self: WWRandomizer):
 
 def implement_key_bag(self: WWRandomizer):
   # Replaces the Pirate's Charm description with a description that changes dynamically depending on the dungeon keys you have.
-  # To do this new text commands are implemented to show the dynamic numbers. There are 5 new commands, 0x4B to 0x4F, one for each dungeon. (Forsaken Fortress and Ganon's Tower are not included as they have no keys.)
+  # To do this new text commands are implemented to show the dynamic numbers. There are 5 new commands, 0x4B to 0x4F, one for each dungeon with keys.
+  # When boss soul shuffle is enabled, an extra command, 0x50, is also used to show Forsaken Fortress's soul status.
   
   self.bmg.messages_by_id[403].string = "Key Bag"
-  description = "A handy bag for holding your keys!\n"
-  description += "Here's how many you've got with you:\n"
-  description += "DRC: \\{1A 05 00 00 4B}    "
-  description += "FW: \\{1A 05 00 00 4C}    "
-  description += "TotG: \\{1A 05 00 00 4D}\n"
-  description += "ET: \\{1A 05 00 00 4E}      "
-  description += "WT: \\{1A 05 00 00 4F}"
+  if self.options.boss_soul_shuffle:
+    description = "A handy bag for your keys and souls!\n"
+    description += "DRC: \\{1A 05 00 00 4B}    "
+    description += "FW: \\{1A 05 00 00 4C}\n"
+    description += "TotG: \\{1A 05 00 00 4D}   "
+    description += "FF: \\{1A 05 00 00 50}\n"
+    description += "ET: \\{1A 05 00 00 4E}    "
+    description += "WT: \\{1A 05 00 00 4F}"
+  else:
+    description = "A handy bag for holding your keys!\n"
+    description += "Here's how many you've got with you:\n"
+    description += "DRC: \\{1A 05 00 00 4B}    "
+    description += "FW: \\{1A 05 00 00 4C}    "
+    description += "TotG: \\{1A 05 00 00 4D}\n"
+    description += "ET: \\{1A 05 00 00 4E}      "
+    description += "WT: \\{1A 05 00 00 4F}"
   self.bmg.messages_by_id[603].string = description
   
   itemicons_arc = self.get_arc("files/res/Msg/itemicon.arc")
