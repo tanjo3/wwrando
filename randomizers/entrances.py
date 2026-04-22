@@ -214,6 +214,14 @@ ENTRANCE_RANDOMIZABLE_ITEM_LOCATION_TYPES = [
 ]
 ITEM_LOCATION_NAME_TO_EXIT_OVERRIDES = {
   "Forbidden Woods - Mothula Miniboss Room"          : ZoneExit.all["Forbidden Woods Miniboss Arena"],
+  "Forbidden Woods - Rupee Around Miniboss Chest 1"  : ZoneExit.all["Forbidden Woods Miniboss Arena"],
+  "Forbidden Woods - Rupee Around Miniboss Chest 2"  : ZoneExit.all["Forbidden Woods Miniboss Arena"],
+  "Forbidden Woods - Rupee Around Miniboss Chest 3"  : ZoneExit.all["Forbidden Woods Miniboss Arena"],
+  "Forbidden Woods - Rupee Around Miniboss Chest 4"  : ZoneExit.all["Forbidden Woods Miniboss Arena"],
+  "Forbidden Woods - Rupee Around Miniboss Chest 5"  : ZoneExit.all["Forbidden Woods Miniboss Arena"],
+  "Forbidden Woods - Rupee Around Miniboss Chest 6"  : ZoneExit.all["Forbidden Woods Miniboss Arena"],
+  "Forbidden Woods - Rupee Around Miniboss Chest 7"  : ZoneExit.all["Forbidden Woods Miniboss Arena"],
+  "Forbidden Woods - Rupee Around Miniboss Chest 8"  : ZoneExit.all["Forbidden Woods Miniboss Arena"],
   "Tower of the Gods - Darknut Miniboss Room"        : ZoneExit.all["Tower of the Gods Miniboss Arena"],
   "Earth Temple - Stalfos Miniboss Room"             : ZoneExit.all["Earth Temple Miniboss Arena"],
   "Wind Temple - Wizzrobe Miniboss Room"             : ZoneExit.all["Wind Temple Miniboss Arena"],
