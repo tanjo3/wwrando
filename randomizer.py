@@ -80,6 +80,12 @@ class WWRandomizer:
     self.options = options
     self.seed = self.sanitize_seed(seed)
     self.permalink = self.encode_permalink(self.seed, self.options)
+    
+    seed_string = self.permalink
+    if self.options.do_not_generate_spoiler_log:
+      seed_string += SEED_KEY
+    
+    self.integer_seed = self.convert_string_to_integer_md5(seed_string)
     self.seed_hash = self.get_seed_hash()
     
     if cmd_line_args is None:
@@ -105,12 +111,6 @@ class WWRandomizer:
     self.test_room_args = None
     if cmd_line_args.test:
       self.test_room_args = cmd_line_args.test
-    
-    seed_string = self.permalink
-    if self.options.do_not_generate_spoiler_log:
-      seed_string += SEED_KEY
-    
-    self.integer_seed = self.convert_string_to_integer_md5(seed_string)
     
     self.arcs_by_path: dict[str, RARC] = {}
     self.jpcs_by_path: dict[str, JPC100] = {}
@@ -954,27 +954,22 @@ class WWRandomizer:
   def get_seed_hash(self):
     # Generate some text that will be shown on the name entry screen which has two random character names that vary based on the permalink (so the seed and settings both change it).
     # This is so two players intending to play the same seed can verify if they really are on the same seed or not.
-
+    
     if not self.permalink:
       return None
-
-    if not self.options.do_not_generate_spoiler_log:
-      integer_seed = self.convert_string_to_integer_md5(self.permalink)
-    else:
-      # When no spoiler log is generated, the seed key also affects randomization, not just the data in the permalink.
-      integer_seed = self.convert_string_to_integer_md5(self.permalink + SEED_KEY)
+    
     temp_rng = Random()
-    temp_rng.seed(integer_seed)
-
+    temp_rng.seed(self.integer_seed)
+    
     with open(os.path.join(SEEDGEN_PATH, "names.txt")) as f:
       all_names = f.read().splitlines()
     valid_names = [name for name in all_names if len(name) <= 5]
-
+    
     name_1, name_2 = temp_rng.sample(valid_names, 2)
     name_1 = tweaks.upper_first_letter(name_1)
     name_2 = tweaks.upper_first_letter(name_2)
     return name_1 + " " + name_2
-
+  
   def get_log_header(self):
     header = ""
     
