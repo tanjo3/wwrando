@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import StrEnum
 
+from logic.logic import Logic
 from options.base_options import BaseOptions, option
 
 from wwr_ui.inventory import DEFAULT_STARTING_ITEMS, DEFAULT_RANDOMIZED_ITEMS
@@ -22,13 +23,13 @@ class TrickDifficulty(StrEnum):
 
 @dataclass
 class Options(BaseOptions):
-  def __post_init__(self):
-    from logic.logic import Logic
+  def validate(self):
+    super().validate()
     
     if self.excluded_locations:
       valid_locations = set(Logic.load_and_parse_item_locations().keys())
-      self.excluded_locations = sorted(loc for loc in self.excluded_locations if loc in valid_locations)
-
+      self.excluded_locations = sorted({loc for loc in self.excluded_locations if loc in valid_locations})
+  
   #region Progress locations
   progression_dungeons: bool = option(
     default=True,
