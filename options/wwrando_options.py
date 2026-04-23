@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from enum import StrEnum
 
-from logic.logic import Logic
 from options.base_options import BaseOptions, option
 
 from wwr_ui.inventory import DEFAULT_STARTING_ITEMS, DEFAULT_RANDOMIZED_ITEMS
@@ -27,6 +26,8 @@ class Options(BaseOptions):
     super().validate()
     
     if self.excluded_locations:
+      from logic.logic import Logic
+      
       valid_locations = set(Logic.load_and_parse_item_locations(deepcopy=False).keys())
       self.excluded_locations = sorted({loc for loc in self.excluded_locations if loc in valid_locations})
   
