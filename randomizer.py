@@ -546,7 +546,7 @@ class WWRandomizer:
       elif option.name == "excluded_locations":
         assert issubclass(typing.get_origin(option.type) or option.type, list)
         value_set = set(value)
-        for location_name in Logic.load_and_parse_item_locations():
+        for location_name in Logic.load_and_parse_item_locations(deepcopy=False):
           bit = location_name in value_set
           bitswriter.write(bit, 1)
       else:
@@ -643,7 +643,7 @@ class WWRandomizer:
       elif option.name == "excluded_locations":
         assert issubclass(typing.get_origin(option.type) or option.type, list)
         excluded_list = []
-        for location_name in Logic.load_and_parse_item_locations():
+        for location_name in Logic.load_and_parse_item_locations(deepcopy=False):
           excluded = bitsreader.read(1)
           if excluded == 1:
             excluded_list.append(location_name)

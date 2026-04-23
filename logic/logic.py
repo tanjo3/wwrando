@@ -667,27 +667,28 @@ class Logic:
     return valid_items
   
   @staticmethod
-  def load_and_parse_item_locations() -> dict[str, dict]:
-    if Logic.initial_item_locations is not None:
-      return copy.deepcopy(Logic.initial_item_locations)
-    
-    with open(os.path.join(LOGIC_PATH, "item_locations.txt")) as f:
-      item_locations = yaml.load(f)
-    
-    for location_name in item_locations:
-      req_string = item_locations[location_name]["Need"]
-      if req_string is None:
-        raise Exception("Requirements are blank for location \"%s\"" % location_name)
-      item_locations[location_name]["Need"] = Logic.parse_logic_expression(req_string)
+  def load_and_parse_item_locations(deepcopy: bool = True) -> dict[str, dict]:
+    if Logic.initial_item_locations is None:
+      with open(os.path.join(LOGIC_PATH, "item_locations.txt")) as f:
+        item_locations = yaml.load(f)
       
-      types_string = item_locations[location_name]["Types"]
-      types = types_string.split(",")
-      types = [type.strip() for type in types]
-      item_locations[location_name]["Types"] = types
+      for location_name in item_locations:
+        req_string = item_locations[location_name]["Need"]
+        if req_string is None:
+          raise Exception("Requirements are blank for location \"%s\"" % location_name)
+        item_locations[location_name]["Need"] = Logic.parse_logic_expression(req_string)
+        
+        types_string = item_locations[location_name]["Types"]
+        types = types_string.split(",")
+        types = [type.strip() for type in types]
+        item_locations[location_name]["Types"] = types
+      
+      Logic.initial_item_locations = copy.deepcopy(item_locations)
     
-    Logic.initial_item_locations = copy.deepcopy(item_locations)
-    return item_locations
-    
+    if deepcopy:
+      return copy.deepcopy(Logic.initial_item_locations)
+    return Logic.initial_item_locations
+  
   def load_and_parse_macros(self):
     if Logic.initial_macros is not None:
       self.macros = copy.deepcopy(Logic.initial_macros)

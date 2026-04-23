@@ -27,7 +27,7 @@ class Options(BaseOptions):
     super().validate()
     
     if self.excluded_locations:
-      valid_locations = set(Logic.load_and_parse_item_locations().keys())
+      valid_locations = set(Logic.load_and_parse_item_locations(deepcopy=False).keys())
       self.excluded_locations = sorted({loc for loc in self.excluded_locations if loc in valid_locations})
   
   #region Progress locations
