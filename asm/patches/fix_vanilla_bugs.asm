@@ -103,6 +103,49 @@ deluxe_picto_box_item_func_fix_equipped_picto_box:
 
 
 
+; Fix stone head targets (d_a_obj_homen, including homen2) sometimes falling endlessly without breaking in Wind Temple.
+; Depending on the angle the head is pulled from, it can fail to detect ground and fall forever.
+; This adds a timeout: if the homen has been falling for more than
+; 90 frames (3 seconds), force mGroundY above the current position to trigger the
+; existing break logic.
+.open "files/rels/d_a_obj_homen.rel" ; Stone head
+.org 0x1D54 ; In process_falldown_init, just before return (li r3, 1)
+  b init_homen_falldown_timer
+.org @NextFreeSpace
+.global init_homen_falldown_timer
+init_homen_falldown_timer:
+  li r0, 0
+  sth r0, 0x07DA(r30)   ; field_0x7DA = 0 (reset frame counter)
+  li r3, 1               ; Original instruction: return TRUE
+  b 0x1D58               ; Return to epilogue
+
+.org 0x1FA0 ; In process_falldown_main, first instruction of epilogue (lwz r31, 76(r1))
+  b check_homen_falldown_timeout
+.org @NextFreeSpace
+.global check_homen_falldown_timeout
+check_homen_falldown_timeout:
+  lha r12, 0x07DA(r31)   ; Load frame counter (use r12 to avoid r0 rA pitfall)
+  addi r12, r12, 1
+  sth r12, 0x07DA(r31)   ; Increment counter
+  cmpwi r12, 90          ; 90 frames = 3 seconds at 30fps
+  ble homen_falldown_timeout_done
+  ; Timeout exceeded: set mGroundY above current position to force break on next frame
+  lfs f0, 0x01FC(r31)    ; current.pos.y
+  lis r12, 0x43FA         ; 0x43FA0000 = 500.0f
+  ; Safe to use 0x08(r1) as scratch here: this hook runs at the function epilogue, no calls are made,
+  ; and the remaining epilogue only restores registers/stack and returns.
+  stw r12, 0x08(r1)      ; Store float bits in stack scratch space
+  lfs f1, 0x08(r1)       ; Load as float
+  fadds f0, f0, f1        ; f0 = current.pos.y + 500
+  stfs f0, 0x07CC(r31)   ; mGroundY = pos.y + 500
+homen_falldown_timeout_done:
+  lwz r31, 76(r1)        ; Original replaced instruction (restore r31)
+  b 0x1FA4                ; Return to rest of epilogue
+.close
+
+
+
+
 ; Delete Morths that fall out-of-bounds.
 .open "files/rels/d_a_ks.rel" ; Morth
 .org 0x678 ; In naraku_check__FP8ks_class
@@ -589,4 +632,18 @@ check_helmaroc_king_landing_timeout:
 .open "files/rels/d_a_boko.rel" ; Enemy weapon
 .org 0x26A8 ; In daBoko_c::procCarry
   nop
+.close
+
+
+
+; Fix a vanilla bug where Gohdan's HARAI (sweep) attack could wake up a sleeping (stunned) hand.
+; In main_cont, the HARAI attack's guard condition checks mActionType < ACTION_DOWN_ATTACK_e (10),
+; while all other attacks check mActionType < ACTION_DAMAGE_e (5).
+; Since ACTION_SLEEP_e is 6, sleeping hands pass the HARAI guard and can be forcibly assigned
+; a sweep attack, prematurely ending their stun. This fix tightens the guard to match other attacks.
+.open "files/rels/d_a_bst.rel" ; Gohdan (boss)
+.org 0x6A58 ; In main_cont, hand[0] HARAI guard: cmpwi r0, 0x0A (ACTION_DOWN_ATTACK_e)
+  cmpwi r0, 0x05 ; ACTION_DAMAGE_e — block DAMAGE, SLEEP, HEAD_DAMAGE, HEAD_HUKKI states
+.org 0x6A8C ; In main_cont, hand[1] HARAI guard: cmpwi r0, 0x0A (ACTION_DOWN_ATTACK_e)
+  cmpwi r0, 0x05 ; ACTION_DAMAGE_e — block DAMAGE, SLEEP, HEAD_DAMAGE, HEAD_HUKKI states
 .close
