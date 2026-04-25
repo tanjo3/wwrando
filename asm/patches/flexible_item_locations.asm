@@ -1311,8 +1311,34 @@ blue_chuchu_demo_no_replace:
   b fopAcM_createItemForTrBoxDemo__FP4cXyziiiP5csXyzP4cXyz
 
 
+; In daItem_c::CreateInit, after mAction is stored from actor params, we detect our custom Blue
+; ChuChu action marker (0x3E) and overwrite mAction to BOSS_DISAPPEAR (5) so that initAction()
+; gives the item the correct grow+spin+ding spawn animation. The raw params at offset 0xB0 are
+; NOT modified, so downstream hooks can still identify the item by checking params bits [31:26].
+.org 0x800F51DC ; In daItem_c::CreateInit, right after stb r0, 0x668(r30) at 0x800F51D8
+  b blue_chuchu_restore_action
+
+.org @NextFreeSpace
+.global blue_chuchu_restore_action
+blue_chuchu_restore_action:
+  lbz r3, 0x668 (r30) ; mAction (just stored from params >> 26)
+  cmpwi r3, 0x3E
+  bne blue_chuchu_restore_action_done
+
+  ; Overwrite mAction to BOSS_DISAPPEAR so initAction() gives the grow-spin-ding appearance.
+  li r3, 5 ; daItemAct_BOSS_DISAPPEAR_e
+  stb r3, 0x668 (r30)
+
+blue_chuchu_restore_action_done:
+  mr r3, r30 ; Replace the instruction we overwrote to branch here
+  b 0x800F51E0
+
+
 ; In daItem_create, the code skips the room-level isItem pickup check for Blue Chu Jelly (0x4B) because Blue Chu Jelly uses stage 0xE switches instead.
-; Death-path items have a custom m_itemNo (not 0x4B) but still use stage 0xE via mItemBitNo 1-23, so we need to skip the isItem check for them too.
+; Death-path items have a custom m_itemNo (not 0x4B) but still use stage 0xE. We identify them
+; by checking item_action == 0x3E from the raw actor params, which is a unique tag we set in
+; blue_chuchu_create_death_item. This avoids the previous bug where checking mItemBitNo range
+; 1-23 would incorrectly match regular room items.
 .org 0x800F5594 ; In daItem_create
   bl blue_chuchu_check_skip_isitem
 
@@ -1321,16 +1347,19 @@ blue_chuchu_demo_no_replace:
 blue_chuchu_check_skip_isitem:
   cmplwi r0, 0x4B
   beqlr ; Original behavior for Blue Chu Jelly.
-  
+
   lis r11, blue_chuchu_shuffle_enabled@ha
   lbz r11, blue_chuchu_shuffle_enabled@l(r11)
   cmpwi r11, 0
   beq blue_chuchu_skip_isitem_no
-  lwz r11, 0x630 (r31) ; mItemBitNo (stored at 0x800F558C, before this hook)
-  cmpwi r11, 1
-  blt blue_chuchu_skip_isitem_no
-  cmpwi r11, 23
-  bgt blue_chuchu_skip_isitem_no
+
+  ; Check item_action == 0x3E from raw actor params (immutable, set at actor creation).
+  ; mAction at 0x668 is NOT yet stored at this point (_daItem_create runs before CreateInit).
+  lwz r11, 0xB0 (r31) ; Raw actor params
+  rlwinm r11, r11, 6, 26, 31 ; Extract action (bits 26-31)
+  cmpwi r11, 0x3E
+  bne blue_chuchu_skip_isitem_no
+
   crset 2 ; Set EQ to skip the isItem check.
   blr
 blue_chuchu_skip_isitem_no:
@@ -1339,8 +1368,9 @@ blue_chuchu_skip_isitem_no:
 
 
 ; In the fopAcM_onItemForIb inline at the end of itemGetExecute, the code checks if m_itemNo is 0x4B to decide between stage 0xE switches and room-level item flags.
-; Death-path items have a custom m_itemNo but still need stage 0xE, so we check mItemBitNo 1-23.
-.org 0x800F6C98 ; In daItem_c
+; Death-path items have a custom m_itemNo but still need stage 0xE. We identify them by checking
+; item_action == 0x3E from raw params, matching the tag set in blue_chuchu_create_death_item.
+.org 0x800F6C98 ; In daItem_c::itemGetExecute
   bl blue_chuchu_check_use_stage_switch
 
 .org @NextFreeSpace
@@ -1348,16 +1378,20 @@ blue_chuchu_skip_isitem_no:
 blue_chuchu_check_use_stage_switch:
   cmplwi r0, 0x4B
   beqlr ; Original behavior for Blue Chu Jelly.
-  
+
   lis r11, blue_chuchu_shuffle_enabled@ha
   lbz r11, blue_chuchu_shuffle_enabled@l(r11)
   cmpwi r11, 0
   beq blue_chuchu_stage_switch_no
-  lwz r11, 0x630 (r31) ; mItemBitNo
-  cmpwi r11, 1
-  blt blue_chuchu_stage_switch_no
-  cmpwi r11, 23
-  bgt blue_chuchu_stage_switch_no
+
+  ; Check item_action == 0x3E from raw actor params.
+  ; By this point, mAction at 0x668 has been overwritten to 5 by blue_chuchu_restore_action.
+  ; But raw params at 0xB0 are never modified and still contain 0x3E.
+  lwz r11, 0xB0 (r31) ; Raw actor params
+  rlwinm r11, r11, 6, 26, 31 ; Extract action (bits 26-31)
+  cmpwi r11, 0x3E
+  bne blue_chuchu_stage_switch_no
+
   crset 2 ; Set EQ to use stage 0xE save switch.
   blr
 blue_chuchu_stage_switch_no:
@@ -1404,7 +1438,7 @@ blue_chuchu_create_death_item:
   extsb r6, r6
   li r7, 3 ; Don't fade out
   li r8, 0
-  li r9, 5 ; Item action 5 (ding sound)
+  li r9, 0x3E ; Blue ChuChu custom action marker (restored to BOSS_DISAPPEAR in CreateInit)
   li r10, 0
   bl fopAcM_createItem__FP4cXyziiiiP5csXyziP4cXyz
   b blue_chuchu_death_func_end
