@@ -412,7 +412,7 @@ class ItemRandomizer(BaseRandomizer):
         raise Exception("Not enough valid locations left for any of the unplaced progress items!")
       
       # Remove duplicates from the list so items like swords and bows aren't so likely to show up early.
-      # We exclude dungeon items from this so that small keys can still be front-loaded when shuffled anywhere.
+      # We exclude dungeon items from this so that small keys can still be front-loaded when shuffled outside their own dungeon.
       # With small keys de-duplicated too, dungeons can be inaccessible until late in the seed (especially when nested).
       # We also exclude Blue Chu Jelly so that enough copies are placed early for the Doc Bandam trade to be relevant.
       unique_possible_items = []
