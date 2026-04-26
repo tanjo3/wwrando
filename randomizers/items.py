@@ -11,6 +11,8 @@ from wwlib.dzx import DZx, ACTR, SCOB, TRES, DZxLayer
 from wwlib.events import EventList
 from tweaks import add_trap_chest_event_to_stage
 
+class DungeonItemPlacementError(Exception): pass
+
 class ItemRandomizer(BaseRandomizer):
   def __init__(self, rando):
     super().__init__(rando)
@@ -100,7 +102,7 @@ class ItemRandomizer(BaseRandomizer):
       try:
         self._try_randomize_dungeon_items()
         return
-      except Exception:
+      except DungeonItemPlacementError:
         if attempt == max_attempts - 1:
           raise
         self.logic.load_simulated_playthrough_state(state_backup)
@@ -255,7 +257,7 @@ class ItemRandomizer(BaseRandomizer):
       ]
     
     if not possible_locations:
-      raise Exception("No valid locations left to place dungeon items!")
+      raise DungeonItemPlacementError("No valid locations left to place dungeon items!")
     
     location_name = self.rng.choice(possible_locations)
     self.logic.set_prerandomization_item_location(location_name, item_name)
@@ -268,7 +270,7 @@ class ItemRandomizer(BaseRandomizer):
       vanilla_locations = self.logic.get_vanilla_item_locations(item_name)
     
     if not vanilla_locations:
-      raise Exception(f"No vanilla locations found for {item_name}!")
+      raise DungeonItemPlacementError(f"No vanilla locations found for {item_name}!")
     
     if for_progression:
       # Filter locations for progression locations only.
@@ -281,7 +283,7 @@ class ItemRandomizer(BaseRandomizer):
         self.logic.set_prerandomization_item_location(location_name, item_name)
         return
     
-    raise Exception(f"No vanilla locations left to place {item_name}!")
+    raise DungeonItemPlacementError(f"No vanilla locations left to place {item_name}!")
   
   def check_is_swappable_item_for_boss_location(self, location_name, item_name, boss_location_name, boss_item_name):
     # Don't swap with another required boss location.
