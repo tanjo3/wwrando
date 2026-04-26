@@ -84,6 +84,25 @@ class ItemRandomizer(BaseRandomizer):
   
   #region Randomization
   def randomize_dungeon_items(self):
+    # The placement logic below is a greedy forward fill that can hit dead ends from random ordering.
+    # Retry the whole pass with reshuffled orderings on failure.
+    state_backup = self.logic.save_simulated_playthrough_state()
+    prerand_backup = dict(self.logic.prerandomization_item_locations)
+    drc_failsafe_backup = self.drc_failsafe_location
+    
+    max_attempts = 10
+    for attempt in range(max_attempts):
+      try:
+        self._try_randomize_dungeon_items()
+        return
+      except Exception:
+        if attempt == max_attempts - 1:
+          raise
+        self.logic.load_simulated_playthrough_state(state_backup)
+        self.logic.prerandomization_item_locations = dict(prerand_backup)
+        self.drc_failsafe_location = drc_failsafe_backup
+  
+  def _try_randomize_dungeon_items(self):
     # Places dungeon-specific items first so all the dungeon locations don't get used up by other items.
     
     # Temporarily add all items except for dungeon keys while we randomize them.
@@ -112,19 +131,20 @@ class ItemRandomizer(BaseRandomizer):
       ])
     
     # Collect all dungeon items to place.
-    small_keys_to_place = [
+    # Sorted up front for determinism across retries.
+    small_keys_to_place = sorted([
       item_name for item_name in (self.logic.unplaced_progress_items + self.logic.unplaced_nonprogress_items)
       if item_name.endswith(" Small Key")
-    ]
-    big_keys_to_place = [
+    ])
+    big_keys_to_place = sorted([
       item_name for item_name in (self.logic.unplaced_progress_items + self.logic.unplaced_nonprogress_items)
       if item_name.endswith(" Big Key")
-    ]
-    other_dungeon_items_to_place = [
+    ])
+    other_dungeon_items_to_place = sorted([
       item_name for item_name in (self.logic.unplaced_progress_items + self.logic.unplaced_nonprogress_items)
       if item_name.endswith(" Dungeon Map")
       or item_name.endswith(" Compass")
-    ]
+    ])
     
     # Shuffle the lists so that the dungeon items are not always placed in the same order.
     self.rng.shuffle(small_keys_to_place)
