@@ -39,9 +39,29 @@ class ItemRandomizer(BaseRandomizer):
     return "Saving items..."
   
   def _randomize(self):
-    self.randomize_dungeon_items()
+    state_backup = self.logic.save_simulated_playthrough_state()
+    prerand_backup = dict(self.logic.prerandomization_item_locations)
+    done_backup = dict(self.logic.done_item_locations)
+    remaining_backup = list(self.logic.remaining_item_locations)
+    drc_failsafe_backup = self.drc_failsafe_location
     
-    self.randomize_progression_items_forward_fill()
+    max_attempts = 10
+    for attempt in range(max_attempts):
+      try:
+        self.randomize_dungeon_items()
+        
+        self.randomize_progression_items_forward_fill()
+        
+        break
+      except Exception:
+        if attempt == max_attempts - 1:
+          raise
+        
+        self.logic.load_simulated_playthrough_state(state_backup)
+        self.logic.prerandomization_item_locations = dict(prerand_backup)
+        self.logic.done_item_locations = dict(done_backup)
+        self.logic.remaining_item_locations = list(remaining_backup)
+        self.drc_failsafe_location = drc_failsafe_backup
     
     self.randomize_unique_nonprogress_items()
     
@@ -86,25 +106,6 @@ class ItemRandomizer(BaseRandomizer):
   
   #region Randomization
   def randomize_dungeon_items(self):
-    # The placement logic below is a greedy forward fill that can hit dead ends from random ordering.
-    # Retry the whole pass with reshuffled orderings on failure.
-    state_backup = self.logic.save_simulated_playthrough_state()
-    prerand_backup = dict(self.logic.prerandomization_item_locations)
-    drc_failsafe_backup = self.drc_failsafe_location
-    
-    max_attempts = 10
-    for attempt in range(max_attempts):
-      try:
-        self._try_randomize_dungeon_items()
-        return
-      except DungeonItemPlacementError:
-        if attempt == max_attempts - 1:
-          raise
-        self.logic.load_simulated_playthrough_state(state_backup)
-        self.logic.prerandomization_item_locations = dict(prerand_backup)
-        self.drc_failsafe_location = drc_failsafe_backup
-  
-  def _try_randomize_dungeon_items(self):
     # Places dungeon-specific items first so all the dungeon locations don't get used up by other items.
     
     # Temporarily add all items except for dungeon keys while we randomize them.
