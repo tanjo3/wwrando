@@ -1,3 +1,5 @@
+from collections import Counter
+
 import tweaks
 from logic.item_types import DUNGEON_SMALL_KEYS, DUNGEON_BIG_KEYS, DUNGEON_MAPS_AND_COMPASSES
 from options.wwrando_options import DungeonItemShuffleMode, SwordMode
@@ -102,18 +104,19 @@ class ExtraStartingItemsRandomizer(BaseRandomizer):
       raise Exception("Random starting items didn't unlock at least one check")
   
   def add_starting_dungeon_items(self):
+    starting_gear = Counter(self.options.starting_gear)
+    
+    dungeon_items_to_add = []
     if self.options.shuffle_small_keys == DungeonItemShuffleMode.START_WITH:
-      for item in DUNGEON_SMALL_KEYS:
-        self.logic.add_owned_item(item)
-        self.starting_dungeon_items.append(item)
-    
+      dungeon_items_to_add += DUNGEON_SMALL_KEYS
     if self.options.shuffle_big_keys == DungeonItemShuffleMode.START_WITH:
-      for item in DUNGEON_BIG_KEYS:
-        self.logic.add_owned_item(item)
-        self.starting_dungeon_items.append(item)
-    
+      dungeon_items_to_add += DUNGEON_BIG_KEYS
     if self.options.shuffle_maps_and_compasses == DungeonItemShuffleMode.START_WITH:
-      for item in DUNGEON_MAPS_AND_COMPASSES:
+      dungeon_items_to_add += DUNGEON_MAPS_AND_COMPASSES
+    
+    remaining_dungeon_items_to_add = Counter(dungeon_items_to_add) - starting_gear
+    for item, count in remaining_dungeon_items_to_add.items():
+      for _ in range(count):
         self.logic.add_owned_item(item)
         self.starting_dungeon_items.append(item)
   
