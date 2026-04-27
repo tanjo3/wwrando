@@ -174,40 +174,26 @@ class ItemRandomizer(BaseRandomizer):
     for item_name in big_keys_to_place:
       self.logic.remove_owned_item(item_name)
     
-    # Then, place OWN_DUNGEON shuffle mode dungeon items.
+    # Then, place OWN_DUNGEON shuffle mode dungeon items, plus ANY_DUNGEON items if Required Bosses Mode is on.
+    # ANY_DUNGEON items need to fit across all dungeons (including banned ones, which forward fill excludes), so we pre-place them and rely on the prerand exception in forward fill to bring them in.
+    # When Required Bosses Mode is off, banned locations don't exist and forward fill can handle ANY_DUNGEON placement directly along the accessibility chain.
+    pre_place_any_dungeon = self.options.required_bosses
+    own_dungeon_or_any_dungeon = (DungeonItemShuffleMode.OWN_DUNGEON, DungeonItemShuffleMode.ANY_DUNGEON)
+    own_dungeon_only = (DungeonItemShuffleMode.OWN_DUNGEON,)
+    small_key_modes = own_dungeon_or_any_dungeon if pre_place_any_dungeon else own_dungeon_only
+    big_key_modes = own_dungeon_or_any_dungeon if pre_place_any_dungeon else own_dungeon_only
+    map_compass_modes = own_dungeon_or_any_dungeon if pre_place_any_dungeon else own_dungeon_only
+    
     for item_name in small_keys_to_place:
-      if self.options.shuffle_small_keys == DungeonItemShuffleMode.OWN_DUNGEON:
+      if self.options.shuffle_small_keys in small_key_modes:
         self.place_dungeon_item(item_name)
       self.logic.add_owned_item(item_name)
     for item_name in big_keys_to_place:
-      if self.options.shuffle_big_keys == DungeonItemShuffleMode.OWN_DUNGEON:
+      if self.options.shuffle_big_keys in big_key_modes:
         self.place_dungeon_item(item_name)
       self.logic.add_owned_item(item_name)
     for item_name in other_dungeon_items_to_place:
-      if self.options.shuffle_maps_and_compasses == DungeonItemShuffleMode.OWN_DUNGEON:
-        self.place_dungeon_item(item_name)
-    
-    # Reset entrance macros to real shuffled values and remove accumulated keys before placing ANY_DUNGEON items.
-    # This ensures that ANY_DUNGEON items go in actually-reachable dungeons, preventing forward fill deadlocks with entrance rando.
-    self.logic.update_entrance_connection_macros()
-    
-    # Keys are re-accumulated during placement, creating a valid accessibility chain where each key is at a location reachable with previously placed keys.
-    # Without this, all keys in inventory would allow placement at deep locations that forward fill can't reach early.
-    for item_name in small_keys_to_place:
-      self.logic.remove_owned_item(item_name)
-    for item_name in big_keys_to_place:
-      self.logic.remove_owned_item(item_name)
-    
-    for item_name in small_keys_to_place:
-      if self.options.shuffle_small_keys == DungeonItemShuffleMode.ANY_DUNGEON:
-        self.place_dungeon_item(item_name)
-      self.logic.add_owned_item(item_name)
-    for item_name in big_keys_to_place:
-      if self.options.shuffle_big_keys == DungeonItemShuffleMode.ANY_DUNGEON:
-        self.place_dungeon_item(item_name)
-      self.logic.add_owned_item(item_name)
-    for item_name in other_dungeon_items_to_place:
-      if self.options.shuffle_maps_and_compasses == DungeonItemShuffleMode.ANY_DUNGEON:
+      if self.options.shuffle_maps_and_compasses in map_compass_modes:
         self.place_dungeon_item(item_name)
     
     # Remove the items we temporarily added.
@@ -217,6 +203,9 @@ class ItemRandomizer(BaseRandomizer):
       self.logic.remove_owned_item(item_name)
     for item_name in big_keys_to_place:
       self.logic.remove_owned_item(item_name)
+    
+    # Reset the dungeon entrance macros to real shuffled values for forward fill.
+    self.logic.update_entrance_connection_macros()
   
   def place_dungeon_item(self, item_name):
     if self.options.progression_dungeons:
