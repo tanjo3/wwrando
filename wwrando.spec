@@ -61,14 +61,19 @@ exe = EXE(pyz,
           console=False,
           icon="assets/icon.ico" )
 
-app = BUNDLE(exe,
-          name='Wind Waker Randomizer.app',
-          icon="assets/icon.icns",
-          bundle_identifier=None,
-          info_plist={
-              "LSBackgroundOnly": False,
-              "CFBundleDisplayName": "Wind Waker Randomizer",
-              "CFBundleName": "WW Randomizer", # 15 character maximum
-              "CFBundleShortVersionString": randomizer_version,
-          }
-          )
+# Disabled code for building macOS .app bundles below.
+# This was for PyInstaller's onefile mode, which apparently isn't supposed to be used with macOS bundles.
+# In order properly support macOS, onedir mode (COLLECT) should be used instead.
+# But as GitHub Actions doesn't seem to properly support building macOS bundles with PyInstaller anymore either way this doesn't seem worthwhile.
+# If anyone is interested in adding support for macOS builds again it may require some completely different method.
+# app = BUNDLE(exe,
+#           name='Wind Waker Randomizer.app',
+#           icon="assets/icon.icns",
+#           bundle_identifier=None,
+#           info_plist={
+#               "LSBackgroundOnly": False,
+#               "CFBundleDisplayName": "Wind Waker Randomizer",
+#               "CFBundleName": "WW Randomizer", # 15 character maximum
+#               "CFBundleShortVersionString": randomizer_version,
+#           }
+#           )
