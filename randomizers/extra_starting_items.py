@@ -37,7 +37,7 @@ class ExtraStartingItemsRandomizer(BaseRandomizer):
     self.random_starting_items = []
   
   def is_enabled(self) -> bool:
-    return self.rando.items.is_enabled() and (
+    has_starting_spoils = (
       self.options.starting_joy_pendant > 0
       or self.options.starting_skull_necklace > 0
       or self.options.starting_boko_baba_seed > 0
@@ -46,8 +46,10 @@ class ExtraStartingItemsRandomizer(BaseRandomizer):
       or self.options.starting_red_chu_jelly > 0
       or self.options.starting_green_chu_jelly > 0
       or self.options.starting_blue_chu_jelly > 0
-      or self.options.num_extra_starting_items > 0
     )
+    has_random_starting_items = self.options.num_extra_starting_items > 0
+    
+    return has_starting_spoils or (self.rando.items.is_enabled() and has_random_starting_items)
   
   @property
   def progress_randomize_duration_weight(self) -> int:
@@ -72,46 +74,47 @@ class ExtraStartingItemsRandomizer(BaseRandomizer):
     self.starting_spoils.extend(["Red Chu Jelly"]   * self.options.starting_red_chu_jelly)
     self.starting_spoils.extend(["Green Chu Jelly"] * self.options.starting_green_chu_jelly)
     self.starting_spoils.extend(["Blue Chu Jelly"]  * self.options.starting_blue_chu_jelly)
-
-    initial_sphere_0_checks = self.logic.get_accessible_remaining_locations(for_progression=True)
-    for remaining_random_starting_items in range(self.options.num_extra_starting_items, 0, -1):
-      max_fraction = remaining_random_starting_items
-      if len(self.logic.get_accessible_remaining_locations(for_progression=True)) > len(initial_sphere_0_checks):
-        # If we've already unlocked at least one check, we can use any items for the remaining slots
-        # We still want to avoid completely useless ones though (e.g. dungeon items for non-required-bosses-mode dungeons)
-        max_fraction = 9998
-      available_items = self.filter_possible_random_starting_items(max_fraction)
-      
-      if len(available_items) == 0:
-        break
-      
-      selected = self.rng.choice(available_items)
-      
-      if selected in ("Treasure Chart", "Triforce Chart"):
-        chart_usefulness = self.logic.get_items_by_usefulness_fraction(
-          self.logic.treasure_chart_names + self.logic.triforce_chart_names,
-          filter_sunken_treasure=False,
-        )
-        selected = self.rng.choice([
-          chart for chart in self.logic.unplaced_progress_items
-          if chart.startswith(selected) and chart in chart_usefulness and chart_usefulness[chart] <= max_fraction
-        ])
-      
-      # Sync the added items back to the other lists:
-      self.logic.add_owned_item(selected)
-      self.random_starting_items.append(selected)
-      # Do *not* add it to the base starting items list, as it would mess up the
-      # hints since they'd start with a different set of starting items when
-      # demoting some progress items to nonprogress.
-      # e.g. big octos with a starting boomerang would make the quiver foolish,
-      # which is (maybe?) confusing and would lead you to never check octos
-      # self.rando.starting_items.extend([selected])
     
-    # Confirm that we opened at least one new check if we assigned an item
-    if self.random_starting_items and len(self.logic.get_accessible_remaining_locations(for_progression=True)) <= len(initial_sphere_0_checks):
-      # This would indicate a logic bug, the filtering above should prevent it
-      raise Exception("Random starting items didn't unlock at least one check")
+    if self.rando.items.is_enabled():
+      initial_sphere_0_checks = self.logic.get_accessible_remaining_locations(for_progression=True)
+      for remaining_random_starting_items in range(self.options.num_extra_starting_items, 0, -1):
+        max_fraction = remaining_random_starting_items
+        if len(self.logic.get_accessible_remaining_locations(for_progression=True)) > len(initial_sphere_0_checks):
+          # If we've already unlocked at least one check, we can use any items for the remaining slots
+          # We still want to avoid completely useless ones though (e.g. dungeon items for non-required-bosses-mode dungeons)
+          max_fraction = 9998
+        available_items = self.filter_possible_random_starting_items(max_fraction)
+        
+        if len(available_items) == 0:
+          break
+        
+        selected = self.rng.choice(available_items)
+        
+        if selected in ("Treasure Chart", "Triforce Chart"):
+          chart_usefulness = self.logic.get_items_by_usefulness_fraction(
+            self.logic.treasure_chart_names + self.logic.triforce_chart_names,
+            filter_sunken_treasure=False,
+          )
+          selected = self.rng.choice([
+            chart for chart in self.logic.unplaced_progress_items
+            if chart.startswith(selected) and chart in chart_usefulness and chart_usefulness[chart] <= max_fraction
+          ])
+        
+        # Sync the added items back to the other lists:
+        self.logic.add_owned_item(selected)
+        self.random_starting_items.append(selected)
+        # Do *not* add it to the base starting items list, as it would mess up the
+        # hints since they'd start with a different set of starting items when
+        # demoting some progress items to nonprogress.
+        # e.g. big octos with a starting boomerang would make the quiver foolish,
+        # which is (maybe?) confusing and would lead you to never check octos
+        # self.rando.starting_items.extend([selected])
       
+      # Confirm that we opened at least one new check if we assigned an item
+      if self.random_starting_items and len(self.logic.get_accessible_remaining_locations(for_progression=True)) <= len(initial_sphere_0_checks):
+        # This would indicate a logic bug, the filtering above should prevent it
+        raise Exception("Random starting items didn't unlock at least one check")
+  
   def filter_possible_random_starting_items(self, max_fraction: int) -> list[str]:
     item_names_to_check = self.logic.unplaced_progress_items.copy()
     need_sunken_treasure = any(item.startswith("Treasure Chart ") or item.startswith("Triforce Chart ") for item in item_names_to_check)
