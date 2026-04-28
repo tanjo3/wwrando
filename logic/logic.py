@@ -88,6 +88,11 @@ class Logic:
         if item_name != "Hurricane Spin"
       ]
     
+    if self.options.always_double_magic:
+      # The second Progressive Magic Meter only refills magic, so it has no progression value.
+      self.all_progress_items.remove("Progressive Magic Meter")
+      self.all_nonprogress_items.append("Progressive Magic Meter")
+    
     if self.options.progression_triforce_charts:
       self.all_progress_items += self.triforce_chart_names
     else:
