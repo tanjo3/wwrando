@@ -664,7 +664,7 @@ class WWRandomizerWindow(QMainWindow):
     
     if options.hoho_hint_shards:
       should_enable_options["hoho_hints"] = False
-    if options.hoho_hints:
+    elif options.hoho_hints:
       should_enable_options["hoho_hint_shards"] = False
     
     dungeon_entrances_random = any([
