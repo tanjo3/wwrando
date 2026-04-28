@@ -329,11 +329,15 @@ def make_items_progressive(self: WWRandomizer):
   msg.display_item_id = magic_meter_item_id
   
   if self.options.always_double_magic:
-    # Use the message for the first magic meter upgrade for both magic meter upgrades.
     magic_meter_upgrade_item_id = 0xB2
     msg = self.bmg.messages_by_id[101 + magic_meter_upgrade_item_id]
     msg.string = description
     msg.display_item_id = magic_meter_item_id
+    
+    # Add an item get message for the second pickup that would only refill the plyer's magic meter.
+    refill_description = "\\{1A 05 00 00 01}Your \\{1A 06 FF 00 00 01}magic\\{1A 06 FF 00 00 00} has been refilled!"
+    msg = self.bmg.messages_by_id[101 + magic_meter_item_id]
+    msg.string = refill_description
 
 def make_sail_behave_like_swift_sail(self: WWRandomizer):
   # Causes the wind direction to always change to face the direction KoRL is facing as long as the sail is out.
