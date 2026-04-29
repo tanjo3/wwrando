@@ -137,6 +137,7 @@ class Logic:
     
     self.update_entrance_connection_macros()
     self.update_chart_macros()
+    self.update_blue_chu_jelly_macro()
     
     self.unplaced_progress_items = self.all_progress_items.copy()
     self.unplaced_nonprogress_items = self.all_nonprogress_items.copy()
@@ -721,6 +722,11 @@ class Logic:
         req_string = chart_item_name
       
       self.set_macro(chart_macro_name, req_string)
+  
+  def update_blue_chu_jelly_macro(self):
+    # 14/23 Blue ChuChus need no items to reach, so any non-zero amount of starting Blue Chu Jelly already covers the difference for the 15-jelly trade-in.
+    if self.options.starting_blue_chu_jelly >= 1:
+      self.set_macro("Can Obtain 15 Blue Chu Jelly", "Can Get Blue Chu Jelly from Blue ChuChus & Spoils Bag")
   
   def update_required_bosses_macro(self):
     required_boss_reqs = [

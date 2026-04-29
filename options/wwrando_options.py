@@ -456,7 +456,7 @@ class Options(BaseOptions):
     minimum=0,
     maximum=99,
     description="Amount of Blue Chu Jellies to start with.<br>"
-      "This is a convenience setting and does not affect the logic.",
+      "This setting affects the logic for the <i>Windfall Island - Chu Jelly Juice Shop - Give 15 Blue Chu Jelly</i> location.",
   )
   num_extra_starting_items: int = option(
     default=0,

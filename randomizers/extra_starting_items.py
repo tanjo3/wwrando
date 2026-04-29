@@ -61,11 +61,6 @@ class ExtraStartingItemsRandomizer(BaseRandomizer):
   
   def _randomize(self):
     # Add desired starting spoils to the player's inventory.
-    # This currently has no logical implications, since apart from Blue
-    # Chu Jelly, the player could sell all the spoils they start with
-    # and still need logical access to spoils.
-    # The logic behind starting Blue Chu Jelly could be considered in
-    # the future.
     self.starting_spoils.extend(["Joy Pendant"]     * self.options.starting_joy_pendant)
     self.starting_spoils.extend(["Skull Necklace"]  * self.options.starting_skull_necklace)
     self.starting_spoils.extend(["Boko Baba Seed"]  * self.options.starting_boko_baba_seed)
