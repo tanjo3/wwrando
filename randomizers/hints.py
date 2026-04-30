@@ -1163,10 +1163,15 @@ class HintsRandomizer(BaseRandomizer):
     
     zones_to_remove: dict[str, str] = {}
     for zone_a, locs_a in barren_locations_by_zone.items():
+      best_parent = None
+      best_size = -1
       for zone_b, locs_b in barren_locations_by_zone.items():
         if zone_a != zone_b and locs_a < locs_b:
-          zones_to_remove[zone_a] = zone_b
-          break
+          if len(locs_b) > best_size:
+            best_parent = zone_b
+            best_size = len(locs_b)
+      if best_parent is not None:
+        zones_to_remove[zone_a] = best_parent
     
     # Transfer location counts from removed zones to their parent zones.
     if location_counter is not None:
