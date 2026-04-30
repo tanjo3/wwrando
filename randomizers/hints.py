@@ -818,9 +818,6 @@ class HintsRandomizer(BaseRandomizer):
     #    copy. For progressive items, check if the Ganondorf path needs more copies than this location requires.
     #    Otherwise, the copy is redundant.
     
-    if item_name not in self.path_logic.all_cleaned_item_names:
-      return False
-    
     # Step 1: Sphere check. Runs before the chain analysis gate because it can detect utility the chain analysis misses.
     if sphere_state is not None:
       self.path_logic.load_simulated_playthrough_state(sphere_state)
