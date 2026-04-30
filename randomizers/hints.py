@@ -913,7 +913,8 @@ class HintsRandomizer(BaseRandomizer):
     # The list includes only zones which are allowed to be hinted at as barren.
     
     # To start, exclude locations in non required bosses mode dungeons from being considered as progress locations.
-    progress_locations = set(progress_locations) - set(self.rando.boss_reqs.banned_locations)
+    banned_locations = set(self.rando.boss_reqs.banned_locations)
+    progress_locations = set(progress_locations) - banned_locations
     
     # Next, create a dictionary mapping all progress items to their randomized locations. The values in this dictionary
     # will be lists since an item can be in multiple locations if it is progressive or a small key.
@@ -1003,7 +1004,7 @@ class HintsRandomizer(BaseRandomizer):
     
     while self.path_logic.unplaced_progress_items:
       accessible = self.path_logic.get_accessible_remaining_locations(for_progression=True)
-      accessible = [loc for loc in accessible if loc not in self.rando.boss_reqs.banned_locations]
+      accessible = [loc for loc in accessible if loc not in banned_locations]
       new_locations = [loc for loc in accessible if loc not in previously_accessible]
       if not new_locations:
         break
@@ -1046,7 +1047,7 @@ class HintsRandomizer(BaseRandomizer):
       
       while self.path_logic.unplaced_progress_items:
         accessible = self.path_logic.get_accessible_remaining_locations(for_progression=True)
-        accessible = [loc for loc in accessible if loc not in self.rando.boss_reqs.banned_locations]
+        accessible = [loc for loc in accessible if loc not in banned_locations]
         new_locations = [loc for loc in accessible if loc not in previously_accessible]
         if not new_locations:
           break
