@@ -20,8 +20,8 @@ ALL_TRICKS: list[Trick] = [
   ),
   Trick(
     name="DRC - Use Ice Arrows to Enter Gaping Maw",
-    description="You can use Ice Arrows to freeze the magma and make one or two platforms to jump across.<br>" \
-    "It's somewhat tricky, but made easier by jump attacking if you have a sword.",
+    description="You can use Ice Arrows to freeze the magma and make one or two platforms to jump across.<br>"
+      "It's somewhat tricky, but made easier by jump attacking if you have a sword.",
   ),
   Trick(
     name="FW - Fly Through Vines Without Destroying Seeds",
@@ -62,8 +62,8 @@ ALL_TRICKS: list[Trick] = [
   ),
   Trick(
     name="FF - Reach Boss Entrance via Bedpost Jumps",
-    description="It is possible to get up there without either Deku Leaf or Hookshot. To do it, go to the southwest room, and jump on top of the wooden bedposts (not the rightmost one).<br>" \
-    "Then jump diagonally onto the corner of the platform with the Bokoblin and the Skull Hammer pegs on it.",
+    description="It is possible to get up there without either Deku Leaf or Hookshot. To do it, go to the southwest room, and jump on top of the wooden bedposts (not the rightmost one).<br>"
+      "Then jump diagonally onto the corner of the platform with the Bokoblin and the Skull Hammer pegs on it.",
   ),
   Trick(
     name="ET - Defeat Floormasters with Skull Hammer",
@@ -87,18 +87,18 @@ ALL_TRICKS: list[Trick] = [
   ),
   Trick(
     name="Circumvent Outset Island Trees with Deku Leaf",
-    description="You can circumvent the trees entirely by jumping off the edge of the path near the trees and flying northeast to land on the elevated cliff on the side of the island.<br>" \
-    "Then follow the path on top of the cliff to get behind the trees.",
+    description="You can circumvent the trees entirely by jumping off the edge of the path near the trees and flying northeast to land on the elevated cliff on the side of the island.<br>"
+      "Then follow the path on top of the cliff to get behind the trees.",
   ),
   Trick(
     name="Use Big Pig to Cut Down Outset Island Trees",
-    description="To do this, first carry the pig to the trees. Then pick it up and throw it against the wall several times. For the tenth throw, instead of throwing it against the wall, throw it through the trees. " \
-    "Being thrown ten times will enrage it, so it will start rushing at you, cutting the trees down in the process.",
+    description="To do this, first carry the pig to the trees. Then pick it up and throw it against the wall several times. For the tenth throw, instead of throwing it against the wall, throw it through the trees. "
+      "Being thrown ten times will enrage it, so it will start rushing at you, cutting the trees down in the process.",
   ),
   Trick(
     name="Reach Pillar Outside Forest Haven without Grappling Hook",
-    description="You can access pillar outside Forest Haven by flying to the lowest elevated exit out of Forest Haven, and then flying southwest.<br>" \
-    "From there, you can access the middle elevated platform exit or the dungeon entrance.",
+    description="You can access pillar outside Forest Haven by flying to the lowest elevated exit out of Forest Haven, and then flying southwest.<br>"
+      "From there, you can access the middle elevated platform exit or the dungeon entrance.",
   ),
   Trick(
     name="Boating Course Cave with Only Hookshot",
@@ -114,8 +114,8 @@ ALL_TRICKS: list[Trick] = [
   ),
   Trick(
     name="Salvage Without Killing Enemies",
-    description="The enemies can get in the way when trying to salvage treasures, so being able to destroy them makes this easier.<br>" \
-    "Without killing them, salvaging is more difficult but still possible.",
+    description="The enemies can get in the way when trying to salvage treasures, so being able to destroy them makes this easier.<br>"
+      "Without killing them, salvaging is more difficult but still possible.",
   ),
   Trick(
     name="Defeat Electric ChuChus with Grappling Hook and Sword",
@@ -131,8 +131,8 @@ ALL_TRICKS: list[Trick] = [
   ),
   Trick(
     name="Defeat Puppet Ganon Without Boomerang",
-    description="You can snipe Puppet Ganon's tail without cutting his strings first, though this is fairly precise.<br>" \
-    "Boomerang makes things significantly easier, both to cut down Puppet Ganon's strings and to defeat the keese who drop refills.",
+    description="You can snipe Puppet Ganon's tail without cutting his strings first, though this is fairly precise.<br>"
+      "Boomerang makes things significantly easier, both to cut down Puppet Ganon's strings and to defeat the keese who drop refills.",
   ),
   Trick(
     name="Reflect Light Arrows with Skull Hammer",
