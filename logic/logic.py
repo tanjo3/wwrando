@@ -65,11 +65,13 @@ class Logic:
     for location_name in self.remaining_item_locations:
       types = self.item_locations[location_name]["Types"]
       if "Rupee" in types:
-        if "Dungeon" in types and not self.options.progression_rupee_dungeon:
-          locations_to_remove.append(location_name)
-        elif "Puzzle Secret Cave" in types and not self.options.progression_rupee_overworld:
-          locations_to_remove.append(location_name)
-        elif "Dungeon" not in types and "Puzzle Secret Cave" not in types and not self.options.progression_rupee_overworld:
+        if "Dungeon" in types:
+          if not self.options.progression_rupee_dungeon or not self.options.progression_dungeons:
+            locations_to_remove.append(location_name)
+        elif "Puzzle Secret Cave" in types:
+          if not self.options.progression_rupee_overworld or not self.options.progression_puzzle_secret_caves:
+            locations_to_remove.append(location_name)
+        elif not self.options.progression_rupee_overworld:
           locations_to_remove.append(location_name)
     for location_name in locations_to_remove:
       self.remaining_item_locations.remove(location_name)
