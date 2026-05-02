@@ -1354,7 +1354,7 @@ Forbidden Woods - Rupee Around Miniboss Chest 1:
     Can Access Forbidden Woods Miniboss Arena
     & Can Defeat Winged Mothulas
   Original item: Green Rupee
-  Types: Dungeon, Rupee
+  Types: Dungeon, Randomizable Miniboss Room, Rupee
   Paths:
     - kinMB/Room10.arc/Actor027
 Forbidden Woods - Rupee Around Miniboss Chest 2:
@@ -1362,7 +1362,7 @@ Forbidden Woods - Rupee Around Miniboss Chest 2:
     Can Access Forbidden Woods Miniboss Arena
     & Can Defeat Winged Mothulas
   Original item: Green Rupee
-  Types: Dungeon, Rupee
+  Types: Dungeon, Randomizable Miniboss Room, Rupee
   Paths:
     - kinMB/Room10.arc/Actor02B
 Forbidden Woods - Rupee Around Miniboss Chest 3:
@@ -1370,7 +1370,7 @@ Forbidden Woods - Rupee Around Miniboss Chest 3:
     Can Access Forbidden Woods Miniboss Arena
     & Can Defeat Winged Mothulas
   Original item: Green Rupee
-  Types: Dungeon, Rupee
+  Types: Dungeon, Randomizable Miniboss Room, Rupee
   Paths:
     - kinMB/Room10.arc/Actor02A
 Forbidden Woods - Rupee Around Miniboss Chest 4:
@@ -1378,7 +1378,7 @@ Forbidden Woods - Rupee Around Miniboss Chest 4:
     Can Access Forbidden Woods Miniboss Arena
     & Can Defeat Winged Mothulas
   Original item: Green Rupee
-  Types: Dungeon, Rupee
+  Types: Dungeon, Randomizable Miniboss Room, Rupee
   Paths:
     - kinMB/Room10.arc/Actor02D
 Forbidden Woods - Rupee Around Miniboss Chest 5:
@@ -1386,7 +1386,7 @@ Forbidden Woods - Rupee Around Miniboss Chest 5:
     Can Access Forbidden Woods Miniboss Arena
     & Can Defeat Winged Mothulas
   Original item: Green Rupee
-  Types: Dungeon, Rupee
+  Types: Dungeon, Randomizable Miniboss Room, Rupee
   Paths:
     - kinMB/Room10.arc/Actor028
 Forbidden Woods - Rupee Around Miniboss Chest 6:
@@ -1394,7 +1394,7 @@ Forbidden Woods - Rupee Around Miniboss Chest 6:
     Can Access Forbidden Woods Miniboss Arena
     & Can Defeat Winged Mothulas
   Original item: Green Rupee
-  Types: Dungeon, Rupee
+  Types: Dungeon, Randomizable Miniboss Room, Rupee
   Paths:
     - kinMB/Room10.arc/Actor02C
 Forbidden Woods - Rupee Around Miniboss Chest 7:
@@ -1402,7 +1402,7 @@ Forbidden Woods - Rupee Around Miniboss Chest 7:
     Can Access Forbidden Woods Miniboss Arena
     & Can Defeat Winged Mothulas
   Original item: Green Rupee
-  Types: Dungeon, Rupee
+  Types: Dungeon, Randomizable Miniboss Room, Rupee
   Paths:
     - kinMB/Room10.arc/Actor029
 Forbidden Woods - Rupee Around Miniboss Chest 8:
@@ -1410,7 +1410,7 @@ Forbidden Woods - Rupee Around Miniboss Chest 8:
     Can Access Forbidden Woods Miniboss Arena
     & Can Defeat Winged Mothulas
   Original item: Green Rupee
-  Types: Dungeon, Rupee
+  Types: Dungeon, Randomizable Miniboss Room, Rupee
   Paths:
     - kinMB/Room10.arc/Actor02E
 Forbidden Woods - Past Seeds Hanging by Vines:
