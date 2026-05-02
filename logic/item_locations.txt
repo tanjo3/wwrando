@@ -16,7 +16,6 @@ Outset Island - Underneath Link's House:
     - LinkUG/Stage.arc/Chest000
 Outset Island - Rupee Behind Trees Near Link's House:
   Need: Can Cut Down Outset Trees
-    | Boomerang
     | Hookshot
   Original item: Yellow Rupee
   Types: Rupee
@@ -137,9 +136,8 @@ Outset Island - Orca - Hit 500 Times:
 #    - rels/d_a_npc_ji1.rel@42EF
 Outset Island - Rupee Above Path to Forest of Fairies:
   Need: (Bait Bag & Can Buy Hyoi Pears)
-    | (Can Reach Outset Island Upper Level & Can Fly With Deku Leaf Outdoors)
-    | Boomerang
-    | Hookshot
+    | Can Fly With Deku Leaf Outdoors
+    | (Can Reach Outset Island Upper Level & (Boomerang | Hookshot))
   Original item: Yellow Rupee
   Types: Rupee
   Paths:
