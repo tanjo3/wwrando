@@ -3016,9 +3016,6 @@ def setup_soul_items(self: WWRandomizer):
   item_mesg_num = self.dol.read_data(fs.read_s16, heart_container_resources_addr + 0x16)
   
   for item_name, item_id, arc_symbol, bmd_idx in soul_items:
-    # Register the proper item ID for this item with the randomizer.
-    self.register_renamed_item(item_id, item_name)
-    
     # Update the item get funcs for the soul items to point to our custom item get funcs instead.
     custom_symbol_name = item_name.lower().replace("'", "").replace(" ", "_") + "_item_get_func"
     item_get_func_addr = item_get_funcs_list + item_id*4
