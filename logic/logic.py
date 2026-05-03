@@ -1107,10 +1107,6 @@ class Logic:
     
     if req_name.startswith("Progressive "):
       result = self.check_progressive_item_req(req_name)
-    elif " Small Key x" in req_name:
-      result = self.check_small_key_req(req_name)
-    elif re.search(r" x\d+$", req_name):
-      result = self.check_item_count_req(req_name)
     elif req_name.startswith("Can Access Item Location \""):
       result = self.check_item_location_requirement(req_name)
     elif req_name.startswith("Option \""):
@@ -1124,6 +1120,9 @@ class Logic:
       result = True
     elif req_name == "Impossible":
       result = False
+    elif re.search(r" x\d+$", req_name):
+      # Check after macros to ensure no other macros are misinterpreted as an item count.
+      result = self.check_item_count_req(req_name)
     else:
       raise Exception("Unknown requirement name: " + req_name)
     
@@ -1208,16 +1207,6 @@ class Logic:
       item_name = match.group(1)
       num_required = int(match.group(2))
       items_needed[item_name] = max(num_required, items_needed.setdefault(item_name, 0))
-    elif " Small Key x" in req_name:
-      match = re.search(r"^(.+ Small Key) x(\d+)$", req_name)
-      small_key_name = match.group(1)
-      num_keys_required = int(match.group(2))
-      items_needed[small_key_name] = max(num_keys_required, items_needed.setdefault(small_key_name, 0))
-    elif re.search(r" x\d+$", req_name):
-      match = re.search(r"^(.+) x(\d+)$", req_name)
-      item_name = match.group(1)
-      num_required = int(match.group(2))
-      items_needed[item_name] = max(num_required, items_needed.setdefault(item_name, 0))
     elif req_name.startswith("Can Access Item Location \""):
       match = re.search(r"^Can Access Item Location \"([^\"]+)\"$", req_name)
       item_location_name = match.group(1)
@@ -1238,6 +1227,12 @@ class Logic:
       pass
     elif req_name == "Impossible":
       pass
+    elif re.search(r" x\d+$", req_name):
+      # Check after macros to ensure no other macros are misinterpreted as an item count.
+      match = re.search(r"^(.+) x(\d+)$", req_name)
+      item_name = match.group(1)
+      num_required = int(match.group(2))
+      items_needed[item_name] = max(num_required, items_needed.setdefault(item_name, 0))
     else:
       raise Exception("Unknown requirement name: " + req_name)
     
@@ -1286,15 +1281,6 @@ class Logic:
     
     num_owned = self.currently_owned_items.count(item_name)
     return num_owned >= num_required
-  
-  def check_small_key_req(self, req_name: str):
-    match = re.search(r"^(.+ Small Key) x(\d+)$", req_name)
-    assert match
-    small_key_name = match.group(1)
-    num_keys_required = int(match.group(2))
-    
-    num_small_keys_owned = self.currently_owned_items.count(small_key_name)
-    return num_small_keys_owned >= num_keys_required
   
   def check_item_count_req(self, req_name: str):
     match = re.search(r"^(.+) x(\d+)$", req_name)
