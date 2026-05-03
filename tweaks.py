@@ -27,6 +27,7 @@ from logic.item_types import PROGRESS_ITEMS, NONPROGRESS_ITEMS, CONSUMABLE_ITEMS
 from data_tables import DataTables
 from wwlib.events import EventList
 from wwlib.dzx import DZx, DZxLayer, ACTR, EVNT, FILI, PLYR, SCLS, SCOB, SHIP, TGDR, TRES, Pale, RPAT, RPPN
+from wwr_ui.inventory import BOSS_SOUL_ITEMS
 from options.wwrando_options import SwordMode, MilaSpeedup
 from randomizers.entrances import DUNGEON_ENTRANCES
 
@@ -1473,6 +1474,12 @@ def update_starting_gear(self: WWRandomizer, starting_gear: list[str]):
   # Note: This tweak may be called more than once in a single randomization.
   
   starting_gear = starting_gear.copy()
+  
+  # When boss soul shuffle is off, the player needs to start with all souls so the corresponding event bits get set on game start.
+  if not self.options.boss_soul_shuffle:
+    for soul_name in BOSS_SOUL_ITEMS:
+      if soul_name not in starting_gear:
+        starting_gear.append(soul_name)
   
   # Changing starting magic doesn't work when done via our normal starting items initialization code, so we need to handle it specially.
   starting_magic_count = starting_gear.count("Progressive Magic Meter")

@@ -191,8 +191,6 @@ class ExtraStartingItemsRandomizer(BaseRandomizer):
   def _save(self):
     # This tweak is written in an idempotent way, so this should be ok to call a second time.
     starting_gear = self.options.starting_gear + self.starting_spoils + self.random_starting_items + self.starting_dungeon_items
-    if not self.options.boss_soul_shuffle:
-      starting_gear += BOSS_SOUL_ITEMS
     tweaks.update_starting_gear(self.rando, starting_gear)
   
   def write_to_spoiler_log(self) -> str:

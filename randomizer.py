@@ -183,7 +183,8 @@ class WWRandomizer:
     
     if not self.options.boss_soul_shuffle:
       for soul_name in BOSS_SOUL_ITEMS:
-        self.starting_items.append(soul_name)
+        if soul_name not in self.starting_items:
+          self.starting_items.append(soul_name)
     
     
     self.custom_model_name = self.options.custom_player_model
@@ -333,10 +334,7 @@ class WWRandomizer:
       if self.options.sword_mode == SwordMode.SWORDLESS:
         patcher.apply_patch(self, "swordless")
         tweaks.update_text_for_swordless(self)
-      starting_gear = self.options.starting_gear.copy()
-      if not self.options.boss_soul_shuffle:
-        starting_gear += BOSS_SOUL_ITEMS
-      tweaks.update_starting_gear(self, starting_gear)
+      tweaks.update_starting_gear(self, self.options.starting_gear)
       if self.options.chest_type_matches_contents:
         tweaks.replace_dark_wood_chest_texture(self)
       if self.options.open_drc:
