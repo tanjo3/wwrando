@@ -483,7 +483,8 @@ class WWRandomizer:
     tweaks.fix_stone_head_bugs(self)
     tweaks.show_number_of_tingle_statues_on_quest_status_screen(self)
     patcher.apply_patch(self, "flexible_enemies")
-    patcher.apply_patch(self, "boss_soul_shuffle")
+    if self.options.boss_soul_shuffle:
+      patcher.apply_patch(self, "boss_soul_shuffle")
     tweaks.fix_needle_rock_island_salvage_flags(self)
     tweaks.allow_nonlinear_servants_of_the_towers(self)
     tweaks.fix_helmaroc_king_table_softlock(self)
