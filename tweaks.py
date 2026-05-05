@@ -2791,7 +2791,7 @@ def setup_soul_items(self: WWRandomizer):
     self.dol.write_data(fs.write_s16, item_resources_addr+0x16, item_mesg_num)
     self.dol.write_data(fs.write_u32, item_resources_addr+0x18, 0)
     self.dol.write_data(fs.write_u32, item_resources_addr+0x1C, 0)
-    self.dol.write_data(fs.write_u32, item_resources_addr+0x20, 0x30000000)
+    self.dol.write_data(fs.write_u16, item_resources_addr+0x20, 0)
     
     field_item_resources_addr = field_item_resources_list_start + item_id*0x1C
     self.dol.write_data(fs.write_u32, field_item_resources_addr, arc_name_pointer)
@@ -2803,7 +2803,7 @@ def setup_soul_items(self: WWRandomizer):
     self.dol.write_data(fs.write_s16, field_item_resources_addr+0x0E, -1)
     self.dol.write_data(fs.write_s8,  field_item_resources_addr+0x10, -1)
     self.dol.write_data(fs.write_u32, field_item_resources_addr+0x14, 0)
-    self.dol.write_data(fs.write_u32, field_item_resources_addr+0x18, 0x30000000)
+    self.dol.write_data(fs.write_u16, field_item_resources_addr+0x18, 0)
     
     # Set the item info for all soul items to match Heart Container.
     # Reference: d_item_data.cpp:8235
