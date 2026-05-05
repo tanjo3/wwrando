@@ -461,7 +461,8 @@ class WWRandomizer:
     tweaks.add_hint_signs(self)
     tweaks.prevent_door_boulder_softlocks(self)
     tweaks.update_tingle_statue_item_get_funcs(self)
-    tweaks.setup_soul_items(self)
+    if self.options.boss_soul_shuffle:
+      tweaks.setup_soul_items(self)
     patcher.apply_patch(self, "tingle_chests_without_tuner")
     tweaks.make_tingle_statue_reward_rupee_rainbow_colored(self)
     if self.seed_hash is not None:
