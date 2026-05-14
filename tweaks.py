@@ -5,7 +5,6 @@ if TYPE_CHECKING:
 
 from gclib.bti import BTI
 from gclib.j3d import BDL
-from gclib.rarc import RARC
 
 import re
 import os
@@ -3067,54 +3066,12 @@ def setup_soul_items(self: WWRandomizer):
     item_info_entry_addr = item_info_list_start+4*item_id
     self.dol.write_data(fs.write_u32, item_info_entry_addr, 0x32503201)
   
-  # Create one small custom archive per soul item, each containing a single BDL figurine model.
-  # We extract only the needed BDL files into small archives, shrink and re-center them so they look good as item pickups.
-  # Using one BDL per archive prevents heap exhaustion: the game parses ALL files in an archive,
-  # and with 3 BDLs the combined J3DModelData allocation can exceed available heap in complex stages.
-  # The original Figure archives are left unmodified to preserve Nintendo Gallery functionality.
-  
-  # Map each source Figure archive to the new custom archive name and the file IDs to extract.
-  soul_arc_sources = [
-    ("Soul0", "files/res/Object/Figure6b.arc", 2),  # Gohma
-    ("Soul1", "files/res/Object/Figure6b.arc", 3),  # Kalle Demos
-    ("Soul2", "files/res/Object/Figure6b.arc", 4),  # Gohdan
-    ("Soul3", "files/res/Object/Figure6c.arc", 0),  # Helmaroc King
-    ("Soul4", "files/res/Object/Figure6c.arc", 1),  # Jalhalla
-    ("Soul5", "files/res/Object/Figure6c.arc", 2),  # Molgera
-  ]
-  
-  for new_arc_name, source_arc_path, file_id in soul_arc_sources:
-    source_arc = self.get_arc(source_arc_path)
-    
-    new_arc = RARC()
-    new_arc.add_root_directory()
-    root_node = new_arc.nodes[0]
-    
-    # Create a "bdl" subdirectory matching vanilla item archive structure.
-    # The game's resource system expects BDL files inside a typed subdirectory.
-    _, bdl_node = new_arc.add_new_directory("bdl", "BDL ", root_node)
-    
-    # Add the needed BDL files in order
-    for file_entry in source_arc.file_entries:
-      if file_entry.is_dir or file_entry.id != file_id:
-        continue
-      
-      # Copy the BDL data so we don't modify the original Figure archive.
-      file_entry.data.seek(0)
-      bdl_data_copy = BytesIO(file_entry.data.read())
-      bdl_model = BDL(bdl_data_copy)
-      root_joint = bdl_model.jnt1.joints[0]
-      root_joint.scale.x = 0.45
-      root_joint.scale.y = 0.45
-      root_joint.scale.z = 0.45
-      root_joint.translation.y -= 25.0
-      bdl_model.save()
-      
-      new_arc.add_new_file(file_entry.name, bdl_model.data, bdl_node)
-      break
-    
-    new_arc.save_changes()
-    self.add_new_raw_file("files/res/Object/%s.arc" % new_arc_name, new_arc.data)
+  # Mount each pre-built figurine archive.
+  for n in range(6):
+    new_arc_name = "Soul%d" % n
+    arc_path = os.path.join(ASSETS_PATH, "figurines", "%s.arc" % new_arc_name)
+    with open(arc_path, "rb") as f:
+      self.add_new_raw_file("files/res/Object/%s.arc" % new_arc_name, BytesIO(f.read()))
 
 def replace_drc_entrance_boulder_with_normal_boulder(self: WWRandomizer):
   room = self.get_arc("files/res/Stage/Adanmae/Room0.arc").get_file("room.dzr", DZx)
