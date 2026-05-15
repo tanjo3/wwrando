@@ -83,10 +83,6 @@ class ExtraStartingItemsRandomizer(BaseRandomizer):
     self.starting_spoils.extend(["Green Chu Jelly"] * self.options.starting_green_chu_jelly)
     self.starting_spoils.extend(["Blue Chu Jelly"]  * self.options.starting_blue_chu_jelly)
     
-    if self.options.progression_blue_chu_jellies:
-      for _ in range(self.options.starting_blue_chu_jelly):
-        self.logic.add_owned_item("Blue Chu Jelly")
-    
     # Then, handle random starting items.
     if self.options.num_extra_starting_items == 0:
       return
