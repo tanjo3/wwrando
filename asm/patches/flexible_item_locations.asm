@@ -94,13 +94,14 @@
 ; Normally when the player takes a boss item drop, it would not set the flag for having taken the current dungeon's boss item, since in vanilla that was handled by the heart container's item get function.
 ; That could allow the player to get the item over and over again since the item never disappears.
 ; So we modify createItemForBoss to pass an item flag to createItem, so that the item properly keeps track of whether it has been taken.
-; We use item pickup flag 0x15 for all boss items, since that flag is not used by any items in any of the dungeons.
+; We use item pickup flag 0x20 for all boss items, since that flag is not used by any items in any of the dungeons.
+; The value also stays outside 1-23, which is the range used by Blue ChuChu stealItemBitNos, so that the Blue Chu Jelly shuffle hook below can't ever mistake a boss drop for a grapple-stolen Blue Chu Jelly.
 ; (Note that since we're just setting an item flag, the special flag for the dungeon's boss item being taken is never set. But I don't believe that should cause any issues.)
 .open "sys/main.dol"
 .org 0x80026A94
-  li r5, 0x15
+  li r5, 0x20
 .org 0x80026AB4
-  li r5, 0x15
+  li r5, 0x20
 .close
 
 
@@ -1176,6 +1177,13 @@ blue_chuchu_item_id_17: .byte 0x4B
   .align 2
 
 
+; Tag every grapple-stolen daItem with bit 0x80 of byte +0x669 (set by stealItem_CB) so we can identify grapple-stolen Blue Chu Jellies at pickup time without relying on the leaky mItemBitNo range heuristic.
+; Vanilla stealItem_CB sets only bit 0x40 here, but that bit can be cleared mid-flight by daItem::mode_proc_call when the Himo2 (grappling rope) actor despawns.
+; Bit 0x80 is untouched by every other code path in main.dol and every REL, so once set here it persists for the actor's full lifetime.
+.org 0x80027270 ; In stealItem_CB
+  ori r0, r0, 0xC0 ; Was ori r0, r0, 0x40. The extra bit 0x80 is our grapple-steal tag.
+
+
 ; In itemGetExecute, before the switch dispatch, we set the grapple-path relay and replace r0 with the randomized item ID so the switch dispatches to the correct item's case.
 .org 0x800F6460 ; In daItem_c::itemGetExecute
   bl blue_chuchu_set_pending_early
@@ -1198,11 +1206,19 @@ blue_chuchu_set_pending_early:
   cmpwi r11, 0
   beqlr ; Shuffle disabled.
   
+  ; Primary check: bit 0x80 of +0x669 is our grapple-steal tag, set in stealItem_CB above.
+  ; Items randomized to any other location never go through stealItem_CB, so this bit is the only reliable way to tell a grapple-stolen Blue Chu Jelly apart from one placed by the randomizer.
+  lbz r11, 0x669 (r31)
+  andi. r11, r11, 0x80
+  beqlr ; Not from a grapple steal; let the normal Blue Chu Jelly path handle it.
+  
+  ; Secondary sanity gate: stealItemBitNo (which becomes mItemBitNo) must be 1-23 to index into blue_chuchu_item_ids.
+  ; If the tag above is somehow set on an actor with an out-of-range bit_no, bail rather than read out of bounds.
   lwz r11, 0x630 (r31) ; mItemBitNo
   cmpwi r11, 1
   bltlr
   cmpwi r11, 23
-  bgtlr ; mItemBitNo not in range 1-23, not from a Blue ChuChu.
+  bgtlr
   
   ; Set the relay so the execItemGet and createItemForTrBoxDemo hooks know which item to give.
   lis r12, blue_chuchu_pending_item_bit_no@ha
