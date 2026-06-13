@@ -433,11 +433,14 @@ class WWRandomizerWindow(QMainWindow):
     seed = WWRandomizer.sanitize_seed(seed)
     if not seed:
       self.ui.permalink.setText("")
+      self.ui.seed_hash_label.setText("")
       return
-    
+
     options = self.get_all_options_from_widget_values()
     base64_encoded_permalink = WWRandomizer.encode_permalink(seed, options)
     self.ui.permalink.setText(base64_encoded_permalink)
+    seed_hash = WWRandomizer.compute_seed_hash(base64_encoded_permalink, options.do_not_generate_spoiler_log)
+    self.ui.seed_hash_label.setText("Seed hash: <b>%s</b>" % seed_hash)
   
   def decode_permalink(self, base64_encoded_permalink):
     base64_encoded_permalink = base64_encoded_permalink.strip()
