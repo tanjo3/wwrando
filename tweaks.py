@@ -334,7 +334,7 @@ def make_items_progressive(self: WWRandomizer):
     msg.string = description
     msg.display_item_id = magic_meter_item_id
     
-    # Add an item get message for the second pickup that would only refill the plyer's magic meter.
+    # Add an item get message for the second pickup that would only refill the player's magic meter.
     refill_description = "\\{1A 05 00 00 01}Your \\{1A 06 FF 00 00 01}magic\\{1A 06 FF 00 00 00} has been refilled!"
     msg = self.bmg.messages_by_id[101 + magic_meter_item_id]
     msg.string = refill_description
