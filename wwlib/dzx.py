@@ -6,7 +6,7 @@ from enum import Enum
 from gclib import fs_helpers as fs
 from gclib.gclib_file import GCLibFile
 from gclib.bunfoe import bunfoe, BUNFOE, field
-from gclib.bunfoe_types import RGBu8
+from gclib.bunfoe_types import RGBAu8, RGBu8
 from gclib.fs_helpers import u32, u24, u16, u8, s32, s16, s8, u16Rot, FixedStr, MagicStr
 
 from data_tables import DataTables
@@ -910,6 +910,30 @@ class Pale(ChunkEntry):
   def save_changes(self):
     return BUNFOE.save(self, self.offset)
 
+@bunfoe
+class Virt(ChunkEntry):
+  DATA_SIZE = 0x24
+  
+  unknown_1: u32
+  unknown_2: u32
+  unknown_3: u32
+  unknown_4: u32
+  kumo_color: RGBAu8
+  kumo_center_color: RGBAu8
+  sky_color: RGBu8
+  uso_umi_color: RGBu8
+  kasumi_mae_color: RGBu8
+  _padding: u24 = field(assert_default=True, default=0)
+  
+  # TODO: temporary until refactoring the rest of the chunks to use BUNFOE
+  def read(self, offset: int):
+    self.offset = offset
+    return BUNFOE.read(self, offset)
+  
+  # TODO: temporary until refactoring the rest of the chunks to use BUNFOE
+  def save_changes(self):
+    return BUNFOE.save(self, self.offset)
+
 class FLOR(DummyEntry):
   DATA_SIZE = 0x14
 
@@ -933,9 +957,6 @@ class EnvR(DummyEntry):
 
 class Colo(DummyEntry):
   DATA_SIZE = 0xC
-
-class Virt(DummyEntry):
-  DATA_SIZE = 0x24
 
 class LGHT(DummyEntry):
   DATA_SIZE = 0x1C

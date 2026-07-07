@@ -263,19 +263,22 @@ def run_no_ui(args):
       ps = pstats.Stats(profiler, stream=f).sort_stats("cumulative")
       ps.print_stats()
 
+def is_windows() -> bool:
+  return sys.platform == "win32"
+
 def try_fix_taskbar_icon():
   from wwrando_paths import IS_RUNNING_FROM_SOURCE
   if not IS_RUNNING_FROM_SOURCE:
     return
+  if not is_windows():
+    return
   
-  # Setting the app user model ID is necessary for Windows to display a custom taskbar icon when running the randomizer from source.
+  # Setting the app user model ID is necessary for Windows to display a custom taskbar icon when running from source.
   import ctypes
   app_id = "LagoLunatic.WindWakerRandomizer"
-  try:
+  # This function can technically be null because versions of Windows before Windows 7 don't support it.
+  if hasattr(ctypes.windll.shell32, "SetCurrentProcessExplicitAppUserModelID"):
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
-  except AttributeError:
-    # Versions of Windows before Windows 7 don't support SetCurrentProcessExplicitAppUserModelID, so just swallow the error.
-    pass
 
 def get_dark_mode_palette(app):
   from qtpy.QtGui import QPalette, QColor
@@ -313,7 +316,8 @@ def run_with_ui(args):
   from wwr_ui import qt_init
   from qtpy.QtCore import Qt, QTimer
   from qtpy.QtWidgets import QApplication
-  from qtpy import QT_VERSION
+  from qtpy import QT_VERSION # pyright: ignore [reportAttributeAccessIssue]
+  QT_VERSION: str
   from wwr_ui.randomizer_window import WWRandomizerWindow
   
   try_fix_taskbar_icon()

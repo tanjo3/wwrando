@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'cosmetic_tab.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -103,7 +103,7 @@ class Ui_CosmeticTab(object):
         self.custom_model_comment = QLabel(CosmeticTab)
         self.custom_model_comment.setObjectName(u"custom_model_comment")
         self.custom_model_comment.setMaximumSize(QSize(810, 16777215))
-        self.custom_model_comment.setTextFormat(Qt.TextFormat.PlainText)
+        self.custom_model_comment.setTextFormat(Qt.PlainText)
         self.custom_model_comment.setWordWrap(True)
 
         self.gridLayout_5.addWidget(self.custom_model_comment, 3, 0, 1, 2)

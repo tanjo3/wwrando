@@ -307,29 +307,18 @@ class PaletteRandomizer(BaseRandomizer):
     # Changing value/saturation of particle colors can sometimes make them disappear or be bigger/smaller than in vanilla if the changes are too extreme, so limit to hue shifting only for particles.
     v_shift = 0
     
-    r, g, b, a = particle.bsp1.color_prm
-    r, g, b = texture_utils.hsv_shift_color((r, g, b), h_shift, v_shift)
-    particle.bsp1.color_prm = (r, g, b, a)
+    particle.bsp1.prm_color.rgb = texture_utils.hsv_shift_color(particle.bsp1.prm_color.rgb, h_shift, v_shift)
+    particle.bsp1.env_color.rgb = texture_utils.hsv_shift_color(particle.bsp1.env_color.rgb, h_shift, v_shift)
     
-    r, g, b, a = particle.bsp1.color_env
-    r, g, b = texture_utils.hsv_shift_color((r, g, b), h_shift, v_shift)
-    particle.bsp1.color_env = (r, g, b, a)
+    for keyframe in particle.bsp1.prm_color_anim_keys:
+      keyframe.color.rgb = texture_utils.hsv_shift_color(keyframe.color.rgb, h_shift, v_shift)
     
-    #print(particle.bsp1.color_prm_anm_data_count)
-    for keyframe in particle.bsp1.color_prm_anm_table:
-      r, g, b, a = keyframe.color
-      r, g, b = texture_utils.hsv_shift_color((r, g, b), h_shift, v_shift)
-      keyframe.color = (r, g, b, a)
-    
-    #print(particle.bsp1.color_env_anm_data_count)
-    for keyframe in particle.bsp1.color_env_anm_table:
-      r, g, b, a = keyframe.color
-      r, g, b = texture_utils.hsv_shift_color((r, g, b), h_shift, v_shift)
-      keyframe.color = (r, g, b, a)
+    for keyframe in particle.bsp1.env_color_anim_keys:
+      keyframe.color.rgb = texture_utils.hsv_shift_color(keyframe.color.rgb, h_shift, v_shift)
     
     if particle.ssp1 is not None:
-      particle.ssp1.color_prm.rgb = texture_utils.hsv_shift_color(particle.ssp1.color_prm.rgb, h_shift, v_shift)
-      particle.ssp1.color_env.rgb = texture_utils.hsv_shift_color(particle.ssp1.color_env.rgb, h_shift, v_shift)
+      particle.ssp1.prm_color.rgb = texture_utils.hsv_shift_color(particle.ssp1.prm_color.rgb, h_shift, v_shift)
+      particle.ssp1.env_color.rgb = texture_utils.hsv_shift_color(particle.ssp1.env_color.rgb, h_shift, v_shift)
   
   def shift_hardcoded_color_in_rel(self, rel: REL, offset, h_shift, v_shift):
     r = rel.read_data(fs.read_u8, offset + 0)
