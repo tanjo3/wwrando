@@ -806,6 +806,11 @@ class WWRandomizerWindow(QMainWindow):
         if getattr(options, field.name) is None:
           setattr(options, field.name, field.default)
     
+    # Item names from other games can contain characters the message font can't encode.
+    for item_info in plando_file["Locations"].values():
+      if item_info["game"] != "The Wind Waker":
+        item_info["name"] = item_info["name"].encode("cp1252", "replace").decode("latin-1")
+    
     # Save the rest of the plando in a dataclass
     return Plando(
       f"AP_{plando_file['Seed']}_P{plando_file['Slot']}",
