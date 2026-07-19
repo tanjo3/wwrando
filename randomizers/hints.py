@@ -1161,11 +1161,13 @@ class HintsRandomizer(BaseRandomizer):
       for zone in zones & barren_zones:
         barren_locations_by_zone.setdefault(zone, set()).add(location_name)
     
+    # Iterate zones in sorted order so that ties for the largest superset resolve deterministically.
     zones_to_remove: dict[str, str] = {}
-    for zone_a, locs_a in barren_locations_by_zone.items():
+    sorted_barren_zone_items = sorted(barren_locations_by_zone.items())
+    for zone_a, locs_a in sorted_barren_zone_items:
       best_parent = None
       best_size = -1
-      for zone_b, locs_b in barren_locations_by_zone.items():
+      for zone_b, locs_b in sorted_barren_zone_items:
         if zone_a != zone_b and locs_a < locs_b:
           if len(locs_b) > best_size:
             best_parent = zone_b
@@ -1174,8 +1176,10 @@ class HintsRandomizer(BaseRandomizer):
         zones_to_remove[zone_a] = best_parent
     
     # Transfer location counts from removed zones to their parent zones.
+    # A removed zone's parent is always a retained zone, since a superset of a removed zone's superset
+    # would be an even larger superset of that zone, so the transfer order does not matter.
     if location_counter is not None:
-      for removed_zone, parent_zone in sorted(zones_to_remove.items(), key=lambda kv: len(barren_locations_by_zone[kv[0]])):
+      for removed_zone, parent_zone in zones_to_remove.items():
         location_counter[parent_zone] += location_counter[removed_zone]
     
     barren_zones -= set(zones_to_remove)
