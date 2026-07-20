@@ -1,4 +1,5 @@
 import os
+import re
 from collections import Counter, deque
 from enum import Enum
 import math
@@ -793,56 +794,169 @@ class HintsRandomizer(BaseRandomizer):
     return path_hint, hinted_location
   
   
-  def check_if_item_location_is_useful(self, item_name, location_name, has_useful_chain=True, sphere_state=None,
-                                       useful_item_locations=None, reachable_locs=None,
-                                       reachable_without_item=None, chain_locations_by_item=None,
-                                       items_referenced_by_location=None, locations_referencing_item=None):
-    # Determine if an item at a specific location is useful for beating the seed.
-    # The check proceeds through several steps:
-    # 
-    # 1. Sphere check: simulate the player's realistic inventory when they reach this location and see if adding the
-    #    item opens any useful location. If so, the item is useful.
-    #    If the item opens nothing and the player already has a copy, check for a circular utility chain. A "circular
-    #    utility chain" occurs when an item's only value is providing access to items the player already needs to reach
-    #    this location. If the chain is circular, the item is not useful.
-    # 
-    # 2. Chain analysis gate: if removing all copies of this item from the game doesn't make any useful location
-    #    inaccessible, the item doesn't matter in this seed.
-    # 
-    # 3. Reachable-without check: simulate a full playthrough where this item is never collected. If the location is
-    #    still reachable, there exists a valid routing where the player picks up this copy, so it's useful. For items
-    #    whose usefulness comes from OR alternatives, also check that the location is not locked behind an OR-covering
-    #    partner that the player would always have first.
-    # 
-    # 4. Transitive dependency check: if the location is not reachable without the item, this copy is behind an earlier
-    #    copy. For progressive items, check if the Ganondorf path needs more copies than this location requires.
-    #    Otherwise, the copy is redundant.
+  def get_min_referenced_item_counts_by_req_name(self, req_name, memo, reqs_being_checked=None):
+    # Returns a dict mapping each item mentioned by this requirement to the smallest copy count that any
+    # single mention of the item asks for.
+    # This differs from Logic.get_items_needed_by_req_name, which takes the largest count across mentions
+    # to describe the worst case a player could need.
+    # The smallest count is what determines whether an item could ever help satisfy at least some part of
+    # the requirement.
+    if req_name in memo:
+      return memo[req_name]
     
-    # Step 1: Sphere check. Runs before the chain analysis gate because it can detect utility the chain analysis misses.
+    referenced = {}
+    
+    if reqs_being_checked is None:
+      reqs_being_checked = set()
+    if req_name in self.path_logic.nested_entrance_macros and self.path_logic.nested_entrance_macros[req_name] in reqs_being_checked:
+      # See Logic.get_items_needed_by_req_name for an explanation of this check.
+      return referenced
+    assert req_name not in reqs_being_checked, f"Recursive requirement check on non-whitelisted macro: {req_name!r}"
+    reqs_being_checked.add(req_name)
+    
+    if req_name.startswith("Progressive "):
+      match = re.search(r"^(Progressive .+) x(\d+)$", req_name)
+      referenced[match.group(1)] = int(match.group(2))
+    elif " Small Key x" in req_name:
+      match = re.search(r"^(.+ Small Key) x(\d+)$", req_name)
+      referenced[match.group(1)] = int(match.group(2))
+    elif req_name.startswith("Can Access Item Location \""):
+      match = re.search(r"^Can Access Item Location \"([^\"]+)\"$", req_name)
+      requirement_expression = self.logic.item_locations[match.group(1)]["Need"]
+      referenced = self.get_min_referenced_item_counts_from_expression(requirement_expression, memo, reqs_being_checked)
+    elif req_name.startswith("Option \""):
+      pass
+    elif req_name in self.path_logic.all_cleaned_item_names:
+      referenced[req_name] = 1
+    elif req_name in self.path_logic.macros:
+      logical_expression = self.path_logic.macros[req_name]
+      referenced = self.get_min_referenced_item_counts_from_expression(logical_expression, memo, reqs_being_checked)
+    elif req_name == "Nothing":
+      pass
+    elif req_name == "Impossible":
+      pass
+    else:
+      raise Exception("Unknown requirement name: " + req_name)
+    
+    reqs_being_checked.remove(req_name)
+    
+    memo[req_name] = referenced
+    return referenced
+  
+  def get_min_referenced_item_counts_from_expression(self, logical_expression, memo, reqs_being_checked):
+    if self.path_logic.check_logical_expression_req(logical_expression):
+      # If this expression is already satisfied, none of the items it references can matter.
+      return {}
+    
+    referenced = {}
+    tokens = logical_expression.copy()
+    tokens.reverse()
+    while tokens:
+      token = tokens.pop()
+      if token == "|" or token == "&":
+        pass
+      elif token == "(":
+        nested_expression = tokens.pop()
+        sub_referenced = self.get_min_referenced_item_counts_from_expression(nested_expression, memo, reqs_being_checked)
+        for item_name, count in sub_referenced.items():
+          referenced[item_name] = min(count, referenced.get(item_name, count))
+        assert tokens.pop() == ")"
+      else:
+        sub_referenced = self.get_min_referenced_item_counts_by_req_name(token, memo, reqs_being_checked)
+        for item_name, count in sub_referenced.items():
+          referenced[item_name] = min(count, referenced.get(item_name, count))
+    
+    return referenced
+  
+  def check_if_item_location_is_useful(self, item_name, location_name, has_useful_chain, sphere_state,
+                                       sphere_check_memo, useful_value_locations, reachable_locs,
+                                       reachable_without_item, chain_locations_by_item,
+                                       req_counts_by_location, locations_referencing_item,
+                                       openable_with_required_items,
+                                       available_item_counts, ganondorf_item_counts,
+                                       item_serves_ganondorf):
+    # Determines whether the copy of item_name placed at location_name could help the player beat the seed.
+    # Note that useful_value_locations must not include the locations of this item's own copies.
+    # Opening the way to another copy of yourself is not valuable by itself, and counting it would let a
+    # group of copies keep each other alive (e.g. small keys whose only value is unlocking more small keys).
+    # Value that legitimately flows through extra copies (progressive tiers, key counts) is handled by the
+    # count checks in step 4.
+    # The check proceeds through several steps:
+    #
+    # 1. Sphere check.
+    #    Simulate the inventory the player realistically has when they first reach this location, and see
+    #    if adding the item opens up any useful location.
+    #    If so, the item is useful.
+    #    If the item opens nothing and the player already has a copy, check for a circular utility chain.
+    #    A "circular utility chain" occurs when an item's only value is providing access to items the
+    #    player already needs to reach this location.
+    #    If the chain is circular, the item is not useful.
+    #
+    # 2. Chain analysis gate.
+    #    If removing every copy of this item from the game does not make any useful location inaccessible,
+    #    and no useful location's requirements can make use of the item, the item does not matter in this
+    #    seed.
+    #
+    # 3. Reachability check.
+    #    Simulate a full playthrough where this item is never collected.
+    #    If the location is still reachable, there exists a valid routing where the player picks up this
+    #    copy, so it is useful.
+    #    For items whose usefulness comes only from being one of several alternatives, also check whether
+    #    those alternatives are always covered.
+    #    The item is redundant if every location that could use it is openable with items the player must
+    #    collect anyway, or if this location is locked behind an alternative that the player would always
+    #    have first.
+    #
+    # 4. Transitive dependency check.
+    #    If the location is not reachable without the item, this copy sits behind an earlier copy of the
+    #    same item.
+    #    The copy is useful only if the goal or some useful location can use more copies of the item than
+    #    the player already used to reach this location.
+    
+    # Step 1: Sphere check.
+    # Runs before the chain analysis gate because it can detect utility the chain analysis misses.
+    # Locations skipped by the playthrough simulation (such as small key locations handled by its fast
+    # path) have no saved sphere state, so this step is skipped for them.
     if sphere_state is not None:
-      self.path_logic.load_simulated_playthrough_state(sphere_state)
-      already_has_item = item_name in self.path_logic.currently_owned_items
-      accessible_before = set(self.path_logic.get_accessible_remaining_locations(for_progression=True))
+      # Which locations the item opens from this sphere state never changes between passes of the
+      # fixed-point loop, so the accessibility scans are memoized across passes.
+      memo_key = (item_name, location_name)
+      if memo_key in sphere_check_memo:
+        newly_accessible, already_has_item = sphere_check_memo[memo_key]
+      else:
+        self.path_logic.load_simulated_playthrough_state(sphere_state)
+        already_has_item = item_name in self.path_logic.currently_owned_items
+        accessible_before = set(self.path_logic.get_accessible_remaining_locations(for_progression=True))
+        
+        self.path_logic.add_owned_item(item_name)
+        accessible_after = set(self.path_logic.get_accessible_remaining_locations(for_progression=True))
+        
+        newly_accessible = accessible_after - accessible_before
+        sphere_check_memo[memo_key] = (newly_accessible, already_has_item)
       
-      self.path_logic.add_owned_item(item_name)
-      accessible_after = set(self.path_logic.get_accessible_remaining_locations(for_progression=True))
-      
-      newly_accessible = accessible_after - accessible_before
-      if newly_accessible & useful_item_locations:
+      # Only count newly opened locations whose requirements can genuinely be missing this item.
+      # A location that merely opens earlier with this item, but that guaranteed items always cover
+      # eventually, gains nothing of logical value from it.
+      newly_openable = newly_accessible & locations_referencing_item.get(item_name, set())
+      if newly_openable & useful_value_locations:
         return True
       
-      # Circular chain check. If the item opens nothing and the player already has a copy, check whether the items at
-      # this item's chain locations are all transitively required to reach this location. If so, the chain is circular
-      # and this copy provides nothing new.
-      if (len(newly_accessible) == 0 and already_has_item
-          and chain_locations_by_item is not None and reachable_without_item is not None
-          and useful_item_locations is not None):
-        useful_chains = chain_locations_by_item.get(item_name, set()) & useful_item_locations
+      # Circular chain check.
+      # If the item opens nothing and the player already has a copy, check whether the items at this
+      # item's chain locations are all transitively required to reach this location.
+      # If so, the chain is circular and this copy provides nothing new.
+      if len(newly_accessible) == 0 and already_has_item:
+        useful_chains = chain_locations_by_item.get(item_name, set()) & useful_value_locations
         if useful_chains:
           all_circular = True
           for chain_loc in useful_chains:
             chain_placed = self.logic.done_item_locations.get(chain_loc)
-            if chain_placed and chain_placed in reachable_without_item:
+            
+            # The circularity argument only holds for single copy items.
+            # When multiple copies of the chain location's item exist, the copy placed there can still
+            # provide a new tier even though the player always owns an earlier copy.
+            if (chain_placed and chain_placed in reachable_without_item
+                and available_item_counts.get(chain_placed, 0) == 1):
               if location_name in reachable_without_item[chain_placed]:
                 all_circular = False
                 break
@@ -856,56 +970,66 @@ class HintsRandomizer(BaseRandomizer):
     if not has_useful_chain:
       return False
     
-    # Step 3: Reachable-without check. Simulate a full playthrough where this item is never collected. If the location
-    # is still reachable, the player could route to pick up this copy.
-    if reachable_locs is not None:
-      if location_name in reachable_locs:
-        # The location is independently reachable. However, if the item's usefulness comes solely from OR alternatives
-        # (no useful chain locations of its own), check whether the location is locked behind an OR-covering partner.
-        if (sphere_state is not None
-            and useful_item_locations is not None
-            and reachable_without_item is not None
-            and chain_locations_by_item is not None
-            and items_referenced_by_location is not None
-            and locations_referencing_item is not None
-            and not (chain_locations_by_item.get(item_name, set()) & useful_item_locations)):
-          # Find the OR partners: items that appear in the requirements of every useful location
-          # that references this item. Items unique to individual locations drop out.
-          shared_locs = locations_referencing_item.get(item_name, set()) & useful_item_locations
-          if shared_locs:
-            common_items = None
-            for loc in shared_locs:
-              if common_items is None:
-                common_items = set(items_referenced_by_location[loc])
-              else:
-                common_items &= items_referenced_by_location[loc]
-            common_items.discard(item_name)
-            # If this location is not reachable without an OR partner, the player always has that partner before
-            # reaching here, making this item redundant.
-            for partner in common_items:
-              if partner in reachable_without_item and location_name not in reachable_without_item[partner]:
-                return False
-        return True
-      
-      # Step 4: Transitive dependency check. The location is not reachable without this item, so this copy is behind an
-      # earlier copy. For progressive items where the location directly requires an earlier tier, check if the Ganondorf
-      # path needs more copies than this location requires. If the item doesn't appear in the location's direct
-      # requirements, the dependency is purely through other items' placements and this copy is redundant.
-      self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
-      requirement_name = "Can Access Item Location \"%s\"" % location_name
-      items_needed = self.path_logic.get_items_needed_by_req_name(requirement_name)
-      location_count = items_needed.get(item_name, 0)
-      
-      if location_count == 0:
-        return False
-      
-      ganondorf_items = self.path_logic.get_items_needed_by_req_name("Can Reach and Defeat Ganondorf")
-      ganondorf_count = ganondorf_items.get(item_name, 0)
-      return ganondorf_count > location_count
+    # Step 3: Reachability check.
+    # Simulate a full playthrough where this item is never collected.
+    # If the location is still reachable, the player could route to pick up this copy.
+    if location_name in reachable_locs:
+      # The location is independently reachable.
+      # However, if the item's usefulness comes solely from being an alternative in useful locations'
+      # requirements (no useful chain locations of its own), check whether those alternatives are always
+      # covered.
+      if not (chain_locations_by_item.get(item_name, set()) & useful_value_locations):
+        # If the Ganondorf requirement itself can use more copies of this item than the player is
+        # guaranteed to collect, the alternatives below cannot be relied upon to cover it.
+        if not item_serves_ganondorf:
+          shared_locs = locations_referencing_item.get(item_name, set()) & useful_value_locations
+          if not shared_locs:
+            # The item's only useful reference is opening its own copies' locations, which provides nothing.
+            return False
+          
+          # Coverage check.
+          # If every useful location that can use this item remains reachable when the item does not
+          # exist at all, and is openable using only items the player must collect in any completed
+          # playthrough, then the items the player must collect anyway always make this one redundant.
+          if all(loc in openable_with_required_items and loc in reachable_locs for loc in shared_locs):
+            return False
+          
+          # Otherwise, find the partner items that appear in the requirements of every useful location
+          # referencing this item.
+          # Items unique to individual locations drop out.
+          common_items = None
+          for loc in shared_locs:
+            if common_items is None:
+              common_items = set(req_counts_by_location[loc])
+            else:
+              common_items &= set(req_counts_by_location[loc])
+          common_items.discard(item_name)
+          
+          # If this location is not reachable without a partner item, the player always has that partner
+          # before reaching here, making this item redundant.
+          for partner in common_items:
+            if partner in reachable_without_item and location_name not in reachable_without_item[partner]:
+              return False
+      return True
     
-    return False
+    # Step 4: Transitive dependency check.
+    # The location is not reachable without this item, so this copy is behind an earlier copy.
+    # Check if the Ganondorf path or any useful location can use more copies than the player must
+    # already have used to reach this location.
+    location_count = req_counts_by_location[location_name].get(item_name, 0)
+    if location_count == 0:
+      # Even when the item is not in the location's direct requirements, the dependency through other
+      # items' placements means the player used at least one earlier copy to get here.
+      location_count = 1
+    
+    needed_count = 0
+    if item_serves_ganondorf:
+      needed_count = ganondorf_item_counts.get(item_name, 0)
+    for other_loc in locations_referencing_item.get(item_name, set()) & useful_value_locations:
+      needed_count = max(needed_count, req_counts_by_location[other_loc].get(item_name, 0))
+    return needed_count > location_count
   
-  def get_barren_zones(self, progress_locations, hinted_remote_locations, location_counter: Counter = None):
+  def get_barren_zones(self, progress_locations, hinted_remote_locations, location_counter: Counter | None = None):
     # Helper function to build a list of barren zones in this seed.
     # The list includes only zones which are allowed to be hinted at as barren.
     
@@ -941,10 +1065,6 @@ class HintsRandomizer(BaseRandomizer):
       if item_name in potentially_useful_items or item_name not in progress_items:
         continue
       
-      # Don't consider dungeon keys when keylunacy is not enabled.
-      if self.logic.is_dungeon_item(item_name) and not self.options.keylunacy:
-        continue
-      
       potentially_useful_items.add(item_name)
       
       # Consider all instances of this item, even if those extra copies might not be required.
@@ -954,15 +1074,37 @@ class HintsRandomizer(BaseRandomizer):
         other_items_needed = self.path_logic.get_item_names_by_req_name(requirement_name)
         items_needed.extend(other_items_needed)
     
-    # Build a reverse map of which items are referenced by each location's access requirements.
+    # Count how many copies of each item the player could ever own: the starting inventory plus all
+    # copies placed at progress locations.
+    self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
+    starting_item_counts = Counter(self.path_logic.currently_owned_items)
+    available_item_counts = starting_item_counts.copy()
+    for item_name, item_locations in progress_items.items():
+      available_item_counts[item_name] += len(item_locations)
+    
+    # Also record how many copies of each item the Ganondorf requirement may make use of.
+    ganondorf_item_counts = self.path_logic.get_items_needed_by_req_name("Can Reach and Defeat Ganondorf")
+    
+    # Build a map of which items are referenced by each location's access requirements, along with each
+    # location's direct requirement counts per item.
     # This is used in the iteration below to detect items that share OR branches with other items.
     # Such items don't uniquely open any location, but they're still valid routing options.
+    # An item only counts as referenced when enough copies are obtainable to satisfy at least one of the
+    # individual conditions in the requirement.
+    # For example, a requirement like "Progressive Quiver x2" can never be satisfied when only one quiver
+    # is obtainable, so it shouldn't keep the quiver alive as a routing option.
     items_referenced_by_location = {}
+    req_counts_by_location = {}
+    min_referenced_counts_memo = {}
     for item_name in potentially_useful_items:
       for location_name in progress_items[item_name]:
         requirement_name = "Can Access Item Location \"%s\"" % location_name
-        req_items = set(self.path_logic.get_item_names_by_req_name(requirement_name))
-        items_referenced_by_location[location_name] = req_items
+        req_counts_by_location[location_name] = self.path_logic.get_items_needed_by_req_name(requirement_name)
+        min_counts = self.get_min_referenced_item_counts_by_req_name(requirement_name, min_referenced_counts_memo)
+        items_referenced_by_location[location_name] = {
+          ref_item for ref_item, min_count in min_counts.items()
+          if available_item_counts[ref_item] >= min_count
+        }
     
     # Build a reverse index: for each item, which locations' requirements reference it?
     locations_referencing_item = {}
@@ -970,10 +1112,32 @@ class HintsRandomizer(BaseRandomizer):
       for item in req_items:
         locations_referencing_item.setdefault(item, set()).add(loc)
     
+    # Determine the items the player is guaranteed to own by the end of any completed playthrough.
+    # These are the starting items plus the item at every path location, since removing a path location's
+    # item makes some goal unreachable, meaning every completed playthrough collects all of them.
+    # Then record which locations can be opened using only those guaranteed items.
+    # Note that guaranteed items are only guaranteed to be collected eventually.
+    # A route may still need an alternative item before the guaranteed one is obtainable.
+    # These sets must therefore only ever be used together with the reachability checks below, never as a
+    # substitute for them.
+    self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
+    guaranteed_item_counts = Counter(self.path_logic.currently_owned_items)
+    if self.path_locations:
+      for location_name in sorted(self.path_locations):
+        path_item_name = self.logic.done_item_locations[location_name]
+        guaranteed_item_counts[self.logic.clean_item_name(path_item_name)] += 1
+        self.path_logic.add_owned_item(path_item_name)
+    openable_with_required_items = set()
+    for location_name in req_counts_by_location:
+      requirement_name = "Can Access Item Location \"%s\"" % location_name
+      if self.path_logic.check_requirement_met(requirement_name):
+        openable_with_required_items.add(location_name)
+    
     # Next, compute "chain locations" for each item.
-    # A chain location is a location that becomes inaccessible when all copies of the item are removed from the game.
-    # We do this by giving the player every progress item, then for each item, giving them everything except that item
-    # and checking which locations become inaccessible.
+    # A chain location is a location that becomes inaccessible when all copies of the item are removed
+    # from the game.
+    # We do this by giving the player every progress item, then for each item, giving them everything
+    # except that item and checking which locations become inaccessible.
     self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
     for item in self.logic.all_progress_items:
       self.path_logic.add_owned_item(item)
@@ -989,10 +1153,10 @@ class HintsRandomizer(BaseRandomizer):
       chain_locations_by_item[item_name] = accessible_with_all - accessible_without
     
     # Simulate a normal playthrough to record the player's inventory at each sphere.
-    # This is used by the sphere check in check_if_item_location_is_useful to determine what the player would
-    # realistically have when they first reach each location.
-    # The state is saved before collecting each sphere's items, so it represents what the player has when they discover
-    # the location (not after picking up items from that sphere).
+    # This is used by the sphere check in check_if_item_location_is_useful to determine what the player
+    # would realistically have when they first reach each location.
+    # The state is saved before collecting each sphere's items, so it represents what the player has when
+    # they discover the location (not after picking up items from that sphere).
     sphere_state_at_location = {}
     self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
     previously_accessible = []
@@ -1031,8 +1195,8 @@ class HintsRandomizer(BaseRandomizer):
       previously_accessible = accessible
     
     # For each potentially useful item, simulate a playthrough where that item is never collected.
-    # This tells us which locations are reachable without the item, accounting for the full transitive dependency chain
-    # through actual item placements.
+    # This tells us which locations are reachable without the item, accounting for the full transitive
+    # dependency chain through actual item placements.
     reachable_without_item = {}
     for excluded_item in potentially_useful_items:
       self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
@@ -1055,7 +1219,9 @@ class HintsRandomizer(BaseRandomizer):
           ]
           if newly_accessible_small_keys:
             for loc in newly_accessible_small_keys:
-              self.path_logic.add_owned_item(self.logic.prerandomization_item_locations[loc])
+              key_item_name = self.logic.prerandomization_item_locations[loc]
+              if key_item_name != excluded_item:
+                self.path_logic.add_owned_item(key_item_name)
             previously_accessible += newly_accessible_small_keys
             continue
         
@@ -1068,17 +1234,6 @@ class HintsRandomizer(BaseRandomizer):
       
       reachable_without_item[excluded_item] = set(previously_accessible)
     
-    # Determine which locations are truly useful by iterating until stable.
-    # We start with all locations that have potentially useful items plus path locations (which are always useful).
-    # Each pass checks every (item, location) pair using check_if_item_location_is_useful.
-    # Locations where the check returns False are removed from the set, which may cascade: if Cabana Deed only gates a
-    # location with a redundant Magic Meter, the Magic Meter is removed first, and then the Deed loses its only useful
-    # chain location and is removed too.
-    # The chain analysis is re-derived each pass against the current set.
-    useful_item_locations = set()
-    for item_name in potentially_useful_items:
-      useful_item_locations.update(progress_items[item_name])
-    
     # Path locations are seeded as useful, but dungeon key locations are excluded when keylunacy is off.
     # Dungeon keys are always in their own dungeon without keylunacy, so they don't make a zone non-barren.
     path_locations_for_barren = self.path_locations
@@ -1088,55 +1243,98 @@ class HintsRandomizer(BaseRandomizer):
         item_name = self.logic.done_item_locations[location_name]
         if not self.logic.is_dungeon_item(item_name):
           path_locations_for_barren.add(location_name)
+    
+    # Determine which locations are truly useful by growing the set outward from the goal until stable.
+    # We start with only the path locations and add locations whose items can serve some purpose that is
+    # already known to be useful: satisfying the Ganondorf requirement beyond the guaranteed items,
+    # uniquely opening a useful location, or appearing in a useful location's requirements as a routing
+    # alternative.
+    # Growing from the goal (rather than shrinking from everything) ensures that groups of items whose
+    # only value is unlocking each other never count as useful, since nothing in such a group ever
+    # connects back to the goal.
+    # Each pass checks every (item, location) pair not yet marked useful with
+    # check_if_item_location_is_useful, and the chain analysis is derived again each pass against the
+    # current set.
+    # The set only ever grows and cannot exceed the number of progress locations, so the passes are
+    # guaranteed to reach a stable set.
+    useful_item_locations = set()
     if path_locations_for_barren:
       useful_item_locations |= path_locations_for_barren
     
-    for _ in range(10):
-      # An item has a useful chain if it uniquely opens a useful location, or if it appears in the access requirements
-      # of a useful location (as an OR alternative).
-      items_with_useful_chains = set()
+    # For each item, determine whether the Ganondorf requirement can genuinely make use of copies beyond
+    # the guaranteed ones.
+    # The requirement is evaluated with every other item fully available and this item capped at its
+    # guaranteed count.
+    # If it's still satisfiable, the requirement only mentions this item in branches that guaranteed
+    # items already cover, so extra copies can never be needed for the goal itself.
+    item_can_serve_ganondorf = {}
+    for item_name in sorted(potentially_useful_items):
+      if ganondorf_item_counts.get(item_name, 0) == 0:
+        item_can_serve_ganondorf[item_name] = False
+        continue
+      if available_item_counts[item_name] <= guaranteed_item_counts[item_name]:
+        item_can_serve_ganondorf[item_name] = False
+        continue
+      self.path_logic.load_simulated_playthrough_state(self.path_logic_initial_state)
+      for other_item, other_locations in progress_items.items():
+        if other_item == item_name:
+          num_copies_to_add = guaranteed_item_counts[item_name] - starting_item_counts[item_name]
+        else:
+          num_copies_to_add = len(other_locations)
+        for _ in range(num_copies_to_add):
+          self.path_logic.add_owned_item(other_item)
+      item_can_serve_ganondorf[item_name] = not self.path_logic.check_requirement_met("Can Reach and Defeat Ganondorf")
+    
+    sphere_check_memo = {}
+    while True:
+      new_useful = set(useful_item_locations)
       for item_name in potentially_useful_items:
-        if chain_locations_by_item.get(item_name, set()) & useful_item_locations:
-          items_with_useful_chains.add(item_name)
-        elif locations_referencing_item.get(item_name, set()) & useful_item_locations:
-          items_with_useful_chains.add(item_name)
-      
-      new_useful = set()
-      for item_name in potentially_useful_items:
-        has_useful_chain = item_name in items_with_useful_chains
+        # Locations holding other copies of this item never count as useful targets for it.
+        useful_value_locations = useful_item_locations - set(progress_items[item_name])
+        
+        # An item can serve a useful purpose if the Ganondorf requirement can use more copies than the
+        # player is guaranteed to collect, if it uniquely opens a useful location, or if it appears in
+        # the access requirements of a useful location (as an OR alternative).
+        has_useful_chain = item_can_serve_ganondorf[item_name]
+        if not has_useful_chain:
+          has_useful_chain = bool(chain_locations_by_item.get(item_name, set()) & useful_value_locations)
+        if not has_useful_chain:
+          has_useful_chain = bool(locations_referencing_item.get(item_name, set()) & useful_value_locations)
+        
         reachable_locs = reachable_without_item.get(item_name, set())
         for location_name in progress_items[item_name]:
+          if location_name in new_useful:
+            continue
           sphere_state = sphere_state_at_location.get(location_name)
           if self.check_if_item_location_is_useful(
             item_name,
             location_name,
             has_useful_chain,
             sphere_state=sphere_state,
-            useful_item_locations=useful_item_locations,
+            sphere_check_memo=sphere_check_memo,
+            useful_value_locations=useful_value_locations,
             reachable_locs=reachable_locs,
             reachable_without_item=reachable_without_item,
             chain_locations_by_item=chain_locations_by_item,
-            items_referenced_by_location=items_referenced_by_location,
+            req_counts_by_location=req_counts_by_location,
             locations_referencing_item=locations_referencing_item,
+            openable_with_required_items=openable_with_required_items,
+            available_item_counts=available_item_counts,
+            ganondorf_item_counts=ganondorf_item_counts,
+            item_serves_ganondorf=item_can_serve_ganondorf[item_name],
           ):
             new_useful.add(location_name)
-      
-      # Path locations are always useful, so re-add them each pass to prevent the convergence from removing them.
-      if path_locations_for_barren:
-        new_useful |= path_locations_for_barren
       
       if new_useful == useful_item_locations:
         break
       useful_item_locations = new_useful
     
-    useful_locations = useful_item_locations
-    
     # Subtracting the set of useful locations from the set of progress locations gives us our set of barren locations.
-    self.barren_locations = set(progress_locations) - useful_locations
+    self.barren_locations = set(progress_locations) - useful_item_locations
     
     # Since we hint at zones as barren, we next construct a set of zones which contain at least one useful item.
     zones_with_useful_locations = set()
-    for location_name in sorted(useful_locations):
+    for location_name in sorted(useful_item_locations):
       zones_with_useful_locations.update(self.rando.entrances.get_all_zones_for_item_location(location_name))
     
     # Now, we do the same with barren locations, identifying which zones have barren locations.
