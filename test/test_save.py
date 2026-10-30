@@ -1,7 +1,7 @@
 import os
 from wwrando import make_argparser
 from randomizer import WWRandomizer
-from options.wwrando_options import Options
+from options.wwrando_options import Options, SwordMode
 from test_helpers import *
 import customizer
 
@@ -12,6 +12,7 @@ def rando_with_options(options) -> WWRandomizer:
     "clean_iso_path": os.environ["WW_GZLE01_STRIPPED_PATH"],
     "randomized_output_folder": os.environ["WW_RANDO_OUTPUT_DIR"],
     "options": options,
+    "plando": make_test_plando(options),
     "cmd_line_args": args,
   }
   os.makedirs(rando_kwargs["randomized_output_folder"], exist_ok=True)
@@ -20,6 +21,12 @@ def rando_with_options(options) -> WWRandomizer:
 def test_save_all_options():
   options = Options()
   enable_all_options(options)
+  rando = rando_with_options(options)
+  rando.randomize_all()
+
+def test_save_swords_optional():
+  options = Options()
+  options.sword_mode = SwordMode.SWORDS_OPTIONAL
   rando = rando_with_options(options)
   rando.randomize_all()
 

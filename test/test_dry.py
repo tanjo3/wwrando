@@ -1,7 +1,8 @@
 import os
+import pytest
 from wwrando import make_argparser
 from randomizer import WWRandomizer
-from options.wwrando_options import Options, TrickDifficulty
+from options.wwrando_options import Options, TrickDifficulty, KeyLunacyMode
 from enum import StrEnum
 from test_helpers import *
 
@@ -12,6 +13,7 @@ def dry_rando_with_options(options) -> WWRandomizer:
     "clean_iso_path": None,
     "randomized_output_folder": os.environ["WW_RANDO_OUTPUT_DIR"],
     "options": options,
+    "plando": make_test_plando(options),
     "cmd_line_args": args,
   }
   return WWRandomizer(**rando_kwargs)
@@ -26,6 +28,17 @@ def test_dry_all_options():
   enable_all_options(options)
   rando = dry_rando_with_options(options)
   rando.randomize_all()
+
+def test_own_keys_are_only_hinted_outside_their_dungeon():
+  for mode in KeyLunacyMode:
+    options = Options()
+    options.randomize_smallkeys = mode
+    options.randomize_bigkeys = mode
+    rando = dry_rando_with_options(options)
+    expected = mode not in KeyLunacyMode.VANILLA | KeyLunacyMode.DUNGEON
+    for item_name in ["DRC Small Key", "DRC Big Key"]:
+      item_info = {"player": 1, "name": item_name, "game": "The Wind Waker", "classification": "progression"}
+      assert rando.hints.check_item_can_be_hinted_at(item_info) == expected
 
 def test_tricks_precise_no_obscure():
   options = Options()
@@ -93,6 +106,7 @@ def test_convert_options_to_dict_and_back():
   assert orig_options != default_options
   assert converted_options != default_options
 
+@pytest.mark.skip(reason="The Archipelago build doesn't use permalinks, and they don't support KeyLunacyMode options.")
 def test_convert_options_to_permalink_and_back():
   default_options = Options()
   orig_options = Options(progression_dungeons=False, num_required_bosses=2, logic_precision=TrickDifficulty.HARD)
