@@ -40,7 +40,7 @@ def test_save_customizer():
   rando.randomize_all()
 
 #region Archipelago
-PLAYER_NAME = "Pla:yer?1"
+PLAYER_NAME = "Pla:y\te r\n?1"
 LONGEST_PLAYER_NAME = "😀" * 16
 SHIFTED_CHARTS = list(range(2, 49+1)) + [1]
 
@@ -106,11 +106,11 @@ def test_savage_labyrinth_tablet_does_not_name_an_empty_location(unusual_file_ra
 
 def test_slot_name_is_written_for_the_client(saved_rando):
   slot_name = read_main_dol_symbol(saved_rando, fs.read_bytes, "archipelago_slot_name", 0x40)
-  assert slot_name == b"Pla:yer?1" + b"\0" * 55
+  assert slot_name == b"Pla:y\te r\n?1" + b"\0" * 52
 
 def test_banner_names_the_seed_and_player(saved_rando):
   banner = fs.read_bytes(saved_rando.get_raw_file("files/opening.bnr"), 0x1860, 0x40)
-  assert banner == b"TWW pytestseed (Pla:yer?1)".ljust(0x40, b"\0")
+  assert banner == b"TWW pytestseed (Pla:y\te r\n?1)".ljust(0x40, b"\0")
 
 def test_longest_possible_player_name_is_written_in_full(unusual_file_rando):
   assert read_main_dol_symbol(unusual_file_rando, fs.read_bytes, "archipelago_slot_name", 0x40) == LONGEST_PLAYER_NAME.encode()
@@ -121,8 +121,8 @@ def test_charts_are_written_for_the_client(saved_rando):
   written_charts = [saved_rando.dol.read_data(fs.read_u16, address + offset * 2) for offset in range(49)]
   assert written_charts == SHIFTED_CHARTS
 
-def test_iso_is_named_after_the_player_without_reserved_characters(saved_rando):
-  assert os.listdir(saved_rando.randomized_output_folder) == ["TWW pytestseed (Player1).iso"]
+def test_iso_is_named_after_the_player_without_reserved_or_control_characters(saved_rando):
+  assert os.listdir(saved_rando.randomized_output_folder) == ["TWW pytestseed (Playe r1).iso"]
 
 def test_start_with_sword_uses_the_normal_game(saved_rando):
   assert read_main_dol_symbol(saved_rando, fs.read_u8, "sword_mode") == 1

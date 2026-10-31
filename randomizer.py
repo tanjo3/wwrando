@@ -931,8 +931,8 @@ class WWRandomizer:
       jpc.save()
       self.gcm.changed_files[jpc_path] = jpc.data
     
-    # Remove reserved characters from player name before writing as file name.
-    cleaned_name = "".join(c for c in self.plando.name if c not in '<>:"/\\|?*')
+    # Remove reserved characters and control characters from player name before writing as file name.
+    cleaned_name = "".join(c for c in self.plando.name if c not in '<>:"/\\|?*' and ord(c) >= 0x20)
     
     if self.export_disc_to_folder:
       output_folder_path = os.path.join(self.randomized_output_folder, "TWW %s (%s)" % (self.seed, cleaned_name))

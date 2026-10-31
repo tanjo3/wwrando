@@ -3,6 +3,7 @@ import html
 import io
 import json
 import lzma
+import re
 import zipfile
 import zlib
 from base64 import b64decode
@@ -13,6 +14,7 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from ruamel.yaml import YAML
+from ruamel.yaml.constructor import SafeConstructor
 
 yaml = YAML(typ="safe")
 from ruamel.yaml.error import YAMLError
@@ -26,6 +28,20 @@ try:
   from keys.ap_rsa_private_key import AP_RSA_PRIVATE_KEY # type: ignore
 except ImportError:
   AP_RSA_PRIVATE_KEY = ""
+
+class APWorldYAMLConstructor(SafeConstructor):
+  def construct_yaml_float(self, node):
+    return self.construct_scalar(node)
+  
+  def construct_yaml_int(self, node):
+    value = self.construct_scalar(node)
+    if re.fullmatch(r"-?(?:0|[1-9][0-9]*)", value):
+      return int(value)
+    return value
+
+APWorldYAMLConstructor.add_constructor("tag:yaml.org,2002:float", APWorldYAMLConstructor.construct_yaml_float)
+APWorldYAMLConstructor.add_constructor("tag:yaml.org,2002:int", APWorldYAMLConstructor.construct_yaml_int)
+yaml.Constructor = APWorldYAMLConstructor
 
 # The APWorld versions (major, minor) this build can patch.
 SUPPORTED_APWORLD_VERSIONS = [(3, 0), (3, 1)]

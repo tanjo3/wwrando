@@ -98,6 +98,30 @@ def read_error(plando_file: str) -> str:
     load_and_validate_aptww_file(plando_file)
   return str(e.value)
 
+#region Text the APWorld's YAML writer leaves unquoted
+@pytest.mark.parametrize("text", ["1e3", "0o17", "09", "-08", "+09"])
+def test_text_that_looks_like_a_number_stays_text(text):
+  assert aptww.read_plando_from_yaml(f"Name: {text}".encode()) == {"Name": text}
+
+def test_real_values_keep_their_types():
+  assert aptww.read_plando_from_yaml(b"Slot: 1\nCharts: [-1, 0, 49]\n") == {"Slot": 1, "Charts": [-1, 0, 49]}
+
+@pytest.mark.parametrize("tag", ["!!int", "!!float"])
+def test_number_tag_on_a_list_is_reported_as_corrupted(tag):
+  with pytest.raises(APTWWFileError) as e:
+    aptww.read_plando_from_yaml(f"Name: {tag} [1]".encode())
+  assert str(e.value) == aptww.CORRUPTED_MESSAGE
+
+def test_name_and_item_that_look_like_numbers_are_read_from_a_file(tmp_path):
+  item_info = {"player": 2, "name": "UNQUOTED", "game": "Other Game", "classification": "filler"}
+  plando_dict = make_plando_dict(version=(3, 0, 2), Name="UNQUOTED", Locations={"Some Location": item_info})
+  yaml_text = to_yaml_bytes(plando_dict).replace(b"UNQUOTED", b"1e3")
+  plando_file = write_zip(tmp_path / "file.aptww", base64.b64encode(yaml_text))
+  loaded = load_and_validate_aptww_file(plando_file)
+  assert loaded["Name"] == "1e3"
+  assert loaded["Locations"]["Some Location"]["name"] == "1e3"
+#endregion
+
 #region Formats this build can read
 @pytest.mark.parametrize("version", [(3, 1, 0), (3, 1, 9)])
 def test_encrypted_file_is_read(tmp_path, installed_key, version):
