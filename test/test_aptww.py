@@ -444,16 +444,31 @@ def test_plando_holds_the_contents_of_the_file(tmp_path):
   assert plando.charts == plando_dict["Charts"]
 
 @pytest.mark.parametrize("game, name, expected", [
-  ("Other Game", "Hero’s Sword", "Hero\x92s Sword"),
-  ("Other Game", "Sword \U0001F5E1", "Sword ?"),
+  ("Other Game", "Pokémon ñandú", "Pokémon ñandú"),
+  ("Other Game", "‘Hero’s’ “Sword”–—…™", "'Hero's' \"Sword\"--...TM"),
+  ("Other Game", "€ ‚ „ Š", "? ? ? ?"),
+  ("Other Game", "Sword \U0001F5E1 日本語", "Sword ? ???"),
+  ("Other Game", "AC\\DC", "AC/DC"),
+  ("Other Game", "\\{1A 05}", "/(1A 05)"),
+  ("Other Game", "a\tb\nc\0d\x1Ae\x1Ff\x7Fg", "a b c d e f g"),
+  ("Other Game", "a\x80b\x9Fc", "a b c"),
+  ("Other Game", "Poke\u0301mon", "Pokémon"),
+  ("Other Game", "x" * 101, "x" * 100),
   ("The Wind Waker", "Hero’s Sword", "Hero’s Sword"),
-], ids=["font character", "character outside the font", "own game untouched"])
+], ids=["font characters", "typographic characters", "symbols outside the font", "characters outside the font", "backslash", "control code", "control characters", "bytes the game reads as pairs", "decomposed accent", "too long", "own game untouched"])
 def test_item_name_is_made_encodable_for_other_games(tmp_path, game, name, expected):
   location_info = {"player": 2, "name": name, "game": game, "classification": "progression"}
   plando_dict = make_plando_dict(version=(3, 0, 0), Locations={"Dragon Roost Cavern - First Room": location_info})
   plando_file = write_base64_yaml(tmp_path / "file.aptww", plando_dict)
   plando = read_ap_plando_file(plando_file, Options())
   assert plando.locations["Dragon Roost Cavern - First Room"]["name"] == expected
+
+def test_sanitized_item_names_only_contain_bytes_the_message_system_treats_as_plain_text():
+  allowed = set(range(0x20, 0x7F)) | set(range(0xA0, 0x100))
+  allowed -= {ord("\\"), ord("{"), ord("}")}
+  for code_point in range(0x110000):
+    name = aptww.sanitize_foreign_item_name(chr(code_point))
+    assert all(ord(character) in allowed for character in name), hex(code_point)
 
 def test_encrypted_file_can_be_randomized(tmp_path, installed_key):
   location_info = {"player": 2, "name": "Lantern", "game": "Other Game", "classification": "progression"}

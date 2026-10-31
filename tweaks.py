@@ -776,45 +776,51 @@ def fix_shop_item_y_offsets(self: WWRandomizer):
       new_y_offset = 20.0
       self.dol.write_data(fs.write_float, display_data_addr+0x10, new_y_offset)
 
+def get_shop_item_name(self: WWRandomizer, location_name: str):
+  item_info = self.plando.locations.get(location_name)
+  if item_info is None or "player" not in item_info:
+    # This location has no item from the APWorld, so use the name of the rupee that was placed here instead.
+    return self.logic.done_item_locations[location_name].removesuffix(" (Joke Message)")
+  if item_info["player"] == self.plando.slot:
+    return item_info["name"]
+  return f"P{item_info['player']}'s {item_info['name']}"
+
+def get_auction_item_name(self: WWRandomizer, location_name: str):
+  # The game copies these names onto the stack without checking their length, so longer ones could corrupt it.
+  return get_shop_item_name(self, location_name)[:43]
+
+def get_letter_item_name(self: WWRandomizer, location_name: str):
+  item_name = get_shop_item_name(self, location_name)
+  item_info = self.plando.locations.get(location_name)
+  if item_info is None or "player" not in item_info:
+    return "%s %s" % (get_indefinite_article(item_name), item_name)
+  if item_info["player"] == self.plando.slot:
+    return "your %s" % item_name
+  return item_name
+
 def update_shop_item_descriptions(self: WWRandomizer):
-  if "The Great Sea - Beedle's Shop Ship - 20 Rupee Item" in self.plando.locations:
-    item_info = self.plando.locations["The Great Sea - Beedle's Shop Ship - 20 Rupee Item"]
-    item_name = f"P{item_info['player']}'s {item_info['name']}"
-  else:
-    item_name = "Yellow Rupee"
+  item_name = get_shop_item_name(self, "The Great Sea - Beedle's Shop Ship - 20 Rupee Item")
   cost = 20
   msg = self.bmg.messages_by_id[3906]
   msg.string = "\\{1A 06 FF 00 00 01}%s  %d Rupees\\{1A 06 FF 00 00 00}" % (item_name, cost)
   msg = self.bmg.messages_by_id[3909]
   msg.string = "%s   %d Rupees\nWill you buy it?\n\\{1A 05 00 00 08}I'll buy it\nNo thanks" % (item_name, cost)
   
-  if "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item" in self.plando.locations:
-    item_info = self.plando.locations["Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item"]
-    item_name = f"P{item_info['player']}'s {item_info['name']}"
-  else:
-    item_name = "Yellow Rupee"
+  item_name = get_shop_item_name(self, "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item")
   cost = 500
   msg = self.bmg.messages_by_id[12106]
   msg.string = "\\{1A 06 FF 00 00 01}%s  %d Rupees\n\\{1A 06 FF 00 00 00}This is my last one." % (item_name, cost)
   msg = self.bmg.messages_by_id[12109]
   msg.string = "This \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is a mere \\{1A 06 FF 00 00 01}%d Rupees\\{1A 06 FF 00 00 00}!\nBuy it! Buy it! Buy buy buy!\n\\{1A 05 00 00 08}I'll buy it\nNo thanks" % (item_name, cost)
   
-  if "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item" in self.plando.locations:
-    item_info = self.plando.locations["Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item"]
-    item_name = f"P{item_info['player']}'s {item_info['name']}"
-  else:
-    item_name = "Yellow Rupee"
+  item_name = get_shop_item_name(self, "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item")
   cost = 950
   msg = self.bmg.messages_by_id[12107]
   msg.string = "\\{1A 06 FF 00 00 01}%s  %d Rupees\n\\{1A 06 FF 00 00 00}This is my last one of these, too." % (item_name, cost)
   msg = self.bmg.messages_by_id[12110]
   msg.string = "This \\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00} is only \\{1A 06 FF 00 00 01}%d Rupees\\{1A 06 FF 00 00 00}!\nBuy it! Buy it! Buy buy buy!\n\\{1A 05 00 00 08}I'll buy it\nNo thanks" % (item_name, cost)
   
-  if "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item" in self.plando.locations:
-    item_info = self.plando.locations["Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item"]
-    item_name = f"P{item_info['player']}'s {item_info['name']}"
-  else:
-    item_name = "Yellow Rupee"
+  item_name = get_shop_item_name(self, "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item")
   cost = 900
   msg = self.bmg.messages_by_id[12108]
   msg.string = "\\{1A 06 FF 00 00 01}%s  %d Rupees\n\\{1A 06 FF 00 00 00}The price may be high, but it'll pay\noff handsomely in the end!" % (item_name, cost)
@@ -822,45 +828,24 @@ def update_shop_item_descriptions(self: WWRandomizer):
   msg.string = "This \\{1A 06 FF 00 00 01}%s \\{1A 06 FF 00 00 00}is just \\{1A 06 FF 00 00 01}%d Rupees!\\{1A 06 FF 00 00 00}\nBuy it! Buy it! Buy buy buy!\n\\{1A 05 00 00 08}I'll buy it\nNo thanks" % (item_name, cost)
 
 def update_auction_item_names(self: WWRandomizer):
-  msg = self.bmg.messages_by_id[7441]
-  if "Windfall Island - 5 Rupee Auction" in self.plando.locations:
-    item_info = self.plando.locations["Windfall Island - 5 Rupee Auction"]
-    item_name = f"P{item_info['player']}'s {item_info['name']}"
-  else:
-    item_name = "Yellow Rupee"
+  item_name = get_auction_item_name(self, "Windfall Island - 5 Rupee Auction")
   msg = self.bmg.messages_by_id[7441]
   msg.string = "\\{1A 06 FF 00 00 01}%s" % item_name
   
-  if "Windfall Island - 40 Rupee Auction" in self.plando.locations:
-    item_info = self.plando.locations["Windfall Island - 40 Rupee Auction"]
-    item_name = f"P{item_info['player']}'s {item_info['name']}"
-  else:
-    item_name = "Yellow Rupee"
+  item_name = get_auction_item_name(self, "Windfall Island - 40 Rupee Auction")
   msg = self.bmg.messages_by_id[7440]
   msg.string = "\\{1A 06 FF 00 00 01}%s" % item_name
   
-  if "Windfall Island - 60 Rupee Auction" in self.plando.locations:
-    item_info = self.plando.locations["Windfall Island - 60 Rupee Auction"]
-    item_name = f"P{item_info['player']}'s {item_info['name']}"
-  else:
-    item_name = "Yellow Rupee"
+  item_name = get_auction_item_name(self, "Windfall Island - 60 Rupee Auction")
   msg = self.bmg.messages_by_id[7442]
   msg.string = "\\{1A 06 FF 00 00 01}%s" % item_name
   
-  if "Windfall Island - 80 Rupee Auction" in self.plando.locations:
-    item_info = self.plando.locations["Windfall Island - 80 Rupee Auction"]
-    item_name = f"P{item_info['player']}'s {item_info['name']}"
-  else:
-    item_name = "Yellow Rupee"
+  item_name = get_auction_item_name(self, "Windfall Island - 80 Rupee Auction")
   msg = self.bmg.messages_by_id[7443]
   msg.string = "\\{1A 06 FF 00 00 01}%s" % item_name
 
 def update_battlesquid_item_names(self: WWRandomizer):
-  if "Windfall Island - Battlesquid - First Prize" in self.plando.locations:
-    item_info = self.plando.locations["Windfall Island - Battlesquid - First Prize"]
-    item_name = f"P{item_info['player']}'s {item_info['name']}"
-  else:
-    item_name = "Yellow Rupee"
+  item_name = get_shop_item_name(self, "Windfall Island - Battlesquid - First Prize")
   msg = self.bmg.messages_by_id[7520]
   msg.string = (
     "\\{1A 05 01 00 8E}Hoorayyy! Yayyy! Yayyy!\nOh, thank you, Mr. Sailor!\n\n\n"
@@ -868,11 +853,7 @@ def update_battlesquid_item_names(self: WWRandomizer):
   )
   msg.word_wrap_string(self.bfn)
   
-  if "Windfall Island - Battlesquid - Second Prize" in self.plando.locations:
-    item_info = self.plando.locations["Windfall Island - Battlesquid - Second Prize"]
-    item_name = f"P{item_info['player']}'s {item_info['name']}"
-  else:
-    item_name = "Yellow Rupee"
+  item_name = get_shop_item_name(self, "Windfall Island - Battlesquid - Second Prize")
   msg = self.bmg.messages_by_id[7521]
   msg.string = (
     "\\{1A 05 01 00 8E}Hoorayyy! Yayyy! Yayyy!\nOh, thank you so much, Mr. Sailor!\n\n\n"
@@ -887,24 +868,9 @@ def update_battlesquid_item_names(self: WWRandomizer):
   # msg = self.bmg.messages_by_id[7523]
 
 def update_item_names_in_letter_advertising_rock_spire_shop(self: WWRandomizer):
-  if "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item" in self.plando.locations:
-    item_info_1 = self.plando.locations["Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item"]
-    item_name_1 = f"P{item_info_1['player']}'s {item_info_1['name']}"
-  else:
-    item_name_1 = "Nothing"
-  
-  if "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item" in self.plando.locations:
-    item_info_2 = self.plando.locations["Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item"]
-    item_name_2 = f"P{item_info_2['player']}'s {item_info_2['name']}"
-  else:
-    item_name_2 = "Nothing"
-  
-  if "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item" in self.plando.locations:
-    item_info_3 = self.plando.locations["Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item"]
-    item_name_3 = f"P{item_info_3['player']}'s {item_info_3['name']}"
-  else:
-    item_name_3 = "Nothing"
-  
+  item_name_1 = get_letter_item_name(self, "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item")
+  item_name_2 = get_letter_item_name(self, "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item")
+  item_name_3 = get_letter_item_name(self, "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item")
   msg = self.bmg.messages_by_id[3325]
   
   lines = msg.string.split("\n")

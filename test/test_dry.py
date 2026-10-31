@@ -118,6 +118,7 @@ def test_convert_options_to_permalink_and_back():
 #region Archipelago
 BIG_OCTO_FAIRY = "Two-Eye Reef - Big Octo Great Fairy"
 FIRST_ROOM = "Dragon Roost Cavern - First Room"
+ROCK_SPIRE_500 = "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item"
 ROCK_SPIRE_SLOTS = {
   "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item": "Green Rupee",
   "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item": "Yellow Rupee",
@@ -245,13 +246,45 @@ def test_big_octo_fairy_has_no_hint_when_she_holds_the_only_progression_item():
 @pytest.mark.parametrize("item_info, expected", [
   (foreign_item("Lantern"), "P2's Lantern"),
   (foreign_item("DRC Small Key"), "P2's DRC Small Key"),
-  (own_item("DRC Small Key"), "P1's Dragon Roost Cavern small key"),
-  (own_item("DRC Big Key"), "P1's Dragon Roost Cavern Big Key"),
-  (own_item("DRC Dungeon Map"), "P1's Dragon Roost Cavern Dungeon Map"),
-  (own_item("DRC Compass"), "P1's Dragon Roost Cavern Compass"),
-], ids=["other game", "other game's item named like a key", "small key", "big key", "map", "compass"])
-def test_hinted_item_name_names_its_player(item_info, expected):
-  assert HintsRandomizer.get_formatted_item_name(item_info) == expected
+  ({"player": 2, "name": "DRC Small Key", "game": "The Wind Waker", "classification": "progression"}, "P2's Dragon Roost Cavern small key"),
+  (own_item("DRC Small Key"), "your Dragon Roost Cavern small key"),
+  (own_item("DRC Big Key"), "your Dragon Roost Cavern Big Key"),
+  (own_item("DRC Dungeon Map"), "your Dragon Roost Cavern Dungeon Map"),
+  (own_item("DRC Compass"), "your Dragon Roost Cavern Compass"),
+], ids=["other game", "other game's item named like a key", "other player's key", "small key", "big key", "map", "compass"])
+def test_hinted_item_name_says_whose_it_is(item_info, expected):
+  assert HintsRandomizer.get_formatted_item_name(item_info, 1) == expected
+
+@pytest.mark.parametrize("location_name, item_info, expected_shop_name, expected_letter_name", [
+  (ROCK_SPIRE_500, own_item("Deku Leaf"), "Deku Leaf", "your Deku Leaf"),
+  (ROCK_SPIRE_500, foreign_item("Lantern"), "P2's Lantern", "P2's Lantern"),
+  (ROCK_SPIRE_500, {"player": 2, "name": "Bombs", "game": "The Wind Waker", "classification": "progression"}, "P2's Bombs", "P2's Bombs"),
+  (ROCK_SPIRE_500, nothing_item(), "Red Rupee", "a Red Rupee"),
+  (ROCK_SPIRE_500, None, "Green Rupee", "a Green Rupee"),
+  ("Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item", None, "Yellow Rupee", "a Yellow Rupee"),
+  ("Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item", None, "Blue Rupee", "a Blue Rupee"),
+  ("Windfall Island - 5 Rupee Auction", None, "Yellow Rupee", "a Yellow Rupee"),
+], ids=["own item", "other game", "other player's item from this game", "empty location", "unrandomized 500 rupee slot", "unrandomized 950 rupee slot", "unrandomized 900 rupee slot", "unrandomized joke rupee"])
+def test_shop_and_letter_name_the_placed_item(location_name, item_info, expected_shop_name, expected_letter_name):
+  options = Options()
+  plando = make_test_plando(options)
+  plando.locations.pop(location_name, None)
+  if item_info is not None:
+    plando.locations[location_name] = item_info
+  rando = randomized(options, plando)
+  assert tweaks.get_shop_item_name(rando, location_name) == expected_shop_name
+  assert tweaks.get_letter_item_name(rando, location_name) == expected_letter_name
+
+@pytest.mark.parametrize("item_name, expected", [
+  ("x" * 38, "P2's " + "x" * 38),
+  ("x" * 39, "P2's " + "x" * 38),
+], ids=["longest that fits", "too long"])
+def test_auction_item_name_fits_in_the_game_buffer(item_name, expected):
+  options = Options()
+  plando = make_test_plando(options)
+  plando.locations["Windfall Island - 5 Rupee Auction"] = foreign_item(item_name)
+  rando = randomized(options, plando)
+  assert tweaks.get_auction_item_name(rando, "Windfall Island - 5 Rupee Auction") == expected
 
 @pytest.mark.parametrize("seed, player_name, expected_name", [
   ("AP_12345678901234567890_P1", "Player1", "Player1"),

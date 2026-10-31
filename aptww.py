@@ -4,6 +4,7 @@ import io
 import json
 import lzma
 import re
+import unicodedata
 import zipfile
 import zlib
 from base64 import b64decode
@@ -57,6 +58,8 @@ APWORLD_VERSION_TO_BUILD = {
   (3, 0): "2.6.0",
   (3, 1): "2.6.0",
 }
+
+FOREIGN_CHARACTER_REPLACEMENTS = str.maketrans({"‘": "'", "’": "'", "“": '"', "”": '"', "–": "-", "—": "-", "…": "...", "™": "TM"})
 
 REQUIRED_KEYS = ["Seed", "Slot", "Name", "Options", "Required Bosses", "Locations", "Entrances", "Charts"]
 
@@ -229,6 +232,19 @@ def load_and_validate_aptww_file(plando_file: str) -> dict:
   
   return plando_dict
 
+def sanitize_foreign_item_name(item_name: str) -> str:
+  # Item names from other games can contain characters the message font can't encode.
+  item_name = unicodedata.normalize("NFC", item_name).translate(FOREIGN_CHARACTER_REPLACEMENTS).encode("latin-1", "replace").decode("latin-1")
+  
+  # The message writer takes a backslash or brace for the start of a control code.
+  item_name = item_name.replace("\\", "/").replace("{", "(").replace("}", ")")
+  
+  # Control characters would act as commands in-game, and the game reads 0x80-0x9F as the first byte of a pair.
+  item_name = re.sub(r"[\x00-\x1F\x7F-\x9F]", " ", item_name)
+  
+  # Messages that aren't word wrapped have to fit in a fixed size buffer in-game.
+  return item_name[:100]
+
 def read_ap_plando_file(plando_file: str, options: Options) -> Plando:
   plando_file = load_and_validate_aptww_file(plando_file)
   
@@ -277,10 +293,9 @@ def read_ap_plando_file(plando_file: str, options: Options) -> Plando:
       if getattr(options, field.name) is None:
         setattr(options, field.name, field.default)
   
-  # Item names from other games can contain characters the message font can't encode.
   for item_info in plando_file["Locations"].values():
     if item_info["game"] != "The Wind Waker":
-      item_info["name"] = item_info["name"].encode("cp1252", "replace").decode("latin-1")
+      item_info["name"] = sanitize_foreign_item_name(item_info["name"])
   
   # Save the rest of the plando in a dataclass
   return Plando(

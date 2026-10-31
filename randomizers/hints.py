@@ -57,7 +57,7 @@ class Hint:
       case _:
         raise NotImplementedError
   
-  def formatted_reward(self, is_cryptic: bool):
+  def formatted_reward(self, is_cryptic: bool, slot: int | None = None):
     match self.type:
       case HintType.PATH | HintType.BARREN:
         return self.reward
@@ -65,7 +65,7 @@ class Hint:
         if is_cryptic:
           return HintsRandomizer.get_cryptic_item_hint(self.reward)
         else:
-          return HintsRandomizer.get_formatted_item_name(self.reward)
+          return HintsRandomizer.get_formatted_item_name(self.reward, slot)
       case HintType.LOCATION:
         # Never use cryptic item names for location hints.
         return HintsRandomizer.get_formatted_item_name(self.reward)
@@ -366,19 +366,19 @@ class HintsRandomizer(BaseRandomizer):
       floor_50_item_importance = ""
     
     if floor_30_is_valid and floor_50_is_valid:
-      hint = "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (floor_30_hint.formatted_reward(self.cryptic_hints), floor_30_item_importance)
+      hint = "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (floor_30_hint.formatted_reward(self.cryptic_hints, self.rando.plando.slot), floor_30_item_importance)
       hint += " and "
-      hint += "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (floor_50_hint.formatted_reward(self.cryptic_hints), floor_50_item_importance)
+      hint += "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (floor_50_hint.formatted_reward(self.cryptic_hints, self.rando.plando.slot), floor_50_item_importance)
       hint += " await"
     elif floor_30_is_valid:
-      hint = "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (floor_30_hint.formatted_reward(self.cryptic_hints), floor_30_item_importance)
+      hint = "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (floor_30_hint.formatted_reward(self.cryptic_hints, self.rando.plando.slot), floor_30_item_importance)
       hint += " and "
       hint += "challenge"
       hint += " await"
     elif floor_50_is_valid:
       hint = "challenge"
       hint += " and "
-      hint += "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (floor_50_hint.formatted_reward(self.cryptic_hints), floor_50_item_importance)
+      hint += "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (floor_50_hint.formatted_reward(self.cryptic_hints, self.rando.plando.slot), floor_50_item_importance)
       hint += " await"
     else:
       hint = "challenge"
@@ -395,7 +395,7 @@ class HintsRandomizer(BaseRandomizer):
     msg.word_wrap_string(self.rando.bfn)
     
     msg = self.rando.bmg.messages_by_id[12016]
-    reward = tweaks.upper_first_letter(hint.formatted_reward(self.cryptic_hints))
+    reward = tweaks.upper_first_letter(hint.formatted_reward(self.cryptic_hints, self.rando.plando.slot))
     if importance:
       copula = "is"
       if hint.reward in ["Power Bracelets", "Iron Boots", "Bombs"]:
@@ -414,11 +414,12 @@ class HintsRandomizer(BaseRandomizer):
     msg.word_wrap_string(self.rando.bfn)
     
     msg = self.rando.bmg.messages_by_id[12017]
+    item_owner = "you" if hint.reward["player"] == self.rando.plando.slot else "they"
     if importance and hint.importance == ItemImportance.NOT_REQUIRED:
       # If the item is not required and the player is told so, change the post-hint message to be more appropriate.
-      msg.string = "\\{1A 06 FF 00 00 05}Though if they still desire such an item, you must journey to that place."
+      msg.string = "\\{1A 06 FF 00 00 05}Though if %s still desire such an item, you must journey to that place." % item_owner
     else:
-      msg.string = "\\{1A 06 FF 00 00 05}When they find they have need of such an item, you must journey to that place."
+      msg.string = "\\{1A 06 FF 00 00 05}When %s find %s have need of such an item, you must journey to that place." % (item_owner, item_owner)
     msg.word_wrap_string(self.rando.bfn)
   
   def update_fishmen_hints(self):
@@ -607,7 +608,7 @@ class HintsRandomizer(BaseRandomizer):
     return hint_string
   
   @staticmethod
-  def get_formatted_item_name(item_info):
+  def get_formatted_item_name(item_info, slot=None):
     item_player = item_info["player"]
     item_name = item_info["name"]
     item_game = item_info["game"]
@@ -630,7 +631,10 @@ class HintsRandomizer(BaseRandomizer):
         dungeon_name = Logic.DUNGEON_NAMES[short_dungeon_name]
         item_name = "%s Compass" % dungeon_name
     
-    item_name = f"P{item_player}'s {item_name}"
+    if item_player == slot:
+      item_name = f"your {item_name}"
+    else:
+      item_name = f"P{item_player}'s {item_name}"
     # item_name = tweaks.add_article_before_item_name(item_name)
     return item_name
   
