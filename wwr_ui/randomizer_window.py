@@ -109,6 +109,13 @@ class WWRandomizerWindow(QMainWindow):
     self.setWindowIcon(QIcon(icon_path))
     
     self.show()
+    
+    if not IS_RUNNING_FROM_SOURCE:
+      self.update_checker_thread = UpdateCheckerThread()
+      self.update_checker_thread.finished_checking_for_updates.connect(self.show_update_check_results)
+      self.update_checker_thread.start()
+    else:
+      self.ui.update_checker_label.setText("(Running from source, skipping release update check.)")
   
   def generate_seed(self):
     seed = seedgen.make_random_seed_name()
@@ -268,6 +275,7 @@ class WWRandomizerWindow(QMainWindow):
     else:
       new_text = "<b>Version %s of the randomizer is available!</b>" % new_version
       new_text += " <a href=\"%s\">Click here</a> to go to the download page." % LATEST_RELEASE_DOWNLOAD_PAGE_URL
+      new_text += " Check its release notes first, as a new version may not support your APWorld version."
       self.ui.update_checker_label.setText(new_text)
   
   def initialize_option_widgets(self):

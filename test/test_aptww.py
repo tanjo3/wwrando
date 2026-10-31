@@ -151,14 +151,14 @@ def test_newer_version_links_the_releases_page(tmp_path, installed_key, version)
   plando_file = write_encrypted(tmp_path / "file.aptww", make_plando_dict(version=version), installed_key)
   message = read_error(plando_file)
   assert "newer than this randomizer build" in message
-  assert aptww.RELEASES_PAGE_URL in message
+  assert aptww.LATEST_RELEASE_DOWNLOAD_PAGE_URL in message
 
 @pytest.mark.parametrize("version", [(2, 7, 0), (1, 0, 0)])
 def test_unrecognized_version_links_the_releases_page(tmp_path, version):
   plando_file = write_plain_yaml(tmp_path / "file.aptww", make_plando_dict(version=version))
   message = read_error(plando_file)
   assert "doesn't recognize" in message
-  assert aptww.RELEASES_PAGE_URL in message
+  assert aptww.LATEST_RELEASE_DOWNLOAD_PAGE_URL in message
 #endregion
 
 #region The version in the manifest

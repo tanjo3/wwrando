@@ -231,6 +231,19 @@
      </widget>
     </item>
     <item>
+     <widget class="QLabel" name="update_checker_label">
+      <property name="text">
+       <string>Checking for updates to the randomizer...</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+      <property name="openExternalLinks">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QPushButton" name="about_button">

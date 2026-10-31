@@ -20,7 +20,7 @@ from ruamel.yaml.error import YAMLError
 from options.wwrando_options import EntranceMixMode, KeyLunacyMode, Options, SwordMode, TrickDifficulty
 from randomizer import Plando
 from version import VERSION_WITHOUT_COMMIT
-from wwr_ui.update_checker import string_to_version
+from wwr_ui.update_checker import LATEST_RELEASE_DOWNLOAD_PAGE_URL, string_to_version
 
 try:
   from keys.ap_rsa_private_key import AP_RSA_PRIVATE_KEY # type: ignore
@@ -41,8 +41,6 @@ APWORLD_VERSION_TO_BUILD = {
   (3, 0): "2.6.0",
   (3, 1): "2.6.0",
 }
-
-RELEASES_PAGE_URL = "https://github.com/tanjo3/wwrando/releases?q=tag%3Aap_2"
 
 REQUIRED_KEYS = ["Seed", "Slot", "Name", "Options", "Required Bosses", "Locations", "Entrances", "Charts"]
 
@@ -80,12 +78,12 @@ def check_apworld_version(version: tuple[int, ...]):
     supported_text = " and ".join(f"v{major}.{minor}.x" for major, minor in SUPPORTED_APWORLD_VERSIONS)
     raise APTWWFileError(
       f"""The APTWW file was generated on v{version_text} of the APWorld, which is newer than this randomizer build (v{VERSION_WITHOUT_COMMIT}, made for {supported_text}).<br><br>
-      Download a newer build here: {get_link(RELEASES_PAGE_URL)}"""
+      Download a newer build here: {get_link(LATEST_RELEASE_DOWNLOAD_PAGE_URL)}"""
     )
   
   raise APTWWFileError(
     f"""The APTWW file was generated on v{version_text} of the APWorld, which this randomizer build (v{VERSION_WITHOUT_COMMIT}) doesn't recognize.<br><br>
-    Check the release notes for the build to use: {get_link(RELEASES_PAGE_URL)}"""
+    Check the release notes for the build to use: {get_link(LATEST_RELEASE_DOWNLOAD_PAGE_URL)}"""
   )
 
 def load_private_key() -> rsa.RSAPrivateKey:
@@ -98,7 +96,7 @@ def load_private_key() -> rsa.RSAPrivateKey:
   if not isinstance(private_key, rsa.RSAPrivateKey):
     raise APTWWFileError(
       f"""This randomizer build can't read APTWW files because it was made without the decryption key.<br><br>
-      Download an official build here: {get_link(RELEASES_PAGE_URL)}"""
+      Download an official build here: {get_link(LATEST_RELEASE_DOWNLOAD_PAGE_URL)}"""
     )
   return private_key
 
@@ -128,7 +126,7 @@ def read_encrypted_plando(payload: bytes) -> dict:
     raise APTWWFileError(
       f"""The APTWW file could not be decrypted.<br><br>
       Please ensure that the file has not been modified or corrupted and try again.<br>
-      If it was generated on a newer version of the APWorld, you may need a newer randomizer build: {get_link(RELEASES_PAGE_URL)}"""
+      If it was generated on a newer version of the APWorld, you may need a newer randomizer build: {get_link(LATEST_RELEASE_DOWNLOAD_PAGE_URL)}"""
     )
 
 def check_manifest_version(zf: zipfile.ZipFile):

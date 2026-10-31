@@ -1,5 +1,10 @@
 
+import threading
+
+import pytest
+
 from wwrando import make_argparser
+from wwr_ui import randomizer_window
 from wwr_ui.randomizer_window import WWRandomizerWindow
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QMessageBox
@@ -43,3 +48,54 @@ def test_invalid_aptww_file_is_reported_as_rich_text(qtbot, tmp_path, monkeypatc
   text_format, message = shown_dialogs[0]
   assert text_format == Qt.TextFormat.RichText
   assert "modified or corrupted" in message
+
+def make_released_window(qtbot, monkeypatch, update_check_result) -> WWRandomizerWindow:
+  monkeypatch.setattr(randomizer_window, "IS_RUNNING_FROM_SOURCE", False)
+  monkeypatch.setattr(randomizer_window, "check_for_updates", lambda: update_check_result)
+  window = make_rando_window()
+  qtbot.addWidget(window)
+  label = window.ui.update_checker_label
+  qtbot.waitUntil(lambda: label.text() != "Checking for updates to the randomizer...")
+  window.update_checker_thread.wait()
+  return window
+
+@pytest.mark.parametrize("update_check_result, expected_text", [
+  (None, "No new updates to the randomizer are available."),
+  ("error", "There was an error checking for updates."),
+], ids=["up to date", "error"])
+def test_released_build_reports_the_update_check(qtbot, monkeypatch, update_check_result, expected_text):
+  window = make_released_window(qtbot, monkeypatch, update_check_result)
+  assert window.ui.update_checker_label.text() == expected_text
+
+def test_released_build_links_to_a_new_version(qtbot, monkeypatch):
+  window = make_released_window(qtbot, monkeypatch, "2.7.0")
+  label = window.ui.update_checker_label
+  assert "Version 2.7.0" in label.text()
+  assert 'href="https://github.com/tanjo3/wwrando/releases?q=tag%3Aap_2"' in label.text()
+  assert "APWorld" in label.text()
+  assert label.openExternalLinks()
+
+def test_released_build_waits_for_a_running_update_check_before_closing(qtbot, monkeypatch):
+  check_may_finish = threading.Event()
+  monkeypatch.setattr(randomizer_window, "IS_RUNNING_FROM_SOURCE", False)
+  monkeypatch.setattr(randomizer_window, "check_for_updates", lambda: check_may_finish.wait(10) and None)
+  window = make_rando_window()
+  qtbot.addWidget(window)
+  thread = window.update_checker_thread
+  assert thread.isRunning()
+  
+  threading.Timer(0.2, check_may_finish.set).start()
+  closed = window.close()
+  finished_when_closed = thread.isFinished()
+  
+  thread.wait()
+  assert closed
+  assert finished_when_closed
+
+def test_source_build_skips_the_update_check(qtbot, monkeypatch):
+  monkeypatch.setattr(randomizer_window, "IS_RUNNING_FROM_SOURCE", True)
+  window = make_rando_window()
+  qtbot.addWidget(window)
+  assert not hasattr(window, "update_checker_thread")
+  assert "skipping" in window.ui.update_checker_label.text()
+  assert window.close()
