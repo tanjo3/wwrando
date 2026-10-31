@@ -6,6 +6,12 @@ from randomizers.entrances import (
   DUNGEON_EXITS, MINIBOSS_EXITS, BOSS_EXITS, SECRET_CAVE_EXITS, SECRET_CAVE_INNER_EXITS, FAIRY_FOUNTAIN_EXITS,
 )
 
+def own_item(name: str, classification: str = "progression") -> dict:
+  return {"player": 1, "name": name, "game": "The Wind Waker", "classification": classification}
+
+def foreign_item(name: str = "Lantern", classification: str = "progression") -> dict:
+  return {"player": 2, "name": name, "game": "Other Game", "classification": classification}
+
 def make_test_plando(options: Options) -> Plando:
   item_locations = Logic.load_and_parse_item_locations()
   location_names = Logic.filter_locations_for_progression_static(
@@ -13,7 +19,7 @@ def make_test_plando(options: Options) -> Plando:
     filter_sunken_treasure=not (options.progression_triforce_charts and options.progression_treasure_charts),
   )
   locations = {
-    location_name: {"player": 1, "name": "Green Rupee", "game": "The Wind Waker", "classification": "filler"}
+    location_name: own_item("Green Rupee", "filler")
     for location_name in location_names
   }
   
@@ -24,10 +30,10 @@ def make_test_plando(options: Options) -> Plando:
   }
   for location_name, item_name in own_progression.items():
     if location_name in locations:
-      locations[location_name] = {"player": 1, "name": item_name, "game": "The Wind Waker", "classification": "progression"}
+      locations[location_name] = own_item(item_name)
   for location_name in ["Dragon Roost Cavern - Rat Room", "Outset Island - Savage Labyrinth - Floor 30"]:
     if location_name in locations:
-      locations[location_name] = {"player": 2, "name": "Lantern", "game": "Other Game", "classification": "progression"}
+      locations[location_name] = foreign_item()
   
   required_bosses = []
   if options.required_bosses:
