@@ -41,6 +41,7 @@ def test_save_customizer():
 
 #region Archipelago
 PLAYER_NAME = "Pla:yer?1"
+LONGEST_PLAYER_NAME = "😀" * 16
 SHIFTED_CHARTS = list(range(2, 49+1)) + [1]
 
 def read_main_dol_symbol(rando: WWRandomizer, read_func, symbol_name: str, *args):
@@ -80,12 +81,13 @@ def swords_optional_rando(tmp_path_factory):
   return rando
 
 @pytest.fixture(scope="module")
-def no_progression_rando(tmp_path_factory):
+def unusual_file_rando(tmp_path_factory):
   options = Options()
   options.progression_savage_labyrinth = True
   plando = make_filler_plando(options)
   plando.locations["Outset Island - Savage Labyrinth - Floor 30"] = nothing_item()
-  rando = rando_with_options(options, plando, str(tmp_path_factory.mktemp("no_progression")))
+  plando = dataclasses.replace(plando, name=LONGEST_PLAYER_NAME)
+  rando = rando_with_options(options, plando, str(tmp_path_factory.mktemp("unusual_file")))
   rando.randomize_all()
   return rando
 
@@ -94,17 +96,25 @@ def test_big_octo_fairy_gives_a_hint(saved_rando):
   assert "you will find an item" in read_unwrapped_message(saved_rando, 12015)
   assert "which may help you on your quest" in read_unwrapped_message(saved_rando, 12016)
 
-def test_big_octo_fairy_stays_vanilla_without_a_hint(no_progression_rando):
-  assert read_fairy_bow_check(no_progression_rando) == 0x4082000C # bne
-  assert "place where the wind god guides you" in read_unwrapped_message(no_progression_rando, 12015)
+def test_big_octo_fairy_stays_vanilla_without_a_hint(unusual_file_rando):
+  assert read_fairy_bow_check(unusual_file_rando) == 0x4082000C # bne
+  assert "place where the wind god guides you" in read_unwrapped_message(unusual_file_rando, 12015)
 
-def test_savage_labyrinth_tablet_does_not_name_an_empty_location(no_progression_rando):
-  tablet = read_unwrapped_message(no_progression_rando, 837)
+def test_savage_labyrinth_tablet_does_not_name_an_empty_location(unusual_file_rando):
+  tablet = read_unwrapped_message(unusual_file_rando, 837)
   assert tablet.endswith("the way to challenge and \\{1A 06 FF 00 00 01}P1's Green Rupee\\{1A 06 FF 00 00 00} await.")
 
 def test_slot_name_is_written_for_the_client(saved_rando):
   slot_name = read_main_dol_symbol(saved_rando, fs.read_bytes, "archipelago_slot_name", 0x40)
   assert slot_name == b"Pla:yer?1" + b"\0" * 55
+
+def test_banner_names_the_seed_and_player(saved_rando):
+  banner = fs.read_bytes(saved_rando.get_raw_file("files/opening.bnr"), 0x1860, 0x40)
+  assert banner == b"TWW pytestseed (Pla:yer?1)".ljust(0x40, b"\0")
+
+def test_longest_possible_player_name_is_written_in_full(unusual_file_rando):
+  assert read_main_dol_symbol(unusual_file_rando, fs.read_bytes, "archipelago_slot_name", 0x40) == LONGEST_PLAYER_NAME.encode()
+  assert os.listdir(unusual_file_rando.randomized_output_folder) == [f"TWW pytestseed ({LONGEST_PLAYER_NAME}).iso"]
 
 def test_charts_are_written_for_the_client(saved_rando):
   address = saved_rando.main_custom_symbols["archipelago_charts_mapping"]

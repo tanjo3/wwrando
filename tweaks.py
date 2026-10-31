@@ -560,14 +560,21 @@ def modify_title_screen_logo(self: WWRandomizer):
   data = tlogoe_arc.get_file_entry("title_logo_e.blo").data
   fs.write_u16(data, 0x162, 0x106) # Increase Y pos by 16 pixels (0xF6 -> 0x106)
 
-def update_game_name_icon_and_banners(self: WWRandomizer):
+def get_banner_game_name(seed: str, player_name: str) -> str:
   # Clean game name, attempting to replace UTF-8 characters with Shift JIS equivalents.
   cleaned_name = "".join(
-    c for c in unicodedata.normalize("NFKD", self.plando.name)
+    c for c in unicodedata.normalize("NFKD", player_name)
     if unicodedata.category(c) != "Mn"
-  ).encode("shift_jis", "replace").decode("shift_jis")
+  ).encode("shift_jis", "replace")
   
-  new_game_name = "TWW %s (%s)" % (self.seed, cleaned_name)
+  # The name doesn't always fit in the space left after the seed, so cut it without splitting a character.
+  max_name_length = 0x40 - len("TWW %s ()" % seed)
+  cleaned_name = cleaned_name[:max_name_length].decode("shift_jis", "ignore")
+  
+  return "TWW %s (%s)" % (seed, cleaned_name)
+
+def update_game_name_icon_and_banners(self: WWRandomizer):
+  new_game_name = get_banner_game_name(self.seed, self.plando.name)
   banner_data = self.get_raw_file("files/opening.bnr")
   fs.write_magic_str(banner_data, 0x1860, new_game_name, 0x40)
   
@@ -2788,11 +2795,13 @@ def set_default_targeting_mode_to_switch(self: WWRandomizer):
   self.dol.write_data(fs.write_u8, targeting_mode_addr, 1)
 
 def write_slot_name(data, offset: int, new_string: str, max_length: int):
+  # The client logs in with exactly what it reads here, so a shortened name could not connect.
+  # It reads a fixed length, so no null byte is needed, and Archipelago's limit of 16 characters always fits.
   encoded_string = new_string.encode()
   
   str_len = len(encoded_string)
-  if str_len >= max_length:
-    raise Exception("String \"%s\" is too long (max length including null byte: 0x%X)" % (new_string, max_length))
+  if str_len > max_length:
+    raise Exception("String \"%s\" is too long (max length 0x%X)" % (new_string, max_length))
   
   padding_length = max_length - str_len
   null_padding = b"\0"*padding_length

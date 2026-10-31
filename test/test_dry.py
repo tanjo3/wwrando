@@ -1,8 +1,10 @@
 import dataclasses
+import io
 import os
 import pytest
 from wwrando import make_argparser
 from randomizer import WWRandomizer, Plando
+import tweaks
 from randomizers.entrances import ZoneEntrance
 from randomizers.hints import HintsRandomizer
 from options.wwrando_options import Options, TrickDifficulty, KeyLunacyMode
@@ -250,6 +252,32 @@ def test_big_octo_fairy_has_no_hint_when_she_holds_the_only_progression_item():
 ], ids=["other game", "other game's item named like a key", "small key", "big key", "map", "compass"])
 def test_hinted_item_name_names_its_player(item_info, expected):
   assert HintsRandomizer.get_formatted_item_name(item_info) == expected
+
+@pytest.mark.parametrize("seed, player_name, expected_name", [
+  ("AP_12345678901234567890_P1", "Player1", "Player1"),
+  ("AP_12345678901234567890_P1", "Zoë", "Zoe"),
+  ("AP_12345678901234567890_P1", "😀", "?"),
+  ("AP_12345678901234567890_P1", "あ" * 16, "あ" * 15),
+  ("AP_12345678901234567890_P100", "あ" * 16, "あ" * 14),
+  ("AP_12345678901234567890_P1", "a" + "あ" * 15, "a" + "あ" * 15),
+  ("AP_12345678901234567890_P1", "ﬃ" * 16, "ffi" * 10 + "f"),
+], ids=["plain", "accent", "not in shift jis", "double-byte", "double-byte with a longer seed", "exact fit", "expands when cleaned"])
+def test_banner_game_name_fits_without_splitting_a_character(seed, player_name, expected_name):
+  game_name = tweaks.get_banner_game_name(seed, player_name)
+  assert game_name == f"TWW {seed} ({expected_name})"
+
+@pytest.mark.parametrize("player_name", ["Player1", "😀" * 16], ids=["plain", "longest possible"])
+def test_client_reads_back_the_slot_name_it_logs_in_with(player_name):
+  data = io.BytesIO()
+  tweaks.write_slot_name(data, 0, player_name, 0x40)
+  assert len(data.getvalue()) == 0x40
+  assert data.getvalue().split(b"\0", 1)[0].decode() == player_name
+
+def test_slot_name_too_long_for_its_space_is_refused():
+  data = io.BytesIO()
+  with pytest.raises(Exception, match="too long"):
+    tweaks.write_slot_name(data, 0, "😀" * 17, 0x40)
+  assert data.getvalue() == b""
 
 def test_savage_labyrinth_hint_uses_the_item_from_the_file():
   options = Options()
