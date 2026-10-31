@@ -56,6 +56,13 @@ def is_swordless_patch_applied(rando: WWRandomizer) -> bool:
     for offset, edit in patch["files/rels/d_a_fganon.rel"].items()
   )
 
+def read_fairy_bow_check(rando: WWRandomizer) -> int:
+  # The branch that only lets the Big Octo Great Fairy give her hint if you have the Hero's Bow.
+  return rando.get_rel("files/rels/d_a_bigelf.rel").read_data(fs.read_u32, 0x22A4)
+
+def read_unwrapped_message(rando: WWRandomizer, message_id: int) -> str:
+  return rando.bmg.messages_by_id[message_id].string.replace("\n", " ")
+
 @pytest.fixture(scope="module")
 def saved_rando(tmp_path_factory):
   options = Options()
@@ -71,6 +78,29 @@ def swords_optional_rando(tmp_path_factory):
   rando = rando_with_options(options, output_folder=str(tmp_path_factory.mktemp("swords_optional")))
   rando.randomize_all()
   return rando
+
+@pytest.fixture(scope="module")
+def no_progression_rando(tmp_path_factory):
+  options = Options()
+  options.progression_savage_labyrinth = True
+  plando = make_filler_plando(options)
+  plando.locations["Outset Island - Savage Labyrinth - Floor 30"] = nothing_item()
+  rando = rando_with_options(options, plando, str(tmp_path_factory.mktemp("no_progression")))
+  rando.randomize_all()
+  return rando
+
+def test_big_octo_fairy_gives_a_hint(saved_rando):
+  assert read_fairy_bow_check(saved_rando) == 0x60000000 # nop
+  assert "you will find an item" in read_unwrapped_message(saved_rando, 12015)
+  assert "which may help you on your quest" in read_unwrapped_message(saved_rando, 12016)
+
+def test_big_octo_fairy_stays_vanilla_without_a_hint(no_progression_rando):
+  assert read_fairy_bow_check(no_progression_rando) == 0x4082000C # bne
+  assert "place where the wind god guides you" in read_unwrapped_message(no_progression_rando, 12015)
+
+def test_savage_labyrinth_tablet_does_not_name_an_empty_location(no_progression_rando):
+  tablet = read_unwrapped_message(no_progression_rando, 837)
+  assert tablet.endswith("the way to challenge and \\{1A 06 FF 00 00 01}P1's Green Rupee\\{1A 06 FF 00 00 00} await.")
 
 def test_slot_name_is_written_for_the_client(saved_rando):
   slot_name = read_main_dol_symbol(saved_rando, fs.read_bytes, "archipelago_slot_name", 0x40)

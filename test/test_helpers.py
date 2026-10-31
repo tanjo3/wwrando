@@ -12,6 +12,15 @@ def own_item(name: str, classification: str = "progression") -> dict:
 def foreign_item(name: str = "Lantern", classification: str = "progression") -> dict:
   return {"player": 2, "name": name, "game": "Other Game", "classification": classification}
 
+def nothing_item() -> dict:
+  return {"name": "Nothing", "game": "The Wind Waker", "classification": "filler"}
+
+def make_filler_plando(options: Options) -> Plando:
+  plando = make_test_plando(options)
+  for location_name in plando.locations:
+    plando.locations[location_name] = own_item("Green Rupee", "filler")
+  return plando
+
 def make_test_plando(options: Options) -> Plando:
   item_locations = Logic.load_and_parse_item_locations()
   location_names = Logic.filter_locations_for_progression_static(

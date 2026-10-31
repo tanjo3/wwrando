@@ -131,7 +131,8 @@ def randomized(options: Options, plando: Plando | None = None) -> WWRandomizer:
   (own_item("Bombs"), "Bombs"),
   ({"player": 2, "name": "Bombs", "game": "The Wind Waker", "classification": "progression"}, "Bombs"),
   (foreign_item(), "Archipelago Item"),
-], ids=["own item", "other player's item from this game", "other game"])
+  (nothing_item(), "Red Rupee"),
+], ids=["own item", "other player's item from this game", "other game", "empty location"])
 def test_item_from_the_file_is_placed(item_info, expected):
   options = Options()
   plando = make_test_plando(options)
@@ -203,7 +204,9 @@ def test_small_and_big_key_modes_are_independent(small_key_mode, big_key_mode, s
   (own_item("Bombs", "useful"), False),
   (own_item("Green Rupee", "filler"), False),
   (foreign_item("Lantern", "useful"), False),
-], ids=["progression", "other game", "other game's item named like a key", "other player's key", "useful", "filler", "other game's useful"])
+  (foreign_item("Some Trap", "trap"), False),
+  (nothing_item(), False),
+], ids=["progression", "other game", "other game's item named like a key", "other player's key", "useful", "filler", "other game's useful", "trap", "empty location"])
 def test_only_progression_items_are_hinted(item_info, expected):
   options = Options()
   options.randomize_smallkeys = KeyLunacyMode.DUNGEON
@@ -215,15 +218,27 @@ def test_big_octo_fairy_does_not_hint_at_her_own_item():
   options = Options()
   options.progression_great_fairies = True
   options.progression_big_octos_gunboats = True
-  plando = make_test_plando(options)
-  for location_name in plando.locations:
-    plando.locations[location_name] = own_item("Green Rupee", "filler")
+  plando = make_filler_plando(options)
   plando.locations[BIG_OCTO_FAIRY] = own_item("Bombs")
   plando.locations[FIRST_ROOM] = own_item("Deku Leaf")
   rando = randomized(options, plando)
   rando.hints.reset_rng()
   hinted_items = {rando.hints.generate_octo_fairy_hint().reward["name"] for _ in range(20)}
   assert hinted_items == {"Deku Leaf"}
+
+def test_big_octo_fairy_has_no_hint_without_a_progression_item():
+  options = Options()
+  rando = randomized(options, make_filler_plando(options))
+  assert rando.hints.octo_fairy_hint is None
+
+def test_big_octo_fairy_has_no_hint_when_she_holds_the_only_progression_item():
+  options = Options()
+  options.progression_great_fairies = True
+  options.progression_big_octos_gunboats = True
+  plando = make_filler_plando(options)
+  plando.locations[BIG_OCTO_FAIRY] = own_item("Bombs")
+  rando = randomized(options, plando)
+  assert rando.hints.octo_fairy_hint is None
 
 @pytest.mark.parametrize("item_info, expected", [
   (foreign_item("Lantern"), "P2's Lantern"),
@@ -245,6 +260,17 @@ def test_savage_labyrinth_hint_uses_the_item_from_the_file():
   rando = randomized(options, plando)
   assert rando.hints.floor_30_hint.reward == foreign_item("Lantern")
   assert rando.hints.floor_50_hint.reward == own_item("Bombs")
+
+@pytest.mark.parametrize("item_info", [nothing_item(), foreign_item("Some Trap", "trap")], ids=["empty location", "trap"])
+def test_savage_labyrinth_does_not_reveal_an_empty_location_or_a_trap(item_info):
+  options = Options()
+  options.progression_savage_labyrinth = True
+  plando = make_test_plando(options)
+  plando.locations["Outset Island - Savage Labyrinth - Floor 30"] = item_info
+  plando.locations["Outset Island - Savage Labyrinth - Floor 50"] = foreign_item("Nothing", "filler")
+  rando = randomized(options, plando)
+  assert rando.hints.floor_30_hint is None
+  assert rando.hints.floor_50_hint.reward == foreign_item("Nothing", "filler")
 
 def test_savage_labyrinth_has_no_hint_when_missing_from_the_file():
   rando = randomized(Options())
