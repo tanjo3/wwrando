@@ -249,6 +249,12 @@ class WWRandomizerWindow(QMainWindow):
     
     if self.randomizer_thread is not None:
       self.randomizer_thread.terminate()
+      try:
+        self.randomizer_thread.randomizer.write_error_log(error_message)
+      except Exception as e:
+        stack_trace = traceback.format_exc()
+        other_error_message = "Failed to write error log:\n" + str(e) + "\n\n" + stack_trace
+        print(other_error_message)
     
     self.randomizer_thread = None
     

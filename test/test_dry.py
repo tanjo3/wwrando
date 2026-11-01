@@ -350,6 +350,51 @@ def test_required_bosses_come_from_the_file():
   assert sorted(rando.boss_reqs.required_dungeons) == ["Forbidden Woods", "Wind Temple"]
   assert sorted(rando.boss_reqs.required_bosses) == ["Kalle Demos", "Molgera"]
   assert "Dragon Roost Cavern" in rando.boss_reqs.banned_dungeons
+  assert rando.logic.macros["Can Defeat All Required Bosses"] == [
+    'Can Access Item Location "Forbidden Woods - Kalle Demos Heart Container"',
+    "&",
+    'Can Access Item Location "Wind Temple - Molgera Heart Container"',
+  ]
+
+@pytest.mark.parametrize("required_bosses", [
+  ["Forbidden Woods - Kalle Demos Heart Container"],
+  ["Forbidden Woods - Kalle Demos Heart Container", "Wind Temple - Molgera Heart Container", "Earth Temple - Jalhalla Heart Container"],
+  ["Forbidden Woods - Kalle Demos Heart Container", "Forbidden Woods - Kalle Demos Heart Container"],
+  ["Forbidden Woods - Kalle Demos Heart Container", "Not A Boss"],
+  ["Forbidden Woods - Kalle Demos Heart Container", "Wind Temple - Molgera Heart Container", "Forbidden Woods - Kalle Demos Heart Container"],
+  ["Forbidden Woods - Kalle Demos Heart Container", "Wind Temple - Molgera Heart Container", "Not A Boss"],
+], ids=["too few", "too many", "duplicate", "unknown location", "extra duplicate", "extra unknown location"])
+def test_wrong_required_bosses_in_the_file_are_refused(required_bosses):
+  options = Options()
+  options.required_bosses = True
+  options.num_required_bosses = 2
+  plando = dataclasses.replace(make_test_plando(options), required_bosses=required_bosses)
+  with pytest.raises(Exception, match="Expected 2 required bosses"):
+    randomized(options, plando)
+
+def test_error_log_is_written_even_though_other_logs_are_off(tmp_path):
+  rando = dry_rando_with_options(Options())
+  rando.logs_output_folder = str(tmp_path)
+  rando.write_error_log("Failed in C:\\Users\\日本語")
+  assert os.listdir(tmp_path) == ["WW Random pytestseed - Error Log.txt"]
+  log = (tmp_path / "WW Random pytestseed - Error Log.txt").read_text(encoding="utf-8")
+  assert "Seed: pytestseed\n" in log
+  assert log.endswith("Failed in C:\\Users\\日本語")
+
+def test_error_log_respects_the_no_logs_argument(tmp_path):
+  args = make_argparser().parse_args(args=["--dry", "--nologs"])
+  options = Options()
+  rando = WWRandomizer("pytestseed", None, str(tmp_path), options, make_test_plando(options), cmd_line_args=args)
+  rando.write_error_log("Some error")
+  assert os.listdir(tmp_path) == []
+
+def test_spoiler_logs_stay_off(tmp_path):
+  rando = dry_rando_with_options(Options())
+  rando.logs_output_folder = str(tmp_path)
+  rando.randomize_all()
+  rando.write_non_spoiler_log()
+  rando.write_spoiler_log()
+  assert os.listdir(tmp_path) == []
 
 def test_charts_come_from_the_file():
   options = Options()

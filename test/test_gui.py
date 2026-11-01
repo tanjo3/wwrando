@@ -1,5 +1,6 @@
 
 import threading
+from types import SimpleNamespace
 
 import pytest
 
@@ -99,3 +100,27 @@ def test_source_build_skips_the_update_check(qtbot, monkeypatch):
   assert not hasattr(window, "update_checker_thread")
   assert "skipping" in window.ui.update_checker_label.text()
   assert window.close()
+
+def fail_randomization_in_thread(window: WWRandomizerWindow, monkeypatch, write_error_log) -> list:
+  shown_errors = []
+  monkeypatch.setattr(QMessageBox, "critical", lambda parent, title, text: shown_errors.append(text))
+  window.progress_dialog = SimpleNamespace(reset=lambda: None)
+  window.randomizer_thread = SimpleNamespace(terminate=lambda: None, randomizer=SimpleNamespace(write_error_log=write_error_log))
+  window.randomization_failed("Some error")
+  return shown_errors
+
+def test_failed_randomization_writes_an_error_log(qtbot, monkeypatch):
+  window = make_rando_window()
+  qtbot.addWidget(window)
+  logged_errors = []
+  shown_errors = fail_randomization_in_thread(window, monkeypatch, logged_errors.append)
+  assert logged_errors == ["Some error"]
+  assert shown_errors == ["Some error"]
+
+def test_error_is_still_shown_when_the_error_log_cannot_be_written(qtbot, monkeypatch):
+  def fail_to_write(error_message):
+    raise OSError("disk full")
+  
+  window = make_rando_window()
+  qtbot.addWidget(window)
+  assert fail_randomization_in_thread(window, monkeypatch, fail_to_write) == ["Some error"]
