@@ -1,18 +1,18 @@
+from qtpy.QtGui import *
+from qtpy.QtCore import *
+from qtpy.QtWidgets import *
+from wwr_ui.qt_init import load_ui_file
+
+from wwr_ui.update_checker import check_for_updates, LATEST_RELEASE_DOWNLOAD_PAGE_URL
+from wwr_ui.inventory import INVENTORY_ITEMS, DEFAULT_STARTING_ITEMS, DEFAULT_RANDOMIZED_ITEMS
+
 import os
 import sys
 import traceback
-from collections import Counter
 from enum import StrEnum
+from collections import Counter
 
-from qtpy.QtCore import *
-from qtpy.QtGui import *
-from qtpy.QtWidgets import *
 from ruamel.yaml import YAML
-
-from wwr_ui.inventory import INVENTORY_ITEMS
-from wwr_ui.qt_init import load_ui_file
-from wwr_ui.update_checker import check_for_updates, LATEST_RELEASE_DOWNLOAD_PAGE_URL
-
 from ruamel.yaml.error import YAMLError
 yaml_dumper = YAML(typ="rt") # Use RoundTripDumper for pretty-formatted dumps.
 
@@ -717,7 +717,7 @@ class WWRandomizerWindow(QMainWindow):
   def open_about(self):
     text = """The Wind Waker Archipelago Randomizer Version %s<br><br>
       Originally created by LagoLunatic, modified by tanjo3<br><br>
-      For instructions on how to set up a multiworld, see the <a href=\"https://github.com/tanjo3/tww_apworld/blob/master/docs/setup_en.md">setup guide</a>.<br>
+      For instructions on how to set up a multiworld, see the <a href=\"https://archipelago.gg/tutorial/The%%20Wind%%20Waker/setup_en">setup guide</a>.<br>
       Report issues in the Wind Waker thread in the Archipelago server.<br><br>
       Source code:<br><a href=\"https://github.com/tanjo3/wwrando/tree/archipelago\">https://github.com/tanjo3/wwrando/tree/archipelago</a>""" % VERSION
     

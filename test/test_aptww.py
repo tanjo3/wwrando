@@ -15,6 +15,8 @@ import aptww
 from aptww import APTWWFileError, load_and_validate_aptww_file, read_ap_plando_file
 from options.wwrando_options import Options, SwordMode, EntranceMixMode, TrickDifficulty, KeyLunacyMode
 from randomizer import WWRandomizer
+from version import VERSION_WITHOUT_COMMIT
+from wwr_ui.update_checker import string_to_version
 
 DEFAULT_MANIFEST = {"game": "The Wind Waker", "player": 1}
 
@@ -123,6 +125,10 @@ def test_name_and_item_that_look_like_numbers_are_read_from_a_file(tmp_path):
 #endregion
 
 #region Formats this build can read
+@pytest.mark.parametrize("version", aptww.SUPPORTED_APWORLD_VERSIONS)
+def test_supported_version_names_this_build_as_its_build(version):
+  assert string_to_version(aptww.APWORLD_VERSION_TO_BUILD[version]) == string_to_version(VERSION_WITHOUT_COMMIT)
+
 @pytest.mark.parametrize("version", [(3, 1, 0), (3, 1, 9)])
 def test_encrypted_file_is_read(tmp_path, installed_key, version):
   plando_dict = make_plando_dict(version=version)

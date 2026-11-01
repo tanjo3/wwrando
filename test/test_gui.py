@@ -124,3 +124,12 @@ def test_error_is_still_shown_when_the_error_log_cannot_be_written(qtbot, monkey
   window = make_rando_window()
   qtbot.addWidget(window)
   assert fail_randomization_in_thread(window, monkeypatch, fail_to_write) == ["Some error"]
+
+def test_about_dialog_links_to_the_setup_guide_and_shows_the_version(qtbot, monkeypatch):
+  window = make_rando_window()
+  qtbot.addWidget(window)
+  monkeypatch.setattr(QMessageBox, "show", lambda dialog: None)
+  window.open_about()
+  text = window.about_dialog.text()
+  assert 'href="https://archipelago.gg/tutorial/The%20Wind%20Waker/setup_en"' in text
+  assert randomizer_window.VERSION in text
