@@ -288,16 +288,19 @@ def test_auction_item_name_fits_in_the_game_buffer(item_name, expected):
 
 @pytest.mark.parametrize("seed, player_name, expected_name", [
   ("AP_12345678901234567890_P1", "Player1", "Player1"),
-  ("AP_12345678901234567890_P1", "Zoë", "Zoe"),
+  ("AP_12345678901234567890_P1", "Zoë", "Zoë"),
+  ("AP_12345678901234567890_P1", "Zoe\u0308", "Zoë"),
+  ("AP_12345678901234567890_P1", "Māori", "Maori"),
   ("AP_12345678901234567890_P1", "😀", "?"),
-  ("AP_12345678901234567890_P1", "あ" * 16, "あ" * 15),
-  ("AP_12345678901234567890_P100", "あ" * 16, "あ" * 14),
-  ("AP_12345678901234567890_P1", "a" + "あ" * 15, "a" + "あ" * 15),
+  ("AP_12345678901234567890_P1", "あ" * 16, "?" * 16),
+  ("AP_12345678901234567890_P1", "가" * 16, "?" * 16),
+  ("AP_12345678901234567890_P1", "ﬃ" * 10 + "a", "ffi" * 10 + "a"),
   ("AP_12345678901234567890_P1", "ﬃ" * 16, "ffi" * 10 + "f"),
-], ids=["plain", "accent", "not in shift jis", "double-byte", "double-byte with a longer seed", "exact fit", "expands when cleaned"])
-def test_banner_game_name_fits_without_splitting_a_character(seed, player_name, expected_name):
+  ("AP_12345678901234567890_P100", "ﬃ" * 16, "ffi" * 9 + "ff"),
+], ids=["plain", "accent in windows-1252", "separate accent mark", "accent not in windows-1252", "emoji", "japanese", "korean", "exact fit", "expands when cleaned", "expands with a longer seed"])
+def test_banner_game_name_is_windows_1252_and_fits(seed, player_name, expected_name):
   game_name = tweaks.get_banner_game_name(seed, player_name)
-  assert game_name == f"TWW {seed} ({expected_name})"
+  assert game_name == f"TWW {seed} ({expected_name})".encode("cp1252")
 
 @pytest.mark.parametrize("player_name", ["Player1", "😀" * 16], ids=["plain", "longest possible"])
 def test_client_reads_back_the_slot_name_it_logs_in_with(player_name):

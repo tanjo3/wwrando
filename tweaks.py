@@ -560,23 +560,30 @@ def modify_title_screen_logo(self: WWRandomizer):
   data = tlogoe_arc.get_file_entry("title_logo_e.blo").data
   fs.write_u16(data, 0x162, 0x106) # Increase Y pos by 16 pixels (0xF6 -> 0x106)
 
-def get_banner_game_name(seed: str, player_name: str) -> str:
-  # Clean game name, attempting to replace UTF-8 characters with Shift JIS equivalents.
-  cleaned_name = "".join(
-    c for c in unicodedata.normalize("NFKD", player_name)
-    if unicodedata.category(c) != "Mn"
-  ).encode("shift_jis", "replace")
+def get_banner_game_name(seed: str, player_name: str) -> bytes:
+  # Dolphin shows the banner of a US disc in Windows-1252, so the name is written in that encoding.
+  # Characters it doesn't have lose their accents, and any that still don't fit become a question mark.
+  cleaned_name = ""
+  for c in unicodedata.normalize("NFC", player_name):
+    try:
+      c.encode("cp1252")
+    except UnicodeEncodeError:
+      c = "".join(d for d in unicodedata.normalize("NFKD", c) if unicodedata.category(d) != "Mn")
+      try:
+        c.encode("cp1252")
+      except UnicodeEncodeError:
+        c = "?"
+    cleaned_name += c
   
-  # The name doesn't always fit in the space left after the seed, so cut it without splitting a character.
+  # The name doesn't always fit in the space left after the seed.
   max_name_length = 0x40 - len("TWW %s ()" % seed)
-  cleaned_name = cleaned_name[:max_name_length].decode("shift_jis", "ignore")
-  
-  return "TWW %s (%s)" % (seed, cleaned_name)
+  return ("TWW %s (%s)" % (seed, cleaned_name[:max_name_length])).encode("cp1252")
 
 def update_game_name_icon_and_banners(self: WWRandomizer):
   new_game_name = get_banner_game_name(self.seed, self.plando.name)
+  assert len(new_game_name) <= 0x40
   banner_data = self.get_raw_file("files/opening.bnr")
-  fs.write_magic_str(banner_data, 0x1860, new_game_name, 0x40)
+  fs.write_bytes(banner_data, 0x1860, new_game_name.ljust(0x40, b"\0"))
   
   new_game_id = "GZLE99"
   boot_data = self.get_raw_file("sys/boot.bin")
