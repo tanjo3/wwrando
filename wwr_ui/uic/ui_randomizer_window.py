@@ -175,6 +175,13 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.option_description)
 
+        self.update_checker_label = QLabel(self.centralwidget)
+        self.update_checker_label.setObjectName(u"update_checker_label")
+        self.update_checker_label.setWordWrap(True)
+        self.update_checker_label.setOpenExternalLinks(True)
+
+        self.verticalLayout.addWidget(self.update_checker_label)
+
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.about_button = QPushButton(self.centralwidget)
@@ -236,6 +243,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_randomizer_settings), QCoreApplication.translate("MainWindow", u"Randomizer Settings", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_player_customization), QCoreApplication.translate("MainWindow", u"Player Customization", None))
         self.option_description.setText("")
+        self.update_checker_label.setText(QCoreApplication.translate("MainWindow", u"Checking for updates to the randomizer...", None))
         self.about_button.setText(QCoreApplication.translate("MainWindow", u"About", None))
         self.randomize_button.setText(QCoreApplication.translate("MainWindow", u"Randomize", None))
     # retranslateUi

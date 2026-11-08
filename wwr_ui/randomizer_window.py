@@ -1,5 +1,3 @@
-from base64 import b64decode
-import zipfile
 from qtpy.QtGui import *
 from qtpy.QtCore import *
 from qtpy.QtWidgets import *
@@ -13,19 +11,18 @@ import sys
 import traceback
 from enum import StrEnum
 from collections import Counter
-from dataclasses import fields
 
 from ruamel.yaml import YAML
-yaml = YAML(typ="safe")
 from ruamel.yaml.error import YAMLError
 yaml_dumper = YAML(typ="rt") # Use RoundTripDumper for pretty-formatted dumps.
 
-from options.wwrando_options import EntranceMixMode, KeyLunacyMode, Options, SwordMode, TrickDifficulty
-from randomizer import WWRandomizer, TooFewProgressionLocationsError, InvalidCleanISOError, PermalinkWrongVersionError, PermalinkWrongCommitError, Plando
+from options.wwrando_options import Options, SwordMode
+from randomizer import WWRandomizer, TooFewProgressionLocationsError, InvalidCleanISOError, PermalinkWrongVersionError, PermalinkWrongCommitError
 from version import VERSION
 from wwrando_paths import SETTINGS_PATH, ASSETS_PATH, IS_RUNNING_FROM_SOURCE, RANDO_ROOT_PATH
 from seedgen import seedgen
 from logic.logic import Logic
+from aptww import APTWWFileError, read_ap_plando_file
 
 import typing
 from typing import TYPE_CHECKING, Type, TypeVar
@@ -35,8 +32,6 @@ if os.environ["QT_API"] == "pyside6":
   from wwr_ui.uic.ui_randomizer_window import Ui_MainWindow
 else:
   Ui_MainWindow = load_ui_file(os.path.join(RANDO_ROOT_PATH, "wwr_ui", "randomizer_window.ui"))
-
-class APTWWFileError(Exception): pass
 
 class WWRandomizerWindow(QMainWindow):
   def __init__(self, cmd_line_args):
@@ -114,6 +109,13 @@ class WWRandomizerWindow(QMainWindow):
     self.setWindowIcon(QIcon(icon_path))
     
     self.show()
+    
+    if not IS_RUNNING_FROM_SOURCE:
+      self.update_checker_thread = UpdateCheckerThread()
+      self.update_checker_thread.finished_checking_for_updates.connect(self.show_update_check_results)
+      self.update_checker_thread.start()
+    else:
+      self.ui.update_checker_label.setText("(Running from source, skipping release update check.)")
   
   def generate_seed(self):
     seed = seedgen.make_random_seed_name()
@@ -192,7 +194,7 @@ class WWRandomizerWindow(QMainWindow):
     self.progress_dialog = RandomizerProgressDialog(self, "Randomizing", "Initializing...")
     
     try:
-      plando = self.read_ap_plando_file(plando_file, options)
+      plando = read_ap_plando_file(plando_file, options)
       rando = WWRandomizer(plando.seed, clean_iso_path, output_folder, options, plando, cmd_line_args=self.cmd_line_args)
     except (TooFewProgressionLocationsError, InvalidCleanISOError) as e:
       error_message = str(e)
@@ -247,6 +249,12 @@ class WWRandomizerWindow(QMainWindow):
     
     if self.randomizer_thread is not None:
       self.randomizer_thread.terminate()
+      try:
+        self.randomizer_thread.randomizer.write_error_log(error_message)
+      except Exception as e:
+        stack_trace = traceback.format_exc()
+        other_error_message = "Failed to write error log:\n" + str(e) + "\n\n" + stack_trace
+        print(other_error_message)
     
     self.randomizer_thread = None
     
@@ -273,6 +281,7 @@ class WWRandomizerWindow(QMainWindow):
     else:
       new_text = "<b>Version %s of the randomizer is available!</b>" % new_version
       new_text += " <a href=\"%s\">Click here</a> to go to the download page." % LATEST_RELEASE_DOWNLOAD_PAGE_URL
+      new_text += " Check its release notes first, as a new version may not support your APWorld version."
       self.ui.update_checker_label.setText(new_text)
   
   def initialize_option_widgets(self):
@@ -705,127 +714,10 @@ class WWRandomizerWindow(QMainWindow):
         if self.get_option_value(option.name):
           widget.show()
   
-  def load_and_validate_ap_plando_file(self, plando_file: str) -> dict[str, dict]:
-    if not os.access(plando_file, os.R_OK):
-      raise APTWWFileError(
-        """The APTWW file could not be opened.<br><br>
-        Please ensure that the program has read permissions for the file and try again."""
-      )
-    
-    try:
-      with zipfile.ZipFile(plando_file, "r") as z:
-        with z.open("plando") as plando_in_zip:
-          plando_dict = yaml.load(b64decode(plando_in_zip.read()))
-    except:
-      try:
-        with open(plando_file, "r") as f:
-          plando_dict = yaml.load(f)
-      except:
-        raise APTWWFileError(
-          """There was an error trying to read the APTWW file.<br><br>
-          Please ensure that the file has not been modified or corrupted and try again."""
-        )
-    
-    # Check the APTWW version.
-    error_msg = None
-    if "Version" not in plando_dict:
-      # Pre v2.5.0
-      if "Name" in plando_dict:
-        error_msg = """The APTWW file appears to have been generated on v2.4.0 of the APWorld.<br><br>
-          You should use the 2.2.0 version of the randomizer build instead.<br>
-          Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.2.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.2.0</a>"""
-      else:
-        test_location = plando_dict["Locations"]["Outset Island - Underneath Link's House"]
-        if isinstance(test_location, dict):
-          error_msg = """The APTWW file appears to have been generated on v2.3.x of the APWorld.<br><br>
-            You should use the 2.1.0 version of the randomizer build instead.<br>
-            Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.1.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.1.0</a>"""
-        else:
-          error_msg = """The APTWW file appears to have been generated on a pre-v2.3.0 of the APWorld.<br><br>
-            You should use the 2.0.0 version of the randomizer build instead.<br>
-            Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.0.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.0.0</a>"""
-    else:
-      major, minor, patch = plando_dict["Version"]
-      if major == 2 and minor == 6:
-        error_msg = """The APTWW file appears to have been generated on v%d.%d.%d of the APWorld.<br><br>
-          You should use the 2.4.0 version of the randomizer build instead.<br>
-          Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.4.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.4.0</a>""" % (major, minor, patch)
-      elif major == 2 and minor == 5:
-        error_msg = """The APTWW file appears to have been generated on v%d.%d.%d of the APWorld.<br><br>
-          You should use the 2.3.0 version of the randomizer build instead.<br>
-          Download here: <a href=\"https://github.com/tanjo3/wwrando/releases/tag/ap_2.3.0\">https://github.com/tanjo3/wwrando/releases/tag/ap_2.3.0</a>""" % (major, minor, patch)
-    
-    if error_msg:
-      error_msg += """<br><br>
-      However, The Wind Waker is now officially supported in Archipelago. Consider updating Archipelago and regenerating your multiworld."""
-      raise APTWWFileError(error_msg)
-    else:
-      return plando_dict
-  
-  def read_ap_plando_file(self, plando_file: str, options: Options) -> Plando:
-    plando_file = self.load_and_validate_ap_plando_file(plando_file)
-    
-    # Set options dataclass from the plando file
-    for field in fields(options):
-      if field.name in plando_file["Options"]:
-        value = plando_file["Options"][field.name]
-        
-        if field.type is int:
-          setattr(options, field.name, value)
-        elif field.type is bool:
-          setattr(options, field.name, bool(value))
-        elif field.type is SwordMode:
-          match value:
-            case 0: setattr(options, field.name, SwordMode.START_WITH_SWORD)
-            case 1: setattr(options, field.name, SwordMode.NO_STARTING_SWORD)
-            case 2: setattr(options, field.name, SwordMode.SWORDS_OPTIONAL)
-            case 3: setattr(options, field.name, SwordMode.SWORDLESS)
-        elif field.type is EntranceMixMode:
-            match value:
-              case 0: setattr(options, field.name, EntranceMixMode.SEPARATE_DUNGEONS)
-              case 1: setattr(options, field.name, EntranceMixMode.MIX_DUNGEONS)
-        elif field.type is TrickDifficulty:
-            match value:
-              case 0: setattr(options, field.name, TrickDifficulty.NONE)
-              case 1: setattr(options, field.name, TrickDifficulty.NORMAL)
-              case 2: setattr(options, field.name, TrickDifficulty.HARD)
-              case 3: setattr(options, field.name, TrickDifficulty.VERY_HARD)
-        elif field.type is KeyLunacyMode:
-            match value:
-              case 0: setattr(options, field.name, KeyLunacyMode.START_WITH)
-              case 1: setattr(options, field.name, KeyLunacyMode.VANILLA)
-              case 2: setattr(options, field.name, KeyLunacyMode.DUNGEON)
-              case 3: setattr(options, field.name, KeyLunacyMode.ANY_DUNGEON)
-              case 4: setattr(options, field.name, KeyLunacyMode.LOCAL)
-              case 5: setattr(options, field.name, KeyLunacyMode.KEYLUNACY)
-        else:
-          print(f"Bad option: {field.name} = {value}")
-      else:
-        if field.name in ["randomized_gear", "starting_gear"]:
-          setattr(options, field.name, field.default_factory())
-        if getattr(options, field.name) is None:
-          setattr(options, field.name, field.default)
-    
-    # Item names from other games can contain characters the message font can't encode.
-    for item_info in plando_file["Locations"].values():
-      if item_info["game"] != "The Wind Waker":
-        item_info["name"] = item_info["name"].encode("cp1252", "replace").decode("latin-1")
-    
-    # Save the rest of the plando in a dataclass
-    return Plando(
-      f"AP_{plando_file['Seed']}_P{plando_file['Slot']}",
-      plando_file["Slot"],
-      plando_file["Name"],
-      plando_file["Required Bosses"],
-      plando_file["Locations"],
-      plando_file["Entrances"],
-      plando_file["Charts"]
-    )
-  
   def open_about(self):
     text = """The Wind Waker Archipelago Randomizer Version %s<br><br>
       Originally created by LagoLunatic, modified by tanjo3<br><br>
-      For instructions on how to set up a multiworld, see the <a href=\"https://github.com/tanjo3/tww_apworld/blob/master/docs/setup_en.md">setup guide</a>.<br>
+      For instructions on how to set up a multiworld, see the <a href=\"https://archipelago.gg/tutorial/The%%20Wind%%20Waker/setup_en">setup guide</a>.<br>
       Report issues in the Wind Waker thread in the Archipelago server.<br><br>
       Source code:<br><a href=\"https://github.com/tanjo3/wwrando/tree/archipelago\">https://github.com/tanjo3/wwrando/tree/archipelago</a>""" % VERSION
     

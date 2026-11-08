@@ -65,9 +65,15 @@ jobs:
           submodules: recursive
       - name: Add keys
         run: |
+            if [ -z "$AP_RSA_PRIVATE_KEY" ] && [ "${{ github.event.pull_request.head.repo.fork }}" != "true" ]; then
+              echo "AP_RSA_PRIVATE_KEY secret is not set for this environment" >&2
+              exit 1
+            fi
             echo "$SEED_KEY" > keys/seed_key.py
+            echo "AP_RSA_PRIVATE_KEY='''$AP_RSA_PRIVATE_KEY'''" > keys/ap_rsa_private_key.py
         env:
           SEED_KEY: ${{ secrets.SEED_KEY }}
+          AP_RSA_PRIVATE_KEY: ${{ secrets.AP_RSA_PRIVATE_KEY }}
       - name: Set up Python
         id: setup-py
         uses: actions/setup-python@v5

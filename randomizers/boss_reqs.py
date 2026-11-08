@@ -48,6 +48,7 @@ class RequiredBossesRandomizer(BaseRandomizer):
   
   def _randomize(self):
     self.randomize_required_bosses()
+    self.logic.update_required_bosses_macro()
   
   def _save(self):
     self.show_quest_markers_on_sea_chart_for_dungeons()
@@ -86,6 +87,8 @@ class RequiredBossesRandomizer(BaseRandomizer):
     if num_required_bosses > 6 or num_required_bosses < 1:
       raise Exception(f"Number of required bosses is invalid: {num_required_bosses}")
     
+    self.required_boss_item_locations = list(self.rando.plando.required_bosses)
+    
     for location_name in possible_boss_item_locations:
       assert "Boss" in self.logic.item_locations[location_name]["Types"]
       dungeon_name, specific_location_name = self.logic.split_location_name_by_zone(location_name)
@@ -98,6 +101,9 @@ class RequiredBossesRandomizer(BaseRandomizer):
       else:
         self.banned_dungeons.append(dungeon_name)
         self.banned_bosses.append(boss_name)
+    
+    if len(self.required_boss_item_locations) != num_required_bosses or len(self.required_bosses) != num_required_bosses:
+      raise Exception(f"Expected {num_required_bosses} required bosses in the APTWW file, but it names: {self.rando.plando.required_bosses}")
   
   def show_quest_markers_on_sea_chart_for_dungeons(self):
     # Uses the blue quest markers on the sea chart to highlight certain dungeons.

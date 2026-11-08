@@ -57,7 +57,7 @@ class Hint:
       case _:
         raise NotImplementedError
   
-  def formatted_reward(self, is_cryptic: bool):
+  def formatted_reward(self, is_cryptic: bool, slot: int | None = None):
     match self.type:
       case HintType.PATH | HintType.BARREN:
         return self.reward
@@ -65,7 +65,7 @@ class Hint:
         if is_cryptic:
           return HintsRandomizer.get_cryptic_item_hint(self.reward)
         else:
-          return HintsRandomizer.get_formatted_item_name(self.reward)
+          return HintsRandomizer.get_formatted_item_name(self.reward, slot)
       case HintType.LOCATION:
         # Never use cryptic item names for location hints.
         return HintsRandomizer.get_formatted_item_name(self.reward)
@@ -291,6 +291,10 @@ class HintsRandomizer(BaseRandomizer):
   def _save(self):
     self.update_savage_labyrinth_hint_tablet(self.floor_30_hint, self.floor_50_hint, self.hint_importance)
     
+    if self.octo_fairy_hint is None:
+      # If this slot has no hintable progress items, we leave the Big Octo Great Fairy as vanilla.
+      return
+    
     patcher.apply_patch(self.rando, "flexible_hint_locations")
     
     self.update_big_octo_great_fairy_item_name_hint(self.octo_fairy_hint, self.hint_importance)
@@ -362,19 +366,19 @@ class HintsRandomizer(BaseRandomizer):
       floor_50_item_importance = ""
     
     if floor_30_is_valid and floor_50_is_valid:
-      hint = "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (floor_30_hint.formatted_reward(self.cryptic_hints), floor_30_item_importance)
+      hint = "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (floor_30_hint.formatted_reward(self.cryptic_hints, self.rando.plando.slot), floor_30_item_importance)
       hint += " and "
-      hint += "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (floor_50_hint.formatted_reward(self.cryptic_hints), floor_50_item_importance)
+      hint += "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (floor_50_hint.formatted_reward(self.cryptic_hints, self.rando.plando.slot), floor_50_item_importance)
       hint += " await"
     elif floor_30_is_valid:
-      hint = "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (floor_30_hint.formatted_reward(self.cryptic_hints), floor_30_item_importance)
+      hint = "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (floor_30_hint.formatted_reward(self.cryptic_hints, self.rando.plando.slot), floor_30_item_importance)
       hint += " and "
       hint += "challenge"
       hint += " await"
     elif floor_50_is_valid:
       hint = "challenge"
       hint += " and "
-      hint += "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (floor_50_hint.formatted_reward(self.cryptic_hints), floor_50_item_importance)
+      hint += "\\{1A 06 FF 00 00 01}%s\\{1A 06 FF 00 00 00}%s" % (floor_50_hint.formatted_reward(self.cryptic_hints, self.rando.plando.slot), floor_50_item_importance)
       hint += " await"
     else:
       hint = "challenge"
@@ -391,7 +395,7 @@ class HintsRandomizer(BaseRandomizer):
     msg.word_wrap_string(self.rando.bfn)
     
     msg = self.rando.bmg.messages_by_id[12016]
-    reward = tweaks.upper_first_letter(hint.formatted_reward(self.cryptic_hints))
+    reward = tweaks.upper_first_letter(hint.formatted_reward(self.cryptic_hints, self.rando.plando.slot))
     if importance:
       copula = "is"
       if hint.reward in ["Power Bracelets", "Iron Boots", "Bombs"]:
@@ -410,11 +414,12 @@ class HintsRandomizer(BaseRandomizer):
     msg.word_wrap_string(self.rando.bfn)
     
     msg = self.rando.bmg.messages_by_id[12017]
+    item_owner = "you" if hint.reward["player"] == self.rando.plando.slot else "they"
     if importance and hint.importance == ItemImportance.NOT_REQUIRED:
       # If the item is not required and the player is told so, change the post-hint message to be more appropriate.
-      msg.string = "\\{1A 06 FF 00 00 05}Though if they still desire such an item, you must journey to that place."
+      msg.string = "\\{1A 06 FF 00 00 05}Though if %s still desire such an item, you must journey to that place." % item_owner
     else:
-      msg.string = "\\{1A 06 FF 00 00 05}When they find they have need of such an item, you must journey to that place."
+      msg.string = "\\{1A 06 FF 00 00 05}When %s find %s have need of such an item, you must journey to that place." % (item_owner, item_owner)
     msg.word_wrap_string(self.rando.bfn)
   
   def update_fishmen_hints(self):
@@ -603,7 +608,7 @@ class HintsRandomizer(BaseRandomizer):
     return hint_string
   
   @staticmethod
-  def get_formatted_item_name(item_info):
+  def get_formatted_item_name(item_info, slot=None):
     item_player = item_info["player"]
     item_name = item_info["name"]
     item_game = item_info["game"]
@@ -626,7 +631,10 @@ class HintsRandomizer(BaseRandomizer):
         dungeon_name = Logic.DUNGEON_NAMES[short_dungeon_name]
         item_name = "%s Compass" % dungeon_name
     
-    item_name = f"P{item_player}'s {item_name}"
+    if item_player == slot:
+      item_name = f"your {item_name}"
+    else:
+      item_name = f"P{item_player}'s {item_name}"
     # item_name = tweaks.add_article_before_item_name(item_name)
     return item_name
   
@@ -885,15 +893,16 @@ class HintsRandomizer(BaseRandomizer):
     return new_hintable_locations
   
   def check_item_can_be_hinted_at(self, item_info: dict[str, dict[str, str | None]]):
-    item_player = int(item_info["player"])
     item_name = item_info["name"]
     item_game = item_info["game"]
     item_classification = item_info["classification"]
     
     # Don't hint at non-progress items.
-    if item_classification in ["useful", "filler"]:
+    # This includes empty locations, which are filler with no player.
+    if item_classification in ["useful", "filler", "trap"]:
       return False
     
+    item_player = int(item_info["player"])
     if item_player == self.rando.plando.slot and item_game == "The Wind Waker":
       # Don't hint at Big Keys when they are intentionally placed inisde of their own dungeon.
       if item_name.endswith(" Big Key") and self.options.randomize_bigkeys in KeyLunacyMode.VANILLA | KeyLunacyMode.DUNGEON:
@@ -1030,8 +1039,6 @@ class HintsRandomizer(BaseRandomizer):
     if "Two-Eye Reef - Big Octo Great Fairy" in hintable_locations:
       # We don't want this Great Fairy to hint at her own item.
       hintable_locations.remove("Two-Eye Reef - Big Octo Great Fairy")
-    if len(hintable_locations) == 0:
-      raise Exception("No valid items to give hints for")
     
     item_hint, location_name = self.get_item_hint(hintable_locations)
     
@@ -1043,6 +1050,10 @@ class HintsRandomizer(BaseRandomizer):
     
     # Get an item hint for one of the two checks in Savage Labyrinth.
     item_info = self.rando.plando.locations[location_name]
+    # Don't reveal a trap or name an empty location.
+    if item_info["classification"] == "trap" or (item_info["game"] == "The Wind Waker" and item_info["name"] == "Nothing"):
+      return None
+    
     item_importance = self.get_importance_for_location(location_name)
     hint = Hint(HintType.FIXED_LOCATION, location_name, item_info, item_importance)
     return hint

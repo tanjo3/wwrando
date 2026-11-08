@@ -129,6 +129,7 @@ class WWRandomizer:
     self.disassemble = cmd_line_args.disassemble
     self.export_disc_to_folder = cmd_line_args.exportfolder
     self.no_logs = True
+    self.no_error_log = cmd_line_args.nologs
     self.bulk_test = cmd_line_args.bulk
     if self.bulk_test:
       self.dry_run = True
@@ -931,8 +932,8 @@ class WWRandomizer:
       jpc.save()
       self.gcm.changed_files[jpc_path] = jpc.data
     
-    # Remove reserved characters from player name before writing as file name.
-    cleaned_name = "".join(c for c in self.plando.name if c not in '<>:"/\\|?*')
+    # Remove reserved characters and control characters from player name before writing as file name.
+    cleaned_name = "".join(c for c in self.plando.name if c not in '<>:"/\\|?*' and ord(c) >= 0x20)
     
     if self.export_disc_to_folder:
       output_folder_path = os.path.join(self.randomized_output_folder, "TWW %s (%s)" % (self.seed, cleaned_name))
@@ -1078,7 +1079,7 @@ class WWRandomizer:
       f.write(spoiler_log)
   
   def write_error_log(self, error_message):
-    if self.no_logs:
+    if self.no_error_log:
       return
     
     error_log_str = ""
@@ -1091,7 +1092,7 @@ class WWRandomizer:
     
     os.makedirs(self.logs_output_folder, exist_ok=True)
     error_log_output_path = os.path.join(self.logs_output_folder, "WW Random %s - Error Log.txt" % self.seed)
-    with open(error_log_output_path, "w") as f:
+    with open(error_log_output_path, "w", encoding="utf-8") as f:
       f.write(error_log_str)
   
   def disassemble_all_code(self):

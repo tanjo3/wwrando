@@ -1,4 +1,59 @@
-from options.wwrando_options import Options, SwordMode, EntranceMixMode, TrickDifficulty
+from options.wwrando_options import Options, SwordMode, EntranceMixMode, TrickDifficulty, KeyLunacyMode
+from logic.logic import Logic
+from randomizer import Plando
+from randomizers.entrances import (
+  DUNGEON_ENTRANCES, MINIBOSS_ENTRANCES, BOSS_ENTRANCES, SECRET_CAVE_ENTRANCES, SECRET_CAVE_INNER_ENTRANCES, FAIRY_FOUNTAIN_ENTRANCES,
+  DUNGEON_EXITS, MINIBOSS_EXITS, BOSS_EXITS, SECRET_CAVE_EXITS, SECRET_CAVE_INNER_EXITS, FAIRY_FOUNTAIN_EXITS,
+)
+
+def own_item(name: str, classification: str = "progression") -> dict:
+  return {"player": 1, "name": name, "game": "The Wind Waker", "classification": classification}
+
+def foreign_item(name: str = "Lantern", classification: str = "progression") -> dict:
+  return {"player": 2, "name": name, "game": "Other Game", "classification": classification}
+
+def nothing_item() -> dict:
+  return {"name": "Nothing", "game": "The Wind Waker", "classification": "filler"}
+
+def make_filler_plando(options: Options) -> Plando:
+  plando = make_test_plando(options)
+  for location_name in plando.locations:
+    plando.locations[location_name] = own_item("Green Rupee", "filler")
+  return plando
+
+def make_test_plando(options: Options) -> Plando:
+  item_locations = Logic.load_and_parse_item_locations()
+  location_names = Logic.filter_locations_for_progression_static(
+    list(item_locations), item_locations, options,
+    filter_sunken_treasure=not (options.progression_triforce_charts and options.progression_treasure_charts),
+  )
+  locations = {
+    location_name: own_item("Green Rupee", "filler")
+    for location_name in location_names
+  }
+  
+  own_progression = {
+    "Dragon Roost Cavern - First Room": "Deku Leaf",
+    "Dragon Roost Cavern - Alcove With Water Jugs": "DRC Small Key",
+    "Dragon Roost Cavern - Boarded Up Chest": "DRC Big Key",
+  }
+  for location_name, item_name in own_progression.items():
+    if location_name in locations:
+      locations[location_name] = own_item(item_name)
+  for location_name in ["Dragon Roost Cavern - Rat Room", "Outset Island - Savage Labyrinth - Floor 30"]:
+    if location_name in locations:
+      locations[location_name] = foreign_item()
+  
+  required_bosses = []
+  if options.required_bosses:
+    boss_locations = [name for name, location in item_locations.items() if "Boss" in location["Types"]]
+    required_bosses = boss_locations[:options.num_required_bosses]
+  
+  zone_entrances = DUNGEON_ENTRANCES + MINIBOSS_ENTRANCES + BOSS_ENTRANCES + SECRET_CAVE_ENTRANCES + SECRET_CAVE_INNER_ENTRANCES + FAIRY_FOUNTAIN_ENTRANCES
+  zone_exits = DUNGEON_EXITS + MINIBOSS_EXITS + BOSS_EXITS + SECRET_CAVE_EXITS + SECRET_CAVE_INNER_EXITS + FAIRY_FOUNTAIN_EXITS
+  entrances = {zone_entrance.entrance_name: zone_exit.unique_name for zone_entrance, zone_exit in zip(zone_entrances, zone_exits)}
+  
+  return Plando("pytestseed", 1, "Player1", required_bosses, locations, entrances, list(range(1, 49+1)))
 
 def enable_all_progression_location_options(options: Options):
   options.progression_dungeons = True
@@ -54,7 +109,9 @@ def enable_all_options(options: Options):
   enable_all_progression_location_options(options)
   
   options.sword_mode = SwordMode.SWORDLESS
-  options.keylunacy = True
+  options.randomize_mapcompass = KeyLunacyMode.KEYLUNACY
+  options.randomize_smallkeys = KeyLunacyMode.KEYLUNACY
+  options.randomize_bigkeys = KeyLunacyMode.KEYLUNACY
   
   options.mix_entrances = EntranceMixMode.MIX_DUNGEONS
   options.randomize_dungeon_entrances = True
@@ -101,6 +158,7 @@ def enable_all_options(options: Options):
   options.invert_sea_compass_x_axis = True
   options.remove_title_and_ending_videos = True
   options.remove_music = True
+  options.switch_targeting_mode = True
   
   # options.custom_player_model
   # options.player_in_casual_clothes
